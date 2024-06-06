@@ -1,0 +1,44 @@
+---
+project: 'smo_teiv'
+project_creation_date: '2024-06-06'
+project_category: ''
+lifecycle_state: 'Incubation'
+project_lead: &oran_smo_ptl
+    name: 'Seshu Kumar Mudiganti'
+    email: 'seshukumar.mudiganti@windriver.com'
+    company: 'Windriver'
+    id: 'seshukm'
+    timezone: 'Asia/Kolkata'
+primary_contact: *oran_smo_ptl
+issue_tracking:
+    type: 'jira'
+    url: 'https://jira.o-ran-sc.org/projects/SMO'
+    key: 'SMO'
+mailing_list:
+    type: 'groups.io'
+    url: 'https://lists.o-ran-sc.org/g/discuss'
+meetings:
+    - type: 'zoom'
+      agenda: ''
+      url: 'https://wiki.o-ran-sc.org/display/SMO'
+      server: 'n/a'
+      channel: 'n/a'
+      repeats: 'bi-weekly'
+      time: 'Tuesdays, 05:00 AM PST/PDT'
+repositories:
+    - 'smo/teiv'
+committers:
+    - <<: *oran_smo_ptl
+    - name: 'John Keeney'
+      email: 'John.Keeney@est.tech'
+      id: 'johnkeeney'
+      company: 'Ericsson Software Technology'
+      timezone: 'Europe/Dublin'
+    - name: 'Aravindhan Ayyanathan'
+      email: 'aravindhan.a@est.tech'
+      company: 'Ericsson Software Technology'
+      id: 'aravind.est'
+      timezone: 'Europe/Dublin'
+tsc:
+    # yamllint disable-line rule:line-length
+    approval: 'https://wiki.o-ran-sc.org/display/TOC#ORANSCTechnicalOversightCommittee(TOC)-20240425 #6.c.iii'
