@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "51b934cc3f637c367939db112a42a7343c7981a4",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a2b59bd_e830a972",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-06-06T16:21:12Z",
+      "side": 1,
+      "message": "Will GHA fail until a first commit to the repo is performed?\nCurrently github branch (master) does not exist. Is a first commit to master needed to trigger sync to github?",
+      "revId": "51b934cc3f637c367939db112a42a7343c7981a4",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
