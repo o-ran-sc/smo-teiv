@@ -31,3 +31,6 @@ yang-parser/src/test/resources/_orig-modules/_3gpp*.yang
 yang-parser/src/test/resources/_orig-modules/iana*.yang
 pgsql-schema-generator/src/test/resources/generate-defaults/import/*.yang
 teiv/src/main/resources/models/import/*.yang
+
+.tox
+docs/_build
