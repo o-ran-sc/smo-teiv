@@ -1,0 +1,6 @@
+tox
+Sphinx
+doc8
+docutils < 0.17
+lfdocs-conf
+urllib3~=1.26.15
