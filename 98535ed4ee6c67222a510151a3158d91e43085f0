@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1851ba8_f0c7ac51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-06-11T14:11:32Z",
+      "side": 1,
+      "message": "@Jeff\nCan you please also add a brief intro into readme.md (ie. the intro text in index.rst \u0026 developerguide.rst) \neasiest thing might be a new review, with https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/12945 as the base.",
+      "revId": "98535ed4ee6c67222a510151a3158d91e43085f0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
