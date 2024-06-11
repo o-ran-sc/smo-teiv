@@ -16,6 +16,23 @@
       "message": "@Jeff\nCan you please also add a brief intro into readme.md (ie. the intro text in index.rst \u0026 developerguide.rst) \neasiest thing might be a new review, with https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/12945 as the base.",
       "revId": "98535ed4ee6c67222a510151a3158d91e43085f0",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a807651a_b6c66a54",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2024-06-11T15:04:17Z",
+      "side": 1,
+      "message": "Comments addressed by 12955: Update developer docs | https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/12955",
+      "revId": "98535ed4ee6c67222a510151a3158d91e43085f0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
