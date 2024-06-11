@@ -41,6 +41,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "91df2429_f55b5552",
+        "filename": "docs/data-models-guide.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-06-11T09:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d80e7b29_482e6fae",
+      "revId": "2f786932f72d2c27c523309bbe4bb7274f2e866f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08881287_669a7447",
