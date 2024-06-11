@@ -1,6 +1,7 @@
 tox
-Sphinx
+sphinx
 doc8
-docutils < 0.17
+docutils
+sphinxcontrib-openapi
 lfdocs-conf
 urllib3~=1.26.15

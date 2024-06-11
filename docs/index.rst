@@ -17,7 +17,9 @@ to share and operate on a common view of the topology.
    :caption: Contents:
 
    ./developer-guide.rst
+   ./query-api-examples.rst
    ./data-models-guide.rst
    ./geographical-location-enrichment-guide.rst
    ./geographical-location-enrichment-api.rst
    ./supported-filter-options.rst
+   ./api-documentation.rst

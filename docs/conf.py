@@ -27,4 +27,5 @@ author = "ORAN"
 
 extensions = [
     'sphinx.ext.autosectionlabel',
+    'sphinxcontrib.openapi'
 ]
