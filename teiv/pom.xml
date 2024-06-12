@@ -316,6 +316,72 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-push-smo-teiv-exposure-image</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <pullRegistry>${env.CONTAINER_PULL_REGISTRY}</pullRegistry>
+                            <pushRegistry>${env.CONTAINER_PUSH_REGISTRY}</pushRegistry>
+                            <images>
+                                <image>
+                                    <name>
+                                        o-ran-sc/smo-teiv-exposure:${project.version}
+                                    </name>
+                                    <build>
+                                        <contextDir>${project.basedir}</contextDir>
+                                        <dockerFile>exposure.Dockerfile</dockerFile>
+                                        <args>
+                                            <JAR>${project.build.finalName}.jar</JAR>
+                                        </args>
+                                        <tags>
+                                            <tag>${project.version}</tag>
+                                            <tag>latest</tag>
+                                        </tags>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-push-smo-teiv-ingestion-image</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <pullRegistry>${env.CONTAINER_PULL_REGISTRY}</pullRegistry>
+                            <pushRegistry>${env.CONTAINER_PUSH_REGISTRY}</pushRegistry>
+                            <images>
+                                <image>
+                                    <name>
+                                        o-ran-sc/smo-teiv-ingestion:${project.version}
+                                    </name>
+                                    <build>
+                                        <contextDir>${project.basedir}</contextDir>
+                                        <dockerFile>ingestion.Dockerfile</dockerFile>
+                                        <args>
+                                            <JAR>${project.build.finalName}.jar</JAR>
+                                        </args>
+                                        <tags>
+                                            <tag>${project.version}</tag>
+                                            <tag>latest</tag>
+                                        </tags>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
                 <version>4.0.2</version>

@@ -32,11 +32,11 @@ RUN echo "$USER_ID:!::0:::::" >>/etc/shadow
 ARG USER_NAME="topology-exposure-inventory"
 RUN echo "$USER_ID:x:$USER_ID:0:An Identity for $USER_NAME:/nonexistent:/bin/false" >>/etc/passwd
 
-# TODO version in the jar file should be moved out
-ARG JAR_FILE="target/topology-exposure-inventory-jar-0.0.1-SNAPSHOT.jar"
-ADD $JAR_FILE topology-exposure-inventory-app.jar
+ARG JAR
+WORKDIR /opt/app/teiv
 
-RUN find / -perm /u=s,g=s -type f -exec chmod a-s {} \; || true
+ADD src/main/resources/application.yaml /opt/app/teiv/config/application.yaml
+ADD target/${JAR} /opt/app/teiv/topology-exposure-inventory-app.jar
 
 USER $USER_ID
 
@@ -46,7 +46,7 @@ ARG COMMIT
 ARG BUILD_DATE
 ARG APP_VERSION
 LABEL \
-    org.opencontainers.image.title=topology-exposure-inventory-jsb \
+    org.opencontainers.image.title=topology-exposure-jsb \
     org.opencontainers.image.created=$BUILD_DATE \
     org.opencontainers.image.revision=$COMMIT \
     org.opencontainers.image.vendor=ORAN \

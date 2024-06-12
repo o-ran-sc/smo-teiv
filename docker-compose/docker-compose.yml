@@ -43,7 +43,7 @@ services:
 
   topology-exposure-inventory:
     container_name: topology-exposure-inventory
-    image: topology-exposure-inventory:latest
+    image: o-ran-sc/smo-teiv-exposure:latest
     ports:
       - 31074:8080
     depends_on:
@@ -59,9 +59,7 @@ services:
 
   topology-ingestion-inventory:
     container_name: topology-ingestion-inventory
-    image: topology-exposure-inventory:latest
-    environment:
-      - SPRING_PROFILES_ACTIVE=ingestion
+    image: o-ran-sc/smo-teiv-ingestion:latest
     depends_on:
       - dbpostgresql
     deploy:
