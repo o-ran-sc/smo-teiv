@@ -33,6 +33,24 @@
       "message": "@Seshu, All\nAre there any more comments for this review? \nShall we go ahead an merge it, then use this as the base for further updates (e.g. documentation, deployment charts, etc.,)",
       "revId": "f1e44606bead634779f177e178098b84ff89de5c",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "504b1dbe_31edfc1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-06-12T08:50:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47e4a9b6_80372643",
+      "revId": "f1e44606bead634779f177e178098b84ff89de5c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
