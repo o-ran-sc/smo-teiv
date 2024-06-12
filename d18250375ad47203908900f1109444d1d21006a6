@@ -16,6 +16,23 @@
       "message": "Comments address and updates in a follow up review: https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/12955",
       "revId": "d18250375ad47203908900f1109444d1d21006a6",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f56e1b13_9844ed62",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-06-12T09:08:04Z",
+      "side": 1,
+      "message": "remerge",
+      "revId": "d18250375ad47203908900f1109444d1d21006a6",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ],
   "submitRequirementResults": [
