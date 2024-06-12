@@ -1,0 +1,8 @@
+Code-Review+2: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Verified+1: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Submitted-by: John Keeney <john.keeney@est.tech>
+Submitted-at: Wed, 12 Jun 2024 08:52:02 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/12947
+Project: smo/teiv
+Branch: refs/heads/master
