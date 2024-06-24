@@ -29,13 +29,13 @@
     <parent>
         <groupId>org.oran.smo</groupId>
         <artifactId>topology-exposure-inventory</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
 
     <groupId>org.oran.smo.teiv.pgsqlgenerator</groupId>
     <artifactId>pgsql-schema-generator</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <properties>

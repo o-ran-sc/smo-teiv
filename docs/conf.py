@@ -20,8 +20,8 @@
 from docs_conf.conf import *
 
 project = "teiv"
-release = "master"
-version = "master"
+release = "j-release"
+version = "j-release"
 
 author = "ORAN"
 
