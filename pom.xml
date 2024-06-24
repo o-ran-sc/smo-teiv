@@ -33,7 +33,7 @@
     </parent>
     <groupId>org.oran.smo</groupId>
     <artifactId>topology-exposure-inventory</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <licenses>
@@ -53,6 +53,8 @@
         <!-- Set compiler Java version, MUST match the Dockerfile JDK version -->
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Versions of co-located functions to use-->
+        <version.yang-parser-jar>1.1.0-SNAPSHOT</version.yang-parser-jar> <!--use current master snapshot version -->
         <!-- 3PP Versions -->
         <version.jackson-databind-nullable>0.2.6</version.jackson-databind-nullable>
         <version.lombok>1.18.26</version.lombok>
@@ -83,8 +85,6 @@
         <version.contract-documentation-generator-mvn-plugin>1.0.1</version.contract-documentation-generator-mvn-plugin>
         <version.asciidoctor-maven-plugin>2.2.1</version.asciidoctor-maven-plugin>
         <version.spring-cloud-starter-contract-verifier>3.0.2</version.spring-cloud-starter-contract-verifier>
-        <version.yang-parser-jar>1.0.0-SNAPSHOT</version.yang-parser-jar>
-        <version.yang-validator-jar>1.0.0-SNAPSHOT</version.yang-validator-jar>
         <version.reactor-test>3.2.3.RELEASE</version.reactor-test>
         <!-- Updated from 3.0 to comply with CVE-2023-20861, CVE-2022-22971 & 17
             more -->
