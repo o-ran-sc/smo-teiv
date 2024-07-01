@@ -90,6 +90,14 @@
             <version>${version.lombok}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--graphing dependencies -->
+        <dependency>
+            <groupId>guru.nidi</groupId>
+            <artifactId>graphviz-java</artifactId>
+            <version>0.18.1</version>
+        </dependency>
+
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.mockito</groupId>
