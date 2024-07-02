@@ -20,3 +20,6 @@ Inventory.
    ./data-models/equipment-to-ran.rst
    ./data-models/oam.rst
    ./data-models/oam-to-ran.rst
+   ./data-models/cloud.rst
+   ./data-models/cloud-to-ran.rst
+   ./data-models/oam-to-cloud.rst
