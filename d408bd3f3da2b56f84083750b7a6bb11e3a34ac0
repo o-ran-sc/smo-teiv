@@ -22,6 +22,30 @@
       },
       "revId": "d408bd3f3da2b56f84083750b7a6bb11e3a34ac0",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "829ee1b4_77375690",
+        "filename": "pgsql-schema-generator/src/main/java/org/oran/smo/teiv/pgsqlgenerator/relationshipgrapghgenerator/RelationshipGraphGenerator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2024-07-04T14:56:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29d4aa8e_693e2e6a",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 24
+      },
+      "revId": "d408bd3f3da2b56f84083750b7a6bb11e3a34ac0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
