@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.EntityGraphGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.data.DataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.model.ModelSchemaGenerator;
-import org.oran.smo.teiv.pgsqlgenerator.relationshipgrapghgenerator.RelationshipGraphGenerator;
+import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.RelationshipGraphGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -44,6 +45,7 @@ public class Processor {
     private final DataSchemaGenerator dataSchemaGenerator;
     private final ModelSchemaGenerator modelSchemaGenerator;
     private final RelationshipGraphGenerator relationshipGraphGenerator;
+    private final EntityGraphGenerator entityGraphGenerator;
     @Value("${yang-model.source}")
     private String yangModelDirectory;
 
@@ -64,6 +66,7 @@ public class Processor {
         List<Relationship> relationshipsFromModelService = yangModelProcessor.getRelationshipsFromYang(pathToImplementing);
 
         relationshipGraphGenerator.generate(relationshipsFromModelService, entitiesFromModelService);
+        entityGraphGenerator.generate(entitiesFromModelService);
         dataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
         modelSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
     }

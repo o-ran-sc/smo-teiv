@@ -18,7 +18,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *  ============LICENSE_END=========================================================
  */
-package org.oran.smo.teiv.pgsqlgenerator.relationshipgrapghgenerator;
+package org.oran.smo.teiv.pgsqlgenerator.grapghgenerator;
 
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
@@ -40,10 +40,10 @@ import java.util.List;
 @Slf4j
 public class RelationshipGraphGenerator {
 
-    @Value("${relationship-graph.generate}")
+    @Value("${graphs.generate}")
     private boolean generateRelationshipGraph;
 
-    @Value("${relationship-graph.output}")
+    @Value("${graphs.output}")
     private String graphOutput;
 
     public void generate(List<Relationship> relationships, List<Entity> entities) throws IOException {
@@ -58,7 +58,7 @@ public class RelationshipGraphGenerator {
             }
             generateGraph("overall", relationships, entities);
         } else {
-            log.info("generate-relationship-graph set to false");
+            log.info("graphs.generate set to false");
         }
     }
 

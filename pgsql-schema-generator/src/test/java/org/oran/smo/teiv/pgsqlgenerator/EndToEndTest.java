@@ -55,7 +55,7 @@ class EndToEndTest {
     @Value("${schema.model.output}")
     private String actualModelSql;
 
-    @Value("${relationship-graph.output}")
+    @Value("${graphs.output}")
     private String graphOutput;
 
     @Test

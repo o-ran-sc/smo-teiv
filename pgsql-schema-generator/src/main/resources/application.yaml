@@ -34,6 +34,6 @@ schema:
     output: target/01_init-oran-smo-teiv-model.sql
 exclusions:
   model-names: metadata, decorators
-relationship-graph:
+graphs:
   generate: true
   output: target/graphs
