@@ -37,6 +37,6 @@ test-result:
     model: src/test/resources/expected-db-schema/result_01_init-oran-smo-teiv-model.sql
 exclusions:
   model-names: metadata, decorators
-relationship-graph:
+graphs:
   generate: true
-  output: target/test-classes/graphs
+  output: target/graphs
