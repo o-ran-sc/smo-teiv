@@ -101,16 +101,16 @@ The *entityTypeName* is used as the root of the queries.
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
 | Use case                                 | domainName  | entityTypeName | targetFilter | scopeFilter                | Query result                                     |
 +==========================================+=============+================+==============+============================+==================================================+
-| | To return the ids for all instances of | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement | | All ENodeBFunction entities that are managed   |
+| | To return the ids for all instances of | OAM_TO_RAN  | ENodeBFunction |              | /managed-by-managedElement | | All ENodeBFunction entities that are managed   |
 | | an entityTypeName related by an        |             |                |              |                            | | by any Managed Element.                        |
 | | association.                           |             |                |              |                            |                                                  |
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
-| | To return the ids for all instances of | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement | | All ENodeBFunction entities that are managed   |
+| | To return the ids for all instances of | OAM_TO_RAN  | ENodeBFunction |              | /managed-by-managedElement | | All ENodeBFunction entities that are managed   |
 | | an entityTypeName related by an        |             |                |              | [@id = 'urn\:3gpp:dn:      | | by the Managed Element                         |
 | | association to another entity          |             |                |              | ManagedElement=1']         | | *urn\:3gpp:dn: ManagedElement=1*.              |
 | | specified by its *id*.                 |             |                |              |                            |                                                  |
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
-| | To return the attributes for all       | REL_OAM_RAN | ENodeBFunction | /attributes  | /attributes [@enbId=1];    | | All EnodeBFunction entities with enbId as *1*  |
+| | To return the attributes for all       | OAM_TO_RAN  | ENodeBFunction | /attributes  | /attributes [@enbId=1];    | | All EnodeBFunction entities with enbId as *1*  |
 | | instances of an entityTypeName         |             |                |              |                            | | managed by the Managed Element                 |
 | | related by one or more associations    |             |                |              | /managed-by-managedElement | | *urn\:3gpp:dn: ManagedElement=1* or            |
 | | to other entities specified by their   |             |                |              | [@id='urn\:3gpp:dn:        | | *urn\:3gpp:dn: ManagedElement=2*,              |
@@ -168,11 +168,11 @@ Here, the *relationshipTypeName* is used as the root of the queries.
 |                                          |             | Type Name       |        |                            |                                                 |
 |                                          |             |                 | Filter |                            |                                                 |
 +==========================================+=============+=================+========+============================+=================================================+
-| | To return all relationships for a      | REL_OAM_RAN | MANAGEDELEMENT  |        |                            | | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION     |
+| | To return all relationships for a      | OAM_TO_RAN  | MANAGEDELEMENT  |        |                            | | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION     |
 | | specified relationship                 |             | _MANAGES        |        |                            | | relationships                                 |
 |                                          |             | _ENODEBFUNCTION |        |                            |                                                 |
 +------------------------------------------+-------------+-----------------+--------+----------------------------+-------------------------------------------------+
-| | To return all relationships for a      | REL_OAM_RAN | MANAGEDELEMENT  |        | /managed-by-managedElement | | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION     |
+| | To return all relationships for a      | OAM_TO_RAN  | MANAGEDELEMENT  |        | /managed-by-managedElement | | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION     |
 | | specified relationship type with a     |             | _MANAGES        |        | [@id='urn\:3gpp:dn:        | | relationships having an association           |
 | | specified association to an entity.    |             | _ENODEBFUNCTION |        | ManagedElement=1']         | | *managed-by-managedElement* to ManagedElement |
 |                                          |             |                 |        |                            | | *urn\:3gpp:dn: ManagedElement=1*.             |
@@ -184,8 +184,8 @@ Here, the *relationshipTypeName* is used as the root of the queries.
    **/domains/{domainName}/relationship-types/{relationshipTypeName}/relationships/{relationshipId}**
 
 **Example:** Get the *MANAGEDELEMENT_MANAGES_ENODEBFUNCTION*
-relationship with id *rel1* in the *REL_OAM_RAN* domain:
+relationship with id *rel1* in the *OAM_TO_RAN* domain:
 
 ::
 
-   GET https://<host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ENODEBFUNCTION/relationships/rel1
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/OAM_TO_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ENODEBFUNCTION/relationships/rel1

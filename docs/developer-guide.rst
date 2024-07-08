@@ -136,9 +136,20 @@ Supported domains
 |                                   | | to represent management systems and management      |
 |                                   | | interfaces.                                         |
 +-----------------------------------+-------------------------------------------------------+
-| REL_EQUIPMENT_RAN                 | | This model contains the topology relations          |
+| CLOUD                             | | This model contains the topology entities and       |
+|                                   | | relations in the RAN CLOUD domain, which            |
+|                                   | | comprises cloud infrastructure and deployment       |
+|                                   | | aspects that can be used in the topology model.     |
++-----------------------------------+-------------------------------------------------------+
+| EQUIPMENT_TO_RAN                  | | This model contains the topology relations          |
 |                                   | | between Equipment and RAN.                          |
 +-----------------------------------+-------------------------------------------------------+
-| REL_OAM_RAN                       | | This model contains the topology relations          |
+| OAM_TO_RAN                        | | This model contains the topology relations          |
 |                                   | | between O&M and RAN.                                |
++-----------------------------------+-------------------------------------------------------+
+| CLOUD_TO_RAN                      | | This model contains the RAN Cloud to RAN Logical    |
+|                                   | | topology relations.                                 |
++-----------------------------------+-------------------------------------------------------+
+| OAM_TO_CLOUD                      | | This model contains the RAN O&M to Cloud            |
+|                                   | | topology relations.                                 |
 +-----------------------------------+-------------------------------------------------------+
