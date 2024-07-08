@@ -136,9 +136,20 @@ Supported domains
 |                                   | | to represent management systems and management      |
 |                                   | | interfaces.                                         |
 +-----------------------------------+-------------------------------------------------------+
+| CLOUD                             | | This model contains the topology entities and       |
+|                                   | | relations in the RAN CLOUD domain, which            |
+|                                   | | comprises cloud infrastructure and deployment       |
+|                                   | | aspects that can be used in the topology model.     |
++-----------------------------------+-------------------------------------------------------+
 | REL_EQUIPMENT_RAN                 | | This model contains the topology relations          |
 |                                   | | between Equipment and RAN.                          |
 +-----------------------------------+-------------------------------------------------------+
 | REL_OAM_RAN                       | | This model contains the topology relations          |
 |                                   | | between O&M and RAN.                                |
++-----------------------------------+-------------------------------------------------------+
+| REL_CLOUD_RAN                     | | This model contains the RAN Cloud to RAN Logical    |
+|                                   | | topology relations.                                 |
++-----------------------------------+-------------------------------------------------------+
+| REL_OAM_CLOUD                     | | This model contains the RAN O&M to Cloud            |
+|                                   | | topology relations.                                 |
 +-----------------------------------+-------------------------------------------------------+
