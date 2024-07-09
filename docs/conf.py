@@ -27,5 +27,24 @@ author = "ORAN"
 
 extensions = [
     'sphinx.ext.autosectionlabel',
-    'sphinxcontrib.openapi'
+    'sphinxcontrib.openapi',
+    'sphinxcontrib.redoc'
+]
+
+redoc = [
+            {
+                'name': 'Topology Exposure & Inventory Service API',
+                'page': 'offeredapis/topology-exposure-inventory-openapi',
+                'spec': './offeredapis/topology-exposure-inventory-openapi.yaml',
+                'embed': True,
+            }
+]
+html_extra_path = [
+]
+
+linkcheck_ignore = [
+  r'http://localhost:\d+/',
+  './offeredapis/topology-exposure-inventory-openapi.html',  #Generated file that doesn't exist at link check.
+  './offeredapis/index.html',  #Generated file that doesn't exist at link check.
+  './offeredapis/html/index.html'  #Generated file that doesn't exist at link check.
 ]

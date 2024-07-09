@@ -80,7 +80,7 @@
         <version.mockitoinline>5.2.0</version.mockitoinline>
         <version.testcontainers>1.18.0</version.testcontainers>
         <!-- Plugin Dependencies -->
-        <version.openapi-generator-maven-plugin>6.5.0</version.openapi-generator-maven-plugin>
+        <version.openapi-generator-maven-plugin>7.7.0</version.openapi-generator-maven-plugin>
         <version.spotless-plugin>2.30.0</version.spotless-plugin>
         <version.contract-documentation-generator-mvn-plugin>1.0.1</version.contract-documentation-generator-mvn-plugin>
         <version.asciidoctor-maven-plugin>2.2.1</version.asciidoctor-maven-plugin>
@@ -130,6 +130,8 @@
                                     <exclude>generated*/</exclude>
                                     <exclude>dependencies/*</exclude>
                                     <exclude>dependencies*/</exclude>
+                                    <exclude>teiv/src/main/resources/v1/**/*.html</exclude>
+                                    <exclude>teiv/src/main/resources/v1/topology-exposure-inventory-openapi.json</exclude>
                                 </excludes>
                             </licenseSet>
                         </licenseSets>
@@ -184,6 +186,8 @@
                             <excludes>
                                 <exclude>target/**/*.json</exclude>
                                 <exclude>build/**/*.json</exclude>
+                                <!--generated -->
+                                <exclude>**/resources/v1/topology-exposure-inventory-openapi.json</exclude> 
                             </excludes>
                             <eclipseWtp>
                                 <type>JSON</type>

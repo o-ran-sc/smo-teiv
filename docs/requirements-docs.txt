@@ -3,5 +3,6 @@ sphinx
 doc8
 docutils
 sphinxcontrib-openapi
+sphinxcontrib-redoc
 lfdocs-conf
 urllib3~=1.26.15

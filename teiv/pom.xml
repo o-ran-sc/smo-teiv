@@ -231,8 +231,7 @@
             </testResource>
         </testResources>
         <plugins>
-            <!-- TODO internaltools.devops plugin which generates .adoc of contract
-                test -->
+            <!-- TODO Need a plugin which generates .adoc of contract tests -->
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -258,18 +257,58 @@
                 <executions>
                     <execution>
                         <id>openapi-generate-html</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/v1/topology-exposure-inventory-openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/v1/topology-exposure-inventory-openapi.yaml</inputSpec>
                             <generatorName>html</generatorName>
                             <output>src/main/resources/v1</output>
                         </configuration>
                     </execution>
                     <execution>
+                        <id>generate-openapi-html2</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/v1/topology-exposure-inventory-openapi.yaml</inputSpec>
+                            <generatorName>html2</generatorName>
+                            <output>src/main/resources/v1/html</output>
+                            <skipOperationExample>false</skipOperationExample>
+                            <strictSpec>false</strictSpec>
+                            <configOptions>
+                                <appDescription>The O-RAN Topology Exposure &amp; Inventory
+                                    manages the representation of topology and inventory resource</appDescription>
+                                <appName>O-RAN SC - Topology Exposure &amp; Inventory</appName>
+                                <infoUrl>https://wiki.o-ran-sc.org/pages/viewpage.action?pageId=125042884</infoUrl>
+                                <licenseInfo>Copyright (C) 2024 Ericsson,
+                                    Modifications Copyright (C) 2024 OpenInfra Foundation Europe.
+                                    All rights reserved.</licenseInfo>
+                                <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-openapi-json</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/v1/topology-exposure-inventory-openapi.yaml</inputSpec>
+                            <generatorName>openapi</generatorName>
+                            <output>src/main/resources/v1</output>
+                            <configOptions>
+                                <outputFileName>topology-exposure-inventory-openapi.json</outputFileName>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>openapi-generate-pojos</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -300,6 +339,33 @@
                             <environmentVariables>
                                 <enablePostProcessFile>true</enablePostProcessFile>
                             </environmentVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resource-docs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/../docs/offeredapis/</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/resources/v1</directory>
+                                    <includes>
+                                        <include>topology-exposure-inventory-openapi.yaml</include>
+                                        <include>topology-exposure-inventory-openapi.json</include>
+                                        <include>index.html</include>
+                                        <include>html/index.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
