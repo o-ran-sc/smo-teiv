@@ -22,7 +22,6 @@ target
 /.metadata/
 **/.sts4-cache
 **/.java-version
-index.html
 **/.openapi-generator
 .openapi-generator-ignore
 yang-parser/src/main/resources/modules/*.yang
@@ -31,6 +30,8 @@ yang-parser/src/test/resources/_orig-modules/_3gpp*.yang
 yang-parser/src/test/resources/_orig-modules/iana*.yang
 pgsql-schema-generator/src/test/resources/generate-defaults/import/*.yang
 teiv/src/main/resources/models/import/*.yang
-
+teiv/src/main/resources/v1/README.md
+teiv/src/main/resources/v1/index.html
+teiv/src/main/resources/v1/html/
 .tox
 docs/_build

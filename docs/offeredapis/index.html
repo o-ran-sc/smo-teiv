@@ -1,0 +1,2521 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Topology and Inventory API</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>Topology and Inventory API</h1>
+    <div class="app-desc"><p>Topology and Inventory data is the information that represents entities in a telecommunications network and the relationships between them that provide insight into a particular aspect of the network of importance to specific use cases. Topology and Inventory data can be derived from inventory, configuration, or other data.</p>
+<p>Topology and Inventory supports several topology domains. A domain is a grouping of network topology entities which handles topology data.</p>
+<p>Entities are enabling the modelling and storage of complex network infrastructure and relationships.</p>
+<p>Relationships are a uni-directional connection between two entities, one of which is the originating side (A-side) and the other is the terminating side (B-side). The order of the sides matters since it defines the relationship itself which must be unique</p>
+<p>Topology and Inventory API provides the capabilities to fetch topology data. Using the filtering options, it is possible to define more specific query requests.</p>
+<h2>Querying simple entities</h2>
+<p>EntityType is used as the root of the queries (from here referred as RootObject).  Every other object, either <em>targetFilter</em> or <em>scopeFilter</em>, has to relate to the RootObject. The queries are constructed starting from the RootObject and all other objects are joined to it. If there is no connection between the RootObject and the other object(s), the query will not get constructed. The RootObject still can be retrieved and filtered using the <em>/attributes</em>.</p>
+<p>| USE CASE                                                                                                                                                                                                                                                                                                                                                                                                       |  ENTITY TYPE    |  TARGET FILTER                                                                         | SCOPE FILTER                                                                                                    | QUERY RESULT                                                                                                      |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------|:----------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------|
+| To return the ids for all instances of the entityType used in the query.                                                                                                                                                                                                                                                                                                                                       |   GNBDUFunction  |                                                                                        |                                                                                                                 | All ids of every GNBDUFunction                                                                                    |
+| To return all attributes of every instance of the entityType used in the query.                                                                                                                                                                                                                                                                                                                                |   GNBDUFunction  |   /attributes                                                                           |                                                                                                                 | All GNBDUFunctions with every attribute                                                                           |
+| To return every instance of the entityType used in the query, but only the attribute that was defined in the <em>targetFilter</em> parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                                          |   GNBDUFunction  |   /attributes(gNBId) <br/>    <strong>OR</strong> <br/> /attributes/gNBId                      |                                                                                                             | All FDNs of every GNBDUFunction                                                                                   |
+| To return every instance of the entityType used in the query, but only the attributes that were defined in the <em>targetFilter</em> parameter. <br/> Case 1: The attributes must be separated by a comma &quot;,&quot; in case of using parenthesis &quot;()&quot;. <br/> Case 2: The attributes must be separated by a semicolon &quot;;&quot; in case of using slash &quot;/&quot;. <br/> Note: The attributes must be valid <em>targetFilter</em> of the object. |   GNBDUFunction  |   /attributes(gNBId, gNBIdLength)  <br/>    <strong>OR</strong> <br/> /attributes/gNBId; /attributes/gNBIdLength |                                                                                           | All Ids and FDNs of every GNBDUFunction                                                                           |
+| To return the ids for all instances of the entityType used in the query, that matches the given attribute in the <em>scopeFilter</em> parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                                       |   GNBDUFunction  |                                                                                       | /attributes[contains (@fdn, &quot;/SubNetwork=Ireland/&quot;)]                                                             | Unique set of ids of GNBDUFunctions, where fdn contains &quot;SubNetwork=Ireland&quot;                                      |
+| To return the ids for all instances of the entityType used in the query, that matches the given attributes in the <em>scopeFilter</em> parameter. <br/> Note: the entityType and the object in the <em>scopeFilter</em> parameter must match, and the attributes must be valid field or fields of the object.  The attributes must be separated by a comma &quot;,&quot;.                                                              |   GNBDUFunction  |                                                                                       | /attributes[@gNBIdLength=3 and @gNBId=111]                                                                | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 and the gNBId equals 111                      |
+| To return the ids for all instances of the entityType used in the query, that satisfies every condition in one of the tags in the <em>scopeFilter</em> parameter. A tag is a complete unit of <em>scopeFilter</em> parameter surrounded by square brackets. <br/> Note: The attributes must be valid field or fields of the object.                                                                                          |   GNBDUFunction  |                                                                                       | /attributes[@gNBIdLength=3 and @gNBId=111]  <br/>    <strong>OR</strong> <br/> /attributes[@gNBIdLength=3 and @gNBId=112]             | Unique set of ids of GNBDUFunctions, where where the gNBIdLength equals 3 and the gNBId is either 111 or 112      |</p>
+<h2>Querying connected entities</h2>
+<p>It is possible to get information about directly connected objects as well. If entityType is present in the <em>targetFilter</em> parameter, the query provides information about that entityType itself.</p>
+<p>| USE CASE                                                                                                                                                                                                                                                                                                                                                          | ENTITY TYPE   | TARGET FILTER                       | SCOPE FILTER                                              | QUERY RESULT                                                                                                                                      |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-------------------------------------|-----------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| To return the ids for all instances of the entityType in the <em>targetFilter</em> parameter, if they are directly related to the queried entityType.                                                                                                                                                                                                                    |  GNBDUFunction |  /NRCellDU                           |                                               | Unique set of ids of NRCellDUs that relates to GNBDUFunctions directly with any relationship type                                                 |
+| To return the ids for all instances of the entityTypes in the <em>targetFilter</em> parameter, if they are directly related to the entityType.                                                                                                                                                                                                                           |  GNBDUFunction |  /NRCellDU ;  /NRSectorCarrier        |                                         | Unique set of ids of NRCellDUs and NRSectorCarriers that relates to GNBDUFunctions directly with any relationship type                            |
+| To return the ids for all instances of the queried entityType that has one or more direct relationships with the entityType specified in the <em>scopeFilter</em> parameter.                                                                                                                                                                                             |  GNBDUFunction |                                     | /AntennaCapability                                  | Unique set of ids of GNBDUFunctions that are directly related to AntennaCapability with any relationship type                                     |
+| To return the ids for all instances of the queried entityType that has one or more direct relationships with at least one of the entityTypes specified in the <em>scopeFilter</em> parameter.                                                                                                                                                                            |  GNBDUFunction |                                     | /AntennaCapability <br/>    <strong>OR</strong> <br/> /NRCellDU | Unique set of ids of GNBDUFunctions that are directly related to AntennaCapability or NRCellDU with any relationship type                |</p>
+</div>
+    <div class="app-desc">More information: <a href="https://openapi-generator.tech">https://openapi-generator.tech</a></div>
+    <div class="app-desc">Contact Info: <a href="team@openapitools.org">team@openapitools.org</a></div>
+    <div class="app-desc">Version: 0.11.0</div>
+    <div class="app-desc">BasePath:/topology-inventory/v1alpha11</div>
+    <div class="license-info">Copyright (C) 2024 Ericsson, Modifications Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.</div>
+    <div class="license-url">http://www.apache.org/licenses/LICENSE-2.0</div>
+  <h2>Access</h2>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Classifiers">Classifiers</a></h4>
+  <ul>
+  <li><a href="#updateClassifier"><code><span class="http-method">put</span> /classifiers</code></a></li>
+  </ul>
+  <h4><a href="#Collections">Collections</a></h4>
+  <ul>
+  <li><a href="#createCollection"><code><span class="http-method">post</span> /collections</code></a></li>
+  <li><a href="#deleteCollection"><code><span class="http-method">delete</span> /collections/{collectionId}</code></a></li>
+  <li><a href="#getAllCollections"><code><span class="http-method">get</span> /collections</code></a></li>
+  <li><a href="#getCollection"><code><span class="http-method">get</span> /collections/{collectionId}</code></a></li>
+  <li><a href="#updateCollection"><code><span class="http-method">put</span> /collections/{collectionId}</code></a></li>
+  </ul>
+  <h4><a href="#Decorators">Decorators</a></h4>
+  <ul>
+  <li><a href="#updateDecorator"><code><span class="http-method">put</span> /decorators</code></a></li>
+  </ul>
+  <h4><a href="#EntitiesAndRelationships">EntitiesAndRelationships</a></h4>
+  <ul>
+  <li><a href="#getAllDomains"><code><span class="http-method">get</span> /domains</code></a></li>
+  <li><a href="#getAllRelationshipsForEntityId"><code><span class="http-method">get</span> /domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}/relationships</code></a></li>
+  <li><a href="#getEntitiesByDomain"><code><span class="http-method">get</span> /domains/{domainName}/entities</code></a></li>
+  <li><a href="#getRelationshipById"><code><span class="http-method">get</span> /domains/{domainName}/relationship-types/{relationshipTypeName}/relationships/{relationshipId}</code></a></li>
+  <li><a href="#getRelationshipsByType"><code><span class="http-method">get</span> /domains/{domainName}/relationship-types/{relationshipTypeName}/relationships</code></a></li>
+  <li><a href="#getTopologyByEntityTypeName"><code><span class="http-method">get</span> /domains/{domainName}/entity-types/{entityTypeName}/entities</code></a></li>
+  <li><a href="#getTopologyById"><code><span class="http-method">get</span> /domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}</code></a></li>
+  <li><a href="#getTopologyEntityTypes"><code><span class="http-method">get</span> /domains/{domainName}/entity-types</code></a></li>
+  <li><a href="#getTopologyRelationshipTypes"><code><span class="http-method">get</span> /domains/{domainName}/relationship-types</code></a></li>
+  </ul>
+  <h4><a href="#GeoQuery">GeoQuery</a></h4>
+  <ul>
+  <li><a href="#geoQueryTopologyAcrossDomains"><code><span class="http-method">post</span> /geo-queries</code></a></li>
+  </ul>
+  <h4><a href="#Schemas">Schemas</a></h4>
+  <ul>
+  <li><a href="#createSchema"><code><span class="http-method">post</span> /schemas</code></a></li>
+  <li><a href="#deleteSchema"><code><span class="http-method">delete</span> /schemas/{schemaName}</code></a></li>
+  <li><a href="#getSchemaByName"><code><span class="http-method">get</span> /schemas/{schemaName}/content</code></a></li>
+  <li><a href="#getSchemas"><code><span class="http-method">get</span> /schemas</code></a></li>
+  </ul>
+
+  <h1><a name="Classifiers">Classifiers</a></h1>
+  <div class="method"><a name="updateClassifier"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /classifiers</code></pre></div>
+    <div class="method-summary">Update entities and/or relationships with classifier(s). (<span class="nickname">updateClassifier</span>)</div>
+    <div class="method-notes">Update entities and/or relationships with classifier(s).</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Classifier <a href="#Classifier">Classifier</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Collections">Collections</a></h1>
+  <div class="method"><a name="createCollection"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /collections</code></pre></div>
+    <div class="method-summary">Create a collection. (<span class="nickname">createCollection</span>)</div>
+    <div class="method-notes">Create a collection.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Collection <a href="#Collection">Collection</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#CollectionResponse">CollectionResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "criteria" : {
+    "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
+  },
+  "id" : "id",
+  "collectionName" : "collectionName"
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#CollectionResponse">CollectionResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteCollection"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /collections/{collectionId}</code></pre></div>
+    <div class="method-summary">Delete a collection with specified id. (<span class="nickname">deleteCollection</span>)</div>
+    <div class="method-notes">Delete a collection with specified id.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">collectionId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getAllCollections"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /collections</code></pre></div>
+    <div class="method-summary">Get all collections. (<span class="nickname">getAllCollections</span>)</div>
+    <div class="method-notes">Get all collections.</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Collections">Collections</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "criteria" : {
+      "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
+    },
+    "id" : "id",
+    "collectionName" : "collectionName"
+  }, {
+    "criteria" : {
+      "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
+    },
+    "id" : "id",
+    "collectionName" : "collectionName"
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Collections">Collections</a>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getCollection"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /collections/{collectionId}</code></pre></div>
+    <div class="method-summary">Get a collection with specified id. (<span class="nickname">getCollection</span>)</div>
+    <div class="method-notes">Get a collection with specified id.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">collectionId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#CollectionResponse">CollectionResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "criteria" : {
+    "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
+  },
+  "id" : "id",
+  "collectionName" : "collectionName"
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#CollectionResponse">CollectionResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateCollection"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /collections/{collectionId}</code></pre></div>
+    <div class="method-summary">Update a collection. (<span class="nickname">updateCollection</span>)</div>
+    <div class="method-notes">Update a collection.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">collectionId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Collection <a href="#Collection">Collection</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Decorators">Decorators</a></h1>
+  <div class="method"><a name="updateDecorator"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /decorators</code></pre></div>
+    <div class="method-summary">Update entities and/or relationships with decorator(s). (<span class="nickname">updateDecorator</span>)</div>
+    <div class="method-notes">Update entities and/or relationships with decorator(s).</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Decorator <a href="#Decorator">Decorator</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="EntitiesAndRelationships">EntitiesAndRelationships</a></h1>
+  <div class="method"><a name="getAllDomains"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains</code></pre></div>
+    <div class="method-summary">Get all the available topology domains. (<span class="nickname">getAllDomains</span>)</div>
+    <div class="method-notes">Get all the available topology domains.</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Domains">Domains</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "name" : "name",
+    "entityTypes" : {
+      "href" : "href"
+    },
+    "relationshipTypes" : {
+      "href" : "href"
+    }
+  }, {
+    "name" : "name",
+    "entityTypes" : {
+      "href" : "href"
+    },
+    "relationshipTypes" : {
+      "href" : "href"
+    }
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Domains">Domains</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getAllRelationshipsForEntityId"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}/relationships</code></pre></div>
+    <div class="method-summary">Get all relationships for entity type name with specified id. Specified id represents the entity instance. (<span class="nickname">getAllRelationshipsForEntityId</span>)</div>
+    <div class="method-notes">Get all relationships for entity type name with specified id. Specified id represents the entity instance.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div><div class="param">entityTypeName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div><div class="param">entityId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#RelationshipsResponseMessage">RelationshipsResponseMessage</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ "{}", "{}" ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#RelationshipsResponseMessage">RelationshipsResponseMessage</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getEntitiesByDomain"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/entities</code></pre></div>
+    <div class="method-summary">Get entities by domain (<span class="nickname">getEntitiesByDomain</span>)</div>
+    <div class="method-notes">Get topology entities by domain, using specified targetFilter as mandatory query parameter.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">targetFilter (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#EntitiesResponseMessage">EntitiesResponseMessage</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ "{}", "{}" ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#EntitiesResponseMessage">EntitiesResponseMessage</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRelationshipById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/relationship-types/{relationshipTypeName}/relationships/{relationshipId}</code></pre></div>
+    <div class="method-summary">Get relationship with specified id. Specified id represents the relationship instance. (<span class="nickname">getRelationshipById</span>)</div>
+    <div class="method-notes">Get relationship with specified id. Specified id represents the relationship instance.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div><div class="param">relationshipTypeName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div><div class="param">relationshipId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      Object
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/yang.data+json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Object">Object</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRelationshipsByType"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/relationship-types/{relationshipTypeName}/relationships</code></pre></div>
+    <div class="method-summary">Get topology relationships of a specific relationship type name. (<span class="nickname">getRelationshipsByType</span>)</div>
+    <div class="method-notes">Get topology relationships of a specific relationship type name.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div><div class="param">relationshipTypeName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">targetFilter (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#RelationshipsResponseMessage">RelationshipsResponseMessage</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ "{}", "{}" ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#RelationshipsResponseMessage">RelationshipsResponseMessage</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getTopologyByEntityTypeName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/entity-types/{entityTypeName}/entities</code></pre></div>
+    <div class="method-summary">Get all topology entities of a specific entity type. (<span class="nickname">getTopologyByEntityTypeName</span>)</div>
+    <div class="method-notes">Get all topology entities of a specific entity type.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div><div class="param">entityTypeName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">targetFilter (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#EntitiesResponseMessage">EntitiesResponseMessage</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ "{}", "{}" ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#EntitiesResponseMessage">EntitiesResponseMessage</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getTopologyById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}</code></pre></div>
+    <div class="method-summary">Get topology for entity type name with specified id. Specified id represents the entity instance. (<span class="nickname">getTopologyById</span>)</div>
+    <div class="method-notes">Get topology for entity type name with specified id. Specified id represents the entity instance.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div><div class="param">entityTypeName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div><div class="param">entityId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      Object
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/yang.data+json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Object">Object</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getTopologyEntityTypes"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/entity-types</code></pre></div>
+    <div class="method-summary">Get all the available topology entity types in domain name. (<span class="nickname">getTopologyEntityTypes</span>)</div>
+    <div class="method-notes">Get all the available topology entity types in domain name.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#EntityTypes">EntityTypes</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "entities" : {
+      "href" : "href"
+    },
+    "name" : "name"
+  }, {
+    "entities" : {
+      "href" : "href"
+    },
+    "name" : "name"
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#EntityTypes">EntityTypes</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getTopologyRelationshipTypes"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/relationship-types</code></pre></div>
+    <div class="method-summary">Get all the available topology relationship types. (<span class="nickname">getTopologyRelationshipTypes</span>)</div>
+    <div class="method-notes">Get all the available topology relationship types.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">domainName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; domain name default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#RelationshipTypes">RelationshipTypes</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "relationships" : {
+      "href" : "href"
+    },
+    "name" : "name"
+  }, {
+    "relationships" : {
+      "href" : "href"
+    },
+    "name" : "name"
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#RelationshipTypes">RelationshipTypes</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="GeoQuery">GeoQuery</a></h1>
+  <div class="method"><a name="geoQueryTopologyAcrossDomains"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /geo-queries</code></pre></div>
+    <div class="method-summary">Geo query topology entity or entities  across topology domains. (<span class="nickname">geoQueryTopologyAcrossDomains</span>)</div>
+    <div class="method-notes">Geo query topology entity or entities across topology domains.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">QueryMessage <a href="#QueryMessage">QueryMessage</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      Object
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Object">Object</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Schemas">Schemas</a></h1>
+  <div class="method"><a name="createSchema"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /schemas</code></pre></div>
+    <div class="method-summary">Create a new schema. (<span class="nickname">createSchema</span>)</div>
+    <div class="method-notes">Create a new schema.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>multipart/form-data</code></li>
+    </ul>
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Form parameters</h3>
+    <div class="field-items">
+      <div class="param">file (required)</div>
+
+      <div class="param-desc"><span class="param-type">Form Parameter</span> &mdash; multipartFile default: null format: binary</div>
+    </div>  <!-- field-items -->
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created without response body
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteSchema"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /schemas/{schemaName}</code></pre></div>
+    <div class="method-summary">Delete a schema. (<span class="nickname">deleteSchema</span>)</div>
+    <div class="method-notes">Delete a schema.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">schemaName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: o-ran-smo-teiv-ran </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getSchemaByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /schemas/{schemaName}/content</code></pre></div>
+    <div class="method-summary">Get the model schema. (<span class="nickname">getSchemaByName</span>)</div>
+    <div class="method-notes">Get the model schema by name.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">schemaName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: o-ran-smo-teiv-ran </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      String
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>text/plain</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#String">String</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getSchemas"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /schemas</code></pre></div>
+    <div class="method-summary">Get a list of all schemas. (<span class="nickname">getSchemas</span>)</div>
+    <div class="method-notes">Get a list of all schemas.</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">domain (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  default: null </div><div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SchemaList">SchemaList</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "domain" : [ "domain", "domain" ],
+    "name" : "name",
+    "content" : {
+      "href" : "href"
+    },
+    "revision" : "revision"
+  }, {
+    "domain" : [ "domain", "domain" ],
+    "name" : "name",
+    "content" : {
+      "href" : "href"
+    },
+    "revision" : "revision"
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SchemaList">SchemaList</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#Classifier"><code>Classifier</code> - Classifier</a></li>
+    <li><a href="#Collection"><code>Collection</code> - </a></li>
+    <li><a href="#CollectionResponse"><code>CollectionResponse</code> - </a></li>
+    <li><a href="#CollectionResponse_criteria"><code>CollectionResponse_criteria</code> - </a></li>
+    <li><a href="#Collections"><code>Collections</code> - Collections</a></li>
+    <li><a href="#Decorator"><code>Decorator</code> - Decorator</a></li>
+    <li><a href="#Domains"><code>Domains</code> - Domains</a></li>
+    <li><a href="#Domains_items_inner"><code>Domains_items_inner</code> - </a></li>
+    <li><a href="#DynamicSelection"><code>DynamicSelection</code> - </a></li>
+    <li><a href="#DynamicSelection_resourceQuery"><code>DynamicSelection_resourceQuery</code> - </a></li>
+    <li><a href="#EntitiesResponseMessage"><code>EntitiesResponseMessage</code> - Entities</a></li>
+    <li><a href="#EntityTypes"><code>EntityTypes</code> - EntityTypes</a></li>
+    <li><a href="#EntityTypes_items_inner"><code>EntityTypes_items_inner</code> - </a></li>
+    <li><a href="#ErrorMessage"><code>ErrorMessage</code> - Error</a></li>
+    <li><a href="#Href"><code>Href</code> - Href</a></li>
+    <li><a href="#QueryMessage"><code>QueryMessage</code> - Query</a></li>
+    <li><a href="#RelationshipTypes"><code>RelationshipTypes</code> - RelationshipTypes</a></li>
+    <li><a href="#RelationshipTypes_items_inner"><code>RelationshipTypes_items_inner</code> - </a></li>
+    <li><a href="#RelationshipsResponseMessage"><code>RelationshipsResponseMessage</code> - Relationships</a></li>
+    <li><a href="#Schema"><code>Schema</code> - Schema</a></li>
+    <li><a href="#SchemaList"><code>SchemaList</code> - Schemas</a></li>
+    <li><a href="#StaticSelection"><code>StaticSelection</code> - </a></li>
+    <li><a href="#TopologySelection"><code>TopologySelection</code> - </a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="Classifier"><code>Classifier</code> - Classifier</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">operation (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">merge</div><div class="param-enum">delete</div>
+<div class="param">classifier (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">entityIds (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">relationshipIds (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Collection"><code>Collection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">collectionName (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">criteria (optional)</div><div class="param-desc"><span class="param-type"><a href="#TopologySelection">TopologySelection</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CollectionResponse"><code>CollectionResponse</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">collectionName (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">criteria (optional)</div><div class="param-desc"><span class="param-type"><a href="#CollectionResponse_criteria">CollectionResponse_criteria</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CollectionResponse_criteria"><code>CollectionResponse_criteria</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">resourceInstances (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">resourceQuery (optional)</div><div class="param-desc"><span class="param-type"><a href="#DynamicSelection_resourceQuery">DynamicSelection_resourceQuery</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Collections"><code>Collections</code> - Collections</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#CollectionResponse">array[CollectionResponse]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Decorator"><code>Decorator</code> - Decorator</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">operation (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">merge</div><div class="param-enum">delete</div>
+<div class="param">decorators (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">map[String, String]</a></span>  </div>
+<div class="param">entityIds (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">relationshipIds (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Domains"><code>Domains</code> - Domains</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#Domains_items_inner">array[Domains_items_inner]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Domains_items_inner"><code>Domains_items_inner</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entityTypes (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">relationshipTypes (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DynamicSelection"><code>DynamicSelection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">resourceQuery (optional)</div><div class="param-desc"><span class="param-type"><a href="#DynamicSelection_resourceQuery">DynamicSelection_resourceQuery</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DynamicSelection_resourceQuery"><code>DynamicSelection_resourceQuery</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">url </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">method (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">queryParams (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+<div class="param">requestBody (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="EntitiesResponseMessage"><code>EntitiesResponseMessage</code> - Entities</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#object">array[Object]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="EntityTypes"><code>EntityTypes</code> - EntityTypes</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#EntityTypes_items_inner">array[EntityTypes_items_inner]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="EntityTypes_items_inner"><code>EntityTypes_items_inner</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entities (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ErrorMessage"><code>ErrorMessage</code> - Error</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">message (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">details (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Href"><code>Href</code> - Href</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">href (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: uri-template</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="QueryMessage"><code>QueryMessage</code> - Query</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">query (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="RelationshipTypes"><code>RelationshipTypes</code> - RelationshipTypes</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#RelationshipTypes_items_inner">array[RelationshipTypes_items_inner]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="RelationshipTypes_items_inner"><code>RelationshipTypes_items_inner</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">relationships (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="RelationshipsResponseMessage"><code>RelationshipsResponseMessage</code> - Relationships</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#object">array[Object]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Schema"><code>Schema</code> - Schema</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">domain (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">revision (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">content (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SchemaList"><code>SchemaList</code> - Schemas</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#Schema">array[Schema]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="StaticSelection"><code>StaticSelection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">resourceInstances (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="TopologySelection"><code>TopologySelection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">resourceInstances (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">resourceQuery (optional)</div><div class="param-desc"><span class="param-type"><a href="#DynamicSelection_resourceQuery">DynamicSelection_resourceQuery</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

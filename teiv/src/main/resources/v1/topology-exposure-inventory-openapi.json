@@ -1,0 +1,4048 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "description" : "Topology and Inventory data is the information that represents entities in a telecommunications network and the relationships between them that provide insight into a particular aspect of the network of importance to specific use cases. Topology and Inventory data can be derived from inventory, configuration, or other data.\n\nTopology and Inventory supports several topology domains. A domain is a grouping of network topology entities which handles topology data.\n\nEntities are enabling the modelling and storage of complex network infrastructure and relationships.\n\nRelationships are a uni-directional connection between two entities, one of which is the originating side (A-side) and the other is the terminating side (B-side). The order of the sides matters since it defines the relationship itself which must be unique\n\nTopology and Inventory API provides the capabilities to fetch topology data. Using the filtering options, it is possible to define more specific query requests.\n\n## Querying simple entities\nEntityType is used as the root of the queries (from here referred as RootObject).  Every other object, either *targetFilter* or *scopeFilter*, has to relate to the RootObject. The queries are constructed starting from the RootObject and all other objects are joined to it. If there is no connection between the RootObject and the other object(s), the query will not get constructed. The RootObject still can be retrieved and filtered using the */attributes*.\n\n| USE CASE                                                                                                                                                                                                                                                                                                                                                                                                       |  ENTITY TYPE    |  TARGET FILTER                                                                         | SCOPE FILTER                                                                                                    | QUERY RESULT                                                                                                      |\n|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------|:----------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------|\n| To return the ids for all instances of the entityType used in the query.                                                                                                                                                                                                                                                                                                                                       |&ensp;  GNBDUFunction  |                                                                                        |                                                                                                                 | All ids of every GNBDUFunction                                                                                    |\n| To return all attributes of every instance of the entityType used in the query.                                                                                                                                                                                                                                                                                                                                |&ensp;  GNBDUFunction  |&ensp;  /attributes                                                                           |                                                                                                                 | All GNBDUFunctions with every attribute                                                                           |\n| To return every instance of the entityType used in the query, but only the attribute that was defined in the *targetFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                                          |&ensp;  GNBDUFunction  |&ensp;  /attributes(gNBId) <br/> &emsp;&ensp; **OR** <br/> /attributes/gNBId                      |                                                                                                             | All FDNs of every GNBDUFunction                                                                                   |\n| To return every instance of the entityType used in the query, but only the attributes that were defined in the *targetFilter* parameter. <br/> Case 1: The attributes must be separated by a comma \",\" in case of using parenthesis \"()\". <br/> Case 2: The attributes must be separated by a semicolon \";\" in case of using slash \"/\". <br/> Note: The attributes must be valid *targetFilter* of the object. |&ensp;  GNBDUFunction  |&ensp;  /attributes(gNBId, gNBIdLength)  <br/> &emsp;&ensp; **OR** <br/> /attributes/gNBId; /attributes/gNBIdLength |                                                                                           | All Ids and FDNs of every GNBDUFunction                                                                           |\n| To return the ids for all instances of the entityType used in the query, that matches the given attribute in the *scopeFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                                       |&ensp;  GNBDUFunction  |                                                                                       | /attributes[contains (@fdn, \"/SubNetwork=Ireland/\")]                                                             | Unique set of ids of GNBDUFunctions, where fdn contains \"SubNetwork=Ireland\"                                      |\n| To return the ids for all instances of the entityType used in the query, that matches the given attributes in the *scopeFilter* parameter. <br/> Note: the entityType and the object in the *scopeFilter* parameter must match, and the attributes must be valid field or fields of the object.  The attributes must be separated by a comma \",\".                                                              |&ensp;  GNBDUFunction  |                                                                                       | /attributes[@gNBIdLength=3 and @gNBId=111]                                                                | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 and the gNBId equals 111                      |\n| To return the ids for all instances of the entityType used in the query, that satisfies every condition in one of the tags in the *scopeFilter* parameter. A tag is a complete unit of *scopeFilter* parameter surrounded by square brackets. <br/> Note: The attributes must be valid field or fields of the object.                                                                                          |&ensp;  GNBDUFunction  |                                                                                       | /attributes[@gNBIdLength=3 and @gNBId=111]  <br/> &emsp;&ensp; **OR** <br/> /attributes[@gNBIdLength=3 and @gNBId=112]             | Unique set of ids of GNBDUFunctions, where where the gNBIdLength equals 3 and the gNBId is either 111 or 112      |\n\n## Querying connected entities\nIt is possible to get information about directly connected objects as well. If entityType is present in the *targetFilter* parameter, the query provides information about that entityType itself.\n\n| USE CASE                                                                                                                                                                                                                                                                                                                                                          | ENTITY TYPE   | TARGET FILTER                       | SCOPE FILTER                                              | QUERY RESULT                                                                                                                                      |\n|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-------------------------------------|-----------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|\n| To return the ids for all instances of the entityType in the *targetFilter* parameter, if they are directly related to the queried entityType.                                                                                                                                                                                                                    |&ensp; GNBDUFunction |&ensp; /NRCellDU                           |                                               | Unique set of ids of NRCellDUs that relates to GNBDUFunctions directly with any relationship type                                                 |\n| To return the ids for all instances of the entityTypes in the *targetFilter* parameter, if they are directly related to the entityType.                                                                                                                                                                                                                           |&ensp; GNBDUFunction |&ensp; /NRCellDU ;&ensp; /NRSectorCarrier        |                                         | Unique set of ids of NRCellDUs and NRSectorCarriers that relates to GNBDUFunctions directly with any relationship type                            |\n| To return the ids for all instances of the queried entityType that has one or more direct relationships with the entityType specified in the *scopeFilter* parameter.                                                                                                                                                                                             |&ensp; GNBDUFunction |                                     | /AntennaCapability                                  | Unique set of ids of GNBDUFunctions that are directly related to AntennaCapability with any relationship type                                     |\n| To return the ids for all instances of the queried entityType that has one or more direct relationships with at least one of the entityTypes specified in the *scopeFilter* parameter.                                                                                                                                                                            |&ensp; GNBDUFunction |                                     | /AntennaCapability <br/> &emsp;&ensp; **OR** <br/> /NRCellDU | Unique set of ids of GNBDUFunctions that are directly related to AntennaCapability or NRCellDU with any relationship type                |\n",
+    "license" : {
+      "name" : "Copyright (C) 2024 Ericsson, Modifications Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "termsOfService" : "http://www.apache.org/licenses/LICENSE-2.0",
+    "title" : "Topology and Inventory API",
+    "version" : "0.11.0",
+    "x-api-id" : "52812f69-83ac-4dfa-b83a-1a1bdf2d49b8",
+    "x-audience" : "external-public"
+  },
+  "servers" : [ {
+    "url" : "https://{host}/topology-inventory/v1alpha11",
+    "variables" : {
+      "host" : {
+        "default" : "localhost",
+        "description" : "Change this value to point to your custom host."
+      }
+    }
+  } ],
+  "tags" : [ {
+    "description" : "Provides the capability to retrieve topology and inventory entities and relationships.",
+    "name" : "Entities and relationships"
+  }, {
+    "description" : "Schemas are defined in YANG modeling language. A group of Yang schemas makes the topology and inventory model, which represents topology and inventory entities, their attributes, and their relationships. For more information on YANG modelling language, see [IETF Documentation](https://datatracker.ietf.org/doc/html/rfc6020).",
+    "name" : "Schemas"
+  }, {
+    "description" : "Provides the capability to perform geographical queries on topology entities.",
+    "name" : "Geo-query"
+  }, {
+    "description" : "Provides the capability to update or remove user-defined keywords or tags on entities and relationships.",
+    "name" : "Classifiers"
+  }, {
+    "description" : "Provides the capability to update or remove user-defined values on entities and relationships.",
+    "name" : "Decorators"
+  }, {
+    "description" : "Provides the capability to group topology entities of any type, with an appropriate description and other criteria.",
+    "name" : "Collections"
+  } ],
+  "paths" : {
+    "/domains" : {
+      "get" : {
+        "description" : "Get all the available topology domains.",
+        "operationId" : "getAllDomains",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "domains" : {
+                    "$ref" : "#/components/examples/DomainsResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Domains"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get all the available topology domains.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/entity-types" : {
+      "get" : {
+        "description" : "Get all the available topology entity types in domain name.",
+        "operationId" : "getTopologyEntityTypes",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "entityTypes" : {
+                    "$ref" : "#/components/examples/EntityTypesResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/EntityTypes"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get all the available topology entity types in domain name.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/entity-types/{entityTypeName}/entities" : {
+      "get" : {
+        "description" : "Get all topology entities of a specific entity type.",
+        "operationId" : "getTopologyByEntityTypeName",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "entityTypeName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Use *targetFilter* to specify the entity type and attributes to be returned in the REST response. The value for *targetFilter* can also be a list of entity types and attributes.",
+          "examples" : {
+            "targetFilter" : {
+              "value" : "/attributes(nCI,nRPCI)"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "targetFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
+          "examples" : {
+            "scopeFilter" : {
+              "value" : "/attributes[@nRTAC=310\"]"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "scopeFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "entities" : {
+                    "$ref" : "#/components/examples/EntitiesResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/EntitiesResponseMessage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get all topology entities of a specific entity type.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}" : {
+      "get" : {
+        "description" : "Get topology for entity type name with specified id. Specified id represents the entity instance.",
+        "operationId" : "getTopologyById",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "entityTypeName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "entityId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/yang.data+json" : {
+                "examples" : {
+                  "entity" : {
+                    "$ref" : "#/components/examples/EntityResponseExample"
+                  }
+                },
+                "schema" : {
+                  "description" : "Refer to yang model for schema definition",
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get topology for entity type name with specified id. Specified id represents the entity instance.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}/relationships" : {
+      "get" : {
+        "description" : "Get all relationships for entity type name with specified id. Specified id represents the entity instance.",
+        "operationId" : "getAllRelationshipsForEntityId",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "entityTypeName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "entityId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "relationships" : {
+                    "$ref" : "#/components/examples/RelationshipsResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/RelationshipsResponseMessage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get all relationships for entity type name with specified id. Specified id represents the entity instance.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/relationship-types" : {
+      "get" : {
+        "description" : "Get all the available topology relationship types.",
+        "operationId" : "getTopologyRelationshipTypes",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "relationshipTypes" : {
+                    "$ref" : "#/components/examples/RelationshipTypesResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/RelationshipTypes"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get all the available topology relationship types.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/relationship-types/{relationshipTypeName}/relationships" : {
+      "get" : {
+        "description" : "Get topology relationships of a specific relationship type name.",
+        "operationId" : "getRelationshipsByType",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "relationshipTypeName",
+          "required" : true,
+          "schema" : {
+            "example" : "NRCELLDU_USES_NRSECTORCARRIER",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Use *targetFilter* to specify the entity type and attributes to be returned in the REST response. The value for *targetFilter* can also be a list of entity types and attributes.",
+          "examples" : {
+            "targetFilter" : {
+              "value" : "/attributes(nCI,nRPCI)"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "targetFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
+          "examples" : {
+            "scopeFilter" : {
+              "value" : "/attributes[@nRTAC=310\"]"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "scopeFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "relationships" : {
+                    "$ref" : "#/components/examples/RelationshipsResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/RelationshipsResponseMessage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get topology relationships of a specific relationship type name.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/relationship-types/{relationshipTypeName}/relationships/{relationshipId}" : {
+      "get" : {
+        "description" : "Get relationship with specified id. Specified id represents the relationship instance.",
+        "operationId" : "getRelationshipById",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "relationshipTypeName",
+          "required" : true,
+          "schema" : {
+            "example" : "NRCELLDU_USES_NRSECTORCARRIER",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "relationshipId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/yang.data+json" : {
+                "examples" : {
+                  "relationship" : {
+                    "$ref" : "#/components/examples/RelationshipResponseExample"
+                  }
+                },
+                "schema" : {
+                  "description" : "Refer to yang model for schema definition",
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get relationship with specified id. Specified id represents the relationship instance.",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/domains/{domainName}/entities" : {
+      "get" : {
+        "description" : "Get topology entities by domain, using specified targetFilter as mandatory query parameter.",
+        "operationId" : "getEntitiesByDomain",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "domain name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "domainName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Use *targetFilter* to specify the entity type and attributes to be returned in the REST response. The value for *targetFilter* can also be a list of entity types and attributes.",
+          "examples" : {
+            "targetFilter" : {
+              "value" : "/attributes(nCI,nRPCI)"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "targetFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
+          "examples" : {
+            "scopeFilter" : {
+              "value" : "/attributes[@nRTAC=310\"]"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "scopeFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "entities" : {
+                    "$ref" : "#/components/examples/EntitiesResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/EntitiesResponseMessage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get entities by domain",
+        "tags" : [ "Entities and relationships" ]
+      }
+    },
+    "/schemas" : {
+      "get" : {
+        "description" : "Get a list of all schemas.",
+        "operationId" : "getSchemas",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "examples" : {
+            "domain" : {
+              "value" : "ran"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "domain",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "schemas" : {
+                    "$ref" : "#/components/examples/SchemasResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/SchemaList"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get a list of all schemas.",
+        "tags" : [ "Schemas" ]
+      },
+      "post" : {
+        "description" : "Create a new schema.",
+        "operationId" : "createSchema",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MultipartFile"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created without response body"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409'",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Create a new schema.",
+        "tags" : [ "Schemas" ]
+      }
+    },
+    "/schemas/{schemaName}/content" : {
+      "get" : {
+        "description" : "Get the model schema by name.",
+        "operationId" : "getSchemaByName",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "schemaName",
+          "required" : true,
+          "schema" : {
+            "default" : "o-ran-smo-teiv-ran",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "examples" : {
+                  "schema" : {
+                    "$ref" : "#/components/examples/SchemaResponseExample"
+                  }
+                },
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get the model schema.",
+        "tags" : [ "Schemas" ]
+      }
+    },
+    "/schemas/{schemaName}" : {
+      "delete" : {
+        "description" : "Delete a schema.",
+        "operationId" : "deleteSchema",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "schemaName",
+          "required" : true,
+          "schema" : {
+            "default" : "o-ran-smo-teiv-ran",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Delete a schema.",
+        "tags" : [ "Schemas" ]
+      }
+    },
+    "/geo-queries" : {
+      "post" : {
+        "description" : "Geo query topology entity or entities across topology domains.",
+        "operationId" : "geoQueryTopologyAcrossDomains",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "geoQuery" : {
+                  "$ref" : "#/components/examples/QueryMessageExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/QueryMessage"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "geoQueryResponse" : {
+                    "$ref" : "#/components/examples/QueryResponseExample"
+                  }
+                },
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409'",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Geo query topology entity or entities  across topology domains.",
+        "tags" : [ "Geo-query" ]
+      }
+    },
+    "/classifiers" : {
+      "put" : {
+        "description" : "Update entities and/or relationships with classifier(s).",
+        "operationId" : "updateClassifier",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "classifier" : {
+                  "$ref" : "#/components/examples/ClassifierExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Classifier"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409'",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Update entities and/or relationships with classifier(s).",
+        "tags" : [ "Classifiers" ]
+      }
+    },
+    "/decorators" : {
+      "put" : {
+        "description" : "Update entities and/or relationships with decorator(s).",
+        "operationId" : "updateDecorator",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "decorator" : {
+                  "$ref" : "#/components/examples/DecoratorExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Decorator"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409'",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Update entities and/or relationships with decorator(s).",
+        "tags" : [ "Decorators" ]
+      }
+    },
+    "/collections" : {
+      "get" : {
+        "description" : "Get all collections.",
+        "operationId" : "getAllCollections",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "collections" : {
+                    "$ref" : "#/components/examples/CollectionsResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Collections"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get all collections.",
+        "tags" : [ "Collections" ]
+      },
+      "post" : {
+        "description" : "Create a collection.",
+        "operationId" : "createCollection",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "dynamicCollection" : {
+                  "$ref" : "#/components/examples/DynamicCollectionExample"
+                },
+                "staticCollection" : {
+                  "$ref" : "#/components/examples/StaticCollectionExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Collection"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "collection" : {
+                    "$ref" : "#/components/examples/CollectionResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/CollectionResponse"
+                }
+              }
+            },
+            "description" : "Created"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409'",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Create a collection.",
+        "tags" : [ "Collections" ]
+      }
+    },
+    "/collections/{collectionId}" : {
+      "delete" : {
+        "description" : "Delete a collection with specified id.",
+        "operationId" : "deleteCollection",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "collectionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Delete a collection with specified id.",
+        "tags" : [ "Collections" ]
+      },
+      "get" : {
+        "description" : "Get a collection with specified id.",
+        "operationId" : "getCollection",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "collectionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "collection" : {
+                    "$ref" : "#/components/examples/CollectionResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/CollectionResponse"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get a collection with specified id.",
+        "tags" : [ "Collections" ]
+      },
+      "put" : {
+        "description" : "Update a collection.",
+        "operationId" : "updateCollection",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "collectionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "dynamicCollection" : {
+                  "$ref" : "#/components/examples/DynamicCollectionExample"
+                },
+                "staticCollection" : {
+                  "$ref" : "#/components/examples/StaticCollectionExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Collection"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409'",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Update a collection.",
+        "tags" : [ "Collections" ]
+      }
+    }
+  },
+  "components" : {
+    "examples" : {
+      "ClassifierExample" : {
+        "value" : {
+          "operation" : "merge",
+          "classifiers" : [ "module-x:Outdoor", "module-y:Rural", "module-z:Weekend" ],
+          "entityIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2" ],
+          "relationshipIds" : [ "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmV=" ]
+        }
+      },
+      "DecoratorExample" : {
+        "value" : {
+          "operation" : "merge",
+          "decorators" : {
+            "module-x:location" : "Stockholm",
+            "module-y:vendor" : "Ericsson"
+          },
+          "entityIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2" ],
+          "relationshipIds" : [ "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmV=" ]
+        }
+      },
+      "EntityResponseExample" : {
+        "value" : {
+          "o-ran-smo-teiv-ran:GNBDUFunction" : [ {
+            "id" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1",
+            "attributes" : {
+              "gNBDUId" : 11,
+              "dUpLMNId" : {
+                "mcc" : 110,
+                "mnc" : 210
+              },
+              "gNBId" : 21,
+              "gNBIdLength" : 2
+            },
+            "decorators" : {
+              "location" : "Stockholm"
+            },
+            "classifiers" : [ "Rural" ],
+            "sourceIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1", "urn:cmHandle:395221E080CCF0FD1924103B15873814" ],
+            "metadata" : {
+              "trustLevel" : "RELIABLE"
+            }
+          } ]
+        }
+      },
+      "EntitiesResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "o-ran-smo-teiv-ran:NRCellDU" : [ {
+              "id" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
+              "attributes" : {
+                "cellLocalId" : 4589,
+                "nCI" : 1,
+                "nRPCI" : 12,
+                "nRTAC" : 310
+              },
+              "decorators" : {
+                "location" : "Stockholm"
+              },
+              "classifiers" : [ "Rural" ],
+              "sourceIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:cmHandle:395221E080CCF0FD1924103B15873814" ],
+              "metadata" : {
+                "trustLevel" : "RELIABLE"
+              }
+            } ]
+          }, {
+            "o-ran-smo-teiv-ran:NRCellDU" : [ {
+              "id" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2",
+              "attributes" : {
+                "cellLocalId" : 4559,
+                "nRPCI" : 32,
+                "nRTAC" : 510
+              },
+              "decorators" : {
+                "location" : "Stockholm"
+              },
+              "classifiers" : [ "Rural" ],
+              "sourceIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:cmHandle:395221E080CCF0FD1924103B15873814" ],
+              "metadata" : {
+                "trustLevel" : "RELIABLE"
+              }
+            } ]
+          } ],
+          "self" : {
+            "href" : "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          },
+          "first" : {
+            "href" : "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          },
+          "prev" : {
+            "href" : "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          },
+          "next" : {
+            "href" : "/domains/RAN/entity-types/NRCellDU/entities?offset=500&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          },
+          "last" : {
+            "href" : "/domains/RAN/entity-types/NRCellDU/entities?offset=678&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          },
+          "totalCount" : 12
+        }
+      },
+      "RelationshipResponseExample" : {
+        "value" : {
+          "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER" : [ {
+            "id" : "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmV=",
+            "aSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
+            "bSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1",
+            "decorators" : {
+              "location" : "Stockholm"
+            },
+            "classifiers" : [ "Rural" ],
+            "sourceIds" : [ ],
+            "metadata" : {
+              "trustLevel" : "RELIABLE"
+            }
+          } ]
+        }
+      },
+      "RelationshipsResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER" : [ {
+              "id" : "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+              "aSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
+              "bSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1",
+              "decorators" : {
+                "location" : "Stockholm"
+              },
+              "classifiers" : [ "Rural" ],
+              "sourceIds" : [ ],
+              "metadata" : {
+                "trustLevel" : "RELIABLE"
+              }
+            } ]
+          }, {
+            "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER" : [ {
+              "id" : "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
+              "aSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2",
+              "bSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2",
+              "decorators" : {
+                "location" : "Stockholm"
+              },
+              "classifiers" : [ "Rural" ],
+              "sourceIds" : [ ],
+              "metadata" : {
+                "trustLevel" : "RELIABLE"
+              }
+            } ]
+          } ],
+          "self" : {
+            "href" : "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
+          },
+          "first" : {
+            "href" : "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
+          },
+          "prev" : {
+            "href" : "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
+          },
+          "next" : {
+            "href" : "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=500&limit=500"
+          },
+          "last" : {
+            "href" : "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=678&limit=500"
+          },
+          "totalCount" : 23
+        }
+      },
+      "EntityTypesResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "name" : "GNBCUUPFunction",
+            "entities" : {
+              "href" : "/domains/RAN/entity-types/GNBCUUPFunction/entities"
+            }
+          }, {
+            "name" : "NRCellDU",
+            "entities" : {
+              "href" : "/domains/RAN/entity-types/NRCellDU/entities"
+            }
+          }, {
+            "name" : "GNBDUFunction",
+            "entities" : {
+              "href" : "/domains/RAN/entity-types/GNBDUFunction/entities"
+            }
+          } ],
+          "self" : {
+            "href" : "/domains/RAN/entity-types?offset=0&limit=500"
+          },
+          "first" : {
+            "href" : "/domains/RAN/entity-types?offset=0&limit=500"
+          },
+          "prev" : {
+            "href" : "/domains/RAN/entity-types?offset=0&limit=500"
+          },
+          "next" : {
+            "href" : "/domains/RAN/entity-types?offset=500&limit=500"
+          },
+          "last" : {
+            "href" : "/domains/RAN/entity-types?offset=678&limit=500"
+          },
+          "totalCount" : 43
+        }
+      },
+      "RelationshipTypesResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "name" : "MANAGEDELEMENT_MANAGES_GNBDUFUNCTION",
+            "relationships" : {
+              "href" : "/domains/RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships"
+            }
+          }, {
+            "name" : "GNBDUFUNCTION_PROVIDES_NRCELLDU",
+            "relationships" : {
+              "href" : "/domains/RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRCELLDU/relationships"
+            }
+          }, {
+            "name" : "NRCELLDU_USES_NRSECTORCARRIER",
+            "relationships" : {
+              "href" : "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
+            }
+          } ],
+          "self" : {
+            "href" : "/domains/RAN/relationship-types?offset=0&limit=500"
+          },
+          "first" : {
+            "href" : "/domains/RAN/relationship-types?offset=0&limit=500"
+          },
+          "prev" : {
+            "href" : "/domains/RAN/relationship-types?offset=0&limit=500"
+          },
+          "next" : {
+            "href" : "/domains/RAN/relationship-types?offset=500&limit=500"
+          },
+          "last" : {
+            "href" : "/domains/RAN/relationship-types?offset=678&limit=500"
+          },
+          "totalCount" : 21
+        }
+      },
+      "DomainsResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "name" : "RAN_CLOUD",
+            "entityTypes" : {
+              "href" : "/domains/CLOUD/entity-types"
+            },
+            "relationshipTypes" : {
+              "href" : "/domains/CLOUD/relationship-types"
+            }
+          }, {
+            "name" : "RAN_OAM",
+            "entityTypes" : {
+              "href" : "/domains/OAM/entity-types"
+            },
+            "relationshipTypes" : {
+              "href" : "/domains/OAM/relationship-types"
+            }
+          }, {
+            "name" : "RAN_LOGICAL",
+            "entityTypes" : {
+              "href" : "/domains/RAN/entity-types"
+            },
+            "relationshipTypes" : {
+              "href" : "/domains/RAN/relationship-types"
+            }
+          } ],
+          "self" : {
+            "href" : "/domains?offset=0&limit=500"
+          },
+          "first" : {
+            "href" : "/domains?offset=0&limit=500"
+          },
+          "prev" : {
+            "href" : "/domains?offset=0&limit=500"
+          },
+          "next" : {
+            "href" : "/domains?offset=500&limit=500"
+          },
+          "last" : {
+            "href" : "/domains?offset=678&limit=500"
+          },
+          "totalCount" : 343
+        }
+      },
+      "QueryMessageExample" : {
+        "value" : {
+          "query" : "WITH point({longitude: 12.78232, latitude: 56.7455}) AS p1, point({latitude: 56.7134, longitude: 12.79565}) AS p2 RETURN point.distance(p1, p2) AS distance"
+        }
+      },
+      "QueryResponseExample" : {
+        "value" : {
+          "query" : "WITH point({longitude: 12.78232, latitude: 56.7455}) AS p1, point({latitude: 56.7134, longitude: 12.79565}) AS p2 RETURN point.distance(p1, p2) AS distance",
+          "response" : "distance : 2873.5"
+        }
+      },
+      "StaticCollectionExample" : {
+        "value" : {
+          "collectionName" : "son-cell-filter-group-1",
+          "criteria" : {
+            "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3" ]
+          }
+        }
+      },
+      "DynamicCollectionExample" : {
+        "value" : {
+          "collectionName" : "son-cell-filter-group-1",
+          "criteria" : {
+            "resourceQuery" : {
+              "url" : "/domains/RAN/entity-types/NRCellDU/entities",
+              "method" : "GET",
+              "queryParams" : {
+                "target:Filter" : "/attributes(cmId)",
+                "scopeFilter" : "/attributes[@nRTAC=310]"
+              },
+              "requestBody" : ""
+            }
+          }
+        }
+      },
+      "CollectionResponseExample" : {
+        "value" : {
+          "id" : "urn:oran:collection:/JHKJ4H5JH45345TB=",
+          "collectionName" : "son-cell-filter-group-1",
+          "criteria" : {
+            "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3" ]
+          }
+        }
+      },
+      "CollectionsResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "id" : "urn:topology:collection:/JHKJ4H5JH45345TB=",
+            "collectionName" : "son-cell-group-1",
+            "criteria" : {
+              "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3" ]
+            }
+          }, {
+            "id" : "urn:topology:collection:/DFJER77R6F7S9VD=",
+            "collectionName" : "son-cell-group-2",
+            "criteria" : {
+              "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=4", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=5", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=6" ]
+            }
+          } ],
+          "self" : {
+            "href" : "/collections?offset=0&limit=500"
+          },
+          "first" : {
+            "href" : "/collections?offset=0&limit=500"
+          },
+          "prev" : {
+            "href" : "/collections?offset=0&limit=500"
+          },
+          "next" : {
+            "href" : "/collections?offset=500&limit=500"
+          },
+          "last" : {
+            "href" : "/collections?offset=678&limit=500"
+          },
+          "totalCount" : 11
+        }
+      },
+      "SchemasResponseExample" : {
+        "value" : {
+          "items" : [ {
+            "name" : "o-ran-smo-teiv-ran",
+            "domain" : [ "RAN_LOGICAL" ],
+            "revision" : "2013-07-15",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-ran/content"
+            }
+          }, {
+            "name" : "o-ran-smo-teiv-cloud",
+            "domain" : [ "RAN_CLOUD" ],
+            "revision" : "2021-05-19",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-cloud/content"
+            }
+          }, {
+            "name" : "o-ran-smo-teiv-oam",
+            "domain" : [ "RAN_OAM'" ],
+            "revision" : "2021-05-19",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-oam/content"
+            }
+          }, {
+            "name" : "o-ran-smo-teiv-common-yang-types",
+            "domain" : [ ],
+            "revision" : "2021-07-04",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-common-yang-types/content"
+            }
+          }, {
+            "name" : "o-ran-smo-teiv-common-yang-extensions",
+            "domain" : [ ],
+            "revision" : "2021-07-04",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-common-yang-extensions/content"
+            }
+          } ],
+          "self" : {
+            "href" : "/schemas?offset=0&limit=500"
+          },
+          "first" : {
+            "href" : "/schemas?offset=0&limit=500"
+          },
+          "prev" : {
+            "href" : "/schemas?offset=0&limit=500"
+          },
+          "next" : {
+            "href" : "/schemas?offset=500&limit=500"
+          },
+          "last" : {
+            "href" : "/schemas?offset=678&limit=500"
+          },
+          "totalCount" : 14
+        }
+      },
+      "SchemaResponseExample" : {
+        "value" : "module stores {yang-version 1.1;namespace \"ietf-inet-types\";prefix module-references;revision \"2020-09-15\" {description\"Sample Model\";}  typedef Mcc {type string;}typedef Mnc {type string;}grouping PLMNId {leaf mcc {type Mcc;}leaf mnc {type Mnc;}}      container RAN_LOGICAL {leaf namespace {type string;}container GNBDUFunction {leaf eiid {type string;}  leaf gNBDUId {type uint16;}leaf gNBID {type uint16;}leaf gNBIdLength {type uint16;}container dUpLMNId{description \"ToDo\";uses PLMNId;}        }container GNBCUUPFunction {leaf eiid {type string;} leaf gNBID {type uint16;}leaf gNBIdLength {type uint16;}}  container GNBCUCPFunction {            leaf eiid {type string;} leaf gNBID {type uint16;}leaf gNBIdLength {type uint16;}leaf gNBCUName {type string;}container pLMNId{description \"ToDo\";uses PLMNId;}      }container NRCellCU {            leaf eiid {type string;} leaf cellLocalId {type uint16;}leaf nCI {type uint16;}leaf nRTAC {type uint16;}container plmnId{description \"ToDo\";uses PLMNId;}        }container NRCellDU {            leaf eiid {type string;} leaf cellLocalId {type uint16;}leaf nCI {type uint16;}leaf nRPCI {type uint16;}leaf nRTAC {type uint16;}}}}"
+      }
+    },
+    "parameters" : {
+      "acceptInHeader" : {
+        "explode" : false,
+        "in" : "header",
+        "name" : "Accept",
+        "required" : true,
+        "schema" : {
+          "default" : "application/json",
+          "example" : "application/json",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "contentTypeInHeader" : {
+        "explode" : false,
+        "in" : "header",
+        "name" : "Content-Type",
+        "required" : true,
+        "schema" : {
+          "default" : "application/json",
+          "example" : "application/json",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "offsetParam" : {
+        "description" : "Pagination offset.",
+        "explode" : true,
+        "in" : "query",
+        "name" : "offset",
+        "required" : false,
+        "schema" : {
+          "default" : 0,
+          "minimum" : 0,
+          "type" : "integer"
+        },
+        "style" : "form"
+      },
+      "limitParam" : {
+        "description" : "Result limiter.",
+        "explode" : true,
+        "in" : "query",
+        "name" : "limit",
+        "required" : false,
+        "schema" : {
+          "default" : 500,
+          "maximum" : 500,
+          "minimum" : 1,
+          "type" : "integer"
+        },
+        "style" : "form"
+      },
+      "domainNameInPath" : {
+        "description" : "domain name",
+        "explode" : false,
+        "in" : "path",
+        "name" : "domainName",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "schemaNameInPath" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "schemaName",
+        "required" : true,
+        "schema" : {
+          "default" : "o-ran-smo-teiv-ran",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "collectionIdInPath" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "collectionId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "entityIdInPath" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "entityId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "relationshipIdInPath" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "relationshipId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "entityTypeNameInPath" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "entityTypeName",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "relationshipTypeNameInPath" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "relationshipTypeName",
+        "required" : true,
+        "schema" : {
+          "example" : "NRCELLDU_USES_NRSECTORCARRIER",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "domainOptionalInQuery" : {
+        "examples" : {
+          "domain" : {
+            "value" : "ran"
+          }
+        },
+        "explode" : true,
+        "in" : "query",
+        "name" : "domain",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "targetFilterOptionalInQuery" : {
+        "description" : "Use *targetFilter* to specify the entity type and attributes to be returned in the REST response. The value for *targetFilter* can also be a list of entity types and attributes.",
+        "examples" : {
+          "targetFilter" : {
+            "value" : "/attributes(nCI,nRPCI)"
+          }
+        },
+        "explode" : true,
+        "in" : "query",
+        "name" : "targetFilter",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "scopeFilterOptionalInQuery" : {
+        "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
+        "examples" : {
+          "scopeFilter" : {
+            "value" : "/attributes[@nRTAC=310\"]"
+          }
+        },
+        "explode" : true,
+        "in" : "query",
+        "name" : "scopeFilter",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      }
+    },
+    "responses" : {
+      "NotFound" : {
+        "content" : {
+          "application/problem+json" : {
+            "example" : {
+              "status" : "404",
+              "title" : "Resource Not Found",
+              "details" : "The requested resource is not found"
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            }
+          }
+        },
+        "description" : "Not Found"
+      },
+      "Unauthorized" : {
+        "content" : {
+          "application/problem+json" : {
+            "example" : {
+              "status" : "401",
+              "title" : "Unauthorized request",
+              "details" : "This request is unauthorized"
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            }
+          }
+        },
+        "description" : "Unauthorized"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/problem+json" : {
+            "example" : {
+              "status" : "403",
+              "title" : "Request Forbidden",
+              "details" : "This request is forbidden"
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            }
+          }
+        },
+        "description" : "Forbidden"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/problem+json" : {
+            "example" : {
+              "status" : "400",
+              "title" : "Bad Request",
+              "details" : "The provided request is not valid"
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            }
+          }
+        },
+        "description" : "Bad Request"
+      },
+      "Conflict" : {
+        "content" : {
+          "application/problem+json" : {
+            "example" : {
+              "status" : "409'",
+              "title" : "Conflicting request",
+              "details" : "The request cannot be processed as the resource is in use."
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            }
+          }
+        },
+        "description" : "Conflict"
+      },
+      "Created" : {
+        "description" : "Created without response body"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/problem+json" : {
+            "example" : {
+              "status" : "500",
+              "title" : "Internal Server Error",
+              "details" : "Internal Server Error occurred"
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            }
+          }
+        },
+        "description" : "Internal Server Error"
+      },
+      "NoContent" : {
+        "content" : { },
+        "description" : "No Content"
+      }
+    },
+    "schemas" : {
+      "Classifier" : {
+        "properties" : {
+          "operation" : {
+            "enum" : [ "merge", "delete" ],
+            "type" : "string"
+          },
+          "classifier" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "entityIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "relationshipIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "title" : "Classifier",
+        "type" : "object"
+      },
+      "CollectionResponse" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "collectionName" : {
+            "type" : "string"
+          },
+          "criteria" : {
+            "$ref" : "#/components/schemas/CollectionResponse_criteria"
+          }
+        },
+        "type" : "object"
+      },
+      "Collection" : {
+        "properties" : {
+          "collectionName" : {
+            "type" : "string"
+          },
+          "criteria" : {
+            "$ref" : "#/components/schemas/TopologySelection"
+          }
+        },
+        "type" : "object"
+      },
+      "Collections" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/CollectionResponse"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "Collections",
+        "type" : "object"
+      },
+      "TopologySelection" : {
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/StaticSelection"
+        }, {
+          "$ref" : "#/components/schemas/DynamicSelection"
+        } ]
+      },
+      "StaticSelection" : {
+        "properties" : {
+          "resourceInstances" : {
+            "items" : {
+              "type" : "string"
+            },
+            "minItems" : 1,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "DynamicSelection" : {
+        "additionalProperties" : false,
+        "properties" : {
+          "resourceQuery" : {
+            "$ref" : "#/components/schemas/DynamicSelection_resourceQuery"
+          }
+        },
+        "type" : "object"
+      },
+      "Decorator" : {
+        "properties" : {
+          "operation" : {
+            "enum" : [ "merge", "delete" ],
+            "type" : "string"
+          },
+          "decorators" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "entityIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "relationshipIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "title" : "Decorator",
+        "type" : "object"
+      },
+      "Domains" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Domains_items_inner"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "Domains",
+        "type" : "object"
+      },
+      "EntityTypes" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/EntityTypes_items_inner"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "EntityTypes",
+        "type" : "object"
+      },
+      "EntitiesResponseMessage" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "description" : "Refer to yang model for schema definition of topology entities",
+              "type" : "object"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "Entities",
+        "type" : "object"
+      },
+      "RelationshipTypes" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/RelationshipTypes_items_inner"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "RelationshipTypes",
+        "type" : "object"
+      },
+      "RelationshipsResponseMessage" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "description" : "Refer to yang model for schema definition of topology relationships",
+              "type" : "object"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "Relationships",
+        "type" : "object"
+      },
+      "ErrorMessage" : {
+        "properties" : {
+          "status" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "details" : {
+            "type" : "string"
+          }
+        },
+        "title" : "Error",
+        "type" : "object"
+      },
+      "Href" : {
+        "properties" : {
+          "href" : {
+            "format" : "uri-template",
+            "type" : "string"
+          }
+        },
+        "title" : "Href",
+        "type" : "object"
+      },
+      "MultipartFile" : {
+        "properties" : {
+          "file" : {
+            "description" : "multipartFile",
+            "format" : "binary",
+            "type" : "string"
+          }
+        },
+        "required" : [ "file" ],
+        "type" : "object"
+      },
+      "QueryMessage" : {
+        "properties" : {
+          "query" : {
+            "type" : "string"
+          }
+        },
+        "title" : "Query",
+        "type" : "object"
+      },
+      "Schema" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "domain" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "revision" : {
+            "type" : "string"
+          },
+          "content" : {
+            "$ref" : "#/components/schemas/Href"
+          }
+        },
+        "title" : "Schema",
+        "type" : "object"
+      },
+      "SchemaList" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Schema"
+            },
+            "type" : "array"
+          },
+          "self" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "totalCount" : {
+            "type" : "integer"
+          }
+        },
+        "title" : "Schemas",
+        "type" : "object"
+      },
+      "CollectionResponse_criteria" : {
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/StaticSelection"
+        }, {
+          "$ref" : "#/components/schemas/DynamicSelection"
+        } ]
+      },
+      "DynamicSelection_resourceQuery" : {
+        "properties" : {
+          "url" : {
+            "type" : "string"
+          },
+          "method" : {
+            "type" : "string"
+          },
+          "queryParams" : {
+            "type" : "object"
+          },
+          "requestBody" : {
+            "type" : "object"
+          }
+        },
+        "required" : [ "url" ],
+        "type" : "object"
+      },
+      "Domains_items_inner" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "entityTypes" : {
+            "$ref" : "#/components/schemas/Href"
+          },
+          "relationshipTypes" : {
+            "$ref" : "#/components/schemas/Href"
+          }
+        }
+      },
+      "EntityTypes_items_inner" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "entities" : {
+            "$ref" : "#/components/schemas/Href"
+          }
+        },
+        "type" : "object"
+      },
+      "RelationshipTypes_items_inner" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "relationships" : {
+            "$ref" : "#/components/schemas/Href"
+          }
+        },
+        "type" : "object"
+      }
+    }
+  }
+}
