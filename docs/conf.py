@@ -37,6 +37,9 @@ redoc = [
                 'page': 'offeredapis/topology-exposure-inventory-openapi',
                 'spec': './offeredapis/topology-exposure-inventory-openapi.yaml',
                 'embed': True,
+                'opts': {
+                    'suppress-warnings': True
+                }
             }
 ]
 html_extra_path = [
