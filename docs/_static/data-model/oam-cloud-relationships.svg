@@ -1,0 +1,37 @@
+<svg width="194px" height="218px"
+ viewBox="0.00 0.00 193.88 218.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 214.0)">
+<title>moduleName</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-214 189.88,-214 189.88,4 -4,4"/>
+<!-- CloudifiedNF -->
+<g id="node1" class="node">
+<title>CloudifiedNF</title>
+<ellipse fill="none" stroke="black" cx="92.94" cy="-18" rx="71.49" ry="18"/>
+<text text-anchor="middle" x="92.94" y="-14.3" font-family="Times,serif" font-size="14.00">CloudifiedNF</text>
+</g>
+<!-- ManagedElement -->
+<g id="node2" class="node">
+<title>ManagedElement</title>
+<ellipse fill="none" stroke="black" cx="92.94" cy="-105" rx="92.88" ry="18"/>
+<text text-anchor="middle" x="92.94" y="-101.3" font-family="Times,serif" font-size="14.00">ManagedElement</text>
+</g>
+<!-- ManagedElement&#45;&#45;CloudifiedNF -->
+<g id="edge1" class="edge">
+<title>ManagedElement&#45;&#45;CloudifiedNF</title>
+<path fill="none" stroke="black" d="M92.94,-86.8C92.94,-72.05 92.94,-50.92 92.94,-36.18"/>
+<text text-anchor="middle" x="134.44" y="-57.8" font-family="Times,serif" font-size="14.00">DEPLOYED</text>
+</g>
+<!-- NFDeployment -->
+<g id="node3" class="node">
+<title>NFDeployment</title>
+<ellipse fill="none" stroke="black" cx="92.94" cy="-192" rx="81.49" ry="18"/>
+<text text-anchor="middle" x="92.94" y="-188.3" font-family="Times,serif" font-size="14.00">NFDeployment</text>
+</g>
+<!-- NFDeployment&#45;&#45;ManagedElement -->
+<g id="edge2" class="edge">
+<title>NFDeployment&#45;&#45;ManagedElement</title>
+<path fill="none" stroke="black" d="M92.94,-173.8C92.94,-159.05 92.94,-137.92 92.94,-123.18"/>
+<text text-anchor="middle" x="123.44" y="-144.8" font-family="Times,serif" font-size="14.00">SERVES</text>
+</g>
+</g>
+</svg>
