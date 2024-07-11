@@ -55,6 +55,9 @@ class EndToEndTest {
     @Value("${schema.model.output}")
     private String actualModelSql;
 
+    @Value("${graphs.output}")
+    private String graphOutput;
+
     @Test
     @Order(1)
     void generateDataAndModelSchemaTest() throws IOException {
@@ -63,10 +66,13 @@ class EndToEndTest {
         processor.process();
         File generatedDataSql = new File(actualDataSql);
         File generatedModelSql = new File(actualModelSql);
+        File generatedGraphs = new File(graphOutput);
 
         //then
         Assertions.assertTrue(generatedDataSql.exists());
         Assertions.assertTrue(generatedModelSql.exists());
+        Assertions.assertTrue(generatedGraphs.exists() && generatedGraphs.isDirectory() && generatedGraphs
+                .listFiles().length > 0);
     }
 
     @Test
