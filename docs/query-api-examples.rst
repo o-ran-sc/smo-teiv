@@ -98,7 +98,7 @@ and the *scopeFilter* is the WHERE tag.
 
 A detailed explanation about the *targetFilter* and *scopeFilter*
 parameters can be found in :doc:`Supported filter options
-<api-documentation>`.
+<supported-filter-options>`.
 
 **Example:**
 
