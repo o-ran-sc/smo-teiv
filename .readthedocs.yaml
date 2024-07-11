@@ -28,7 +28,7 @@ build:
     python: "3.11"
   jobs:
     post_build:
-      - cp -v docs/offeredapis/html/index.html $READTHEDOCS_OUTPUT/html/offeredapis/html
+      - cp -v docs/offeredapis/html/index.html $READTHEDOCS_OUTPUT/html/offeredapis/html/
       - cp -v docs/offeredapis/index.html $READTHEDOCS_OUTPUT/html/offeredapis/
       - cp -v docs/offeredapis/topology-exposure-inventory-openapi.yaml $READTHEDOCS_OUTPUT/html/offeredapis/
       - cp -v docs/offeredapis/topology-exposure-inventory-openapi.json $READTHEDOCS_OUTPUT/html/offeredapis/
