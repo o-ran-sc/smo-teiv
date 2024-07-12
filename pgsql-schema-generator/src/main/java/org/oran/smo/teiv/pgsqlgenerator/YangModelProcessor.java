@@ -92,6 +92,7 @@ public class YangModelProcessor {
             {
                 put("string", TEXT);
                 put("uint32", BIGINT);
+                put("int32", BIGINT);
                 put("or-teiv-types:_3GPP_FDN_Type", TEXT);
                 put("enumeration", TEXT);
                 put("types3gpp:PLMNId", JSONB);
@@ -100,6 +101,7 @@ public class YangModelProcessor {
                 put("[uses types3gpp:PLMNId]", JSONB);
                 put("geo:geo-location", "geography");
                 put("uint64", BIGINT);
+                put("int64", BIGINT);
                 put("decimal64", DECIMAL);
                 put("[uses or-teiv-types:CM_ID]", JSONB);
             }

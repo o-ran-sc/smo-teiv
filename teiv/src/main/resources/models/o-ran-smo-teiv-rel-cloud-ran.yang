@@ -1,6 +1,6 @@
-module o-ran-smo-teiv-cloud-to-ran {
+module o-ran-smo-teiv-rel-cloud-ran {
     yang-version 1.1;
-    namespace "urn:o-ran:smo-teiv-cloud-to-ran";
+    namespace "urn:o-ran:smo-teiv-rel-cloud-ran";
     prefix or-teiv-cloudtoran;
 
     import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
@@ -40,7 +40,7 @@ module o-ran-smo-teiv-cloud-to-ran {
         or-teiv-yext:label 0.3.0;
     }
 
-    or-teiv-yext:domain CLOUD_TO_RAN;
+    or-teiv-yext:domain REL_CLOUD_RAN;
 
     or-teiv-yext:biDirectionalTopologyRelationship NFDEPLOYMENT_SERVES_GNBDUFUNCTION { // 0..n to 0..m
 

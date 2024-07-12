@@ -1,15 +1,15 @@
-module o-ran-smo-teiv-oam-to-ran {
+module o-ran-smo-teiv-rel-oam-ran {
     yang-version 1.1;
-    namespace "urn:o-ran:smo-teiv-oam-to-ran";
-    prefix or-teiv-oamtoran;
+    namespace "urn:o-ran:smo-teiv-rel-oam-ran";
+    prefix or-teiv-rel-oamran;
 
-    import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
 
-    import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
 
-    import o-ran-smo-teiv-oam {prefix or-teiv-oam; }
+    import o-ran-smo-teiv-oam { prefix or-teiv-oam; }
 
-    import o-ran-smo-teiv-ran {prefix or-teiv-ran; }
+    import o-ran-smo-teiv-ran { prefix or-teiv-ran; }
 
     organization "ORAN";
     contact "The Authors";
@@ -35,12 +35,12 @@ module o-ran-smo-teiv-oam-to-ran {
 
     SPDX-License-Identifier: Apache-2.0";
 
-    revision "2024-05-02" {
+    revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
     }
 
-    or-teiv-yext:domain OAM_TO_RAN;
+    or-teiv-yext:domain REL_OAM_RAN;
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_ENODEBFUNCTION {   // 1 to 0..n
 

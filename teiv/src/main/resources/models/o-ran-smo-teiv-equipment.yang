@@ -34,12 +34,9 @@ module o-ran-smo-teiv-equipment {
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an \"AS IS\" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+    See the License for the specific language governing permissions and";
 
-    SPDX-License-Identifier: Apache-2.0";
-
-    revision "2024-05-02" {
+    revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
     }
@@ -47,83 +44,70 @@ module o-ran-smo-teiv-equipment {
     or-teiv-yext:domain EQUIPMENT;
 
     list AntennaModule {
-        description "An Antenna Module represents the
-                    physical aspect of an antenna.";
+        description "An Antenna Module represents the physical aspect of an
+            antenna.";
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
 
         container attributes {
-            leaf fdn {
-                description "This Full Distinguished Name (FDN) identifies
-                            an instance of the AntennaSubUnit MO. It contains
-                            the full path from the Subnetwork to the
-                            AntennaSubUnit.";
-                type or-teiv-types:_3GPP_FDN_Type;
-            }
-
             leaf antennaModelNumber {
-                description "Vendor-specific antenna model
-                            identifier. This attribute is part of
-                            AISG v3 ADB Standard and has
-                            no operational impact.";
+                description "Vendor-specific antenna model identifier. This
+                    attribute is part of AISG v3 ADB Standard and has no
+                    operational impact.";
                 type string;
             }
 
             leaf mechanicalAntennaBearing {
-                description "Antenna bearing on antenna subunit
-                            where antenna unit is installed.";
-                type uint32;
+                description "Antenna bearing on antenna subunit where antenna
+                    unit is installed.";
+                type int32;
             }
 
             leaf mechanicalAntennaTilt {
-                description "The fixed antenna tilt of the installation,
-                            defined as the inclination of the antenna
-                            element respect to the vertical plane.
-                            It is a signed value. Positive indicates
-                            downtilt, and negative indicates uptilt.";
-                type uint32;
+                description "The fixed antenna tilt of the installation, defined
+                    as the inclination of the antenna element respect to the
+                    vertical plane. It is a signed value. Positive indicates
+                    downtilt, and negative indicates uptilt.";
+                type int32;
             }
 
             leaf positionWithinSector {
-                description "Antenna unit position within sector.
-                            This attribute is part of AISG v3 ADB
-                            Standard and has no operational impact.";
+                description "Antenna unit position within sector. This attribute
+                    is part of AISG v3 ADB Standard and has no operational
+                    impact.";
                 type string;
             }
 
             leaf totalTilt {
-                description "Total antenna elevation including the
-                            installed tilt and the tilt applied by
-                            the Remote Electrical Tilt (RET).";
-                type uint32;
+                description "Total antenna elevation including the installed
+                    tilt and the tilt applied by the Remote Electrical
+                    Tilt (RET).";
+                type int32;
             }
 
             leaf electricalAntennaTilt {
                 description "Electrically-controlled tilt of main beam maximum
-                            with respect to direction orthogonal to antenna
-                            element axis (see 3GPP TS 25.466). Value is signed;
-                            tilt down is positive, tilt up is negative.";
-                type uint32;
+                    with respect to direction orthogonal to antenna element
+                    axis (see 3GPP TS 25.466). Value is signed; tilt down is
+                    positive, tilt up is negative.";
+                type int32;
             }
 
             leaf-list antennaBeamWidth {
-                description "The angular span of the main lobe of the antenna radiation
-                              pattern in the horizontal plane. Measured in degrees.";
+                description "The angular span of the main lobe of the antenna
+                    radiation pattern in the horizontal plane. Measured in
+                    degrees.";
                 type uint32;
             }
 
             uses geo:geo-location;
-
-            container cmId {
-                uses or-teiv-types:CM_ID;
-            }
         }
     }
 
     list Site {
-        description "A site is a physical location where an Antenna or
-                    Physical NF can be installed.";
+        description "A site is a physical location where an equipment can be
+            installed.";
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
@@ -136,35 +120,6 @@ module o-ran-smo-teiv-equipment {
 
             uses geo:geo-location;
 
-            container cmId {
-                uses or-teiv-types:CM_ID;
-            }
-        }
-    }
-
-    list PhysicalNF {
-        description "Represents a Physical NF,
-                    which is used to realise Network Functions.";
-
-        uses or-teiv-types:Top_Grp_Type;
-        key id;
-
-        container attributes {
-            leaf name {
-                description "Name of Physical NF.";
-                type string;
-            }
-
-            leaf type {
-                description "Type of Physical NF.";
-                type string;
-            }
-
-            uses geo:geo-location;
-
-            container cmId {
-                uses or-teiv-types:CM_ID;
-            }
         }
     }
 
@@ -183,25 +138,6 @@ module o-ran-smo-teiv-equipment {
             description "Site where Antenna Module is installed.";
             or-teiv-yext:bSide Site;
             type instance-identifier;
-        }
-    }
-
-    or-teiv-yext:biDirectionalTopologyRelationship PHYSICALNF_INSTALLED_AT_SITE { // 1..n to 0..1
-
-        uses or-teiv-types:Top_Grp_Type;
-        key id;
-
-        leaf installed-at-site {
-            description "Physical NF installed at Site.";
-            or-teiv-yext:aSide PhysicalNF;
-            type instance-identifier;
-        }
-
-        leaf-list installed-physicalNF {
-            description "Site where Physical NF is installed.";
-            or-teiv-yext:bSide Site;
-            type instance-identifier;
-            min-elements 1;
         }
     }
 }

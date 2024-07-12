@@ -1,6 +1,6 @@
-module o-ran-smo-teiv-oam-to-cloud {
+module o-ran-smo-teiv-rel-oam-cloud {
     yang-version 1.1;
-    namespace "urn:o-ran:smo-teiv-oam-to-cloud";
+    namespace "urn:o-ran:smo-teiv-rel-oam-cloud";
     prefix or-teiv-oamtocloud;
 
     import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
@@ -40,7 +40,7 @@ module o-ran-smo-teiv-oam-to-cloud {
         or-teiv-yext:label 0.3.0;
     }
 
-    or-teiv-yext:domain OAM_TO_CLOUD;
+    or-teiv-yext:domain REL_OAM_CLOUD;
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF {  // 0..1 to 1
 

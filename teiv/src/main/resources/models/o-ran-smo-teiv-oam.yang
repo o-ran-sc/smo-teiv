@@ -3,9 +3,9 @@ module o-ran-smo-teiv-oam {
     namespace "urn:o-ran:smo-teiv-oam";
     prefix or-teiv-oam;
 
-    import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
 
-    import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
 
     organization "ORAN";
     contact "The Authors";
@@ -33,7 +33,7 @@ module o-ran-smo-teiv-oam {
 
     SPDX-License-Identifier: Apache-2.0";
 
-    revision "2024-05-02" {
+    revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
     }
@@ -41,26 +41,13 @@ module o-ran-smo-teiv-oam {
     or-teiv-yext:domain OAM;
 
     list ManagedElement {
-        description "A Managed Element (ME) is a node into a telecommunication network
-                    providing support and/or service to subscribers. An ME communicates
-                    with a manager application (directly or indirectly) over one or more
-                    interfaces for the purpose of being monitored and/or controlled.";
+        description "A Managed Element (ME) is a node into a telecommunication
+            network providing support and/or service to subscribers. An ME
+            communicates with a manager application (directly or indirectly)
+            over one or more interfaces for the purpose of being monitored
+            and/or controlled.";
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
-
-        container attributes {
-            leaf fdn {
-                description "This Full Distinguished Name (FDN) identifies
-                            an instance of the ManagedElement MO. It contains
-                            the full path from the Subnetwork to the
-                            ManagedElement.";
-                type or-teiv-types:_3GPP_FDN_Type;
-            }
-
-            container cmId {
-                uses or-teiv-types:CM_ID;
-            }
-        }
     }
 }
