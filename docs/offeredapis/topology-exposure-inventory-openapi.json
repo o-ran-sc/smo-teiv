@@ -1,13 +1,13 @@
 {
   "openapi" : "3.0.2",
   "info" : {
-    "description" : "Topology and Inventory data is the information that represents entities in a telecommunications network and the relationships between them that provide insight into a particular aspect of the network of importance to specific use cases. Topology and Inventory data can be derived from inventory, configuration, or other data.\n\nTopology and Inventory supports several topology domains. A domain is a grouping of network topology entities which handles topology data.\n\nEntities are enabling the modelling and storage of complex network infrastructure and relationships.\n\nRelationships are a uni-directional connection between two entities, one of which is the originating side (A-side) and the other is the terminating side (B-side). The order of the sides matters since it defines the relationship itself which must be unique\n\nTopology and Inventory API provides the capabilities to fetch topology data. Using the filtering options, it is possible to define more specific query requests.\n\n## Querying simple entities\nEntityType is used as the root of the queries (from here referred as RootObject).  Every other object, either *targetFilter* or *scopeFilter*, has to relate to the RootObject. The queries are constructed starting from the RootObject and all other objects are joined to it. If there is no connection between the RootObject and the other object(s), the query will not get constructed. The RootObject still can be retrieved and filtered using the */attributes*.\n\n| USE CASE                                                                                                                                                                                                                                                                                                                                                                                                       |  ENTITY TYPE    |  TARGET FILTER                                                                         | SCOPE FILTER                                                                                                    | QUERY RESULT                                                                                                      |\n|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------|:----------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------|\n| To return the ids for all instances of the entityType used in the query.                                                                                                                                                                                                                                                                                                                                       |&ensp;  GNBDUFunction  |                                                                                        |                                                                                                                 | All ids of every GNBDUFunction                                                                                    |\n| To return all attributes of every instance of the entityType used in the query.                                                                                                                                                                                                                                                                                                                                |&ensp;  GNBDUFunction  |&ensp;  /attributes                                                                           |                                                                                                                 | All GNBDUFunctions with every attribute                                                                           |\n| To return every instance of the entityType used in the query, but only the attribute that was defined in the *targetFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                                          |&ensp;  GNBDUFunction  |&ensp;  /attributes(gNBId) <br/> &emsp;&ensp; **OR** <br/> /attributes/gNBId                      |                                                                                                             | All FDNs of every GNBDUFunction                                                                                   |\n| To return every instance of the entityType used in the query, but only the attributes that were defined in the *targetFilter* parameter. <br/> Case 1: The attributes must be separated by a comma \",\" in case of using parenthesis \"()\". <br/> Case 2: The attributes must be separated by a semicolon \";\" in case of using slash \"/\". <br/> Note: The attributes must be valid *targetFilter* of the object. |&ensp;  GNBDUFunction  |&ensp;  /attributes(gNBId, gNBIdLength)  <br/> &emsp;&ensp; **OR** <br/> /attributes/gNBId; /attributes/gNBIdLength |                                                                                           | All Ids and FDNs of every GNBDUFunction                                                                           |\n| To return the ids for all instances of the entityType used in the query, that matches the given attribute in the *scopeFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                                       |&ensp;  GNBDUFunction  |                                                                                       | /attributes[contains (@fdn, \"/SubNetwork=Ireland/\")]                                                             | Unique set of ids of GNBDUFunctions, where fdn contains \"SubNetwork=Ireland\"                                      |\n| To return the ids for all instances of the entityType used in the query, that matches the given attributes in the *scopeFilter* parameter. <br/> Note: the entityType and the object in the *scopeFilter* parameter must match, and the attributes must be valid field or fields of the object.  The attributes must be separated by a comma \",\".                                                              |&ensp;  GNBDUFunction  |                                                                                       | /attributes[@gNBIdLength=3 and @gNBId=111]                                                                | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 and the gNBId equals 111                      |\n| To return the ids for all instances of the entityType used in the query, that satisfies every condition in one of the tags in the *scopeFilter* parameter. A tag is a complete unit of *scopeFilter* parameter surrounded by square brackets. <br/> Note: The attributes must be valid field or fields of the object.                                                                                          |&ensp;  GNBDUFunction  |                                                                                       | /attributes[@gNBIdLength=3 and @gNBId=111]  <br/> &emsp;&ensp; **OR** <br/> /attributes[@gNBIdLength=3 and @gNBId=112]             | Unique set of ids of GNBDUFunctions, where where the gNBIdLength equals 3 and the gNBId is either 111 or 112      |\n\n## Querying connected entities\nIt is possible to get information about directly connected objects as well. If entityType is present in the *targetFilter* parameter, the query provides information about that entityType itself.\n\n| USE CASE                                                                                                                                                                                                                                                                                                                                                          | ENTITY TYPE   | TARGET FILTER                       | SCOPE FILTER                                              | QUERY RESULT                                                                                                                                      |\n|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-------------------------------------|-----------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|\n| To return the ids for all instances of the entityType in the *targetFilter* parameter, if they are directly related to the queried entityType.                                                                                                                                                                                                                    |&ensp; GNBDUFunction |&ensp; /NRCellDU                           |                                               | Unique set of ids of NRCellDUs that relates to GNBDUFunctions directly with any relationship type                                                 |\n| To return the ids for all instances of the entityTypes in the *targetFilter* parameter, if they are directly related to the entityType.                                                                                                                                                                                                                           |&ensp; GNBDUFunction |&ensp; /NRCellDU ;&ensp; /NRSectorCarrier        |                                         | Unique set of ids of NRCellDUs and NRSectorCarriers that relates to GNBDUFunctions directly with any relationship type                            |\n| To return the ids for all instances of the queried entityType that has one or more direct relationships with the entityType specified in the *scopeFilter* parameter.                                                                                                                                                                                             |&ensp; GNBDUFunction |                                     | /AntennaCapability                                  | Unique set of ids of GNBDUFunctions that are directly related to AntennaCapability with any relationship type                                     |\n| To return the ids for all instances of the queried entityType that has one or more direct relationships with at least one of the entityTypes specified in the *scopeFilter* parameter.                                                                                                                                                                            |&ensp; GNBDUFunction |                                     | /AntennaCapability <br/> &emsp;&ensp; **OR** <br/> /NRCellDU | Unique set of ids of GNBDUFunctions that are directly related to AntennaCapability or NRCellDU with any relationship type                |\n",
+    "description" : "Topology Exposure and Inventory data is the information that represents entities\nin a telecommunications network and the relationships between them that\nprovide insight into a particular aspect of the network of importance to\nspecific use cases. Topology and Inventory data can be derived from\ninventory, configuration, or other data.\n\nTopology Exposure and Inventory supports several topology domains. A domain is a\ngrouping of topology and inventory entities that handles topology and\ninventory data.\n\nEntities are enabling the modelling and storage of complex network\ninfrastructure and relationships.\n\nA relationship is a bi-directional connection between two entities, one\nof which is the originating side (A-side) and the other is the\nterminating side (B-side). The order of the sides matters since it\ndefines the relationship itself which must be unique.\n\nClassifier (also known as tag or label) permits the association of a \nwell defined user specified string with an entity or relationship.\n\nDecorators are user-defined attributes (key-value pairs) which can\nbe applied to topology entities and relationships.\n\nTopology Exposure and Inventory API provides the capabilities to fetch topology\ndata. Using the filtering options, it is possible to define more specific\nquery requests.\n\n## Querying simple entities\nThe *entityTypeName* is used as the root of the queries (from here\nreferred to as RootObject). Every other object, either in *targetFilter* or\n*scopeFilter*, has to relate to the RootObject. The queries are\nconstructed starting from the RootObject and all other objects are joined\nto it. If there is no connection between the RootObject and the other\nobject(s), the query is not constructed. The RootObject still can be\nretrieved and filtered using the */attributes*.\n\n| Use case                                                                                                                                                                                                                                                                                                                                                                                             | domainName | entityTypeName | targetFilter                    | scopeFilter                                                                             | Query result                                                                                                                         |\n|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|:---------------|:--------------------------------|:----------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------|\n| To return the ids for all instances of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 |                                                                                         | All ids of every GNBDUFunction                                                                                                       |\n| To return all attributes of every instance of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                  | RAN        | GNBDUFunction  | /attributes                     |                                                                                         | All GNBDUFunctions with every attribute                                                                                              |\n| To return every instance of the entityTypeName used in the query, but only the attribute that was defined in the *targetFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                            | RAN        | GNBDUFunction  | /attributes(gNBId)              |                                                                                         | All gNBIds of every GNBDUFunction                                                                                                    |\n| To return every instance of the entityTypeName used in the query, but only the attributes that were defined in the *targetFilter* parameter. <br/> Note: The attributes must be separated by a comma \",\" when using parenthesis \"()\".                                                                                                                                                                | RAN        | GNBDUFunction  | /attributes(gNBId, gNBIdLength) |                                                                                         | All gNBIds and gNBIdLengths of every GNBDUFunction                                                                                   |\n| To return the ids for all instances of the entityTypeName used in the query, that matches the given property in the *scopeFilter* parameter.                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 | /sourceIds[contains (@item, 'SubNetwork=Ireland')]                                      | Unique set of ids of GNBDUFunctions, where sourceIds contains *SubNetwork=Ireland*                                                   |\n| To return the ids for all instances of the entityTypeName used in the query, that matches the given attributes in the *scopeFilter* parameter. <br/> Note: The attributes must be separated by a *AND* or *OR*\".                                                                                                                                                                                     | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=3 and @gNBId=111]                                             | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 and the gNBId equals 111                                         |\n| To return the ids for all instances of the entityTypeName used in the query, that satisfies one of the conditions in the *scopeFilter* parameter. A condition is a complete unit of *scopeFilter* parameter surrounded by square brackets. <br/> Note: Multiple conditions can be given in the scopeFilter separated by a semicolon \";\" to represent AND, or a pipe symbol \"&#124;\" to represent OR. | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=3]  &#124; /sourceIds[contains (@item, 'SubNetwork=Ireland')] | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 or the sourceIds contains an item with \"SubNetwork=Ireland\"      |\n\n## Querying connected entities\nThe *entityTypeName* is used as the root of the queries.\n\n| Use case                                                                                                                                       | domainName  | entityTypeName | targetFilter | scopeFilter                                                                                                                                                                                                                                   | Query result                                                                                                                                                                                                             |\n|:-----------------------------------------------------------------------------------------------------------------------------------------------|-------------|:---------------|:-------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| To return the ids for all instances of an entityTypeName related by an association.                                                            | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement                                                                                                                                                                                                                    | All ENodeBFunction entities that are managed by any Managed Element.                                                                                                                                                     |\n| To return the ids for all instances of an entityTypeName related by an association to another entity specified by its *id*.                    | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement [@id = 'urn:3gpp:dn: ManagedElement=1']                                                                                                                                                                            | All ENodeBFunction entities that are managed by by the Managed Element *urn:3gpp:dn: ManagedElement=1*.                                                                                                                  |\n| To return the attributes for all instances of an entityTypeName related by one or more associations to other entities specified by their *id*. | REL_OAM_RAN | ENodeBFunction | /attributes  | /attributes [@enbId=1] ; /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=1'] &#124;  /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=2'] ; /provided-euTranCell [@id='urn:3gpp:dn: ManagedElement=1, EUtranCell=2'] | All EnodeBFunction entities with enbId as *1*, managed by the Managed Element *urn:3gpp:dn: ManagedElement=1* or *urn:3gpp:dn: ManagedElement=2*, and provides EuTranCell *urn:3gpp:dn: ManagedElement=1, EUtranCell=2*. |\n\n## Querying entities for relationships\nThe *entityTypeName* is used as the root of the queries.\n\n| Use case                                                                                                           | domainName  | entityTypeName | entityId                                       | targetFilter                            | scopeFilter                                                        | Query result                                                                                                                                                                                        |\n|:-------------------------------------------------------------------------------------------------------------------|-------------|:---------------|------------------------------------------------|:----------------------------------------|:-------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| To return the relationships for a given entity specified by its id.                                                | RAN         | GNBDUFunction  | urn:3gpp:dn: ManagedElement=1, GNBDUFunction=1 |                                         |                                                                    | All relations for the GNBDUFunction with id *urn:3gpp:dn: ManagedElement=1, GNBDUFunction=1*.                                                                                                       |\n| To return specific relationships for a given entity specified by its id.                                           | REL_OAM_RAN | GNBDUFunction  | urn:3gpp:dn: ManagedElement=1, GNBDUFunction=1 | /MANAGEDELEMENT _MANAGES _GNBDUFUNCTION |                                                                    | All *MANAGEDELEMENT _MANAGES _GNBDUFUNCTION* relations for the GNBDUFunction with id *urn:3gpp:dn: ManagedElement=1, GNBDUFunction=1*.                                                              |\n| To return specific relationships for an entity specified by its id to another entity using its id and association. | REL_OAM_RAN | GNBDUFunction  | urn:3gpp:dn: ManagedElement=1, GNBDUFunction=1 |                                         | /managed-by-managedElement [@id = 'urn:3gpp:dn: ManagedElement=1'] | All *MANAGEDELEMENT _MANAGES _GNBDUFUNCTION* relations for the GNBDUFunction with id *urn:3gpp:dn: ManagedElement=1, GNBDUFunction=1* where the managed element is *urn:3gpp:dn: ManagedElement=1*. |\n\n## Querying on relationships\nHere, the *relationshipTypeName* is used as the root of the queries.\n\n| Use case                                                                                                 | domainName  | relationshipTypeName                    | targetFilter | scopeFilter                                                      | Query result                                                                                                                                                 |\n|:---------------------------------------------------------------------------------------------------------|-------------|:----------------------------------------|:-------------|:-----------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| To return all relationships for a specified relationship type.                                           | REL_OAM_RAN | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION |              |                                                                  | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION relationships.                                                                                                     |\n| To return all relationships for a specified relationship type with a specified association to an entity. | REL_OAM_RAN | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION |              | /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=1'] | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION relationships having an association *managed-by-managedElement* to ManagedElement *urn:3gpp:dn: ManagedElement=1*. |\n\n## Querying on classifiers and decorators\nThe *domainName* is used as the root of the queries.\n\n| Use case                                                                                                                                          | domainName | targetFilter | scopeFilter                                               | Query result                                                                                                           |\n|:--------------------------------------------------------------------------------------------------------------------------------------------------|------------|--------------|:----------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------|\n| Return all related entity IDs that are exactly matched with the specified classifier with given domain name.                                      | RAN        |              | /classifiers[@item = 'gnbdu-function-model:Indoor']       | All the entity IDs that are classified with \"gnbdu-function-model:Indoor\" in RAN domain.                               |\n| Return all related entity IDs that are partially matched for the given classifier with given domain name.                                         | RAN        |              | /classifiers[contains(@item, 'Ind')]                      | All the entity IDs that are partially matched with \"Ind\" in RAN domain.                                                |\n| Return all related entity IDs that are exactly matched with the key-value pair that specified decorators with given domain name.                  | RAN        |              | /decorators[@gnbdu-function-model:textdata = 'Stockholm'] | All the entity IDs that are exactly matched with \"gnbdu-function-model:textdata = 'Stockholm'\" in RAN domain.          |\n| Return all related entity IDs that are exactly matched with key parameter where the value of the decorator is unknown with given domain name.     | RAN        |              | /decorators[contains(@gnbdu-function-model:textdata, \"\")] | All the entity IDs that are exactly matched with \"gnbdu-function-model:textdata as key of the decorator in RAN domain. |\n\nThe *entityName* is used as the root of the queries.\n\n| Use case                                                                                                                                                                                         | entityName   | relationshipTypeName | targetFilter              | scopeFilter                                                                                                     | Query result                                                                                                                                                                                               |\n|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|:---------------------|:--------------------------|:----------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| Return all related entity IDs and classifiers.                                                                                                                                                   | NRCellDU     |                      | /classifiers              |                                                                                                                 | All NRCellDU IDs and classifiers.                                                                                                                                                                          |\n| Return all related entity IDs and decorators.                                                                                                                                                    | NRCellDU     |                      | /decorators               |                                                                                                                 | All NRCellDU IDs and decorators.                                                                                                                                                                           |\n| Return all related entity IDs that are exact match for the given classifiers and decorators.                                                                                                     | NRCellDU     |                      |                           | /classifiers[@item = 'gnbdu-function-model:Indoor']; /decorators [@gnbdu-function-model:textdata = 'Stockholm'] | All NRCellDU IDs where key of the decorator is \"gnbdu-function-model:textdata\" and the value of the decorator is 'Stockholm'\" and where classifier exactly contains \"gnbdu-function-model:Indoor\".         |\n| Return all related entity IDs and classifiers that are partially matched for the given classifier.                                                                                               | NRCellDU     |                      | /classifiers              | /classifiers[contains(@item, 'Ind')]                                                                            | All NRCellDU IDs and classifiers partially contains the text \"Ind\".                                                                                                                                        |\n| Return all related entity IDs and decorators where key is a exact match and value is partially match.                                                                                            | NRCellDU     |                      | /decorators               | /decorators[contains(@gnbdu-function-model:textdata, 'Stoc')]                                                   | All NRCellDU IDs and where key of the decorator is \"gnbdu-function-model:textdata\" and the value of the decorator partially contains 'Stoc'.                                                               |\n| Return all related entity IDs, decorators and classifiers where key of the decorator is a exact match and value partially matches, and classifiers partially contains from the given parameters. | NRCellDU     |                      | /classifiers; /decorators | /classifiers[contains(@item, 'Ind')]; /decorators[contains(@gnbdu-function-model:textdata, 'Stoc')]             | All NRCellDU IDs and decorators where key of the decorator is \"gnbdu-function-model:textdata\" and the value of the decorator partially contains 'Stoc' and classifiers partially contains the text \"Ind\".  |\n\n The *relationshipTypeName* is used as the root of the queries.\n\n| Use case                                                                                                                                                                                               | entityName | relationshipTypeName                    | targetFilter              | scopeFilter                                                                                                                       | Query result                                                                                                                                                                                                                                |\n|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|:----------------------------------------|:--------------------------|:----------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| Return all related relationships IDs and classifiers.                                                                                                                                                  |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /classifiers              |                                                                                                                                   | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION IDs and classifiers.                                                                                                                                                                            |\n| Return all related relationships IDs and decorators.                                                                                                                                                   |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /decorators               |                                                                                                                                   | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION IDs and decorators.                                                                                                                                                                             |\n| Return all related relationship IDs that are exact match for the given classifier and decorators.                                                                                                      |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION |                           | /classifiers[@item = 'gnbdu-function-model:Indoor']; /decorators [@gnbdu-function-model:textdata = 'Stockholm']                   | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION IDs and decorators where key of the decorator is \"gnbdu-function-model:textdata\" and the value of the decorator is 'Stockholm'\" and classifiers exactly contains \"gnbdu-function-model:Indoor\". |\n| Return all related relationships IDs and classifiers that are partially matched for the given classifier.                                                                                              |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /classifiers              | /classifiers[contains(@item, 'Ind')]                                                                                              | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION and classifiers partially contains the text \"Ind\".                                                                                                                                              |\n| Return all related relationships IDs and decorators where key is a exact match and value is partially match.                                                                                           |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /decorators               | /decorators[contains(@gnbdu-function-model:textdata, 'Stock')]                                                                    | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION and where key of the decorator is \"gnbdu-function-model:textdata\" and the value of the decorator partially contains 'Stock'.                                                                    |\n| Return all related relationships IDs,decorators and classifiers where key of the decorator is a exact match and value partially matches, and classifiers partially contains from the given parameters. |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /classifiers; /decorators | /classifiers[contains(@item, 'Ind')]; /decorators[contains(@gnbdu-function-model:textdata, 'Stock')]                              | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION IDs and decorators where key of the decorator is \"gnbdu-function-model:textdata\" and the value of the decorator partially contains 'Stock' and classifiers partially contains the text \"Ind\".   |\n",
     "license" : {
       "name" : "Copyright (C) 2024 Ericsson, Modifications Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.",
       "url" : "http://www.apache.org/licenses/LICENSE-2.0"
     },
     "termsOfService" : "http://www.apache.org/licenses/LICENSE-2.0",
-    "title" : "Topology and Inventory API",
+    "title" : "Topology Exposure and Inventory API",
     "version" : "0.11.0",
     "x-api-id" : "52812f69-83ac-4dfa-b83a-1a1bdf2d49b8",
     "x-audience" : "external-public"
@@ -28,9 +28,6 @@
     "description" : "Schemas are defined in YANG modeling language. A group of Yang schemas makes the topology and inventory model, which represents topology and inventory entities, their attributes, and their relationships. For more information on YANG modelling language, see [IETF Documentation](https://datatracker.ietf.org/doc/html/rfc6020).",
     "name" : "Schemas"
   }, {
-    "description" : "Provides the capability to perform geographical queries on topology entities.",
-    "name" : "Geo-query"
-  }, {
     "description" : "Provides the capability to update or remove user-defined keywords or tags on entities and relationships.",
     "name" : "Classifiers"
   }, {
@@ -38,7 +35,7 @@
     "name" : "Decorators"
   }, {
     "description" : "Provides the capability to group topology entities of any type, with an appropriate description and other criteria.",
-    "name" : "Collections"
+    "name" : "Topology Groups"
   } ],
   "paths" : {
     "/domains" : {
@@ -348,7 +345,7 @@
           "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
           "examples" : {
             "scopeFilter" : {
-              "value" : "/attributes[@nRTAC=310\"]"
+              "value" : "/attributes[@nRTAC=310]"
             }
           },
           "explode" : true,
@@ -476,8 +473,8 @@
           "name" : "Accept",
           "required" : true,
           "schema" : {
-            "default" : "application/json",
-            "example" : "application/json",
+            "default" : "application/yang.data+json",
+            "example" : "application/yang.data+json",
             "type" : "string"
           },
           "style" : "simple"
@@ -650,6 +647,36 @@
             "type" : "string"
           },
           "style" : "simple"
+        }, {
+          "description" : "Use *targetFilter* to specify the entity type and attributes to be returned in the REST response. The value for *targetFilter* can also be a list of entity types and attributes.",
+          "examples" : {
+            "targetFilter" : {
+              "value" : "/attributes(nCI,nRPCI)"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "targetFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
+          "examples" : {
+            "scopeFilter" : {
+              "value" : "/attributes[@nRTAC=310]"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "scopeFilter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
         }, {
           "description" : "Pagination offset.",
           "explode" : true,
@@ -958,7 +985,7 @@
           "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
           "examples" : {
             "scopeFilter" : {
-              "value" : "/attributes[@nRTAC=310\"]"
+              "value" : "/attributes[@nRTAC=310]"
             }
           },
           "explode" : true,
@@ -1086,8 +1113,8 @@
           "name" : "Accept",
           "required" : true,
           "schema" : {
-            "default" : "application/json",
-            "example" : "application/json",
+            "default" : "application/yang.data+json",
+            "example" : "application/yang.data+json",
             "type" : "string"
           },
           "style" : "simple"
@@ -1262,7 +1289,7 @@
           "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
           "examples" : {
             "scopeFilter" : {
-              "value" : "/attributes[@nRTAC=310\"]"
+              "value" : "/attributes[@nRTAC=310]"
             }
           },
           "explode" : true,
@@ -1516,7 +1543,7 @@
         "tags" : [ "Schemas" ]
       },
       "post" : {
-        "description" : "Create a new schema.",
+        "description" : "Create a new schema. The request body shall contain the schema in YANG format.",
         "operationId" : "createSchema",
         "parameters" : [ {
           "explode" : false,
@@ -1535,8 +1562,8 @@
           "name" : "Content-Type",
           "required" : true,
           "schema" : {
-            "default" : "application/json",
-            "example" : "application/json",
+            "default" : "multipart/form-data",
+            "example" : "multipart/form-data",
             "type" : "string"
           },
           "style" : "simple"
@@ -1604,7 +1631,7 @@
             "content" : {
               "application/problem+json" : {
                 "example" : {
-                  "status" : "409'",
+                  "status" : "409",
                   "title" : "Conflicting request",
                   "details" : "The request cannot be processed as the resource is in use."
                 },
@@ -1853,172 +1880,9 @@
         "tags" : [ "Schemas" ]
       }
     },
-    "/geo-queries" : {
-      "post" : {
-        "description" : "Geo query topology entity or entities across topology domains.",
-        "operationId" : "geoQueryTopologyAcrossDomains",
-        "parameters" : [ {
-          "explode" : false,
-          "in" : "header",
-          "name" : "Accept",
-          "required" : true,
-          "schema" : {
-            "default" : "application/json",
-            "example" : "application/json",
-            "type" : "string"
-          },
-          "style" : "simple"
-        }, {
-          "explode" : false,
-          "in" : "header",
-          "name" : "Content-Type",
-          "required" : true,
-          "schema" : {
-            "default" : "application/json",
-            "example" : "application/json",
-            "type" : "string"
-          },
-          "style" : "simple"
-        }, {
-          "description" : "Pagination offset.",
-          "explode" : true,
-          "in" : "query",
-          "name" : "offset",
-          "required" : false,
-          "schema" : {
-            "default" : 0,
-            "minimum" : 0,
-            "type" : "integer"
-          },
-          "style" : "form"
-        }, {
-          "description" : "Result limiter.",
-          "explode" : true,
-          "in" : "query",
-          "name" : "limit",
-          "required" : false,
-          "schema" : {
-            "default" : 500,
-            "maximum" : 500,
-            "minimum" : 1,
-            "type" : "integer"
-          },
-          "style" : "form"
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "examples" : {
-                "geoQuery" : {
-                  "$ref" : "#/components/examples/QueryMessageExample"
-                }
-              },
-              "schema" : {
-                "$ref" : "#/components/schemas/QueryMessage"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "examples" : {
-                  "geoQueryResponse" : {
-                    "$ref" : "#/components/examples/QueryResponseExample"
-                  }
-                },
-                "schema" : {
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "OK"
-          },
-          "400" : {
-            "content" : {
-              "application/problem+json" : {
-                "example" : {
-                  "status" : "400",
-                  "title" : "Bad Request",
-                  "details" : "The provided request is not valid"
-                },
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessage"
-                }
-              }
-            },
-            "description" : "Bad Request"
-          },
-          "401" : {
-            "content" : {
-              "application/problem+json" : {
-                "example" : {
-                  "status" : "401",
-                  "title" : "Unauthorized request",
-                  "details" : "This request is unauthorized"
-                },
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessage"
-                }
-              }
-            },
-            "description" : "Unauthorized"
-          },
-          "403" : {
-            "content" : {
-              "application/problem+json" : {
-                "example" : {
-                  "status" : "403",
-                  "title" : "Request Forbidden",
-                  "details" : "This request is forbidden"
-                },
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessage"
-                }
-              }
-            },
-            "description" : "Forbidden"
-          },
-          "409" : {
-            "content" : {
-              "application/problem+json" : {
-                "example" : {
-                  "status" : "409'",
-                  "title" : "Conflicting request",
-                  "details" : "The request cannot be processed as the resource is in use."
-                },
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessage"
-                }
-              }
-            },
-            "description" : "Conflict"
-          },
-          "500" : {
-            "content" : {
-              "application/problem+json" : {
-                "example" : {
-                  "status" : "500",
-                  "title" : "Internal Server Error",
-                  "details" : "Internal Server Error occurred"
-                },
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessage"
-                }
-              }
-            },
-            "description" : "Internal Server Error"
-          }
-        },
-        "summary" : "Geo query topology entity or entities  across topology domains.",
-        "tags" : [ "Geo-query" ]
-      }
-    },
     "/classifiers" : {
-      "put" : {
-        "description" : "Update entities and/or relationships with classifier(s).",
+      "post" : {
+        "description" : "Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.",
         "operationId" : "updateClassifier",
         "parameters" : [ {
           "explode" : false,
@@ -2112,7 +1976,7 @@
             "content" : {
               "application/problem+json" : {
                 "example" : {
-                  "status" : "409'",
+                  "status" : "409",
                   "title" : "Conflicting request",
                   "details" : "The request cannot be processed as the resource is in use."
                 },
@@ -2144,8 +2008,8 @@
       }
     },
     "/decorators" : {
-      "put" : {
-        "description" : "Update entities and/or relationships with decorator(s).",
+      "post" : {
+        "description" : "Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.",
         "operationId" : "updateDecorator",
         "parameters" : [ {
           "explode" : false,
@@ -2239,7 +2103,7 @@
             "content" : {
               "application/problem+json" : {
                 "example" : {
-                  "status" : "409'",
+                  "status" : "409",
                   "title" : "Conflicting request",
                   "details" : "The request cannot be processed as the resource is in use."
                 },
@@ -2270,10 +2134,10 @@
         "tags" : [ "Decorators" ]
       }
     },
-    "/collections" : {
+    "/groups" : {
       "get" : {
-        "description" : "Get all collections.",
-        "operationId" : "getAllCollections",
+        "description" : "Get all groups.",
+        "operationId" : "getAllGroups",
         "parameters" : [ {
           "explode" : false,
           "in" : "header",
@@ -2316,12 +2180,12 @@
             "content" : {
               "application/json" : {
                 "examples" : {
-                  "collections" : {
-                    "$ref" : "#/components/examples/CollectionsResponseExample"
+                  "groups" : {
+                    "$ref" : "#/components/examples/GroupsResponseExample"
                   }
                 },
                 "schema" : {
-                  "$ref" : "#/components/schemas/Collections"
+                  "$ref" : "#/components/schemas/Groups"
                 }
               }
             },
@@ -2392,12 +2256,12 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Get all collections.",
-        "tags" : [ "Collections" ]
+        "summary" : "Get all groups.",
+        "tags" : [ "Topology Groups" ]
       },
       "post" : {
-        "description" : "Create a collection.",
-        "operationId" : "createCollection",
+        "description" : "Create group.",
+        "operationId" : "createGroup",
         "parameters" : [ {
           "explode" : false,
           "in" : "header",
@@ -2425,15 +2289,15 @@
           "content" : {
             "application/json" : {
               "examples" : {
-                "dynamicCollection" : {
-                  "$ref" : "#/components/examples/DynamicCollectionExample"
+                "dynamicGroup" : {
+                  "$ref" : "#/components/examples/DynamicGroupExample"
                 },
-                "staticCollection" : {
-                  "$ref" : "#/components/examples/StaticCollectionExample"
+                "staticGroup" : {
+                  "$ref" : "#/components/examples/StaticGroupExample"
                 }
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Collection"
+                "$ref" : "#/components/schemas/Group"
               }
             }
           },
@@ -2444,12 +2308,12 @@
             "content" : {
               "application/json" : {
                 "examples" : {
-                  "collection" : {
-                    "$ref" : "#/components/examples/CollectionResponseExample"
+                  "group" : {
+                    "$ref" : "#/components/examples/GroupResponseExample"
                   }
                 },
                 "schema" : {
-                  "$ref" : "#/components/schemas/CollectionResponse"
+                  "$ref" : "#/components/schemas/GroupResponse"
                 }
               }
             },
@@ -2504,7 +2368,7 @@
             "content" : {
               "application/problem+json" : {
                 "example" : {
-                  "status" : "409'",
+                  "status" : "409",
                   "title" : "Conflicting request",
                   "details" : "The request cannot be processed as the resource is in use."
                 },
@@ -2531,14 +2395,14 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Create a collection.",
-        "tags" : [ "Collections" ]
+        "summary" : "Create group.",
+        "tags" : [ "Topology Groups" ]
       }
     },
-    "/collections/{collectionId}" : {
+    "/groups/{groupId}" : {
       "delete" : {
-        "description" : "Delete a collection with specified id.",
-        "operationId" : "deleteCollection",
+        "description" : "Delete a group with specified id.",
+        "operationId" : "deleteGroup",
         "parameters" : [ {
           "explode" : false,
           "in" : "header",
@@ -2553,7 +2417,7 @@
         }, {
           "explode" : false,
           "in" : "path",
-          "name" : "collectionId",
+          "name" : "groupId",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -2641,12 +2505,12 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Delete a collection with specified id.",
-        "tags" : [ "Collections" ]
+        "summary" : "Delete a group with specified id.",
+        "tags" : [ "Topology Groups" ]
       },
       "get" : {
-        "description" : "Get a collection with specified id.",
-        "operationId" : "getCollection",
+        "description" : "Get a Group with specified id.",
+        "operationId" : "getGroup",
         "parameters" : [ {
           "explode" : false,
           "in" : "header",
@@ -2661,7 +2525,7 @@
         }, {
           "explode" : false,
           "in" : "path",
-          "name" : "collectionId",
+          "name" : "groupId",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -2673,12 +2537,12 @@
             "content" : {
               "application/json" : {
                 "examples" : {
-                  "collection" : {
-                    "$ref" : "#/components/examples/CollectionResponseExample"
+                  "group" : {
+                    "$ref" : "#/components/examples/GroupResponseExample"
                   }
                 },
                 "schema" : {
-                  "$ref" : "#/components/schemas/CollectionResponse"
+                  "$ref" : "#/components/schemas/GroupResponse"
                 }
               }
             },
@@ -2760,12 +2624,12 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Get a collection with specified id.",
-        "tags" : [ "Collections" ]
+        "summary" : "Get a group with specified id.",
+        "tags" : [ "Topology Groups" ]
       },
       "put" : {
-        "description" : "Update a collection.",
-        "operationId" : "updateCollection",
+        "description" : "Update a Group.",
+        "operationId" : "updateGroup",
         "parameters" : [ {
           "explode" : false,
           "in" : "header",
@@ -2791,7 +2655,7 @@
         }, {
           "explode" : false,
           "in" : "path",
-          "name" : "collectionId",
+          "name" : "groupId",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -2802,15 +2666,15 @@
           "content" : {
             "application/json" : {
               "examples" : {
-                "dynamicCollection" : {
-                  "$ref" : "#/components/examples/DynamicCollectionExample"
+                "dynamicGroup" : {
+                  "$ref" : "#/components/examples/DynamicGroupExample"
                 },
-                "staticCollection" : {
-                  "$ref" : "#/components/examples/StaticCollectionExample"
+                "staticGroup" : {
+                  "$ref" : "#/components/examples/StaticGroupExample"
                 }
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Collection"
+                "$ref" : "#/components/schemas/Group"
               }
             }
           },
@@ -2870,7 +2734,7 @@
             "content" : {
               "application/problem+json" : {
                 "example" : {
-                  "status" : "409'",
+                  "status" : "409",
                   "title" : "Conflicting request",
                   "details" : "The request cannot be processed as the resource is in use."
                 },
@@ -2897,8 +2761,8 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Update a collection.",
-        "tags" : [ "Collections" ]
+        "summary" : "Update a Group.",
+        "tags" : [ "Topology Groups" ]
       }
     }
   },
@@ -2909,7 +2773,7 @@
           "operation" : "merge",
           "classifiers" : [ "module-x:Outdoor", "module-y:Rural", "module-z:Weekend" ],
           "entityIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2" ],
-          "relationshipIds" : [ "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmV=" ]
+          "relationshipIds" : [ "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B" ]
         }
       },
       "DecoratorExample" : {
@@ -2920,7 +2784,7 @@
             "module-y:vendor" : "Ericsson"
           },
           "entityIds" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2" ],
-          "relationshipIds" : [ "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmV=" ]
+          "relationshipIds" : [ "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B" ]
         }
       },
       "EntityResponseExample" : {
@@ -3006,7 +2870,7 @@
       "RelationshipResponseExample" : {
         "value" : {
           "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER" : [ {
-            "id" : "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmV=",
+            "id" : "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B",
             "aSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
             "bSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1",
             "decorators" : {
@@ -3024,7 +2888,7 @@
         "value" : {
           "items" : [ {
             "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER" : [ {
-              "id" : "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+              "id" : "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B",
               "aSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
               "bSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1",
               "decorators" : {
@@ -3038,7 +2902,7 @@
             } ]
           }, {
             "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER" : [ {
-              "id" : "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
+              "id" : "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78",
               "aSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2",
               "bSide" : "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2",
               "decorators" : {
@@ -3144,15 +3008,15 @@
       "DomainsResponseExample" : {
         "value" : {
           "items" : [ {
-            "name" : "RAN_CLOUD",
+            "name" : "EQUIPMENT",
             "entityTypes" : {
-              "href" : "/domains/CLOUD/entity-types"
+              "href" : "/domains/EQUIPMENT/entity-types"
             },
             "relationshipTypes" : {
-              "href" : "/domains/CLOUD/relationship-types"
+              "href" : "/domains/EQUIPMENT/relationship-types"
             }
           }, {
-            "name" : "RAN_OAM",
+            "name" : "OAM",
             "entityTypes" : {
               "href" : "/domains/OAM/entity-types"
             },
@@ -3160,7 +3024,7 @@
               "href" : "/domains/OAM/relationship-types"
             }
           }, {
-            "name" : "RAN_LOGICAL",
+            "name" : "RAN",
             "entityTypes" : {
               "href" : "/domains/RAN/entity-types"
             },
@@ -3186,34 +3050,23 @@
           "totalCount" : 343
         }
       },
-      "QueryMessageExample" : {
+      "StaticGroupExample" : {
         "value" : {
-          "query" : "WITH point({longitude: 12.78232, latitude: 56.7455}) AS p1, point({latitude: 56.7134, longitude: 12.79565}) AS p2 RETURN point.distance(p1, p2) AS distance"
-        }
-      },
-      "QueryResponseExample" : {
-        "value" : {
-          "query" : "WITH point({longitude: 12.78232, latitude: 56.7455}) AS p1, point({latitude: 56.7134, longitude: 12.79565}) AS p2 RETURN point.distance(p1, p2) AS distance",
-          "response" : "distance : 2873.5"
-        }
-      },
-      "StaticCollectionExample" : {
-        "value" : {
-          "collectionName" : "son-cell-filter-group-1",
+          "groupName" : "son-cell-filter-group-1",
           "criteria" : {
             "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3" ]
           }
         }
       },
-      "DynamicCollectionExample" : {
+      "DynamicGroupExample" : {
         "value" : {
-          "collectionName" : "son-cell-filter-group-1",
+          "groupName" : "son-cell-filter-group-1",
           "criteria" : {
             "resourceQuery" : {
               "url" : "/domains/RAN/entity-types/NRCellDU/entities",
               "method" : "GET",
               "queryParams" : {
-                "target:Filter" : "/attributes(cmId)",
+                "target:Filter" : "/sourceIds",
                 "scopeFilter" : "/attributes[@nRTAC=310]"
               },
               "requestBody" : ""
@@ -3221,84 +3074,147 @@
           }
         }
       },
-      "CollectionResponseExample" : {
+      "GroupResponseExample" : {
         "value" : {
-          "id" : "urn:oran:collection:/JHKJ4H5JH45345TB=",
-          "collectionName" : "son-cell-filter-group-1",
+          "id" : "urn:o-ran:smo:teiv:group:/JHKJ4H5JH45345TB=",
+          "groupName" : "son-cell-filter-group-1",
           "criteria" : {
             "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3" ]
           }
         }
       },
-      "CollectionsResponseExample" : {
+      "GroupsResponseExample" : {
         "value" : {
           "items" : [ {
-            "id" : "urn:topology:collection:/JHKJ4H5JH45345TB=",
-            "collectionName" : "son-cell-group-1",
+            "id" : "urn:o-ran:smo:teiv:group:/JHKJ4H5JH45345TB=",
+            "groupName" : "son-cell-group-1",
             "criteria" : {
               "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3" ]
             }
           }, {
-            "id" : "urn:topology:collection:/DFJER77R6F7S9VD=",
-            "collectionName" : "son-cell-group-2",
+            "id" : "urn:o-ran:smo:teiv:group:/DFJER77R6F7S9VD=",
+            "groupName" : "son-cell-group-2",
             "criteria" : {
               "resourceInstances" : [ "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=4", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=5", "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=6" ]
             }
+          }, {
+            "id" : "urn:o-ran:smo:teiv:group:/LMND77R6F7S9VD=",
+            "groupName" : "son-cell-group-3",
+            "criteria" : {
+              "resourceQuery" : {
+                "url" : "/domains/RAN/entity-types/NRCellDU/entities",
+                "method" : "GET",
+                "queryParams" : {
+                  "target:Filter" : "/sourceIds",
+                  "scopeFilter" : "/attributes[@nRTAC=310]"
+                },
+                "requestBody" : ""
+              }
+            }
           } ],
           "self" : {
-            "href" : "/collections?offset=0&limit=500"
+            "href" : "/groups?offset=0&limit=500"
           },
           "first" : {
-            "href" : "/collections?offset=0&limit=500"
+            "href" : "/groups?offset=0&limit=500"
           },
           "prev" : {
-            "href" : "/collections?offset=0&limit=500"
+            "href" : "/groups?offset=0&limit=500"
           },
           "next" : {
-            "href" : "/collections?offset=500&limit=500"
+            "href" : "/groups?offset=0&limit=500"
           },
           "last" : {
-            "href" : "/collections?offset=678&limit=500"
+            "href" : "/groups?offset=0&limit=500"
           },
-          "totalCount" : 11
+          "totalCount" : 3
         }
       },
       "SchemasResponseExample" : {
         "value" : {
           "items" : [ {
             "name" : "o-ran-smo-teiv-ran",
-            "domain" : [ "RAN_LOGICAL" ],
-            "revision" : "2013-07-15",
+            "domain" : "RAN",
+            "revision" : "2024-05-24",
             "content" : {
               "href" : "/schemas/o-ran-smo-teiv-ran/content"
             }
           }, {
-            "name" : "o-ran-smo-teiv-cloud",
-            "domain" : [ "RAN_CLOUD" ],
-            "revision" : "2021-05-19",
+            "name" : "o-ran-smo-teiv-equipment",
+            "domain" : "EQUIPMENT",
+            "revision" : "2024-05-24",
             "content" : {
-              "href" : "/schemas/o-ran-smo-teiv-cloud/content"
+              "href" : "/schemas/o-ran-smo-teiv-equipment/content"
             }
           }, {
             "name" : "o-ran-smo-teiv-oam",
-            "domain" : [ "RAN_OAM'" ],
-            "revision" : "2021-05-19",
+            "domain" : "OAM",
+            "revision" : "2024-05-24",
             "content" : {
               "href" : "/schemas/o-ran-smo-teiv-oam/content"
             }
           }, {
+            "name" : "o-ran-smo-teiv-rel-oam-ran",
+            "domain" : "REL_OAM_RAN",
+            "revision" : "2024-05-24",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-rel-oam-ran/content"
+            }
+          }, {
+            "name" : "o-ran-smo-teiv-rel-equipment-ran",
+            "domain" : "REL_EQUIPMENT_RAN",
+            "revision" : "2024-05-24",
+            "content" : {
+              "href" : "/schemas/o-ran-smo-teiv-rel-equipment-ran/content"
+            }
+          }, {
             "name" : "o-ran-smo-teiv-common-yang-types",
-            "domain" : [ ],
-            "revision" : "2021-07-04",
+            "domain" : "",
+            "revision" : "2024-05-24",
             "content" : {
               "href" : "/schemas/o-ran-smo-teiv-common-yang-types/content"
             }
           }, {
             "name" : "o-ran-smo-teiv-common-yang-extensions",
-            "domain" : [ ],
-            "revision" : "2021-07-04",
+            "domain" : "",
+            "revision" : "2024-05-24",
             "content" : {
               "href" : "/schemas/o-ran-smo-teiv-common-yang-extensions/content"
+            }
+          }, {
+            "name" : "ietf-geo-location",
+            "domain" : "",
+            "revision" : "2022-02-11",
+            "content" : {
+              "href" : "/schemas/ietf-geo-location/content"
+            }
+          }, {
+            "name" : "_3gpp-common-yang-extensions",
+            "domain" : "",
+            "revision" : "2019-06-23",
+            "content" : {
+              "href" : "/schemas/_3gpp-common-yang-extensions/content"
+            }
+          }, {
+            "name" : "_3gpp-common-yang-types",
+            "domain" : "",
+            "revision" : "2023-11-06",
+            "content" : {
+              "href" : "/schemas/_3gpp-common-yang-types/content"
+            }
+          }, {
+            "name" : "ietf-yang-types",
+            "domain" : "",
+            "revision" : "2013-07-15",
+            "content" : {
+              "href" : "/schemas/ietf-yang-types/content"
+            }
+          }, {
+            "name" : "ietf-inet-types",
+            "domain" : "",
+            "revision" : "2013-07-15",
+            "content" : {
+              "href" : "/schemas/ietf-inet-types/content"
             }
           } ],
           "self" : {
@@ -3311,20 +3227,20 @@
             "href" : "/schemas?offset=0&limit=500"
           },
           "next" : {
-            "href" : "/schemas?offset=500&limit=500"
+            "href" : "/schemas?offset=0&limit=500"
           },
           "last" : {
-            "href" : "/schemas?offset=678&limit=500"
+            "href" : "/schemas?offset=0&limit=500"
           },
-          "totalCount" : 14
+          "totalCount" : 12
         }
       },
       "SchemaResponseExample" : {
-        "value" : "module stores {yang-version 1.1;namespace \"ietf-inet-types\";prefix module-references;revision \"2020-09-15\" {description\"Sample Model\";}  typedef Mcc {type string;}typedef Mnc {type string;}grouping PLMNId {leaf mcc {type Mcc;}leaf mnc {type Mnc;}}      container RAN_LOGICAL {leaf namespace {type string;}container GNBDUFunction {leaf eiid {type string;}  leaf gNBDUId {type uint16;}leaf gNBID {type uint16;}leaf gNBIdLength {type uint16;}container dUpLMNId{description \"ToDo\";uses PLMNId;}        }container GNBCUUPFunction {leaf eiid {type string;} leaf gNBID {type uint16;}leaf gNBIdLength {type uint16;}}  container GNBCUCPFunction {            leaf eiid {type string;} leaf gNBID {type uint16;}leaf gNBIdLength {type uint16;}leaf gNBCUName {type string;}container pLMNId{description \"ToDo\";uses PLMNId;}      }container NRCellCU {            leaf eiid {type string;} leaf cellLocalId {type uint16;}leaf nCI {type uint16;}leaf nRTAC {type uint16;}container plmnId{description \"ToDo\";uses PLMNId;}        }container NRCellDU {            leaf eiid {type string;} leaf cellLocalId {type uint16;}leaf nCI {type uint16;}leaf nRPCI {type uint16;}leaf nRTAC {type uint16;}}}}"
+        "value" : "module o-ran-smo-teiv-ran {\nyang-version 1.1;\nnamespace \"urn:o-ran:smo-teiv-ran\";\nprefix or-teiv-ran;\nimport o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }\nimport o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }\nimport _3gpp-common-yang-types { prefix types3gpp; }\norganization \"ORAN\";\ndescription\n\"Sample Model.\";\nrevision \"2024-05-24\" {\n  description \"Initial revision.\"\n  or-teiv-yext:label 0.1.0;\n}\nor-teiv-yext:domain RAN;\nlist GNBDUFunction {\n  uses or-teiv-types:Top_Grp_Type;\n  key id;\n  container attributes {\n    container dUpLMNId {\n      uses types3gpp:PLMNId;\n    }\n    leaf gNBDUId {\n      type uint32;\n    }\n    leaf gNBId {\n      type uint32;\n    }\n    leaf gNBIdLength {\n      type uint32;\n    }\n  }\n}\nlist NRCellDU {\n  uses or-teiv-types:Top_Grp_Type;\n  key id;\n  container attributes {\n    leaf cellLocalId {\n      type uint32;\n    }\n    leaf nCI {\n      type uint32;\n    }\n    leaf nRPCI {\n      type uint32;\n    }\n    leaf nRTAC {\n      type uint32;\n    }\n  }\n}\nlist NRSectorCarrier {\n  uses or-teiv-types:Top_Grp_Type;\n  key id;\n    container attributes {\n      leaf arfcnDL {\n        type uint32;\n      }\n      leaf arfcnUL {\n        type uint32;\n      }\n      leaf frequencyDL {\n        type uint32;\n      }\n      leaf frequencyUL {\n        type uint32;\n      }\n      leaf bSChannelBwDL {\n        type uint32;\n      }\n    }\n  }\n}\n"
       }
     },
     "parameters" : {
-      "acceptInHeader" : {
+      "acceptJsonInHeader" : {
         "explode" : false,
         "in" : "header",
         "name" : "Accept",
@@ -3336,7 +3252,31 @@
         },
         "style" : "simple"
       },
-      "contentTypeInHeader" : {
+      "acceptYangJsonInHeader" : {
+        "explode" : false,
+        "in" : "header",
+        "name" : "Accept",
+        "required" : true,
+        "schema" : {
+          "default" : "application/yang.data+json",
+          "example" : "application/yang.data+json",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "contentTypeMultipartFileInHeader" : {
+        "explode" : false,
+        "in" : "header",
+        "name" : "Content-Type",
+        "required" : true,
+        "schema" : {
+          "default" : "multipart/form-data",
+          "example" : "multipart/form-data",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "contentTypeJsonInHeader" : {
         "explode" : false,
         "in" : "header",
         "name" : "Content-Type",
@@ -3397,10 +3337,10 @@
         },
         "style" : "simple"
       },
-      "collectionIdInPath" : {
+      "groupIdInPath" : {
         "explode" : false,
         "in" : "path",
-        "name" : "collectionId",
+        "name" : "groupId",
         "required" : true,
         "schema" : {
           "type" : "string"
@@ -3483,7 +3423,7 @@
         "description" : "Use *scopeFilter* to specify the attributes to match on. The value for *scopeFilter* can also be a list of entity types and attributes. scopeFilter returns a boolean.",
         "examples" : {
           "scopeFilter" : {
-            "value" : "/attributes[@nRTAC=310\"]"
+            "value" : "/attributes[@nRTAC=310]"
           }
         },
         "explode" : true,
@@ -3561,7 +3501,7 @@
         "content" : {
           "application/problem+json" : {
             "example" : {
-              "status" : "409'",
+              "status" : "409",
               "title" : "Conflicting request",
               "details" : "The request cannot be processed as the resource is in use."
             },
@@ -3602,7 +3542,7 @@
             "enum" : [ "merge", "delete" ],
             "type" : "string"
           },
-          "classifier" : {
+          "classifiers" : {
             "items" : {
               "type" : "string"
             },
@@ -3624,23 +3564,23 @@
         "title" : "Classifier",
         "type" : "object"
       },
-      "CollectionResponse" : {
+      "GroupResponse" : {
         "properties" : {
           "id" : {
             "type" : "string"
           },
-          "collectionName" : {
+          "groupName" : {
             "type" : "string"
           },
           "criteria" : {
-            "$ref" : "#/components/schemas/CollectionResponse_criteria"
+            "$ref" : "#/components/schemas/GroupResponse_criteria"
           }
         },
         "type" : "object"
       },
-      "Collection" : {
+      "Group" : {
         "properties" : {
-          "collectionName" : {
+          "groupName" : {
             "type" : "string"
           },
           "criteria" : {
@@ -3649,11 +3589,11 @@
         },
         "type" : "object"
       },
-      "Collections" : {
+      "Groups" : {
         "properties" : {
           "items" : {
             "items" : {
-              "$ref" : "#/components/schemas/CollectionResponse"
+              "$ref" : "#/components/schemas/GroupResponse"
             },
             "type" : "array"
           },
@@ -3676,7 +3616,7 @@
             "type" : "integer"
           }
         },
-        "title" : "Collections",
+        "title" : "Groups",
         "type" : "object"
       },
       "TopologySelection" : {
@@ -3714,9 +3654,8 @@
             "type" : "string"
           },
           "decorators" : {
-            "additionalProperties" : {
-              "type" : "string"
-            },
+            "additionalProperties" : true,
+            "description" : "Decorators must be defined in schema before use. Data type of a decorator is restricted as defined by it's schema.",
             "type" : "object"
           },
           "entityIds" : {
@@ -3923,25 +3862,13 @@
         "required" : [ "file" ],
         "type" : "object"
       },
-      "QueryMessage" : {
-        "properties" : {
-          "query" : {
-            "type" : "string"
-          }
-        },
-        "title" : "Query",
-        "type" : "object"
-      },
       "Schema" : {
         "properties" : {
           "name" : {
             "type" : "string"
           },
           "domain" : {
-            "items" : {
-              "type" : "string"
-            },
-            "type" : "array"
+            "type" : "string"
           },
           "revision" : {
             "type" : "string"
@@ -3983,7 +3910,7 @@
         "title" : "Schemas",
         "type" : "object"
       },
-      "CollectionResponse_criteria" : {
+      "GroupResponse_criteria" : {
         "oneOf" : [ {
           "$ref" : "#/components/schemas/StaticSelection"
         }, {

@@ -70,7 +70,7 @@ public class ExposureMetricsTest {
         when(mockedDataService.getAllRelationshipsForObjectId(eq(ENTITY_NAME), eq(ENTITY_ID), any(PaginationDTO.class)))
                 .thenThrow(TiesException.class);
         assertMetrics(() -> dataRestController.getAllRelationshipsForEntityId(ACCEPT_TYPE, DOMAIN_NAME, ENTITY_NAME,
-                ENTITY_ID, 0, 1), underTest.getNumUnsuccessfullyExposedRelationshipsByEntityId()::count);
+                ENTITY_ID, "", "", 0, 1), underTest.getNumUnsuccessfullyExposedRelationshipsByEntityId()::count);
     }
 
     @Test

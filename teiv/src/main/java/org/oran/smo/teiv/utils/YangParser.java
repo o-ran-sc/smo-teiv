@@ -106,11 +106,11 @@ public class YangParser {
             final AbstractStatement moduleOrSubmodule = yangModel.getYangModelRoot().getModuleOrSubmodule();
             final AbstractStatement domainStatement = moduleOrSubmodule.getChild(new StatementModuleAndName(
                     "o-ran-smo-teiv-common-yang-extensions", "domain"));
-            List<String> values = new ArrayList<>();
+            String value = new String();
             if (domainStatement != null && domainStatement.getDomElement() != null) {
-                values = List.of(domainStatement.getDomElement().getValue().split(","));
+                value = domainStatement.getDomElement().getValue();
             }
-            schemasMetaData.setDomain(values);
+            schemasMetaData.setDomain(value);
 
             if (schemasMetaData.getDomain() != null) {
                 OranTeivSchemasMetaData.add(schemasMetaData);

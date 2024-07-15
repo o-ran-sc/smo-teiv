@@ -37,10 +37,7 @@ import org.springframework.cloud.contract.spec.Contract
     "items": [
         {
             "name": "o-ran-smo-teiv-cloud-to-ran",
-            "domain": [
-                "RAN",
-                "CLOUD"
-            ],
+            "domain": "CLOUD_TO_RAN",
             "revision": "2023-06-26",
             "content": {
                 "href": "/schemas/o-ran-smo-teiv-cloud-to-ran/content"

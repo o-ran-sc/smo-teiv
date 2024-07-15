@@ -83,7 +83,7 @@ public abstract class TopologyExposureApiBase {
         OranTeivHref href = new OranTeivHref();
         href.setHref("/schemas/o-ran-smo-teiv-cloud-to-ran/content");
         schemasMetaData.setName("o-ran-smo-teiv-cloud-to-ran");
-        schemasMetaData.setDomain(List.of("RAN", "CLOUD"));
+        schemasMetaData.setDomain("CLOUD_TO_RAN");
         schemasMetaData.setRevision("2023-06-26");
         schemasMetaData.setContent(href);
 

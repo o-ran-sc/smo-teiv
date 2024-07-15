@@ -20,7 +20,7 @@
  */
 package org.oran.smo.teiv.exposure.collection.rest.controller;
 
-import org.oran.smo.teiv.api.CollectionsApi;
+import org.oran.smo.teiv.api.TopologyGroupsApi;
 import org.oran.smo.teiv.utils.TiesConstants;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(TiesConstants.REQUEST_MAPPING)
-public class CollectionsRestController implements CollectionsApi {
+public class TopologyGroupsRestController implements TopologyGroupsApi {
 
 }
