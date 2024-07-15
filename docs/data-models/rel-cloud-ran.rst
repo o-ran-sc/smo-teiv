@@ -3,11 +3,11 @@
 .. Copyright (C) 2024 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
-Relationship: Equipment RAN
----------------------------
+Relationship: CLOUD RAN
+-----------------------
 
-.. image:: ../_static/data-model/equipment-ran.svg
+.. image:: ../_static/data-model/cloud-ran-relationships.svg
   :width: 900
 
-.. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-equipment-to-ran.yang
+.. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-rel-cloud-ran.yang
    :language: yang

@@ -255,7 +255,7 @@ class DataRestControllerTest {
         response.setLast(href);
 
         Assertions.assertEquals(ResponseEntity.ok(response), underTest.getAllRelationshipsForEntityId(ACCEPT_TYPE,
-                "RAN_LOGICAL", "NRCellDU", "B480427E8A0C0B8D994E437784BB382F", 0, 5));
+                "RAN_LOGICAL", "NRCellDU", "B480427E8A0C0B8D994E437784BB382F", "", "", 0, 5));
 
         verify(requestValidator, Mockito.times(1)).validateDomain("RAN_LOGICAL");
         verify(requestValidator, Mockito.times(1)).validateEntityType("NRCellDU");

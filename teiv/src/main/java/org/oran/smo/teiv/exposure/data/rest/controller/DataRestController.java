@@ -152,7 +152,8 @@ public class DataRestController implements EntitiesAndRelationshipsApi {
     @Override
     @Timed("ties_exposure_http_get_relationships_by_entity_id_seconds")
     public ResponseEntity<OranTeivRelationshipsResponseMessage> getAllRelationshipsForEntityId(@NotNull final String accept,
-            final String domain, final String entityType, final String id, @Min(0) @Valid final Integer offset,
+            final String domain, final String entityType, final String id, @Valid final String targetFilter,
+            @Valid final String scopeFilter, @Min(0) @Valid final Integer offset,
             @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> {
             requestValidator.validateDomain(domain);

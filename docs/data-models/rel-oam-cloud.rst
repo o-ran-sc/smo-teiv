@@ -8,5 +8,5 @@ Relationship: OAM CLOUD
 
 .. image:: ../_static/data-model/oam-cloud-relationships.svg
 
-.. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-oam-to-cloud.yang
+.. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-rel-oam-cloud.yang
    :language: yang

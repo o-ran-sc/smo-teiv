@@ -17,9 +17,9 @@ Inventory.
    ./data-models/common-yang-types.rst
    ./data-models/equipment.rst
    ./data-models/ran.rst
-   ./data-models/equipment-to-ran.rst
+   ./data-models/rel-equipment-ran.rst
    ./data-models/oam.rst
-   ./data-models/oam-to-ran.rst
+   ./data-models/rel-oam-ran.rst
    ./data-models/cloud.rst
-   ./data-models/cloud-to-ran.rst
-   ./data-models/oam-to-cloud.rst
+   ./data-models/rel-cloud-ran.rst
+   ./data-models/rel-oam-cloud.rst

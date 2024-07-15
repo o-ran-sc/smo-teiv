@@ -266,14 +266,14 @@ public class DataControllerE2EContainerizedNonXPathTest {
     @Test
     public void testGetAllRelationshipsForEntityId() {
         final OranTeivRelationshipsResponseMessage responseMessage = underTest.getAllRelationshipsForEntityId(ACCEPT_TYPE,
-                "RAN", "Sector", "2F445AA5744FA3D230FD6838531F1407", 0, 10).getBody();
+                "RAN", "Sector", "2F445AA5744FA3D230FD6838531F1407", "", "", 0, 10).getBody();
 
         Assertions.assertNotNull(responseMessage);
         Assertions.assertEquals(0, responseMessage.getTotalCount());
         Assertions.assertTrue(responseMessage.getItems().isEmpty());
 
         final OranTeivRelationshipsResponseMessage responseMessage2 = underTest.getAllRelationshipsForEntityId(ACCEPT_TYPE,
-                "RAN", "GNBDUFunction", "1050570EBB1315E1AE7A9FD5E1400A00", 0, 10).getBody();
+                "RAN", "GNBDUFunction", "1050570EBB1315E1AE7A9FD5E1400A00", "", "", 0, 10).getBody();
 
         Assertions.assertNotNull(responseMessage2);
         Assertions.assertEquals(1, responseMessage2.getTotalCount());

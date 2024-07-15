@@ -9,5 +9,5 @@ Relationship: OAM RAN
 .. image:: ../_static/data-model/oam-ran.svg
   :width: 900
 
-.. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-oam-to-ran.yang
+.. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-rel-oam-ran.yang
    :language: yang
