@@ -23,4 +23,5 @@ to share and operate on a common view of the topology.
    ./geographical-location-enrichment-api.rst
    ./supported-filter-options.rst
    ./api-documentation.rst
+   ./pgsql-schema-generator-guide.rst
    ./release-notes.rst
