@@ -20,44 +20,48 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.resolver;
 
-import java.util.List;
-
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.ContainerType;
-import org.oran.smo.teiv.utils.query.exception.TiesPathException;
-import jakarta.annotation.Nullable;
-import lombok.NonNull;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.oran.smo.teiv.antlr4.tiesPathParser;
+import org.oran.smo.teiv.utils.path.StrictErrorStrategy;
+import org.oran.smo.teiv.utils.path.TiesPathErrorListener;
+import org.oran.smo.teiv.utils.path.TiesPathLexer;
+import org.oran.smo.teiv.utils.path.TiesPathParser;
 
 public interface PathResolver<T> {
 
-    String NULL_ROOT_OBJECT = "*";
-
-    T resolve(String rootObject, @NonNull String filter);
-
-    default String getTopologyObject(String rootObject, List<String> containerNames) {
-        int noOfContainers = containerNames.size();
-        if (noOfContainers > 2) {
-            throw TiesPathException.grammarError("More than two level deep path is not allowed");
-        } else if (noOfContainers == 2) {
-            return getTopologyObjectWhenTwoContainers(rootObject, containerNames.get(0));
+    /**
+     * Resolves the supplied filter.
+     *
+     * @param rootObject
+     *     - root
+     * @param filter
+     *     - filter for resolving
+     * @return T
+     */
+    default T resolve(String rootObject, String filter) {
+        if (filter == null) {
+            return onEmptyFilter(rootObject);
         }
-        return isRootObjectNullOrEmpty(rootObject) ? NULL_ROOT_OBJECT : rootObject;
+        preCheck(rootObject, filter);
+        return process(rootObject, filter);
     }
 
-    default String getTopologyObjectWhenTwoContainers(String rootObject, String firstContainer) {
-        if (isRootObjectNullOrEmpty(rootObject) || firstContainer.equals(rootObject)) {
-            return firstContainer;
-        } else {
-            throw TiesPathException.grammarError(
-                    "Target filter can only contain Root Object types mentioned in the path parameter");
-        }
-    }
+    T onEmptyFilter(String rootObject);
 
-    default boolean isRootObjectNullOrEmpty(String rootObjectType) {
-        return rootObjectType == null || rootObjectType.isEmpty();
-    }
+    void preCheck(String rootObject, String filter);
 
-    @Nullable
-    default ContainerType getContainerType(List<String> containerNames) {
-        return ContainerType.fromValue(containerNames.get(containerNames.size() - 1));
+    T process(String rootObject, String filter);
+
+    default tiesPathParser getTiesPathParser(String filter) {
+        final CharStream inputStream = CharStreams.fromString(filter);
+        final TiesPathLexer tiesPathLexer = new TiesPathLexer(inputStream);
+        final tiesPathParser tiesPathParser = new TiesPathParser(new CommonTokenStream(tiesPathLexer));
+        tiesPathParser.removeErrorListeners();
+        tiesPathParser.addErrorListener(new TiesPathErrorListener());
+        tiesPathParser.setErrorHandler(new StrictErrorStrategy());
+
+        return tiesPathParser;
     }
 }

@@ -25,14 +25,13 @@ import io.cloudevents.kafka.CloudEventDeserializer;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.oran.smo.teiv.config.KafkaAdminConfig;
 import org.oran.smo.teiv.config.KafkaConfig;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -46,8 +45,7 @@ import org.springframework.util.backoff.FixedBackOff;
 
 @Component
 @EnableKafka
-@AllArgsConstructor
-@Profile("ingestion")
+@RequiredArgsConstructor
 public class KafkaFactory {
 
     private final KafkaConfig kafkaConfig;

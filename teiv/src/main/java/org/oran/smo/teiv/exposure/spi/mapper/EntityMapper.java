@@ -20,51 +20,34 @@
  */
 package org.oran.smo.teiv.exposure.spi.mapper;
 
-import static org.oran.smo.teiv.schema.BidiDbNameMapper.getModelledName;
-import static org.oran.smo.teiv.utils.TiesConstants.ATTRIBUTES;
-import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
-import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.firstHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.prevHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.validateOffset;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Record;
 import org.jooq.Result;
 
-import lombok.RequiredArgsConstructor;
+import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
+import org.oran.smo.teiv.exposure.utils.RequestDetails;
+import org.springframework.stereotype.Component;
 
-import org.oran.smo.teiv.schema.EntityType;
-
-@RequiredArgsConstructor
+@Slf4j
+@Component
 public class EntityMapper extends ResponseMapper {
-
-    final EntityType entityType;
-
-    /**
-     * Maps the query results to an api response
-     *
-     * @param result
-     *     result of the query
-     * @return response
-     */
-    @Override
-    public Map<String, Object> map(final Result<Record> result) {
-        final Map<String, Object> responseData = new HashMap<>();
-        final Map<String, Object> mappedRecords = new HashMap<>();
-        result.forEach(record -> Arrays.stream(record.fields()).forEach(field -> {
-            if (getModelledName(field.getName()).equals(ID_COLUMN_NAME)) {
-                responseData.put(getModelledName(field.getName()), record.getValue(field));
-            } else if (getModelledName(field.getName()).startsWith(CONSUMER_DATA_PREFIX)) {
-                responseData.put(getModelledName(field.getName()).substring(CONSUMER_DATA_PREFIX.length()), mapField(record,
-                        field));
-            } else {
-                mappedRecords.put(getModelledName(field.getName()), mapField(record, field));
-            }
-        }));
-        responseData.put(ATTRIBUTES, mappedRecords);
-        return Map.of(entityType.getFullyQualifiedName(), List.of(responseData));
+    public OranTeivEntitiesResponseMessage mapEntities(final Result<Record> results, final RequestDetails requestDetails) {
+        //Pair<items, totalCount>
+        final Pair<List<Object>, Integer> pair = getItemsWithTotalCount(results);
+        int totalCount = pair.getRight();
+        validateOffset(requestDetails.getOffset(), totalCount);
+        return OranTeivEntitiesResponseMessage.builder().items(pair.getLeft()).first(firstHref(requestDetails)).prev(
+                prevHref(requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails,
+                        totalCount)).last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
     }
-
 }

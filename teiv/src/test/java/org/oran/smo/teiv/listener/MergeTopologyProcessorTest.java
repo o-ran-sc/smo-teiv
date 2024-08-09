@@ -33,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.oran.smo.teiv.CustomMetrics;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -43,20 +41,21 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
-import org.oran.smo.teiv.schema.SchemaLoader;
-import org.oran.smo.teiv.schema.SchemaLoaderException;
-import org.oran.smo.teiv.startup.SchemaHandler;
-import org.oran.smo.teiv.schema.MockSchemaLoader;
 import io.cloudevents.CloudEvent;
 
+import org.oran.smo.teiv.CustomMetrics;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.service.TiesDbService;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
+import org.oran.smo.teiv.startup.SchemaHandler;
 import org.oran.smo.teiv.utils.CloudEventTestUtil;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles({ "test", "ingestion" })
@@ -82,9 +81,9 @@ class MergeTopologyProcessorTest {
     }
 
     @Test
-    void testMergeCloudNativeApplicationEntity1() {
+    void testMergeGNBDUFunctionEntity1() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("merge", "{}");
-        String entityType = "CloudNativeApplication";
+        String entityType = "GNBDUFunction";
         Map<String, Object> yangParserOutputMapBSide = new HashMap<>();
         Entity entity = new Entity("", entityType, "cloud_id_1", yangParserOutputMapBSide, List.of());
 
@@ -101,7 +100,7 @@ class MergeTopologyProcessorTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testInvalidAttribute() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("merge", "{}");
-        String entityType = "CloudNativeApplication";
+        String entityType = "NFDeployment";
         Map<String, Object> yangParserOutputMap = new HashMap<>();
         yangParserOutputMap.put("invalidfield", "value1");
         Entity entity = new Entity("", entityType, "id1", yangParserOutputMap, List.of());

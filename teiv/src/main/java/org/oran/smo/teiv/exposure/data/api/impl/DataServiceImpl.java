@@ -22,8 +22,22 @@ package org.oran.smo.teiv.exposure.data.api.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
+import org.oran.smo.teiv.exposure.tiespath.resolver.ScopeResolver;
+import org.jooq.Record;
+import org.jooq.Result;
+import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exposure.spi.DataRepository;
+import org.oran.smo.teiv.exposure.spi.mapper.EntityMapper;
+import org.oran.smo.teiv.exposure.spi.mapper.RelationshipMapper;
+import org.oran.smo.teiv.exposure.tiespath.innerlanguage.AndLogicalBlock;
+import org.oran.smo.teiv.exposure.tiespath.innerlanguage.FilterCriteria;
+import org.oran.smo.teiv.exposure.tiespath.innerlanguage.InnerFilterCriteria;
+import org.oran.smo.teiv.exposure.tiespath.innerlanguage.OrLogicalBlock;
+import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
+import org.oran.smo.teiv.exposure.tiespath.resolver.TargetResolver;
+import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.springframework.stereotype.Service;
 
 import org.oran.smo.teiv.api.model.OranTeivDomains;
@@ -36,224 +50,218 @@ import org.oran.smo.teiv.api.model.OranTeivRelationshipTypes;
 import org.oran.smo.teiv.api.model.OranTeivRelationshipTypesItemsInner;
 import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
 import org.oran.smo.teiv.exposure.data.api.DataService;
-import org.oran.smo.teiv.exposure.spi.DataPersistanceService;
-import org.oran.smo.teiv.exposure.spi.mapper.MapperUtility;
-import org.oran.smo.teiv.exposure.spi.mapper.PageMetaData;
-import org.oran.smo.teiv.exposure.utils.PaginationDTO;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.firstHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.getViableLimit;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.prevHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
+
 @Service
 @RequiredArgsConstructor
 public class DataServiceImpl implements DataService {
-    private final DataPersistanceService dataPersistanceService;
-    private final MapperUtility mapperUtility;
+    private final DataRepository dataRepository;
+    private final ScopeResolver scopeResolver;
+    private final TargetResolver targetResolver;
+    private final EntityMapper entityMapper;
+    private final RelationshipMapper relationshipMapper;
+    private final BasePathRefinement basePathRefinement;
 
     @Override
-    public OranTeivDomains getDomainTypes(final PaginationDTO paginationDTO) {
-        final Map<String, Object> result = mapperUtility.wrapList(new ArrayList<>(SchemaRegistry.getDomains()),
-                paginationDTO);
-        final List<OranTeivDomainsItemsInner> items = new ArrayList<>();
-        final List<Object> itemsList = (List<Object>) result.get("items");
-        itemsList.forEach(domain -> items.add(OranTeivDomainsItemsInner.builder().name(domain.toString()).entityTypes(
-                OranTeivHref.builder().href(paginationDTO.getBasePath() + "/" + domain + "/entity-types").build())
-                .relationshipTypes(OranTeivHref.builder().href(paginationDTO
-                        .getBasePath() + "/" + domain + "/relationship-types").build()).build()));
-        return getDomainsResponseMessage(result, items, paginationDTO.getLimit(), paginationDTO.getOffset());
+    public OranTeivDomains getDomainTypes(final RequestDetails requestDetails) {
+        final Set<String> domains = SchemaRegistry.getDomains();
+        final int totalCount = domains.size();
+
+        final List<OranTeivDomainsItemsInner> items = domains.stream().skip(requestDetails.getOffset()).limit(
+                getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
+                        domain -> OranTeivDomainsItemsInner.builder().name(domain).entityTypes(OranTeivHref.builder().href(
+                                requestDetails.getBasePath() + "/" + domain + "/entity-types").build()).relationshipTypes(
+                                        OranTeivHref.builder().href(requestDetails
+                                                .getBasePath() + "/" + domain + "/relationship-types").build()).build())
+                .toList();
+
+        return OranTeivDomains.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
+                totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(lastHref(
+                        requestDetails, totalCount)).totalCount(totalCount).build();
     }
 
     @Override
-    public OranTeivEntityTypes getTopologyEntityTypes(final String domain, final PaginationDTO paginationDTO) {
-        final Map<String, Object> result = mapperUtility.wrapList(new ArrayList<>(SchemaRegistry.getEntityNamesByDomain(
-                domain)), paginationDTO);
-        final List<OranTeivEntityTypesItemsInner> items = new ArrayList<>();
-        final List<String> entities = SchemaRegistry.getEntityNamesByDomain(domain);
-        entities.stream().forEach(entity -> {
-            OranTeivEntityTypesItemsInner inner = new OranTeivEntityTypesItemsInner();
-            OranTeivHref entitiesHref = new OranTeivHref();
-            entitiesHref.setHref(paginationDTO.getBasePath() + "/" + entity + "/entities");
-            inner.setName(entity);
-            inner.setEntities(entitiesHref);
-            items.add(inner);
-        });
-        return getEntityTypesResponseMessage(result, items, paginationDTO.getLimit(), paginationDTO.getOffset());
+    public OranTeivEntityTypes getTopologyEntityTypes(final String domain, final RequestDetails requestDetails) {
+        final List<String> entityTypeNames = SchemaRegistry.getEntityNamesByDomain(domain);
+        final int totalCount = entityTypeNames.size();
+
+        final List<OranTeivEntityTypesItemsInner> items = entityTypeNames.stream().skip(requestDetails.getOffset()).limit(
+                getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
+                        entityTypeName -> OranTeivEntityTypesItemsInner.builder().name(entityTypeName).entities(OranTeivHref
+                                .builder().href(requestDetails.getBasePath() + "/" + entityTypeName + "/entities").build())
+                                .build()).toList();
+
+        return OranTeivEntityTypes.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
+                totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(lastHref(
+                        requestDetails, totalCount)).totalCount(totalCount).build();
     }
 
     @Override
-    public OranTeivRelationshipTypes getTopologyRelationshipTypes(final String domain, final PaginationDTO paginationDTO) {
-        final Map<String, Object> result = mapperUtility.wrapList(new ArrayList<>(SchemaRegistry.getRelationNamesByDomain(
-                domain)), paginationDTO);
-        final List<OranTeivRelationshipTypesItemsInner> items = new ArrayList<>();
-        final List<String> relationships = SchemaRegistry.getRelationNamesByDomain(domain);
-        relationships.stream().forEach(relationship -> {
-            OranTeivRelationshipTypesItemsInner inner = new OranTeivRelationshipTypesItemsInner();
-            OranTeivHref relationshipsHref = new OranTeivHref();
-            relationshipsHref.setHref(paginationDTO.getBasePath() + "/" + relationship + "/relationships");
-            inner.setName(relationship);
-            inner.setRelationships(relationshipsHref);
-            items.add(inner);
-        });
-        return getRelationshipTypesResponseMessage(result, items, paginationDTO.getLimit(), paginationDTO.getOffset());
+    public OranTeivRelationshipTypes getTopologyRelationshipTypes(final String domain,
+            final RequestDetails requestDetails) {
+        final List<String> relationNames = SchemaRegistry.getRelationNamesByDomain(domain);
+        final int totalCount = relationNames.size();
+
+        final List<OranTeivRelationshipTypesItemsInner> items = relationNames.stream().skip(requestDetails.getOffset())
+                .limit(getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
+                        relationName -> OranTeivRelationshipTypesItemsInner.builder().name(relationName).relationships(
+                                OranTeivHref.builder().href(requestDetails
+                                        .getBasePath() + "/" + relationName + "/relationships").build()).build()).toList();
+
+        return OranTeivRelationshipTypes.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(
+                requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(
+                        lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
     }
 
     @Override
-    public Map<String, Object> getTopologyById(final String entityName, final String id) {
+    public Object getEntityById(final String entityName, final String id) {
         final EntityType entityType = SchemaRegistry.getEntityTypeByName(entityName);
-        return dataPersistanceService.getTopology(entityType, id);
+        final Result<Record> result = dataRepository.getEntityById(entityType, id);
+        if (result.isEmpty()) {
+            throw TiesException.resourceNotFoundException();
+        }
+
+        return entityMapper.getItemsWithTotalCount(result).getLeft().get(0);
     }
 
     @Override
-    public OranTeivEntitiesResponseMessage getTopologyByType(final String entityName, final String target,
-            final String scope, final PaginationDTO paginationDTO) {
-        final Map<String, Object> response = dataPersistanceService.getTopologyByType(entityName, target, scope,
-                paginationDTO);
-        return getEntitiesResponseMessage(response);
+    public OranTeivEntitiesResponseMessage getTopologyByType(final String domain, final String entityName,
+            final String target, final String scope, final RequestDetails requestDetails) {
+        final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(InnerFilterCriteria
+                .builder().targets(targetResolver.resolve(entityName, target)).scope(scopeResolver.resolve(entityName,
+                        scope)).build())).resolvingTopologyObjectType(FilterCriteria.ResolvingTopologyObjectType.ENTITY)
+                .build();
+        final Result<Record> result = dataRepository.getTopologyByFilterCriteria(filterCriteria, requestDetails.getLimit(),
+                requestDetails.getOffset());
+        return entityMapper.mapEntities(result, requestDetails);
     }
 
     @Override
     public OranTeivEntitiesResponseMessage getEntitiesByDomain(final String domain, final String fields,
-            final String filters, final PaginationDTO paginationDTO) {
-        final Map<String, Object> response = dataPersistanceService.getEntitiesByDomain(domain, fields, filters,
-                paginationDTO);
-        return getEntitiesResponseMessage(response);
+            final String filters, final RequestDetails requestDetails) {
+        final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(InnerFilterCriteria
+                .builder().targets(targetResolver.resolve(null, fields)).scope(scopeResolver.resolve(null, filters))
+                .build())).resolvingTopologyObjectType(FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
+        final Result<Record> result = dataRepository.getTopologyByFilterCriteria(filterCriteria, requestDetails.getLimit(),
+                requestDetails.getOffset());
+        return entityMapper.mapEntities(result, requestDetails);
     }
 
     @Override
-    public OranTeivRelationshipsResponseMessage getAllRelationshipsForObjectId(final String entityName, final String id,
-            final PaginationDTO paginationDTO) {
-        final EntityType entityType = SchemaRegistry.getEntityTypeByName(entityName);
-        final List<RelationType> relationTypes = SchemaRegistry.getRelationTypesByEntityName(entityName);
-        final Map<String, Object> response = dataPersistanceService.getAllRelationships(entityType, relationTypes, id,
-                paginationDTO);
-        return getRelationshipsResponseMessage(response);
+    public OranTeivRelationshipsResponseMessage getAllRelationshipsForObjectId(final String domain, final String entityName,
+            final String id, final String target, final String scope, final RequestDetails requestDetails) {
+
+        final List<RelationType> relationNamesForEntityByDomain = SchemaRegistry.getRelationNamesForEntityByDomain(
+                entityName, domain);
+        final OranTeivRelationshipsResponseMessage response;
+        if (!relationNamesForEntityByDomain.isEmpty()) {
+            final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(
+                    InnerFilterCriteria.builder().targets(targetResolver.resolve(null, target)).scope(scopeResolver.resolve(
+                            null, scope)).build())).resolvingTopologyObjectType(
+                                    FilterCriteria.ResolvingTopologyObjectType.RELATIONSHIP).build();
+
+            basePathRefinement.refine(filterCriteria);
+
+            List<InnerFilterCriteria> resolvedCriteriaList = new ArrayList<>();
+
+            relationNamesForEntityByDomain.forEach(relationType -> filterCriteria.getFilterCriteriaList().forEach(
+                    innerFilterCriteria -> {
+                        final String relationship = innerFilterCriteria.getTargets().get(0).getTopologyObject();
+                        if (relationship.equals(relationType.getName())) {
+                            if (relationType.isConnectsSameEntity()) {
+                                addLogicalBlockForLoopBackRelations(innerFilterCriteria, relationType.getASideAssociation()
+                                        .getName(), relationType.getBSideAssociation().getName(), id, resolvedCriteriaList);
+                            } else if (relationType.getASide().getName().equals(entityName)) {
+                                addAndLogicalBlockToFilter(innerFilterCriteria, relationType.getBSideAssociation()
+                                        .getName(), id, resolvedCriteriaList);
+                            } else if (relationType.getBSide().getName().equals(entityName)) {
+                                addAndLogicalBlockToFilter(innerFilterCriteria, relationType.getASideAssociation()
+                                        .getName(), id, resolvedCriteriaList);
+                            }
+                        }
+                    }));
+
+            final FilterCriteria build = FilterCriteria.builder(domain).resolvingTopologyObjectType(
+                    FilterCriteria.ResolvingTopologyObjectType.RELATIONSHIP).filterCriteriaList(resolvedCriteriaList)
+                    .build();
+
+            final Result<Record> result = dataRepository.getTopologyByFilterCriteria(build, requestDetails.getLimit(),
+                    requestDetails.getOffset());
+            response = relationshipMapper.mapRelationships(result, requestDetails);
+        } else {
+            final int totalCount = 0;
+            response = OranTeivRelationshipsResponseMessage.builder().items(List.of()).first(firstHref(requestDetails))
+                    .prev(prevHref(requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails,
+                            totalCount)).last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
+        }
+
+        if (response.getItems().isEmpty()) {
+            getEntityById(entityName, id);
+        }
+        return response;
     }
 
     @Override
-    public Map<String, Object> getRelationshipById(final String relationName, final String id) {
-        return dataPersistanceService.getRelationshipWithSpecifiedId(id, SchemaRegistry.getRelationTypeByName(
-                relationName));
+    public Object getRelationshipById(final String relationName, final String id) {
+        final RelationType relationType = SchemaRegistry.getRelationTypeByName(relationName);
+        final Result<Record> result = dataRepository.getRelationshipById(id, relationType);
+        if (result.isEmpty()) {
+            throw TiesException.resourceNotFoundException();
+        }
+
+        return relationshipMapper.getItemsWithTotalCount(result).getLeft().get(0);
     }
 
     @Override
-    public OranTeivRelationshipsResponseMessage getRelationshipsByType(final String relationName, final String scopeFilter,
-            final PaginationDTO paginationDTO) {
-        final Map<String, Object> response = dataPersistanceService.getRelationshipsByType(SchemaRegistry
-                .getRelationTypeByName(relationName), scopeFilter, paginationDTO);
-        return getRelationshipsResponseMessage(response);
+    public OranTeivRelationshipsResponseMessage getRelationshipsByType(final String domain, final String relationshipType,
+            final String targetFilter, final String scopeFilter, final RequestDetails requestDetails) {
+        final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(InnerFilterCriteria
+                .builder().targets(targetResolver.resolve(relationshipType, targetFilter)).scope(scopeResolver.resolve(
+                        relationshipType, scopeFilter)).build())).resolvingTopologyObjectType(
+                                FilterCriteria.ResolvingTopologyObjectType.RELATIONSHIP).build();
+        final Result<Record> result = dataRepository.getTopologyByFilterCriteria(filterCriteria, requestDetails.getLimit(),
+                requestDetails.getOffset());
+        return relationshipMapper.mapRelationships(result, requestDetails);
     }
 
-    private OranTeivEntitiesResponseMessage getEntitiesResponseMessage(Map<String, Object> response) {
-        OranTeivEntitiesResponseMessage result = new OranTeivEntitiesResponseMessage();
-        List<Object> items = (List<Object>) response.get("items");
-        PageMetaData self = (PageMetaData) response.get("self");
-        PageMetaData first = (PageMetaData) response.get("first");
-        PageMetaData prev = (PageMetaData) response.get("prev");
-        PageMetaData next = (PageMetaData) response.get("next");
-        PageMetaData last = (PageMetaData) response.get("last");
-        Integer totalCount = (Integer) response.get("totalCount");
-
-        result.setItems(items);
-
-        OranTeivHref selfHref = new OranTeivHref();
-        OranTeivHref firstHref = new OranTeivHref();
-        OranTeivHref prevHref = new OranTeivHref();
-        OranTeivHref nextHref = new OranTeivHref();
-        OranTeivHref lastHref = new OranTeivHref();
-
-        selfHref.setHref(self.getHref());
-        firstHref.setHref(first.getHref());
-        prevHref.setHref(prev.getHref());
-        nextHref.setHref(next.getHref());
-        lastHref.setHref(last.getHref());
-
-        result.setSelf(selfHref);
-        result.setFirst(firstHref);
-        result.setPrev(prevHref);
-        result.setNext(nextHref);
-        result.setLast(lastHref);
-        result.setTotalCount(totalCount);
-        return result;
+    // Helper method for adding AndLogicalBlock to FilterCriteria
+    private void addAndLogicalBlockToFilter(final InnerFilterCriteria innerFilterCriteria, final String associationName,
+            final String id, final List<InnerFilterCriteria> resolvedCriteriaList) {
+        AndLogicalBlock andLogicalBlock = createAndLogicalBlock(innerFilterCriteria, associationName, id);
+        innerFilterCriteria.setScope(andLogicalBlock);
+        resolvedCriteriaList.add(innerFilterCriteria);
     }
 
-    private OranTeivRelationshipsResponseMessage getRelationshipsResponseMessage(Map<String, Object> response) {
-        OranTeivRelationshipsResponseMessage result = new OranTeivRelationshipsResponseMessage();
-        List<Object> items = (List<Object>) response.get("items");
-        PageMetaData self = (PageMetaData) response.get("self");
-        PageMetaData first = (PageMetaData) response.get("first");
-        PageMetaData prev = (PageMetaData) response.get("prev");
-        PageMetaData next = (PageMetaData) response.get("next");
-        PageMetaData last = (PageMetaData) response.get("last");
-        Integer totalCount = (Integer) response.get("totalCount");
-
-        result.setItems(items);
-
-        OranTeivHref selfHref = new OranTeivHref();
-        OranTeivHref firstHref = new OranTeivHref();
-        OranTeivHref prevHref = new OranTeivHref();
-        OranTeivHref nextHref = new OranTeivHref();
-        OranTeivHref lastHref = new OranTeivHref();
-
-        selfHref.setHref(self.getHref());
-        firstHref.setHref(first.getHref());
-        prevHref.setHref(prev.getHref());
-        nextHref.setHref(next.getHref());
-        lastHref.setHref(last.getHref());
-
-        result.setSelf(selfHref);
-        result.setFirst(firstHref);
-        result.setPrev(prevHref);
-        result.setNext(nextHref);
-        result.setLast(lastHref);
-        result.setTotalCount(totalCount);
-        return result;
+    // Helper method used to add LogicalBlock for Rel connecting same entity to FilterCriteria
+    private void addLogicalBlockForLoopBackRelations(final InnerFilterCriteria innerFilterCriteria,
+            final String aSideAssociationName, final String bSideAssociationName, final String id,
+            final List<InnerFilterCriteria> resolvedCriteriaList) {
+        OrLogicalBlock orLogicalBlock = new OrLogicalBlock();
+        orLogicalBlock.addChild(scopeResolver.resolve(null, "/" + aSideAssociationName + "[@id='" + id + "']"));
+        orLogicalBlock.addChild(scopeResolver.resolve(null, "/" + bSideAssociationName + "[@id='" + id + "']"));
+        AndLogicalBlock andLogicalBlock = new AndLogicalBlock();
+        andLogicalBlock.addChild(innerFilterCriteria.getScope());
+        andLogicalBlock.addChild(orLogicalBlock);
+        innerFilterCriteria.setScope(andLogicalBlock);
+        resolvedCriteriaList.add(innerFilterCriteria);
     }
 
-    private OranTeivDomains getDomainsResponseMessage(Map<String, Object> response, List<OranTeivDomainsItemsInner> items,
-            final Integer limit, final Integer offset) {
-        PageMetaData self = (PageMetaData) response.get("self");
-        PageMetaData first = (PageMetaData) response.get("first");
-        PageMetaData prev = (PageMetaData) response.get("prev");
-        PageMetaData next = (PageMetaData) response.get("next");
-        PageMetaData last = (PageMetaData) response.get("last");
-
-        return OranTeivDomains.builder().items(items.subList(offset, Math.min(offset + limit, items.size()))).first(
-                OranTeivHref.builder().href(first.getHref()).build()).prev(OranTeivHref.builder().href(prev.getHref())
-                        .build()).self(OranTeivHref.builder().href(self.getHref()).build()).next(OranTeivHref.builder()
-                                .href(next.getHref()).build()).last(OranTeivHref.builder().href(last.getHref()).build())
-                .totalCount(items.size()).build();
-    }
-
-    private OranTeivEntityTypes getEntityTypesResponseMessage(Map<String, Object> response,
-            List<OranTeivEntityTypesItemsInner> items, final Integer limit, final Integer offset) {
-        PageMetaData self = (PageMetaData) response.get("self");
-        PageMetaData first = (PageMetaData) response.get("first");
-        PageMetaData prev = (PageMetaData) response.get("prev");
-        PageMetaData next = (PageMetaData) response.get("next");
-        PageMetaData last = (PageMetaData) response.get("last");
-
-        return OranTeivEntityTypes.builder().items(items.subList(offset, Math.min(offset + limit, items.size()))).first(
-                OranTeivHref.builder().href(first.getHref()).build()).prev(OranTeivHref.builder().href(prev.getHref())
-                        .build()).self(OranTeivHref.builder().href(self.getHref()).build()).next(OranTeivHref.builder()
-                                .href(next.getHref()).build()).last(OranTeivHref.builder().href(last.getHref()).build())
-                .totalCount(items.size()).build();
-    }
-
-    private OranTeivRelationshipTypes getRelationshipTypesResponseMessage(Map<String, Object> response,
-            List<OranTeivRelationshipTypesItemsInner> items, final Integer limit, final Integer offset) {
-        PageMetaData self = (PageMetaData) response.get("self");
-        PageMetaData first = (PageMetaData) response.get("first");
-        PageMetaData prev = (PageMetaData) response.get("prev");
-        PageMetaData next = (PageMetaData) response.get("next");
-        PageMetaData last = (PageMetaData) response.get("last");
-
-        return OranTeivRelationshipTypes.builder().items(items.subList(offset, Math.min(offset + limit, items.size())))
-                .first(OranTeivHref.builder().href(first.getHref()).build()).prev(OranTeivHref.builder().href(prev
-                        .getHref()).build()).self(OranTeivHref.builder().href(self.getHref()).build()).next(OranTeivHref
-                                .builder().href(next.getHref()).build()).last(OranTeivHref.builder().href(last.getHref())
-                                        .build()).totalCount(items.size()).build();
+    // Helper method to create AndLogicalBlock
+    private AndLogicalBlock createAndLogicalBlock(final InnerFilterCriteria innerFilterCriteria,
+            final String associationName, final String id) {
+        AndLogicalBlock andLogicalBlock = new AndLogicalBlock();
+        andLogicalBlock.addChild(innerFilterCriteria.getScope());
+        andLogicalBlock.addChild(scopeResolver.resolve(null, "/" + associationName + "[@id='" + id + "']"));
+        return andLogicalBlock;
     }
 }

@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-ran:CloudNativeApplication": [
+                "o-ran-smo-teiv-ran-logical:CloudNativeApplication": [
                     {
                         "id": "CNA_SED_1",
                         "attributes": {
@@ -19,9 +19,13 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFunction": [
+                "o-ran-smo-teiv-ran-logical:GNBDUFunction": [
                     {
                         "id": "GNBDU_SED_1",
+                        "sourceIds": [
+                            "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,GNBDUFunction=1",
+                            "urn:cmHandle:395221E080CCF0FD1929103B15999999"
+                        ],
                         "attributes": {
                             "fdn": "SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,GNBDUFunction=1",
                             "dUpLMNId": {
@@ -40,9 +44,13 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBCUCPFunction": [
+                "o-ran-smo-teiv-ran-logical:GNBCUCPFunction": [
                     {
                         "id": "GNBCUCP_SED_1",
+                        "sourceIds": [
+                            "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,GNBCUCPFunction=1",
+                            "urn:cmHandle:395221E080CCF0FD1929103B15999999"
+                        ],
                         "attributes": {
                             "fdn": "SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,GNBCUCPFunction=1",
                             "gNBCUName": "Test_sed_gNBCU",
@@ -60,6 +68,10 @@
                     },
                     {
                         "id": "GNBCUCP_SED_2",
+                        "sourceIds": [
+                            "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,GNBCUCPFunction=2",
+                            "urn:cmHandle:395221E080CCF0FD1929103B15999999"
+                        ],
                         "attributes": {
                             "fdn": "SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,GNBCUCPFunction=2",
                             "gNBCUName": "Test_sed_gNBCU2",
@@ -80,7 +92,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-ran:GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
+                "o-ran-smo-teiv-ran-logical-to-cloud:GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
                     {
                         "id": "relation_sed_1",
                         "aSide": "GNBDU_SED_1",
@@ -89,7 +101,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
+                "o-ran-smo-teiv-ran-logical-to-cloud:GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
                     {
                         "id": "relation_sed_2",
                         "aSide": "GNBCUCP_SED_1",

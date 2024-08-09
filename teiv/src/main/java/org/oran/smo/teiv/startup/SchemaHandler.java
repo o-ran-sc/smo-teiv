@@ -20,6 +20,8 @@
  */
 package org.oran.smo.teiv.startup;
 
+import org.oran.smo.teiv.exposure.spi.ModelRepository;
+import org.oran.smo.teiv.service.SchemaCleanUpService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -37,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SchemaHandler {
     private final SchemaLoader postgresSchemaLoader;
     private final HealthStatus healthStatus;
+    private final ModelRepository modelRepository;
+    private final SchemaCleanUpService schemaCleanUpService;
 
     /**
      * Loads the schema registry at application startup.
@@ -49,5 +53,16 @@ public class SchemaHandler {
         postgresSchemaLoader.loadSchemaRegistry();
         log.info("Schema initialized successfully...");
         healthStatus.setSchemaInitialized(true);
+    }
+
+    /**
+     * Continue schema clean up at application startup.
+     */
+    @Order(value = 15)
+    @EventListener(value = ApplicationReadyEvent.class)
+    public void cleanUpSchema() {
+        log.debug("Start schema clean up");
+        modelRepository.getDeletingModulesOnStartup().forEach(module -> schemaCleanUpService.cleanUpModule(module
+                .getName()));
     }
 }

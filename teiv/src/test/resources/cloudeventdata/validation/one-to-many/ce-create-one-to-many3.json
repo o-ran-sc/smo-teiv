@@ -7,24 +7,28 @@
     "datacontenttype": "application/json",
     "dataschema": "https://ties:8080/schemas/v1/r1-topology",
     "data": {
-        "entities": {
-            "o-ran-smo-teiv-oam:ManagedElement": [
-                {
-                    "id": "ManagedElement_2",
-                    "attributes": {
+        "entities": [
+            {
+                "o-ran-smo-teiv-ran-oam:ManagedElement": [
+                    {
+                        "id": "ManagedElement_2",
+                        "attributes": {
 
+                        }
                     }
-                }
-            ]
-        },
-        "relationships": {
-            "o-ran-smo-teiv-ran-oam-to-ran:MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION": [
-                {
-                    "id": "Relation_OneToMany_2",
-                    "aSide": "ManagedElement_2",
-                    "bSide": "GNBCUCPFunction_1"
-                }
-            ]
-        }
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "o-ran-smo-teiv-ran-oam-to-logical:MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION": [
+                    {
+                        "id": "Relation_OneToMany_2",
+                        "aSide": "ManagedElement_2",
+                        "bSide": "GNBCUCPFunction_1"
+                    }
+                ]
+            }
+        ]
     }
 }

@@ -20,15 +20,11 @@
  */
 package org.oran.smo.teiv.service;
 
-import static org.jooq.impl.DSL.table;
-
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
@@ -65,10 +61,6 @@ public class TiesDbService {
             }
             return null;
         });
-    }
-
-    protected Result<Record> selectAllRowsFromTable(final String tableName) {
-        return runMethodSafe(() -> readDataDslContext.selectFrom(table(tableName)).fetch());
     }
 
     private <T> T runMethodSafe(Supplier<T> supp) {

@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-oam:ManagedElement": [
+                "o-ran-smo-teiv-ran-oam:ManagedElement": [
                     {
                         "id": "ManagedElement_2"
                     }
@@ -18,7 +18,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-oam-to-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
+                "o-ran-smo-teiv-ran-oam-to-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
                     {
                         "id": "relation_12"
                     }

@@ -20,11 +20,7 @@
  */
 package org.oran.smo.teiv.controller.health;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -34,43 +30,28 @@ import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
  * Health Check component for TIES ingestion.
  */
 
-@RequiredArgsConstructor
 @Component
-@Slf4j
 @Profile("ingestion")
-public class TiesIngestionHealthIndicator implements HealthIndicator {
+public class TiesIngestionHealthIndicator extends TiesHealthIndicator {
 
-    private final HealthStatus healthStatus;
+    @Override
+    protected String getServiceName() {
+        return "top-exp-inv-ingestion";
+    }
 
-    private final DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka;
-
-    private static final String SERVICE_NAME = "top-exp-inv-ingestion";
+    public TiesIngestionHealthIndicator(HealthStatus healthStatus,
+            DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka) {
+        super(healthStatus, dependentServiceAvailabilityKafka);
+    }
 
     @Override
     public Health health() {
-        String errorMessage = SERVICE_NAME + " is DOWN because:";
-        boolean isHealthy = true;
-
         if (!healthStatus.isSchemaInitialized()) {
-            errorMessage += " Schema is yet to be initialized.";
-            isHealthy = false;
+            return healthDown("Schema is yet to be initialized.");
         }
-
-        if (!checkKafkaHealth()) {
-            errorMessage += " Kafka is unavailable.";
-            isHealthy = false;
+        if (!isKafkaReachable()) {
+            return healthDown("Kafka is unavailable.");
         }
-
-        if (!isHealthy) {
-            log.error(errorMessage);
-            return Health.down().withDetail("Error", errorMessage).build();
-        } else {
-            log.debug(SERVICE_NAME + " is UP and Healthy.");
-            return Health.up().withDetail("UP", SERVICE_NAME + " is UP and Healthy.").build();
-        }
-    }
-
-    private boolean checkKafkaHealth() {
-        return dependentServiceAvailabilityKafka.checkService();
+        return healthUp();
     }
 }

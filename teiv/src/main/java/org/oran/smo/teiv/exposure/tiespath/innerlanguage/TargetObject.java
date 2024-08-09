@@ -24,10 +24,12 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Builder(builderMethodName = "hiddenBuilder")
 public class TargetObject {
+    @NonNull
     private String topologyObject;
     @Builder.Default
     private TopologyObjectType topologyObjectType = TopologyObjectType.UNDEFINED;
@@ -36,7 +38,11 @@ public class TargetObject {
     @Builder.Default
     private List<String> params = List.of();
 
-    public static TargetObjectBuilder builder(String topologyObject) {
+    private boolean isAllParamQueried;
+
+    private boolean isGenerated;
+
+    public static TargetObjectBuilder builder(final String topologyObject) {
         return hiddenBuilder().topologyObject(topologyObject);
     }
 }

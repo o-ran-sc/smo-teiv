@@ -20,11 +20,10 @@
  */
 package org.oran.smo.teiv.exposure.spi.mapper;
 
-import org.oran.smo.teiv.schema.EntityType;
-import org.oran.smo.teiv.schema.MockSchemaLoader;
-import org.oran.smo.teiv.schema.Module;
-import org.oran.smo.teiv.schema.SchemaLoader;
-import org.oran.smo.teiv.schema.SchemaLoaderException;
+import static org.jooq.impl.DSL.field;
+
+import java.util.List;
+import java.util.Map;
 
 import org.jooq.Record;
 import org.jooq.Result;
@@ -34,44 +33,41 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import static org.oran.smo.teiv.utils.TiesConstants.ATTRIBUTES;
-import static org.jooq.impl.DSL.field;
+import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
+import org.oran.smo.teiv.exposure.utils.RequestDetails;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
 
 class EntityMapperTest {
-    private static EntityMapper entityMapper;
+
+    EntityMapper entityMapper = new EntityMapper();
 
     @BeforeAll
     static void setUp() throws SchemaLoaderException {
-        EntityType entityType = EntityType.builder().name("GNBDUFunction").module(Module.builder().name(
-                "o-ran-smo-teiv-ran").build()).build();
-        entityMapper = new EntityMapper(entityType);
-        SchemaLoader mockSchemaLoader = new MockSchemaLoader();
+        MockSchemaLoader mockSchemaLoader = new MockSchemaLoader();
         mockSchemaLoader.loadSchemaRegistry();
     }
 
     @Test
     void testMap() {
-        final Result<Record> record = DSL.using(SQLDialect.POSTGRES).newResult();
-        Map<String, Object> result = new HashMap<>();
+        final Result<Record> records = DSL.using(SQLDialect.POSTGRES).newResult();
+        records.add(DSL.using(SQLDialect.POSTGRES).newRecord(field("o-ran-smo-teiv-ran:GNBDUFunction.id"), field(
+                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), field("o-ran-smo-teiv-ran:NRCellDU.id"), field("count"))
+                .values("9BCD297B8258F67908477D895636ED65", 1, null, null));
+        records.add(DSL.using(SQLDialect.POSTGRES).newRecord(field("o-ran-smo-teiv-ran:GNBDUFunction.id"), field(
+                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), field("o-ran-smo-teiv-ran:NRCellDU.id"), field("count"))
+                .values(null, null, "98C3A4591A37718E1330F0294E23B62A", null));
+        records.add(DSL.using(SQLDialect.POSTGRES).newRecord(field("o-ran-smo-teiv-ran:GNBDUFunction.id"), field(
+                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), field("o-ran-smo-teiv-ran:NRCellDU.id"), field("count"))
+                .values(null, null, null, 2));
 
-        record.add(DSL.using(SQLDialect.POSTGRES).newRecord(field("dUpLMNId"), field("fdn"), field("gNBDUId"), field(
-                "gNBId"), field("cmId"), field("gNBIdLength"), field("id"), field("CD_sourceIds")).values(Map.of("mcc",
-                        "456", "mnc", "82"),
-                        "SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=95", 95,
-                        95, "null", 2, "5970A12E0AF8B0FBE0B49290FE847F9B", List.of(
-                                "urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=95",
-                                "urn:cmHandle:/395221E080CCF0FD1924103B15873814")));
+        OranTeivEntitiesResponseMessage result = entityMapper.mapEntities(records, RequestDetails.builder().basePath(
+                "/test").offset(0).limit(100).build());
 
-        result.put("o-ran-smo-teiv-ran:GNBDUFunction", List.of(Map.of(ATTRIBUTES, Map.of("dUpLMNId", Map.of("mcc", "456",
-                "mnc", "82"), "fdn",
-                "SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=95", "gNBDUId",
-                95, "gNBId", 95, "cmId", "null", "gNBIdLength", 2), "id", "5970A12E0AF8B0FBE0B49290FE847F9B", "sourceIds",
-                List.of("urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=95",
-                        "urn:cmHandle:/395221E080CCF0FD1924103B15873814"))));
-
-        Assertions.assertEquals(result, entityMapper.map(record));
+        Assertions.assertEquals(2, result.getTotalCount());
+        Assertions.assertEquals(List.of(Map.of("o-ran-smo-teiv-ran:GNBDUFunction", List.of(Map.of("id",
+                "9BCD297B8258F67908477D895636ED65", "attributes", Map.of("gNBId", 1)))), Map.of(
+                        "o-ran-smo-teiv-ran:NRCellDU", List.of(Map.of("id", "98C3A4591A37718E1330F0294E23B62A")))), result
+                                .getItems());
     }
 }

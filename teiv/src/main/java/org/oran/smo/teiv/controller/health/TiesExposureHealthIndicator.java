@@ -20,11 +20,8 @@
  */
 package org.oran.smo.teiv.controller.health;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
+import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -32,26 +29,25 @@ import org.springframework.stereotype.Component;
  * Health Check component for TIES exposure.
  */
 
-@RequiredArgsConstructor
 @Component
-@Slf4j
 @Profile("!ingestion")
-public class TiesExposureHealthIndicator implements HealthIndicator {
+public class TiesExposureHealthIndicator extends TiesHealthIndicator {
 
-    private final HealthStatus healthStatus;
+    public TiesExposureHealthIndicator(HealthStatus healthStatus,
+            DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka) {
+        super(healthStatus, dependentServiceAvailabilityKafka);
+    }
 
-    private static final String SERVICE_NAME = "topology-exposure-inventory";
+    @Override
+    protected String getServiceName() {
+        return "topology-exposure-inventory";
+    }
 
     @Override
     public Health health() {
         if (!healthStatus.isSchemaInitialized()) {
-            String errorMessage = SERVICE_NAME + " is DOWN because: Schema is yet to be initialized.";
-            log.error(errorMessage);
-            return Health.down().withDetail("Error", errorMessage).build();
-        } else {
-            String message = SERVICE_NAME + " is UP and Healthy.";
-            log.debug(message);
-            return Health.up().withDetail("UP", message).build();
+            return healthDown("Schema is yet to be initialized.");
         }
+        return healthUp();
     }
 }

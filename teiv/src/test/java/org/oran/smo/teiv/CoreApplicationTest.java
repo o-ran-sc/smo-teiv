@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.oran.smo.teiv.utils.TiesTestConstants.APPLICATION_JSON;
 
 import java.util.Objects;
 
@@ -54,8 +55,6 @@ class CoreApplicationTest {
     private MockMvc mvc;
     @MockBean
     private SchemaHandler schemaHandler;
-
-    private final String ACCEPT_TYPE = "application/json";
 
     @Test
     void testMetricsAvailable() throws Exception {
@@ -97,6 +96,9 @@ class CoreApplicationTest {
         Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationship_by_id_fail_total"));
         Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationships_by_type_fail_total"));
         Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationships_by_entity_id_fail_total"));
+
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_update_classifiers_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_update_decorators_fail_total"));
         // spotless:on
     }
 
@@ -109,27 +111,29 @@ class CoreApplicationTest {
             "getTopologyEntityTypes:/domains/RAN_LOGICAL/entity-types",
             "getTopologyRelationshipTypes:/domains/RAN_LOGICAL/relationship-types" }, delimiter = ':')
     public void testPaginationRelatedEndpoints(String method, String url) throws Exception {
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("offset", "-1").accept(ACCEPT_TYPE)).andExpect(status()
-                .isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException())
-                        .getMessage(), method + ".offset: must be greater than or equal to 0"));
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "0").accept(ACCEPT_TYPE)).andExpect(status()
-                .isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException())
-                        .getMessage(), method + ".limit: must be greater than or equal to 1"));
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "501").accept(ACCEPT_TYPE)).andExpect(status()
-                .isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException())
-                        .getMessage(), method + ".limit: must be less than or equal to 500"));
+        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("offset", "-1").accept(APPLICATION_JSON)).andExpect(
+                status().isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result
+                        .getResolvedException()).getMessage(), method + ".offset: must be greater than or equal to 0"));
+        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "0").accept(APPLICATION_JSON)).andExpect(
+                status().isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result
+                        .getResolvedException()).getMessage(), method + ".limit: must be greater than or equal to 1"));
+        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "501").accept(APPLICATION_JSON)).andExpect(
+                status().isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result
+                        .getResolvedException()).getMessage(), method + ".limit: must be less than or equal to 500"));
 
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("offset", "0").accept(ACCEPT_TYPE)).andExpect(result -> {
-            if (result.getResponse().getStatus() != HttpStatus.OK.value())
-                assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result.getResolvedException())
-                        .getClass());
-        });
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "1").accept(ACCEPT_TYPE)).andExpect(result -> {
-            if (result.getResponse().getStatus() != HttpStatus.OK.value())
-                assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result.getResolvedException())
-                        .getClass());
-        });
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "500").accept(ACCEPT_TYPE)).andExpect(
+        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("offset", "0").accept(APPLICATION_JSON)).andExpect(
+                result -> {
+                    if (result.getResponse().getStatus() != HttpStatus.OK.value())
+                        assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result
+                                .getResolvedException()).getClass());
+                });
+        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "1").accept(APPLICATION_JSON)).andExpect(
+                result -> {
+                    if (result.getResponse().getStatus() != HttpStatus.OK.value())
+                        assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result
+                                .getResolvedException()).getClass());
+                });
+        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "500").accept(APPLICATION_JSON)).andExpect(
                 result -> {
                     if (result.getResponse().getStatus() != HttpStatus.OK.value())
                         assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result

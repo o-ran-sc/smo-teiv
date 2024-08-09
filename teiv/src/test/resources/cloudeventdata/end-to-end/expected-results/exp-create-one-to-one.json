@@ -1,0 +1,22 @@
+{
+    "163276fa439cdfccabb80f7acacb6fa638e8d314": [
+        {
+            "id": "CloudNativeSystem_2"
+        },
+        {
+            "id": "CloudNativeSystem_3"
+        }
+    ],
+    "o-ran-smo-teiv-ran-oam_ManagedElement": [
+        {
+            "id": "ManagedElement_2",
+            "REL_FK_deployed-as-cloudNativeSystem": "CloudNativeSystem_2",
+            "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": "relation_11"
+        },
+        {
+            "id": "ManagedElement_3",
+            "REL_FK_deployed-as-cloudNativeSystem": "CloudNativeSystem_3",
+            "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": "relation_12"
+        }
+    ]
+}

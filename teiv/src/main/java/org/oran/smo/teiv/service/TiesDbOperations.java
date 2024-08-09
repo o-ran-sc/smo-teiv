@@ -21,7 +21,6 @@
 package org.oran.smo.teiv.service;
 
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getDbName;
-import static org.oran.smo.teiv.schema.BidiDbNameMapper.getModelledName;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.B_SIDE;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.RELATION;
 import static org.oran.smo.teiv.utils.TiesConstants.FOREIGN_KEY_VIOLATION_ERROR_CODE;
@@ -44,6 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.jooq.Field;
 import org.oran.smo.teiv.exception.IllegalManyToManyRelationshipUpdateException;
 import org.oran.smo.teiv.exception.IllegalOneToManyRelationshipUpdateException;
 import org.jooq.Configuration;
@@ -51,6 +51,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.JSON;
 import org.jooq.exception.DataAccessException;
+import org.oran.smo.teiv.utils.JooqTypeConverter;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -72,7 +73,6 @@ import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 import org.oran.smo.teiv.service.cloudevent.data.Relationship;
 
-import org.oran.smo.teiv.utils.ConvertToJooqTypeUtil;
 import org.oran.smo.teiv.utils.TiesConstants;
 import org.oran.smo.teiv.utils.schema.Geography;
 
@@ -89,8 +89,7 @@ public class TiesDbOperations {
     /**
      * Insert or update a row in the given table.
      * <p>
-     * Note: Free version of Jooq doesn't support spatial types like Geography. Instead of that the OTHER type is used.
-     * Instead of that the OTHER type is used.
+     * Note: Free version of Jooq doesn't support spatial types like Geography. Instead of that the OTHER type is used
      * </p>
      *
      * @param context
@@ -98,26 +97,30 @@ public class TiesDbOperations {
      * @param tableName
      *     Name of the database table to use.
      * @param values
-     *     A map of column name and value pairs. The value is converted
-     *     to the corresponding Postgres type based on the
+     *     A map of column name and value pairs. The value is converted to the corresponding Postgres type based on the
      *     dynamic type of the value. For
-     *     example: <"column1", 5L> means that the value 5 should be
-     *     inserted to the column1 as a BIGINT.
+     *     example: <"column1", 5L> means that the value 5 should be inserted to the column1 as a BIGINT.
      * @return The number of modified rows.
      */
 
     public int merge(DSLContext context, String tableName, Map<String, Object> values) {
-        Map<String, Object> valuesToMerge = new HashMap<>(values.size());
+        Map<String, Object> valuesToInsert = new HashMap<>(values.size());
         values.forEach((key, value) -> {
             if (value instanceof Geography geographyValue) {
-                valuesToMerge.put(key, field("'" + geographyValue + "'", OTHER));
+                valuesToInsert.put(key, field("'" + geographyValue + "'", OTHER));
             } else {
-                valuesToMerge.put(key, value);
+                valuesToInsert.put(key, value);
             }
         });
-
-        return context.insertInto(table(tableName)).set(valuesToMerge).onConflict(field(ID_COLUMN_NAME)).doUpdate().set(
-                valuesToMerge).execute();
+        Map<String, Object> valuesToUpdate = new HashMap<>(valuesToInsert);
+        valuesToUpdate.remove(ID_COLUMN_NAME);
+        if (valuesToUpdate.isEmpty()) {
+            return context.insertInto(table(tableName)).set(valuesToInsert).onConflict(field(ID_COLUMN_NAME)).doNothing()
+                    .execute();
+        } else {
+            return context.insertInto(table(tableName)).set(valuesToInsert).onConflict(field(ID_COLUMN_NAME)).doUpdate()
+                    .set(valuesToUpdate).execute();
+        }
     }
 
     public List<OperationResult> deleteEntity(DSLContext context, EntityType entityType, String entityId) {
@@ -127,7 +130,7 @@ public class TiesDbOperations {
         int affectedRows = context.delete(table(entityType.getTableName())).where(field(ID_COLUMN_NAME).eq(entityId))
                 .execute();
         if (affectedRows > 0) {
-            result.add(new OperationResult(entityId, entityType.getName(), null));
+            result.add(OperationResult.createEntityOperationResult(entityId, entityType.getName()));
         }
         return result;
     }
@@ -141,14 +144,14 @@ public class TiesDbOperations {
         List<OperationResult> relationshipList = context.select(field(String.format(QUOTED_STRING, relationType
                 .getIdColumnName()), String.class)).from(table(relationType.getTableName())).where(field(String.format(
                         QUOTED_STRING, manySideEntityIdColumn)).eq(manySideEntityId)).forUpdate().fetchInto(String.class)
-                .stream().filter(Objects::nonNull).map(id -> new OperationResult(id, extractTypeFromColumn(
-                        oneSideEntityIdColumn), null)).collect(Collectors.toList());
+                .stream().filter(Objects::nonNull).map(id -> OperationResult.createRelationshipOperationResult(id,
+                        relationType.getName())).collect(Collectors.toList());
         if (relationshipList.isEmpty()) {
             return relationshipList;
         } else {
             int updateResult = context.update(table(relationType.getTableName())).setNull(field(String.format(QUOTED_STRING,
                     relationType.getIdColumnName()))).setNull(field(String.format(QUOTED_STRING, oneSideEntityIdColumn)))
-                    .set(field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), ConvertToJooqTypeUtil
+                    .set(field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), JooqTypeConverter
                             .toJsonb(List.of())).where(field(String.format(QUOTED_STRING, manySideEntityIdColumn)).eq(
                                     manySideEntityId)).execute();
             return updateResult > 0 ? relationshipList : List.of();
@@ -164,31 +167,31 @@ public class TiesDbOperations {
 
         int affectedRows = context.update(table(relationType.getTableName())).setNull(field(String.format(QUOTED_STRING,
                 relationType.getIdColumnName()))).setNull(field(String.format(QUOTED_STRING, oneSideEntityIdColumn))).set(
-                        field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), ConvertToJooqTypeUtil
+                        field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), JooqTypeConverter
                                 .toJsonb(List.of())).where(field(String.format(QUOTED_STRING, relationType
                                         .getIdColumnName())).eq(relationshipId)).execute();
         return affectedRows > 0 ?
-                Optional.of(new OperationResult(relationshipId, extractTypeFromColumn(oneSideEntityIdColumn), null)) :
+                Optional.of(OperationResult.createRelationshipOperationResult(relationshipId, relationType.getName())) :
                 Optional.empty();
     }
 
-    public List<OperationResult> deleteManyToManyRelationByEntityId(DSLContext context, String tableName, String entityId,
-            String aSideColumnName, String bSideColumnName) {
-        List<String> deletedIds = context.delete(table(tableName)).where(field(String.format(QUOTED_STRING,
-                aSideColumnName)).eq(entityId).or(field(String.format(QUOTED_STRING, bSideColumnName)).eq(entityId)))
-                .returning(field(TiesConstants.ID_COLUMN_NAME)).fetch().getValues(field(TiesConstants.ID_COLUMN_NAME),
-                        String.class);
+    public List<OperationResult> deleteManyToManyRelationByEntityId(DSLContext context, RelationType relationType,
+            String entityId, String aSideColumnName, String bSideColumnName) {
+        List<String> deletedIds = context.delete(table((relationType.getTableName()))).where(field(String.format(
+                QUOTED_STRING, aSideColumnName)).eq(entityId).or(field(String.format(QUOTED_STRING, bSideColumnName)).eq(
+                        entityId))).returning(field(TiesConstants.ID_COLUMN_NAME)).fetch().getValues(field(
+                                TiesConstants.ID_COLUMN_NAME), String.class);
 
-        return deletedIds.stream().map(id -> new OperationResult(id, extractTypeFromTable(tableName), null)).collect(
-                Collectors.toList());
+        return deletedIds.stream().map(id -> OperationResult.createRelationshipOperationResult(id, relationType.getName()))
+                .collect(Collectors.toList());
     }
 
-    public Optional<OperationResult> deleteManyToManyRelationByRelationId(DSLContext context, String tableName,
+    public Optional<OperationResult> deleteManyToManyRelationByRelationId(DSLContext context, RelationType relationType,
             String relationshipId) {
-
-        int affectedRows = context.delete(table(tableName)).where(field(ID_COLUMN_NAME).eq(relationshipId)).execute();
+        int affectedRows = context.delete(table(relationType.getTableName())).where(field(ID_COLUMN_NAME).eq(
+                relationshipId)).execute();
         return affectedRows > 0 ?
-                Optional.of(new OperationResult(relationshipId, extractTypeFromTable(tableName), null)) :
+                Optional.of(OperationResult.createRelationshipOperationResult(relationshipId, relationType.getName())) :
                 Optional.empty();
     }
 
@@ -209,18 +212,11 @@ public class TiesDbOperations {
         return results;
     }
 
-    public List<String> selectByCmHandle(DSLContext context, String tableName, String cmHandle) {
-        String path = "$.** ? (@.cmHandle == \"" + cmHandle + "\")";
-        return context.select(field(String.format(QUOTED_STRING, "id"), String.class)).from(tableName).where(jsonExists(
-                field(String.format(QUOTED_STRING, "cmId"), JSON.class), path)).fetch().getValues(field(String.format(
-                        QUOTED_STRING, "id"), String.class));
-    }
-
     public List<String> selectByCmHandleFormSourceIds(DSLContext context, String tableName, String cmHandle) {
-        String path = String.format("$[*] ? (@ == \"urn:cmHandle:/%s\")", cmHandle);
+        String path = String.format("$[*] ? (@ == \"urn:cmHandle:%s\")", cmHandle);
         return context.select(field(String.format(QUOTED_STRING, "id"), String.class)).from(tableName).where(jsonExists(
-                field(String.format(QUOTED_STRING, "CD_sourceIds"), JSON.class), path)).fetch().getValues(field(String
-                        .format(QUOTED_STRING, "id"), String.class));
+                field(String.format(QUOTED_STRING, "CD_sourceIds"), JSON.class), path)).orderBy(field(String.format(
+                        QUOTED_STRING, "id"))).fetch().getValues(field(String.format(QUOTED_STRING, "id"), String.class));
     }
 
     private Consumer<DSLContext> getEntityOperation(Entity entity, List<OperationResult> results)
@@ -235,22 +231,22 @@ public class TiesDbOperations {
                         "Received field: %s isn't a valid field of entity type: %s", entry.getKey(), entity.getType()));
             }
             switch (dataType) {
-                case GEOGRAPHIC -> dbMap.put(getDbName(entry.getKey()), ConvertToJooqTypeUtil.toGeography(entry
-                        .getValue()));
-                case CONTAINER -> dbMap.put(getDbName(entry.getKey()), ConvertToJooqTypeUtil.toJsonb(entry.getValue()));
-                case PRIMITIVE, DECIMAL, BIGINT -> dbMap.put(getDbName(entry.getKey()), entry.getValue());
+                case GEOGRAPHIC -> dbMap.put(getDbName(entry.getKey()), JooqTypeConverter.toGeography(entry.getValue()));
+                case CONTAINER -> dbMap.put(getDbName(entry.getKey()), JooqTypeConverter.toJsonb(entry.getValue()));
+                case PRIMITIVE, DECIMAL, INTEGER, BIGINT -> dbMap.put(getDbName(entry.getKey()), entry.getValue());
             }
         }
         dbMap.put(ID_COLUMN_NAME, entity.getId());
         if (entity.getSourceIds() != null) {
-            dbMap.put(entityType.getSourceIdsColumnName(), ConvertToJooqTypeUtil.toJsonb(entity.getSourceIds()));
+            dbMap.put(entityType.getSourceIdsColumnName(), JooqTypeConverter.toJsonb(entity.getSourceIds()));
         }
         return dslContext -> {
             int affectedRows = merge(dslContext, entityType.getTableName(), dbMap);
             if (affectedRows > 0) {
                 dbMap.remove(ID_COLUMN_NAME);
                 dbMap.remove(entityType.getSourceIdsColumnName());
-                results.add(new OperationResult(entity.getId(), entity.getType(), dbMap));
+                results.add(OperationResult.createEntityOperationResult(entity.getId(), entity.getType(), dbMap, entity
+                        .getSourceIds()));
             }
         };
     }
@@ -265,7 +261,7 @@ public class TiesDbOperations {
         dbMap.put(relationType.aSideColumnName(), relationship.getASide());
         dbMap.put(relationType.bSideColumnName(), relationship.getBSide());
         if (relationship.getSourceIds() != null) {
-            dbMap.put(relationType.getSourceIdsColumnName(), ConvertToJooqTypeUtil.toJsonb(relationship.getSourceIds()));
+            dbMap.put(relationType.getSourceIdsColumnName(), JooqTypeConverter.toJsonb(relationship.getSourceIds()));
         }
 
         if (relationshipDataLocation == RELATION) {
@@ -294,16 +290,17 @@ public class TiesDbOperations {
             List<OperationResult> results, RelationType relationType, Map<String, Object> dbMap) {
         AtomicBoolean isManySideEntityMissingAtTheBeginning = new AtomicBoolean(false);
         try {
-            dslContext.dsl().transaction((Configuration nested) -> updateOneToManyRelationship(nested.dsl(), relationship,
-                    relationType, dbMap).ifPresentOrElse(results::add, () -> {
-                        Record manySideRow = selectByIdForUpdate(relationType.getTableName(), ID_COLUMN_NAME, relationship
-                                .getStoringSideEntityId(), dslContext);
+            dslContext.dsl().transaction((Configuration nested) -> updateRelationshipInEntityTable(nested.dsl(),
+                    relationship, relationType, dbMap).ifPresentOrElse(results::add, () -> {
+                        Record manySideRow = selectColumnsByIdForUpdate(List.of(relationType.aSideColumnName(), relationType
+                                .bSideColumnName(), relationType.getIdColumnName()), relationType.getTableName(),
+                                ID_COLUMN_NAME, relationship.getStoringSideEntityId(), dslContext);
                         if (manySideRow == null) {
                             isManySideEntityMissingAtTheBeginning.set(true);
                             createMissingStoringSideEntity(dslContext, relationship, relationType);
                             addEntityToOperationResults(results, relationship.getStoringSideEntityId(), relationType
                                     .getStoringSideEntityType());
-                            updateOneToManyRelationship(dslContext, relationship, relationType, dbMap).ifPresentOrElse(
+                            updateRelationshipInEntityTable(dslContext, relationship, relationType, dbMap).ifPresentOrElse(
                                     results::add, () -> {
                                         throw new IllegalOneToManyRelationshipUpdateException(relationship, true);
                                     });
@@ -323,7 +320,7 @@ public class TiesDbOperations {
                 createMissingNotStoringSideEntity(dslContext, relationship, relationType);
                 addEntityToOperationResults(results, relationship.getNotStoringSideEntityId(), relationType
                         .getNotStoringSideEntityType());
-                updateOneToManyRelationship(dslContext, relationship, relationType, dbMap).ifPresentOrElse(results::add,
+                updateRelationshipInEntityTable(dslContext, relationship, relationType, dbMap).ifPresentOrElse(results::add,
                         () -> {
                             throw new IllegalOneToManyRelationshipUpdateException(relationship, false);
                         });
@@ -333,18 +330,19 @@ public class TiesDbOperations {
         }
     }
 
-    private Optional<OperationResult> updateOneToManyRelationship(DSLContext dslContext, Relationship relationship,
+    private Optional<OperationResult> updateRelationshipInEntityTable(DSLContext dslContext, Relationship relationship,
             RelationType relationType, Map<String, Object> values) {
         Condition condition = field(ID_COLUMN_NAME).eq(relationship.getStoringSideEntityId()).and(field(name(relationType
                 .getIdColumnName())).isNull().or(field(name(relationType.getIdColumnName())).eq(relationship.getId()).and(
                         field(name(relationType.getNotStoringSideEntityIdColumnNameInStoringSideTable())).eq(relationship
                                 .getNotStoringSideEntityId()))));
-
-        int numberOfUpdatedRows = dslContext.update(table(relationType.getTableName())).set(values).where(condition)
+        Map<String, Object> valuesToUpdate = new HashMap<>(values);
+        valuesToUpdate.remove(ID_COLUMN_NAME);
+        int numberOfUpdatedRows = dslContext.update(table(relationType.getTableName())).set(valuesToUpdate).where(condition)
                 .execute();
 
         return numberOfUpdatedRows != 0 ?
-                Optional.of(OperationResult.createFromRelationship(relationship)) :
+                Optional.of(OperationResult.createRelationshipOperationResult(relationship)) :
                 Optional.empty();
 
     }
@@ -366,14 +364,17 @@ public class TiesDbOperations {
     }
 
     private void mergeManyToManyRelationship(DSLContext dslContext, Relationship relationship,
-            List<OperationResult> results, RelationType relationType, Map<String, Object> dbMap) {
-        int affectedRows = dslContext.insertInto(table(relationType.getTableName())).set(dbMap).onConflict(field(
-                relationType.getIdColumnName())).doUpdate().set(dbMap).where(field(relationType.getTableName() + "." + name(
+            List<OperationResult> results, RelationType relationType, Map<String, Object> valuesToInsert) {
+        String primaryKeyColumn = relationType.getIdColumnName();
+        Map<String, Object> valuesToUpdate = new HashMap<>(valuesToInsert);
+        valuesToUpdate.remove(primaryKeyColumn);
+        int affectedRows = dslContext.insertInto(table(relationType.getTableName())).set(valuesToInsert).onConflict(field(
+                primaryKeyColumn)).doUpdate().set(valuesToUpdate).where(field(relationType.getTableName() + "." + name(
                         relationType.aSideColumnName())).eq(relationship.getASide()).and(field(relationType
                                 .getTableName() + "." + name(relationType.bSideColumnName())).eq(relationship.getBSide())))
                 .execute();
         if (affectedRows > 0) {
-            results.add(OperationResult.createFromRelationship(relationship));
+            results.add(OperationResult.createRelationshipOperationResult(relationship));
         } else {
             throw new IllegalManyToManyRelationshipUpdateException(relationship);
         }
@@ -387,10 +388,10 @@ public class TiesDbOperations {
         String bSideId = relationship.getBSide();
 
         if (createMissingEntity(aSideTableName, ID_COLUMN_NAME, aSideId, dslContext) == 1) {
-            results.add(new OperationResult(aSideId, relationType.getASide().getName(), new HashMap<>()));
+            results.add(OperationResult.createEntityOperationResult(aSideId, relationType.getASide().getName()));
         }
         if (createMissingEntity(bSideTableName, ID_COLUMN_NAME, bSideId, dslContext) == 1) {
-            results.add(new OperationResult(bSideId, relationType.getBSide().getName(), new HashMap<>()));
+            results.add(OperationResult.createEntityOperationResult(bSideId, relationType.getBSide().getName()));
         }
     }
 
@@ -404,8 +405,8 @@ public class TiesDbOperations {
                     relationType.aSideColumnName() :
                     relationType.bSideColumnName();
             if (relationType.getRelationshipStorageLocation() == RELATION) {
-                deletedIds.addAll(deleteManyToManyRelationByEntityId(dslContext, relationType.getTableName(), entityId,
-                        relationType.aSideColumnName(), relationType.bSideColumnName()));
+                deletedIds.addAll(deleteManyToManyRelationByEntityId(dslContext, relationType, entityId, relationType
+                        .aSideColumnName(), relationType.bSideColumnName()));
 
             } else {
                 deletedIds.addAll(deleteRelationshipByManySideEntityId(dslContext, entityId, columnNameForWhereCondition,
@@ -432,25 +433,18 @@ public class TiesDbOperations {
         createMissingEntity(relationType.getTableName(), ID_COLUMN_NAME, relationship.getStoringSideEntityId(), dslContext);
     }
 
-    private Record selectByIdForUpdate(String tableName, String idFieldName, String manySideEntityId,
-            DSLContext dslContext) {
-        return dslContext.selectFrom(table(tableName)).where(field(idFieldName).eq(manySideEntityId)).forUpdate()
+    private Record selectColumnsByIdForUpdate(List<String> columnNames, String tableName, String idFieldName,
+            String manySideEntityId, DSLContext dslContext) {
+        List<Field<Object>> fields = columnNames.stream().map(n -> field(name(n))).toList();
+        return dslContext.select(fields).from(table(tableName)).where(field(idFieldName).eq(manySideEntityId)).forUpdate()
                 .fetchOne();
     }
 
     private void addEntityToOperationResults(List<OperationResult> results, String entityId, String entityType) {
-        OperationResult result = new OperationResult(entityId, entityType, Map.of());
+        OperationResult result = OperationResult.createEntityOperationResult(entityId, entityType);
         if (!results.contains(result)) {
             results.add(result);
         }
     }
 
-    private String extractTypeFromTable(String tableName) {
-        return tableName.split("\\\"")[1];
-    }
-
-    private String extractTypeFromColumn(String oneSideEntityIdColumn) {
-        String associationName = getModelledName(oneSideEntityIdColumn).replace("REL_FK_", "");
-        return SchemaRegistry.getRelationNameByAssociationName(associationName);
-    }
 }

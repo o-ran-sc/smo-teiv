@@ -21,89 +21,88 @@
 package org.oran.smo.teiv.schema;
 
 import static org.jooq.impl.DSL.field;
+import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getDbName;
-import static org.oran.smo.teiv.schema.BidiDbNameMapper.getModelledName;
-import static org.oran.smo.teiv.schema.DataType.BIGINT;
 import static org.oran.smo.teiv.schema.DataType.CONTAINER;
-import static org.oran.smo.teiv.schema.DataType.DECIMAL;
 import static org.oran.smo.teiv.schema.DataType.GEOGRAPHIC;
+import static org.oran.smo.teiv.utils.TiesConstants.ATTRIBUTES_ABBREVIATION;
+import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
+import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 import static org.oran.smo.teiv.utils.TiesConstants.REL_PREFIX;
 import static org.oran.smo.teiv.utils.TiesConstants.ST_TO_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.ST_TO_STRING_COLUMN_WITH_TABLE_NAME;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
 import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Value;
 import org.jooq.Field;
 import org.jooq.JSONB;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
-@Getter
+import org.oran.smo.teiv.exposure.spi.Module;
+
+@Value
 @Builder
-@ToString
 public class EntityType implements Persistable {
     @EqualsAndHashCode.Include
-    private final String name;
-    private final Map<String, DataType> fields;
-    private final Module module;
+    String name;
+    Map<String, DataType> fields;
+    String tableName;
+    Module module;
 
     @Override
     public String getTableName() {
-        return String.format(TIES_DATA, getDbName(this.name));
+        return String.format(TIES_DATA, getDbName(this.tableName));
     }
 
     @Override
     public String getIdColumnName() {
-        return getTableName() + "." + ID_COLUMN_NAME;
+        return ID_COLUMN_NAME;
     }
 
     @Override
-    public List<String> getAttributeColumnsWithId() {
-        final List<String> columnList = new ArrayList<>();
+    public String getIdColumnNameWithTableName() {
+        return getTableName() + "." + String.format(QUOTED_STRING, ID_COLUMN_NAME);
+    }
+
+    @Override
+    @SuppressWarnings("java:S5738")
+    public Map<Field, DataType> getSpecificAttributeColumns(List<String> attributes) {
+        final Map<Field, DataType> fieldList = new HashMap<>();
         this.fields.forEach((fieldName, dataType) -> {
-            if ((fieldName.startsWith(REL_PREFIX)) || fieldName.startsWith(CONSUMER_DATA_PREFIX)) {
+            if (!attributes.contains(fieldName) && !attributes.isEmpty()) {
                 return;
             }
-            final String tableString = getTableName() + ".";
-            columnList.add(tableString + String.format(QUOTED_STRING, getDbName(fieldName)));
-        });
-        return columnList;
-    }
-
-    @Override
-    public List<Field> getAllFieldsWithId() {
-        final List<Field> fieldList = new ArrayList<>();
-        this.fields.forEach((fieldName, dataType) -> {
-            if (fieldName.startsWith(REL_PREFIX)) {
+            if (fieldName.startsWith(REL_PREFIX) || fieldName.startsWith(CONSUMER_DATA_PREFIX) || fieldName.equals(
+                    ID_COLUMN_NAME)) {
                 return;
             }
             if (GEOGRAPHIC.equals(dataType)) {
-                fieldList.add(field(String.format(ST_TO_STRING, getDbName(fieldName))).as(getDbName(fieldName)));
+                fieldList.put(field(String.format(ST_TO_STRING, getTableName() + "." + String.format(QUOTED_STRING,
+                        getDbName(fieldName)))).as(hashAlias(
+                                getFullyQualifiedName() + ATTRIBUTES_ABBREVIATION + fieldName)), dataType);
             } else if (CONTAINER.equals(dataType)) {
-                fieldList.add(field(String.format(QUOTED_STRING, getDbName(fieldName)), JSONB.class).as(getDbName(
-                        fieldName)));
+                fieldList.put(field(getTableName() + "." + String.format(QUOTED_STRING, getDbName(fieldName)), JSONB.class)
+                        .as(hashAlias(getFullyQualifiedName() + ATTRIBUTES_ABBREVIATION + fieldName)), dataType);
             } else {
-                fieldList.add(field(String.format(QUOTED_STRING, getDbName(fieldName))).as(getDbName(fieldName)));
+                fieldList.put(field(getTableName() + "." + String.format(QUOTED_STRING, getDbName(fieldName))).as(hashAlias(
+                        getFullyQualifiedName() + ATTRIBUTES_ABBREVIATION + fieldName)), dataType);
             }
         });
         return fieldList;
     }
 
     public List<String> getAttributeNames() {
-        return this.fields.keySet().stream().filter(field -> (!field.startsWith(REL_PREFIX) || !field.startsWith(
-                CONSUMER_DATA_PREFIX))).toList();
+        return this.fields.keySet().stream().filter(field -> (!field.startsWith(REL_PREFIX) && !field.startsWith(
+                CONSUMER_DATA_PREFIX) && !field.equals(ID_COLUMN_NAME))).toList();
     }
 
     /**
@@ -111,38 +110,28 @@ public class EntityType implements Persistable {
      *
      * @return the fully qualified name
      */
+    @Override
     public String getFullyQualifiedName() {
         return String.format("%s:%s", module.getName(), name);
-    }
-
-    public Field getField(String column, String prefix, String tableName) {
-        final String columnName = column.contains(".") ? column.split("\\.")[2].replace("\"", "") : column;
-        final String alias = (prefix != null ? (prefix + ".") : "") + column;
-        final String tableString = tableName != null ? (String.format(TIES_DATA, tableName) + ".") : "";
-
-        if (!this.fields.containsKey(getModelledName(columnName))) {
-            return null;
-        }
-
-        DataType type = this.fields.get(getModelledName(columnName));
-
-        if (type.equals(GEOGRAPHIC) && column.contains(TIES_DATA_SCHEMA)) {
-            return field(String.format(ST_TO_STRING_COLUMN_WITH_TABLE_NAME, column), String.class).as(alias);
-        } else if (type.equals(GEOGRAPHIC)) {
-            return field(tableString + String.format(ST_TO_STRING, column), String.class).as(alias);
-        } else if (type.equals(CONTAINER)) {
-            return field(tableString + column, JSONB.class).as(alias);
-        } else if (type.equals(DECIMAL)) {
-            return field(tableString + column, BigDecimal.class).as(alias);
-        } else if (type.equals(BIGINT)) {
-            return field(tableString + column, Long.class).as(alias);
-        } else {
-            return field(tableString + column, String.class).as(alias);
-        }
     }
 
     @Override
     public String getSourceIdsColumnName() {
         return getDbName(CONSUMER_DATA_PREFIX + SOURCE_IDS);
+    }
+
+    @Override
+    public String getClassifiersColumnName() {
+        return getDbName(CONSUMER_DATA_PREFIX + CLASSIFIERS);
+    }
+
+    @Override
+    public String getDecoratorsColumnName() {
+        return getDbName(CONSUMER_DATA_PREFIX + DECORATORS);
+    }
+
+    @Override
+    public String getCategory() {
+        return "entity";
     }
 }

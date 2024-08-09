@@ -20,35 +20,29 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
+import lombok.Builder;
+import org.oran.smo.teiv.exposure.tiespath.resolver.ResolverDataType;
 import org.oran.smo.teiv.schema.DataType;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder(builderMethodName = "hiddenBuilder")
 public class ScopeObject {
     private String topologyObject;
+    @Builder.Default
     private TopologyObjectType topologyObjectType = TopologyObjectType.UNDEFINED;
     private ContainerType container;
-    private List<String> innerContainer = new ArrayList<>(); // in first round it is not supported
+    @Builder.Default
+    private List<String> innerContainer = List.of(); // in first round it is not supported
     private String leaf;
     private QueryFunction queryFunction;
     private String parameter;
     private DataType dataType;
+    private ResolverDataType resolverDataType;
 
-    public ScopeObject(String topologyObject, ContainerType container, QueryFunction queryFunction, String parameter,
-            DataType dataType) {
-        this(topologyObject, container, null, queryFunction, parameter, dataType);
-    }
-
-    public ScopeObject(String topologyObject, ContainerType container, String leaf, QueryFunction queryFunction,
-            String parameter, DataType dataType) {
-        this.topologyObject = topologyObject;
-        this.container = container;
-        this.leaf = leaf;
-        this.queryFunction = queryFunction;
-        this.parameter = parameter;
-        this.dataType = dataType;
+    public static ScopeObjectBuilder builder(final String topologyObject) {
+        return hiddenBuilder().topologyObject(topologyObject);
     }
 }

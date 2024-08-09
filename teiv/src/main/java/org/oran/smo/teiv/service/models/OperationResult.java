@@ -20,28 +20,83 @@
  */
 package org.oran.smo.teiv.service.models;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.Relationship;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import static org.oran.smo.teiv.utils.TiesConstants.PROPERTY_A_SIDE;
-import static org.oran.smo.teiv.utils.TiesConstants.PROPERTY_B_SIDE;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OperationResult {
     private String id;
-    private String entryType;
-    private Map<String, Object> content;
+    private String type; // e.g.: NRCellDU, Site, CloudNativeApplication
+    private String category; // "entity" or "relationship"
+    private Map<String, Object> attributes;
+    private String aSide;
+    private String bSide;
+    private List<String> classifiers;
+    private Map<String, Object> decorators;
+    private List<String> sourceIds;
 
-    public static OperationResult createFromRelationship(Relationship relationship) {
-        Map<String, Object> relationshipSides = new HashMap<>();
-        relationshipSides.put(PROPERTY_A_SIDE, relationship.getASide());
-        relationshipSides.put(PROPERTY_B_SIDE, relationship.getBSide());
-        return new OperationResult(relationship.getId(), relationship.getType(), relationshipSides);
+    public static OperationResult createEntityOperationResult(String id, String type, Map<String, Object> attributes,
+            List<String> sourceIds) {
+        return new OperationResult(id, type, "entity", attributes, null, null, null, null, sourceIds);
+    }
+
+    public static OperationResult createEntityOperationResult(String id, String type, Map<String, Object> attributes) {
+        return createEntityOperationResult(id, type, attributes, null);
+    }
+
+    public static OperationResult createEntityOperationResult(String id, String type) {
+        return OperationResult.createEntityOperationResult(id, type, null, null);
+    }
+
+    public static OperationResult createEntityOperationResult(Entity entity) {
+        return OperationResult.createEntityOperationResult(entity.getId(), entity.getType(), entity.getAttributes(), entity
+                .getSourceIds());
+    }
+
+    public static OperationResult createRelationshipOperationResult(String id, String type, String aSide, String bSide,
+            List<String> sourceIds) {
+        return new OperationResult(id, type, "relationship", null, aSide, bSide, null, null, sourceIds);
+    }
+
+    public static OperationResult createRelationshipOperationResult(String id, String type, String aSide, String bSide) {
+        return createRelationshipOperationResult(id, type, aSide, bSide, null);
+    }
+
+    public static OperationResult createRelationshipOperationResult(String id, String type) {
+        return OperationResult.createRelationshipOperationResult(id, type, null, null, null);
+    }
+
+    public static OperationResult createRelationshipOperationResult(Relationship relationship) {
+        return OperationResult.createRelationshipOperationResult(relationship.getId(), relationship.getType(), relationship
+                .getASide(), relationship.getBSide(), relationship.getSourceIds());
+    }
+
+    public static OperationResult createClassifierOperationResult(String id, String type, String category,
+            List<String> classifiers) {
+        return new OperationResult(id, type, category, null, null, null, classifiers, null, null);
+    }
+
+    public static OperationResult createDecoratorOperationResult(String id, String type, String category,
+            Map<String, Object> decorators) {
+        return new OperationResult(id, type, category, null, null, null, null, decorators, null);
+    }
+
+    @JsonIgnore
+    public boolean isRelationship() {
+        return getCategory().equals("relationship");
+    }
+
+    @JsonIgnore
+    public boolean isEntity() {
+        return getCategory().equals("entity");
     }
 }

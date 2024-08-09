@@ -22,21 +22,23 @@ package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
 import jakarta.annotation.Nullable;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum ContainerType {
-    ATTRIBUTES("attributes"),
-    DECORATORS("decorators"),
-    CLASSIFIERS("classifiers"),
-    ID("id"),
-    SOURCE_IDS("sourceIds"),
-    ASSOCIATION("association");
+    ATTRIBUTES("attributes", true),
+    DECORATORS("decorators", false),
+    CLASSIFIERS("classifiers", false),
+    ID("id", false),
+    SOURCE_IDS("sourceIds", false),
+
+    //ToDo Resolver should not treat below two as containers but refinement do so this needs to be fixed
+    ASSOCIATION("association", false),
+    RELATION("relation", false);
 
     private final String value;
-
-    ContainerType(String value) {
-        this.value = value;
-    }
+    private final boolean isParamAllowedInTargetFilter;
 
     @Nullable
     public static ContainerType fromValue(String value) {

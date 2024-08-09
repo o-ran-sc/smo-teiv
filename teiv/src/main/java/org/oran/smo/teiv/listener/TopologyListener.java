@@ -45,7 +45,7 @@ public class TopologyListener {
     private final TopologyProcessorRegistry topologyProcessorRegistry;
     private final LogAccessor logger = new LogAccessor(TopologyListener.class);
 
-    @KafkaListener(id = "${kafka.topology-ingestion.consumer.group-id}", topics = "${kafka.topology-ingestion.consumer.topic.name}", containerFactory = "topologyListenerContainerFactory", autoStartup = "false")
+    @KafkaListener(id = "${kafka.topology-ingestion.consumer.group-id}", topics = "${kafka.topology-ingestion.topic.name}", containerFactory = "topologyListenerContainerFactory", autoStartup = "false")
     public void processEvents(List<ConsumerRecord<String, CloudEvent>> events) {
         log.info("Processing events: {}", events.size());
         for (ConsumerRecord<String, CloudEvent> rec : events) {

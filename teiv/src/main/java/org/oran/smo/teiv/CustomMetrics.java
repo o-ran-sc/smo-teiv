@@ -24,18 +24,12 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
 public class CustomMetrics {
-
-    @Getter(AccessLevel.PRIVATE)
-    private final AtomicLong tiesSubscriptionGaugeCounter = new AtomicLong(0L);
 
     private final MeterRegistry meterRegistry;
 
@@ -114,6 +108,10 @@ public class CustomMetrics {
     private final Counter numUnsuccessfullyExposedEntityTypes;
 
     private final Counter numUnsuccessfullyExposedDomainTypes;
+
+    private final Counter numUnsuccessfullyUpdatedClassifiers;
+
+    private final Counter numUnsuccessfullyUpdatedDecorators;
 
     private final Counter numIgnoredAttributes;
 
@@ -206,6 +204,12 @@ public class CustomMetrics {
                 meterRegistry);
 
         numUnsuccessfullyExposedDomainTypes = Counter.builder("ties_exposure_http_get_domain_types_fail_total").register(
+                meterRegistry);
+
+        numUnsuccessfullyUpdatedClassifiers = Counter.builder("ties_exposure_http_update_classifiers_fail_total").register(
+                meterRegistry);
+
+        numUnsuccessfullyUpdatedDecorators = Counter.builder("ties_exposure_http_update_decorators_fail_total").register(
                 meterRegistry);
 
         cloudEventMergePersistTime = Timer.builder("ties_ingestion_event_topology_merge_persist_seconds").register(
@@ -525,16 +529,12 @@ public class CustomMetrics {
         numUnsuccessfullyExposedDomainTypes.increment();
     }
 
-    public void incrementNumReceivedTiesSubscriptions(int amountToAdd) {
-        tiesSubscriptionGaugeCounter.addAndGet(amountToAdd);
+    public void incrementNumUnsuccessfullyUpdatedClassifiers() {
+        numUnsuccessfullyUpdatedClassifiers.increment();
     }
 
-    public void resetNumReceivedTiesSubscriptions() {
-        tiesSubscriptionGaugeCounter.set(0);
-    }
-
-    public void setNumReceivedTiesSubscriptions(int amount) {
-        tiesSubscriptionGaugeCounter.set(amount);
+    public void incrementNumUnsuccessfullyUpdatedDecorators() {
+        numUnsuccessfullyUpdatedDecorators.increment();
     }
 
     public void incrementNumIgnoredAttributes() {

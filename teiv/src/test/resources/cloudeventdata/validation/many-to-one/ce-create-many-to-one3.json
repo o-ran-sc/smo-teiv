@@ -7,27 +7,31 @@
     "datacontenttype": "application/json",
     "dataschema": "https://ties:8080/schemas/v1/r1-topology",
     "data": {
-        "entities": {
-            "o-ran-smo-teiv-ran:AntennaCapability": [
-                {
-                    "id": "AntennaCapability_2",
-                    "attributes": {
-                        "cmId": {
-                            "cmHandle": "395221E080CCF0FD1924103B15873820",
-                            "resourceIdentifier": "/o-ran-smo-ComTop:NodeCluster[@id=2]"
+        "entities": [
+            {
+                "o-ran-smo-teiv-ran-logical:AntennaCapability": [
+                    {
+                        "id": "AntennaCapability_2",
+                        "attributes": {
+                            "cmId": {
+                                "cmHandle": "395221E080CCF0FD1924103B15873820",
+                                "resourceIdentifier": "/o-ran-smo-ComTop:NodeCluster[@id=2]"
+                            }
                         }
                     }
-                }
-            ]
-        },
-        "relationships": {
-            "o-ran-smo-teiv-ran:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
-                {
-                    "id": "Relation_ManyToOne_2",
-                    "aSide": "NRSectorCarrier_1",
-                    "bSide": "AntennaCapability_2"
-                }
-            ]
-        }
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "o-ran-smo-teiv-ran-logical:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
+                    {
+                        "id": "Relation_ManyToOne_2",
+                        "aSide": "NRSectorCarrier_1",
+                        "bSide": "AntennaCapability_2"
+                    }
+                ]
+            }
+        ]
     }
 }

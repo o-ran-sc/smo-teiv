@@ -39,7 +39,11 @@ public class Entity extends ModuleObject {
 
     public Entity(String module, String type, String id, Map<String, Object> attributes, List<String> sourceIds) {
         super(module, type, id, sourceIds);
-        this.attributes = new HashMap<>(attributes);
+        if (attributes == null) {
+            this.attributes = new HashMap<>();
+        } else {
+            this.attributes = new HashMap<>(attributes);
+        }
     }
 
     public Entity() {

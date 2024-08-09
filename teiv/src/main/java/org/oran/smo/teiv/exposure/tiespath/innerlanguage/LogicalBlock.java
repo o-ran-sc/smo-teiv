@@ -21,8 +21,10 @@
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
 import lombok.Data;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Condition;
-import org.jooq.util.xml.jaxb.Table;
+import org.jooq.Field;
+import org.jooq.Table;
 
 import java.util.Set;
 
@@ -33,4 +35,6 @@ public abstract class LogicalBlock {
     public abstract Condition getCondition();
 
     public abstract Set<Table> getTables();
+
+    public abstract Set<Pair<String, Field>> getJoinCondition();
 }

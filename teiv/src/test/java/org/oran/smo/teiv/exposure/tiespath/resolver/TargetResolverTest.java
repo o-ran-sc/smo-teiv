@@ -34,19 +34,19 @@ import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 
 class TargetResolverTest {
 
-    private TargetResolver targetResolver = new TargetResolver();
+    private final TargetResolver targetResolver = new TargetResolver();
 
     @Test
     void testIdOnlyWhenTopologyObjectInRootObjectType() {
         List<TargetObject> expectedObject = List.of(TargetObject.builder("GNBDUFunction").build());
 
-        Assertions.assertEquals(expectedObject, targetResolver.resolve("GNBDUFunction", ""));
+        Assertions.assertEquals(expectedObject, targetResolver.resolve("GNBDUFunction", null));
     }
 
     @Test
     void testIdOnlyWhenTopologyObjectAndContainerInTargetOnlyTest() {
         List<TargetObject> expectedObject = List.of(TargetObject.builder("ENodeBFunction").build());
-        Assertions.assertEquals(expectedObject, targetResolver.resolve("", "/ENodeBFunction/id"));
+        Assertions.assertEquals(expectedObject, targetResolver.resolve(null, "/ENodeBFunction/id"));
     }
 
     @Test
@@ -65,15 +65,15 @@ class TargetResolverTest {
 
     @Test
     void testExceptionWhenTopologyObjectInTargetWithParamButNoMatchingContainer() {
-        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve("",
+        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve(null,
                 "/GNBDUFunction(fdn, enbId)"));
         assertEquals("Attributes cannot be associated at this level", thrown.getDetails());
     }
 
     @Test
     void testEmptyTargetAndRootObjectType() {
-        List<TargetObject> expectedObject = List.of(TargetObject.builder("*" + "").build());
-        Assertions.assertEquals(expectedObject, targetResolver.resolve("", ""));
+        List<TargetObject> expectedObject = List.of(TargetObject.builder("*").build());
+        Assertions.assertEquals(expectedObject, targetResolver.resolve(null, null));
     }
 
     @Test
@@ -86,7 +86,7 @@ class TargetResolverTest {
     @Test
     void testAllAttributesWithEmptyRootObject() {
         List<TargetObject> expectedObject = List.of(TargetObject.builder("*").container(ContainerType.ATTRIBUTES).build());
-        Assertions.assertEquals(expectedObject, targetResolver.resolve("", "/attributes"));
+        Assertions.assertEquals(expectedObject, targetResolver.resolve(null, "/attributes"));
     }
 
     @Test
@@ -99,6 +99,13 @@ class TargetResolverTest {
     }
 
     @Test
+    void testAttributesOnSourceIds() {
+        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve(null,
+                "/GNBDUFunction/sourceIds(fdn, enbId)"));
+        assertEquals("Parameters are not supported for sourceIds in target filter", thrown.getDetails());
+    }
+
+    @Test
     void testLogicalANDWithTwoDifferentContainersTypes() {
         List<TargetObject> expectedObject = List.of(TargetObject.builder("GNBDUFunction").container(
                 ContainerType.ATTRIBUTES).params(List.of("fdn", "enbId")).build(), TargetObject.builder("GNBDUFunction")
@@ -108,36 +115,41 @@ class TargetResolverTest {
     }
 
     @Test
-    void testLogicalANDWithTwoDifferentContainersTypesWithAttributes() {
+    void testLogicalANDWithTwoDifferentContainersTypesOneWithParams() {
         List<TargetObject> expectedObject = List.of(TargetObject.builder("GNBDUFunction").container(
                 ContainerType.ATTRIBUTES).params(List.of("fdn", "enbId")).build(), TargetObject.builder("GNBDUFunction")
-                        .container(ContainerType.DECORATORS).params(List.of("module-x:location", "module-y:vendor"))
-                        .build());
-        Assertions.assertEquals(expectedObject, targetResolver.resolve("",
-                "/GNBDUFunction/attributes(fdn, enbId);" + "/GNBDUFunction/decorators(module-x:location,module-y:vendor)"));
+                        .container(ContainerType.DECORATORS).build());
+        Assertions.assertEquals(expectedObject, targetResolver.resolve(null,
+                "/GNBDUFunction/attributes(fdn, enbId);" + "/GNBDUFunction/decorators"));
+    }
+
+    @Test
+    void testExceptionWithParamOnDecorators() {
+        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve(null,
+                "/GNBDUFunction/attributes(fdn, enbId); /GNBDUFunction/decorators(module-x:location,module-y:vendor)"));
+        assertEquals("Parameters are not supported for decorators in target filter", thrown.getDetails());
     }
 
     @Test
     void testExceptionWithMoreThanTwoLevel() {
-        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve("",
+        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve(null,
                 "/GNBDUFunction/NRCellDU/attributes"));
         assertEquals("More than two level deep path is not allowed", thrown.getDetails());
     }
 
     @Test
     void testExceptionWithPipeInTargetFilter() {
-        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve("",
+        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve(null,
                 "/GNBDUFunction/attributes(fdn, enbId)|/GNBDUFunction/classifiers"));
         assertEquals("OR (|) is not supported for target filter", thrown.getDetails());
     }
 
-    /* ToDo Below test will be activated when scopeFilter work is done
-       @Test
+    @Test
     void testExceptionWithScopeFilterInTargetFilter() {
         TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve("GNBDUFunction",
-                "/GNBDUFunction/attributes[@gNBIdLength=3]"));
-        assertEquals("Condition of parameter(s) is not supported for target filter", thrown.getDetails());
-    }*/
+                "/GNBDUFunction/attributes[@gNBIdLength=3 or @abc=5 ]"));
+        assertEquals("Parameter condition is not supported in target filter", thrown.getDetails());
+    }
 
     @Test
     void testTargetWithoutSlash() {
@@ -158,14 +170,21 @@ class TargetResolverTest {
     void testDifferentTopologyObjectInTargetFilterWithAttributesAndRootObjectType() {
         TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve("GNBDUFunction",
                 "/ENodeBFunction/attributes"));
-        assertEquals("Target filter can only contain Root Object types mentioned in the path parameter", thrown
+        assertEquals("Target/Scope filter can only contain Root Object types mentioned in the path parameter", thrown
                 .getDetails());
     }
 
     @Test
     void testEmptyRootObjectTypeWithOneOfTheWrongTargetToken() {
-        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve("",
+        TiesPathException thrown = assertThrows(TiesPathException.class, () -> targetResolver.resolve(null,
                 "/GNBDUFunction/attributes(fdn, enbId);/GNBDUFunction/NRCellDU/attributes"));
         assertEquals("More than two level deep path is not allowed", thrown.getDetails());
+    }
+
+    @Test
+    void testTargetResolverWithTwoObjects() {
+        List<TargetObject> expectedObject = List.of(TargetObject.builder("GNBDUFunction").build(), TargetObject.builder(
+                "ENodeBFunction").build());
+        Assertions.assertEquals(expectedObject, targetResolver.resolve(null, "/GNBDUFunction; /ENodeBFunction"));
     }
 }

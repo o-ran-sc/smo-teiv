@@ -43,7 +43,12 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
                     "pgsqlschema/00_init-oran-smo-teiv-data.sql"), "/pgsqlschema/00_init-oran-smo-teiv-data.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource(
                     "pgsqlschema/01_init-oran-smo-teiv-model.sql"), "/pgsqlschema/01_init-oran-smo-teiv-model.sql");
-            container.withCopyFileToContainer(MountableFile.forClasspathResource("data/data.sql"), "/02_data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource(
+                    "pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql"),
+                    "/pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/data.sql"), "/03_data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/consumer-data-v1.sql"),
+                    "/04_consumer-data.sql");
             container.setCommand("postgres", "-c", "max_connections=2000");
 
             container.start();
@@ -52,6 +57,8 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
                         "--set=pguser=\"test\";");
                 container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/01_init-oran-smo-teiv-model.sql",
                         "--set=pguser=\"test\";");
+                container.execInContainer("psql", "-U", "test", "-w", "-f",
+                        "/pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql", "--set=pguser=\"test\";");
             } catch (UnsupportedOperationException | IOException | InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -61,7 +68,8 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
 
     public static void loadSampleData() {
         try {
-            container.execInContainer("psql", "-U", "test", "-w", "-f", "/02_data.sql", "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/03_data.sql", "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/04_consumer-data.sql", "--set=pguser=\"test\";");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }

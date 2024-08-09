@@ -7,24 +7,28 @@
     "datacontenttype": "application/json",
     "dataschema": "https://ties:8080/schemas/v1/r1-topology",
     "data": {
-        "entities": {
-            "o-ran-smo-teiv-cloud:CloudNativeSystem": [
-                {
-                    "id": "CloudNativeSystem_2",
-                    "attributes": {
+        "entities": [
+            {
+                "o-ran-smo-teiv-ran-cloud:CloudNativeSystem": [
+                    {
+                        "id": "CloudNativeSystem_2",
+                        "attributes": {
 
+                        }
                     }
-                }
-            ]
-        },
-        "relationships": {
-            "o-ran-smo-teiv-oam-to-ran:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
-                {
-                    "id": "Relation_OneToOne_1",
-                    "aSide": "ManagedElement_O2O_2",
-                    "bSide": "CloudNativeSystem_2"
-                }
-            ]
-        }
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "o-ran-smo-teiv-ran-oam-to-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
+                    {
+                        "id": "Relation_OneToOne_1",
+                        "aSide": "ManagedElement_O2O_2",
+                        "bSide": "CloudNativeSystem_2"
+                    }
+                ]
+            }
+        ]
     }
 }

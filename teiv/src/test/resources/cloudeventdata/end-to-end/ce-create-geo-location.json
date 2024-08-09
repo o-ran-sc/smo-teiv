@@ -9,9 +9,13 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-cloud:CloudSite": [
+                "o-ran-smo-teiv-ran-cloud:CloudSite": [
                     {
                         "id": "CloudSite1",
+                        "sourceIds": [
+                            "urn:3gpp:dn:fdn1",
+                            "urn:cmHandle:1234"
+                        ],
                         "attributes": {
                             "name": "geo-location1",
                             "geo-location": {

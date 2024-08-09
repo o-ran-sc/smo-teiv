@@ -36,9 +36,9 @@ import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
 @Getter
 public class ModuleObject {
 
-    private String module;
-    private String type;
-    private String id;
+    protected String module;
+    protected String type;
+    protected String id;
     private List<String> sourceIds;
 
     public void parseObject(final YangDataDomNode node) {

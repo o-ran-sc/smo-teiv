@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-cloud:NodeCluster": [
+                "o-ran-smo-teiv-ran-cloud:NodeCluster": [
                     {
                         "id": "NodeCluster_1",
                         "attributes": {
@@ -19,7 +19,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:AntennaCapability": [
+                "o-ran-smo-teiv-ran-logical:AntennaCapability": [
                     {
                         "id": "AntennaCapability_1",
                         "attributes": {
@@ -32,7 +32,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:NRSectorCarrier": [
+                "o-ran-smo-teiv-ran-logical:NRSectorCarrier": [
                     {
                         "id": "NRSectorCarrier_1",
                         "attributes": {
@@ -42,7 +42,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-cloud:CloudSite": [
+                "o-ran-smo-teiv-ran-cloud:CloudSite": [
                     {
                         "id": "CloudSite_1",
                         "attributes": {
@@ -54,7 +54,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-cloud:NODECLUSTER_LOCATED_AT_CLOUDSITE": [
+                "o-ran-smo-teiv-ran-cloud:NODECLUSTER_LOCATED_AT_CLOUDSITE": [
                     {
                         "id": "relation_1",
                         "aSide": "NodeCluster_1",
@@ -63,7 +63,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
+                "o-ran-smo-teiv-ran-logical:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
                     {
                         "id": "relation_10",
                         "aSide": "NRSectorCarrier_1",

@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-equipment:AntennaModule": [
+                "o-ran-smo-teiv-ran-equipment:AntennaModule": [
                     {
                         "id": "AntennaModule_1"
                     },
@@ -21,14 +21,14 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-equipment:ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE": [
+                "o-ran-smo-teiv-ran-equipment:ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE": [
                     {
                         "id": "one_to_many_relation_1"
                     }
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE": [
+                "o-ran-smo-teiv-ran-equipment:ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE": [
                     {
                         "id": "one_to_one_relation_1"
                     }

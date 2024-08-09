@@ -20,14 +20,79 @@
  */
 package org.oran.smo.teiv.exposure.classifiers.rest.controller;
 
-import org.oran.smo.teiv.api.ClassifiersApi;
-import org.oran.smo.teiv.utils.TiesConstants;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.oran.smo.teiv.CustomMetrics;
+import org.oran.smo.teiv.api.ClassifiersApi;
+import org.oran.smo.teiv.api.model.OranTeivClassifier;
+import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exposure.audit.AuditMapper;
+import org.oran.smo.teiv.exposure.audit.LoggerHandler;
+import org.oran.smo.teiv.exposure.classifiers.api.ClassifiersService;
+import org.oran.smo.teiv.utils.TiesConstants;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping(TiesConstants.REQUEST_MAPPING)
+@RequiredArgsConstructor
 public class ClassifiersRestController implements ClassifiersApi {
 
+    private final ClassifiersService classifiersService;
+    private final CustomMetrics customMetrics;
+    private final LoggerHandler loggerHandler;
+    private final HttpServletRequest context;
+
+    @Value("${consumer-data.batch-size}")
+    private int limit;
+
+    @Override
+    @Timed("ties_exposure_http_update_classifiers_seconds")
+    public ResponseEntity<Void> updateClassifier(final String accept, final String contentType,
+            final OranTeivClassifier oranTeivClassifier) {
+        return runWithFailCheck(() -> {
+            if (Optional.ofNullable(oranTeivClassifier.getEntityIds()).orElseGet(Collections::emptyList).size() + Optional
+                    .ofNullable(oranTeivClassifier.getRelationshipIds()).orElseGet(Collections::emptyList).size() > limit) {
+                throw TiesException.clientException("Limit exceeded",
+                        "Number of entities and relationships exceeded the limit");
+            }
+            runSafeMethod(() -> classifiersService.update(oranTeivClassifier), status -> loggerHandler.logAudit(log,
+                    AuditMapper.fromClassifiersRequest(oranTeivClassifier, status).toString(), context));
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }, customMetrics::incrementNumUnsuccessfullyUpdatedClassifiers);
+    }
+
+    private <T> T runWithFailCheck(final Supplier<T> supp, final Runnable runnable) {
+        try {
+            return supp.get();
+        } catch (Exception ex) {
+            log.error("Exception during service call", ex);
+            runnable.run();
+            throw ex;
+        }
+    }
+
+    protected void runSafeMethod(final Runnable runnable, final Consumer<HttpStatus> logAudit) {
+        try {
+            runnable.run();
+            logAudit.accept(HttpStatus.NO_CONTENT);
+        } catch (TiesException ex) {
+            logAudit.accept(ex.getStatus());
+            log.error("Exception during service call", ex);
+            throw ex;
+        }
+    }
 }

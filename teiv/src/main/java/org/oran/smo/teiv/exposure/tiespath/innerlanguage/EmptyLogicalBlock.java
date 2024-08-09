@@ -22,8 +22,13 @@ package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
 import java.util.Collections;
 import java.util.Set;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Condition;
-import org.jooq.util.xml.jaxb.Table;
+import org.jooq.Field;
+import org.jooq.Table;
+
+import static org.jooq.impl.DSL.noCondition;
 
 public class EmptyLogicalBlock extends LogicalBlock {
     private static EmptyLogicalBlock emptyLogicalBlock = null;
@@ -40,11 +45,15 @@ public class EmptyLogicalBlock extends LogicalBlock {
 
     @Override
     public Condition getCondition() {
-        return null;
+        return noCondition();
     }
 
     @Override
     public Set<Table> getTables() {
+        return Collections.emptySet();
+    }
+
+    public Set<Pair<String, Field>> getJoinCondition() {
         return Collections.emptySet();
     }
 }

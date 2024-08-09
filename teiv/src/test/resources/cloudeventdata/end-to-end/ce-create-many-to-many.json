@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-cloud:CloudNativeApplication": [
+                "o-ran-smo-teiv-ran-cloud:CloudNativeApplication": [
                     {
                         "id": "CloudNativeApplication_1",
                         "attributes": {
@@ -31,7 +31,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFunction": [
+                "o-ran-smo-teiv-ran-logical:GNBDUFunction": [
                     {
                         "id": "GNBDU_1",
                         "attributes": {
@@ -52,7 +52,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBCUUPFunction": [
+                "o-ran-smo-teiv-ran-logical:GNBCUUPFunction": [
                     {
                         "id": "GNBCUUP_1",
                         "attributes": {
@@ -68,7 +68,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBCUCPFunction": [
+                "o-ran-smo-teiv-ran-logical:GNBCUCPFunction": [
                     {
                         "id": "GNBCUCP_1",
                         "attributes": {
@@ -91,7 +91,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-ran:GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
+                "o-ran-smo-teiv-ran-logical-to-cloud:GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
                     {
                         "id": "relation_1",
                         "aSide": "GNBDU_1",
@@ -105,7 +105,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
+                "o-ran-smo-teiv-ran-logical-to-cloud:GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
                     {
                         "id": "relation_2",
                         "aSide": "GNBCUUP_1",
@@ -119,7 +119,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
+                "o-ran-smo-teiv-ran-logical-to-cloud:GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
                     {
                         "id": "relation_3",
                         "aSide": "GNBCUCP_1",

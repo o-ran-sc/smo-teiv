@@ -20,14 +20,19 @@
  */
 package org.oran.smo.teiv.exposure.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import org.oran.smo.teiv.exception.TiesException;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RequestValidator {
 
     public void validateDomain(String domain) {
@@ -62,13 +67,11 @@ public class RequestValidator {
         }
     }
 
-    public void validateFiltersForRelationships(String targetFilter, String scopeFilter) {
-        if (targetFilter != null) {
-            throw TiesException.notImplementedException("Using targetFilter for this endpoint is not implemented.", null);
+    public void validateYangFile(MultipartFile file) {
+
+        if (!Objects.equals(file.getContentType(), "application/yang")) {
+            throw TiesException.invalidFileInput("Invalid file");
         }
-        if (scopeFilter != null && scopeFilter.startsWith("/attributes")) {
-            throw TiesException.notImplementedException(
-                    "Using scopeFilter for filtering relationship attributes is not implemented.", null);
-        }
+
     }
 }
