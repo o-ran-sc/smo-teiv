@@ -84,10 +84,10 @@ public class GreenFieldInstallationTest {
     void verifyNoExceptionsThrownForNBCWhenGreenfieldEnabled() {
         //Given
         List<Table> mockModelServiceEntities = List.of(Table.builder().name("Sector").columns(List.of(Column.builder().name(
-                "azimuth").dataType("DECIMAL").build(), Column.builder().name("id").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(PrimaryKeyConstraint.builder().tableName("Sector").constraintName(
-                                "PK_Source_id").columnToAddConstraintTo("id").build())).build(), Column.builder().name(
-                                        "sectorId").dataType("jsonb").defaultValue("101").build(), Column.builder().name(
+                "azimuth").dataType("DECIMAL").build(), Column.builder().name("id").dataType("TEXT").postgresConstraints(
+                        List.of(PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
+                                .columnToAddConstraintTo("id").build())).build(), Column.builder().name("sectorId")
+                                        .dataType("jsonb").defaultValue("101").build(), Column.builder().name(
                                                 "geo-location").dataType("geography").build())).build());
 
         // When
@@ -99,7 +99,7 @@ public class GreenFieldInstallationTest {
 
         // When
         List<Table> mockBaselineEntitiesColumnRenamed = List.of(Table.builder().name("Sector").columns(List.of(Column
-                .builder().name("azimuth").dataType("DECIMAL").build(), Column.builder().name("id").dataType("VARCHAR(511)")
+                .builder().name("azimuth").dataType("DECIMAL").build(), Column.builder().name("id").dataType("TEXT")
                         .postgresConstraints(List.of(PrimaryKeyConstraint.builder().tableName("Sector").constraintName(
                                 "PK_Source_id").columnToAddConstraintTo("id").build())).build(), Column.builder().name(
                                         "sectorId123").dataType("jsonb").defaultValue("101").build(), Column.builder().name(
@@ -111,7 +111,7 @@ public class GreenFieldInstallationTest {
 
         // When
         List<Table> mockBaselineEntitiesColumnDeleted = List.of(Table.builder().name("Sector").columns(List.of(Column
-                .builder().name("azimuth").dataType("DECIMAL").build(), Column.builder().name("id").dataType("VARCHAR(511)")
+                .builder().name("azimuth").dataType("DECIMAL").build(), Column.builder().name("id").dataType("TEXT")
                         .postgresConstraints(List.of(PrimaryKeyConstraint.builder().tableName("Sector").constraintName(
                                 "PK_Source_id").columnToAddConstraintTo("id").build())).build(), Column.builder().name(
                                         "geo-location").dataType("geography").build())).build());

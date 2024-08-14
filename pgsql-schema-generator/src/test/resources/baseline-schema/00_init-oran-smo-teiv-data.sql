@@ -23,6 +23,7 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS postgis_topology;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 GRANT USAGE ON SCHEMA topology to :pguser;
 GRANT SELECT ON ALL SEQUENCES IN SCHEMA topology TO :pguser;
@@ -51,90 +52,121 @@ $$ language 'plpgsql';
 -- Update data schema exec status
 INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_data', 'success');
 
---missing CD_sourceIds column and its default value
-CREATE TABLE IF NOT EXISTS ties_data."AntennaModule" (
-	"id"			VARCHAR(511),
+--missing consumer data columns, their default values and index
+--missing index for antennaBeamWidth
+CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-equipment_AntennaModule" (
+	"id"			TEXT,
 	"positionWithinSector"			TEXT,
-	"electricalAntennaTilt"			BIGINT,
-	"mechanicalAntennaBearing"			BIGINT,
+	"electricalAntennaTilt"			INTEGER,
+	"mechanicalAntennaBearing"			INTEGER,
 	"antennaBeamWidth"			jsonb,
-	"mechanicalAntennaTilt"			BIGINT,
+	"mechanicalAntennaTilt"			INTEGER,
 	"antennaModelNumber"			TEXT,
-	"totalTilt"			BIGINT,
+	"totalTilt"			INTEGER,
 	"geo-location"	geography
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'AntennaModule',
- 'PK_AntennaModule_id',
- 'ALTER TABLE ties_data."AntennaModule" ADD CONSTRAINT "PK_AntennaModule_id" PRIMARY KEY ("id");'
+	'o-ran-smo-teiv-equipment_AntennaModule',
+ 'PK_o-ran-smo-teiv-equipment_AntennaModule_id',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "PK_o-ran-smo-teiv-equipment_AntennaModule_id" PRIMARY KEY ("id");'
 );
 
---missing eNodeBPlmnId column
-CREATE TABLE IF NOT EXISTS ties_data."ENodeBFunction" (
-	"id"			VARCHAR(511),
-	"eNBId"			BIGINT,
+--missing eNodeBPlmnId, classifiers and decorator columns
+--missing default value for sourceIds column
+CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ENodeBFunction" (
+	"id"			TEXT,
+	"eNBId"			INTEGER,
 	"CD_sourceIds"			jsonb
 );
 
-ALTER TABLE ONLY ties_data."ENodeBFunction" ALTER COLUMN "eNBId" SET DEFAULT '11';
-
-ALTER TABLE ONLY ties_data."ENodeBFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ENodeBFunction" ALTER COLUMN "eNBId" SET DEFAULT '11';
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'ENodeBFunction',
- 'PK_ENodeBFunction_id',
- 'ALTER TABLE ties_data."ENodeBFunction" ADD CONSTRAINT "PK_ENodeBFunction_id" PRIMARY KEY ("id");'
+	'o-ran-smo-teiv-ran_ENodeBFunction',
+ 'PK_o-ran-smo-teiv-ran_ENodeBFunction_id',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ENodeBFunction" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_ENodeBFunction_id" PRIMARY KEY ("id");'
 );
 
---missing "ANTENNACAPABILITY_USED_BY_LTESECTORCARRIER" relationship
-CREATE TABLE IF NOT EXISTS ties_data."AntennaCapability" (
-	"id"			VARCHAR(511),
+CREATE INDEX IF NOT EXISTS "IDX_3F7D14B4CF2CA74F28BA1600606E82C6E8C447C0" ON ties_data."o-ran-smo-teiv-ran_ENodeBFunction" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
+
+--missing index on JSONB columns
+CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_AntennaCapability" (
+	"id"			TEXT,
 	"geranFqBands"			jsonb,
 	"nRFqBands"			jsonb,
 	"eUtranFqBands"			jsonb,
-	"CD_sourceIds"			jsonb
+	"CD_sourceIds"			jsonb,
+	"CD_decorators"			jsonb
+	"CD_classifiers"			jsonb
 );
 
-ALTER TABLE ONLY ties_data."AntennaCapability" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_AntennaCapability" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_AntennaCapability" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_AntennaCapability" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'AntennaCapability',
- 'PK_AntennaCapability_id',
- 'ALTER TABLE ties_data."AntennaCapability" ADD CONSTRAINT "PK_AntennaCapability_id" PRIMARY KEY ("id");'
+	'o-ran-smo-teiv-ran_AntennaCapability',
+ 'PK_o-ran-smo-teiv-ran_AntennaCapability_id',
+ 'ALTER TABLE ties_data."AntennaCapability" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_AntennaCapability_id" PRIMARY KEY ("id");'
 );
 
-CREATE TABLE IF NOT EXISTS ties_data."LTESectorCarrier" (
-	"id"			VARCHAR(511),
+--missing "ANTENNACAPABILITY_USED_BY_LTESECTORCARRIER" relationship
+CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" (
+	"id"			TEXT,
 	"sectorCarrierType"			TEXT,
 	"CD_sourceIds"			jsonb,
-	"REL_FK_provided-by-enodebFunction"			VARCHAR(511),
-	"REL_ID_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"			VARCHAR(511),
-	"REL_CD_sourceIds_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"			jsonb
+	"CD_classifiers"    jsonb,
+	"CD_decorators"     jsonb,
+	"REL_FK_provided-by-enodebFunction"			TEXT,
+	"REL_ID_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"			TEXT,
+	"REL_CD_sourceIds_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"			jsonb,
+	"REL_CD_classifiers_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"			jsonb,
+	"REL_CD_decorators_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"			jsonb,
 );
 
-ALTER TABLE ONLY ties_data."LTESectorCarrier" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
 
-ALTER TABLE ONLY ties_data."LTESectorCarrier" ALTER COLUMN "REL_CD_sourceIds_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER" SET DEFAULT '[]';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ALTER COLUMN "REL_CD_sourceIds_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ALTER COLUMN "REL_CD_classifiers_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ALTER COLUMN "REL_CD_decorators_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER" SET DEFAULT '{}';
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'LTESectorCarrier',
- 'PK_LTESectorCarrier_id',
- 'ALTER TABLE ties_data."LTESectorCarrier" ADD CONSTRAINT "PK_LTESectorCarrier_id" PRIMARY KEY ("id");'
+	'o-ran-smo-teiv-ran_LTESectorCarrier',
+ 'PK_o-ran-smo-teiv-ran_LTESectorCarrier_id',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_LTESectorCarrier_id" PRIMARY KEY ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'LTESectorCarrier',
- 'UNIQUE_B9770D6C26DDA0173DB9690F6E3B42C111AF26E9',
- 'ALTER TABLE ties_data."LTESectorCarrier" ADD CONSTRAINT "UNIQUE_B9770D6C26DDA0173DB9690F6E3B42C111AF26E9" UNIQUE ("REL_ID_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER");'
+	'o-ran-smo-teiv-ran_LTESectorCarrier',
+ 'FK_D0868FBC0BBE2754F4B765C4898C1A1700E2BEFD',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ADD CONSTRAINT "FK_D0868FBC0BBE2754F4B765C4898C1A1700E2BEFD" FOREIGN KEY ("REL_FK_provided-by-enodebFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ENodeBFunction" (id) ON DELETE CASCADE;'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'LTESectorCarrier',
- 'FK_LTESectorCarrier_REL_FK_provided-by-enodebFunction',
- 'ALTER TABLE ties_data."LTESectorCarrier" ADD CONSTRAINT "FK_LTESectorCarrier_REL_FK_provided-by-enodebFunction" FOREIGN KEY ("REL_FK_provided-by-enodebFunction") REFERENCES ties_data."ENodeBFunction" (id) ON DELETE CASCADE;'
+	'o-ran-smo-teiv-ran_LTESectorCarrier',
+ 'UNIQUE_FD943EE596337B11E0C640E1176CADF9CD69E19A',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ADD CONSTRAINT "UNIQUE_FD943EE596337B11E0C640E1176CADF9CD69E19A" UNIQUE ("REL_ID_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER");'
 );
+
+CREATE INDEX IF NOT EXISTS "IDX_6EC539C61EA7078DBA264C9877B87FC263605D42" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_E754EB8AD825DB3111B07B9E5DA3B30C38DB406B" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN (("CD_classifiers"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_LTESectorCarrier_CD_decorators" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN ("CD_decorators");
+
+CREATE INDEX IF NOT EXISTS "IDX_1EBC7271CEA658156DE25286404CBC4593340F8E" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN (("REL_CD_sourceIds_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_846B7740E8AA756B8C1409CD909D2DF73A47ED4C" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN (("REL_CD_classifiers_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_44075E1D464599B61924196C20F2B88332520CD8" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN ("REL_CD_decorators_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER");
 
 COMMIT;
-
-

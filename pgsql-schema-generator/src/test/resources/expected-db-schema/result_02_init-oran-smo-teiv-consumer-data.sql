@@ -21,34 +21,33 @@
 
 BEGIN;
 
-CREATE EXTENSION IF NOT EXISTS postgis;
-CREATE EXTENSION IF NOT EXISTS postgis_topology;
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
-GRANT USAGE ON SCHEMA topology to :pguser;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA topology TO :pguser;
-GRANT SELECT ON ALL TABLES IN SCHEMA topology TO :pguser;
-
-CREATE SCHEMA IF NOT EXISTS ties_data;
-ALTER SCHEMA ties_data OWNER TO :pguser;
+CREATE SCHEMA IF NOT EXISTS ties_consumer_data;
+ALTER SCHEMA ties_consumer_data OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 SET ROLE :'pguser';
 
--- Function to create CONSTRAINT only if it does not exists
-CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
-	t_name TEXT, c_name TEXT, constraint_sql TEXT
-)
-RETURNS void AS
-$$
-BEGIN
-	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = t_name AND constraint_name = c_name) THEN
-		EXECUTE constraint_sql;
-	END IF;
-END;
-$$ language 'plpgsql';
+CREATE TABLE IF NOT EXISTS ties_consumer_data."module_reference" (
+    "name"            TEXT PRIMARY KEY,
+    "namespace"       TEXT,
+    "revision"        TEXT NOT NULL,
+    "content"         TEXT NOT NULL,
+    "ownerAppId"      VARCHAR(511) NOT NULL,
+    "status"          VARCHAR(127) NOT NULL
+);
 
--- Update data schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_data', 'success');
+CREATE TABLE IF NOT EXISTS ties_consumer_data."decorators" (
+    "name"                TEXT PRIMARY KEY,
+    "dataType"            VARCHAR(511) NOT NULL,
+    "moduleReferenceName" TEXT NOT NULL,
+    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data."module_reference" ("name") ON DELETE CASCADE
+);
 
+CREATE TABLE IF NOT EXISTS ties_consumer_data."classifiers" (
+    "name"                TEXT PRIMARY KEY,
+    "moduleReferenceName" TEXT NOT NULL,
+    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data."module_reference" ("name") ON DELETE CASCADE
+);
+
+COMMIT;

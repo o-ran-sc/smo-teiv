@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Slf4j
 public class HashInfoDataGenerator {
-
+    private static final int POSTGRES_MAX_IDENTIFIER_LENGTH = 63;
     private final Set<HashInfoEntity> hashInfoRowsList = new HashSet<>();
 
     /**
@@ -56,7 +56,7 @@ public class HashInfoDataGenerator {
      */
     public String generateHashAndRegisterTableRow(String prefix, String name, String type) {
         String hashedValue;
-        if (prefix.length() + name.length() < 64) {
+        if (prefix.length() + name.length() <= POSTGRES_MAX_IDENTIFIER_LENGTH) {
             hashInfoRowsList.add(HashInfoEntity.builder().name(prefix + name).hashedValue(prefix + name).type(type)
                     .build());
             return prefix + name;

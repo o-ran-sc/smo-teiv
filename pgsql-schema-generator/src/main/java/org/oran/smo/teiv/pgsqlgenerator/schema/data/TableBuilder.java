@@ -27,16 +27,16 @@ import static org.oran.smo.teiv.pgsqlgenerator.Constants.CONSTRAINT;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CONSUMER_DATA;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.FOREIGN_KEY;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ID;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.INDEX;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.INDEX_PREFIX;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.NO_PREFIX;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.PRIMARY_KEY;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.REL_CD;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.REL_FK;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.REL_ID;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.TABLE;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.TEXT;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.UNIQUE;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.VARCHAR511;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.A_SIDE;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.B_SIDE;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.RELATION;
 
 import java.util.ArrayList;
@@ -48,6 +48,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.oran.smo.teiv.pgsqlgenerator.ForeignKeyConstraint;
+import org.oran.smo.teiv.pgsqlgenerator.IndexType;
+import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.oran.smo.teiv.pgsqlgenerator.PrimaryKeyConstraint;
 import org.springframework.stereotype.Component;
 
@@ -80,30 +82,23 @@ public class TableBuilder {
      */
     public List<Table> getTables(List<Entity> entities, List<Relationship> relationships) {
         // Create table from entities and relationships
-        Map<String, List<Column>> tableFromMSvc = new HashMap<>();
+        Map<String, List<Column>> tablesFromModelSvc = new HashMap<>();
 
         entities.forEach(entity -> {
-            String tableName = entity.getEntityName();
+            String tableName = entity.getStoredAt();
             String hashedTableName = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, tableName, TABLE);
-            tableFromMSvc.put(hashedTableName, getColumnsByEntity(entity, hashedTableName));
+            tablesFromModelSvc.put(hashedTableName, getColumnsByEntity(entity, hashedTableName));
         });
 
         relationships.forEach(relationship -> {
-            String tableName = "";
-            switch (relationship.getRelationshipDataLocation()) {
-                case A_SIDE -> tableName = relationship.getASideMOType();
-                case B_SIDE -> tableName = relationship.getBSideMOType();
-                case RELATION -> tableName = relationship.getName();
-                default -> log.error(String.format("Relationship with name %s cannot be mapped", relationship.getName()));
-            }
+            String tableName = relationship.getStoredAt();
             String hashedTableName = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, tableName, TABLE);
-
-            tableFromMSvc.computeIfAbsent(hashedTableName, k -> new ArrayList<>()).addAll(getColumnsByRelationship(
+            tablesFromModelSvc.computeIfAbsent(hashedTableName, k -> new ArrayList<>()).addAll(getColumnsByRelationship(
                     relationship, tableName, hashedTableName));
         });
 
-        return tableFromMSvc.entrySet().stream().map(entry -> Table.builder().name(entry.getKey()).columns(entry.getValue())
-                .build()).collect(Collectors.toList());
+        return tablesFromModelSvc.entrySet().stream().map(entry -> Table.builder().name(entry.getKey()).columns(entry
+                .getValue()).build()).collect(Collectors.toList());
     }
 
     private List<Column> getColumnsByEntity(Entity entity, String hashedTableName) {
@@ -113,14 +108,18 @@ public class TableBuilder {
             String hashedAttributeName = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, attributeName,
                     COLUMN);
             return Column.builder().name(hashedAttributeName).dataType(attribute.getDataType()).postgresConstraints(
-                    getConstraintsForColumn(entity.getEntityName(), hashedTableName, attribute.getConstraints(),
-                            attributeName, hashedAttributeName)).defaultValue(attribute.getDefaultValue()).build();
+                    getConstraintsForColumn(entity.getStoredAt(), hashedTableName, attribute.getConstraints(),
+                            attributeName, hashedAttributeName)).defaultValue(attribute.getDefaultValue())
+                    .postgresIndexList(getIndexesForColumn(entity.getStoredAt(), hashedTableName, attributeName,
+                            hashedAttributeName, attribute.getIndexTypes())).build();
         }).toList());
         entityCols.addAll(entity.getConsumerData().stream().map(cd -> {
+            String attributeName = CONSUMER_DATA + cd.getName();
             String hashedAttributeName = hashInfoDataGenerator.generateHashAndRegisterTableRow(CONSUMER_DATA, cd.getName(),
                     COLUMN);
             return Column.builder().name(hashedAttributeName).dataType(cd.getDataType()).defaultValue(cd.getDefaultValue())
-                    .build();
+                    .postgresIndexList(getIndexesForColumn(entity.getStoredAt(), hashedTableName, attributeName,
+                            hashedAttributeName, cd.getIndexTypes())).build();
         }).toList());
         return entityCols;
     }
@@ -137,44 +136,46 @@ public class TableBuilder {
             String hashedTableName) {
         List<Column> relColumns = new ArrayList<>();
 
-        final String associationEndpointName = tableName.equals(rel.getASideMOType()) ?
+        final String associationEndpointName = tableName.equals(rel.getASideStoredAt()) ?
                 rel.getASideAssociationName() :
                 rel.getBSideAssociationName();
         final String relFk = REL_FK + associationEndpointName;
         final String relId = REL_ID + rel.getName();
 
-        String hashedTableNameASide = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel.getASideMOType(),
-                TABLE);
-        String hashedTableNameBSide = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel.getBSideMOType(),
-                TABLE);
-        final String hashedReferenceTable = tableName.equals(hashedTableNameASide) ?
+        String hashedTableNameASide = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel
+                .getASideStoredAt(), TABLE);
+        String hashedTableNameBSide = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel
+                .getBSideStoredAt(), TABLE);
+        final String hashedReferenceTable = hashedTableName.equals(hashedTableNameASide) ?
                 hashedTableNameBSide :
                 hashedTableNameASide;
         final String hashedRelId = hashInfoDataGenerator.generateHashAndRegisterTableRow(REL_ID, rel.getName(), COLUMN);
         final String hashedRelFk = hashInfoDataGenerator.generateHashAndRegisterTableRow(REL_FK, associationEndpointName,
                 COLUMN);
 
-        relColumns.add(Column.builder().name(hashedRelFk).dataType(VARCHAR511).postgresConstraints(new ArrayList<>(List.of(
+        relColumns.add(Column.builder().name(hashedRelFk).dataType(TEXT).postgresConstraints(new ArrayList<>(List.of(
                 createForeignKeyConstraints(tableName, hashedTableName, hashedReferenceTable, relFk, hashedRelFk))))
                 .build());
 
-        relColumns.add(Column.builder().name(hashedRelId).dataType(VARCHAR511).postgresConstraints(new ArrayList<>(List.of(
+        relColumns.add(Column.builder().name(hashedRelId).dataType(TEXT).postgresConstraints(new ArrayList<>(List.of(
                 createUniqueConstraints(tableName, hashedTableName, relId, hashedRelId)))).build());
         rel.getConsumerData().forEach(cd -> {
-            final String cdColumnName = hashInfoDataGenerator.generateHashAndRegisterTableRow(REL_CD, cd
-                    .getName() + "_" + rel.getName(), COLUMN);
-            relColumns.add(Column.builder().name(cdColumnName).dataType(cd.getDataType()).defaultValue(cd.getDefaultValue())
-                    .build());
+            final String columnNameWithoutPrefix = cd.getName() + "_" + rel.getName();
+            final String columnName = REL_CD + columnNameWithoutPrefix;
+            final String hashedColumnName = hashInfoDataGenerator.generateHashAndRegisterTableRow(REL_CD,
+                    columnNameWithoutPrefix, COLUMN);
+            relColumns.add(Column.builder().name(hashedColumnName).dataType(cd.getDataType()).defaultValue(cd
+                    .getDefaultValue()).postgresIndexList(getIndexesForColumn(tableName, hashedTableName, columnName,
+                            hashedColumnName, cd.getIndexTypes())).build());
         });
         return relColumns;
     }
 
     private List<Column> createRelationshipColumnsForRelationTables(Relationship rel, String tableName,
             String hashedTableName) {
-
-        String hashedASideMOType = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel.getASideMOType(),
+        String hashedASideMOType = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel.getASideStoredAt(),
                 TABLE);
-        String hashedBSideMOType = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel.getBSideMOType(),
+        String hashedBSideMOType = hashInfoDataGenerator.generateHashAndRegisterTableRow(NO_PREFIX, rel.getBSideStoredAt(),
                 TABLE);
 
         final String relASide = A_SIDE_PREFIX + rel.getASideMOType();
@@ -183,38 +184,53 @@ public class TableBuilder {
         final String relBSide = B_SIDE_PREFIX + rel.getBSideMOType();
         final String hashedRelBSide = hashInfoDataGenerator.generateHashAndRegisterTableRow(B_SIDE_PREFIX, rel
                 .getBSideMOType(), COLUMN);
-        List<Column> relColumns = new ArrayList<>(Arrays.asList(Column.builder().name(ID).dataType(VARCHAR511)
+        List<Column> relColumns = new ArrayList<>(Arrays.asList(Column.builder().name(ID).dataType(TEXT)
                 .postgresConstraints(new ArrayList<>(List.of(createPrimaryKeyConstraints(tableName, hashedTableName, ID))))
-                .build(), Column.builder().name(hashedRelASide).dataType(VARCHAR511).postgresConstraints(new ArrayList<>(
-                        List.of(createForeignKeyConstraints(tableName, hashedTableName, hashedASideMOType, relASide,
-                                hashedRelASide)))).build(), Column.builder().name(hashedRelBSide).dataType(VARCHAR511)
+                .build(), Column.builder().name(hashedRelASide).dataType(TEXT).postgresConstraints(new ArrayList<>(List.of(
+                        createForeignKeyConstraints(tableName, hashedTableName, hashedASideMOType, relASide,
+                                hashedRelASide)))).build(), Column.builder().name(hashedRelBSide).dataType(TEXT)
                                         .postgresConstraints(new ArrayList<>(List.of(createForeignKeyConstraints(tableName,
                                                 hashedTableName, hashedBSideMOType, relBSide, hashedRelBSide)))).build()));
         rel.getConsumerData().forEach(cd -> {
-            final String columnName = hashInfoDataGenerator.generateHashAndRegisterTableRow(CONSUMER_DATA, cd.getName(),
-                    COLUMN);
-            relColumns.add(Column.builder().name(columnName).dataType(cd.getDataType()).defaultValue(cd.getDefaultValue())
-                    .build());
+            final String columnName = CONSUMER_DATA + cd.getName();
+            final String hashedColumnName = hashInfoDataGenerator.generateHashAndRegisterTableRow(CONSUMER_DATA, cd
+                    .getName(), COLUMN);
+            relColumns.add(Column.builder().name(hashedColumnName).dataType(cd.getDataType()).defaultValue(cd
+                    .getDefaultValue()).postgresIndexList(getIndexesForColumn(tableName, hashedTableName, columnName,
+                            hashedColumnName, cd.getIndexTypes())).build());
         });
         return relColumns;
     }
 
     private Collection<PostgresConstraint> getConstraintsForColumn(String tableName, String hashedTableName,
-            Collection<Object> constraintsFromEModel, String attributeName, String hashedAttributeName) {
+            Collection<Object> constraintsFromModel, String attributeName, String hashedAttributeName) {
         Collection<PostgresConstraint> postgresConstraintCollection = new ArrayList<>();
-        if (constraintsFromEModel != null) {
-            if (constraintsFromEModel.stream().anyMatch(PrimaryKeyConstraint.class::isInstance)) {
+        if (constraintsFromModel != null && !constraintsFromModel.isEmpty()) {
+            if (constraintsFromModel.stream().anyMatch(PrimaryKeyConstraint.class::isInstance)) {
                 if (attributeName.equals(ID)) {
                     postgresConstraintCollection.add(createPrimaryKeyConstraints(tableName, hashedTableName,
                             attributeName));
                 }
             }
-            //            if (constraintsFromEModel.stream().anyMatch(<any-other-constraint>.class::isInstance)) {
+            //            if (constraintsFromModel.stream().anyMatch(<any-other-constraint>.class::isInstance)) {
             //                postgresConstraintCollection.add(createUniqueConstraints(tableName, hashedTableName, attributeName,
-            //                        hashedAttributeName));
+            //                    hashedAttributeName));
             //            }
         }
         return postgresConstraintCollection;
+    }
+
+    private List<PostgresIndex> getIndexesForColumn(String tableName, String hashedTableName, String attributeName,
+            String hashedAttributeName, List<IndexType> indexTypes) {
+        List<PostgresIndex> postgresIndexList = new ArrayList<>();
+        indexTypes.forEach(indexType -> {
+            //IndexName - IDX_<indexType>_<tableName>_<columnName>
+            final String hashedIndexName = hashInfoDataGenerator.generateHashAndRegisterTableRow(INDEX_PREFIX, String
+                    .format("%s_%s_%s", indexType.name(), tableName, attributeName), INDEX);
+            postgresIndexList.add(PostgresIndex.builder().tableNameToAddIndexTo(hashedTableName).columnNameToAddIndexTo(
+                    hashedAttributeName).indexName(hashedIndexName).indexType(indexType).build());
+        });
+        return postgresIndexList;
     }
 
     private PostgresConstraint createForeignKeyConstraints(String tableToAddForeignKeyTo,

@@ -20,6 +20,8 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator.schema;
 
+import org.oran.smo.teiv.pgsqlgenerator.IndexType;
+import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.oran.smo.teiv.pgsqlgenerator.Table;
 import org.oran.smo.teiv.pgsqlgenerator.Column;
 import org.oran.smo.teiv.pgsqlgenerator.PrimaryKeyConstraint;
@@ -46,14 +48,14 @@ class BackwardCompatibilityCheckerTest {
             Table.builder().name("Sector").columns(
                 List.of(
                         Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                        Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                        Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                 PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                         .columnToAddConstraintTo("id").build())).build(),
                         Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                         Column.builder().name("geo-location").dataType("geography").build())).build(),
             Table.builder().name("Namespace").columns(
                 List.of(
-                        Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                        Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                 PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                         .columnToAddConstraintTo("id").build())).build(),
                         Column.builder().name("name").dataType("TEXT").build())).build());
@@ -67,20 +69,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -101,20 +103,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -124,19 +126,19 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -157,20 +159,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -180,20 +182,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId123").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -212,20 +214,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -235,7 +237,7 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
@@ -248,7 +250,7 @@ class BackwardCompatibilityCheckerTest {
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -268,20 +270,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -291,18 +293,18 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").build(),
+                            Column.builder().name("id").dataType("TEXT").build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -318,20 +320,20 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                         List.of(
                                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                         PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id_123")
                                                 .columnToAddConstraintTo("id").build())).build(),
                                 Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                                 Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                         List.of(
-                                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                         PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                                 .columnToAddConstraintTo("id").build())).build(),
                                 Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("NRCellDU").columns(
                         List.of(
-                                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                         PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
                                                 .columnToAddConstraintTo("id").build())).build(),
                                 Column.builder().name("name").dataType("TEXT").build())).build());
@@ -344,6 +346,84 @@ class BackwardCompatibilityCheckerTest {
 
     }
 
+    @Test
+    void verifyExceptionThrownOnColumnIndexModifiedWhenGreenfieldDisabledTest()  {
+        // Given baseline
+        List<Table> mockBaselineEntities = List.of(
+            Table.builder().name("Sector").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").build(),
+                    Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
+                    Column.builder().name("geo-location").dataType("geography").build())).build(),
+            Table.builder().name("Namespace").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
+                        PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
+                            .columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build())).build(),
+            Table.builder().name("NRCellDU").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
+                        PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
+                            .columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").postgresIndexList(List.of(
+                        PostgresIndex.builder().tableNameToAddIndexTo("NRCellDU").columnNameToAddIndexTo("name")
+                            .indexName("IDX_GIN_NRCellDU_name").indexType(IndexType.GIN).build())).build())).build());
+        // When - entities from Model svc with remove column index
+        mockModelServiceEntities = List.of(
+            Table.builder().name("Sector").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").build(),
+                    Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
+                    Column.builder().name("geo-location").dataType("geography").build())).build(),
+            Table.builder().name("Namespace").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
+                        PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
+                            .columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build())).build(),
+            Table.builder().name("NRCellDU").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
+                        PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
+                            .columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build())).build());
+        // Then
+        Assertions.assertEquals(
+            String.format("NBC change has been introduced: modified/removed index IDX_GIN_NRCellDU_name for column(NRCellDU.name) present in baseline, please make sure you've enabled green-field installation!!%nFor more info please refer to README"),
+            Assertions.assertThrowsExactly(PgSchemaGeneratorException.class, () -> nbcChecker.checkForNBCChangesInData(
+                mockBaselineEntities, mockModelServiceEntities)).getMessage());
+        // When - entities from Model svc with modified column index
+        mockModelServiceEntities = List.of(
+            Table.builder().name("Sector").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").build(),
+                    Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
+                    Column.builder().name("geo-location").dataType("geography").build())).build(),
+            Table.builder().name("Namespace").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
+                        PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
+                            .columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build())).build(),
+            Table.builder().name("NRCellDU").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
+                        PrimaryKeyConstraint.builder().tableName("NRCellDU").constraintName("PK_NRCellDU_id")
+                            .columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").postgresIndexList(List.of(
+                        PostgresIndex.builder().tableNameToAddIndexTo("NRCellDU").columnNameToAddIndexTo("name")
+                            .indexName("IDX_GIN_NRCellDU_name").indexType(IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).build())).build())).build());
+        // Then
+        Assertions.assertEquals(
+            String.format("NBC change has been introduced: modified/removed index IDX_GIN_NRCellDU_name for column(NRCellDU.name) present in baseline, please make sure you've enabled green-field installation!!%nFor more info please refer to README"),
+            Assertions.assertThrowsExactly(PgSchemaGeneratorException.class, () -> nbcChecker.checkForNBCChangesInData(
+                mockBaselineEntities, mockModelServiceEntities)).getMessage());
+    }
+
     //Data:Relationships
     @Test
     void verifyExceptionThrownOnModifiedRelationshipCardinalityWhenGreenfieldDisabledTest() {
@@ -353,18 +433,18 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build(),
-                            Column.builder().name("REL_FK_managed-Namespace").dataType("VARCHAR(511)").postgresConstraints(List.of()).build(),
-                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("REL_FK_managed-Namespace").dataType("TEXT").postgresConstraints(List.of()).build(),
+                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("TEXT").postgresConstraints(List.of(
                                     UniqueConstraint.builder().constraintName("UNIQUE_Sector_REL_ID_SECTOR_MANAGES_NAMESPACE").tableName("Sector")
                                             .columnToAddConstraintTo("REL_ID_SECTOR_MANAGES_NAMESPACE").build())).build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());
@@ -375,19 +455,19 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build(),
-                            Column.builder().name("REL_FK_managed-by-Sector").dataType("VARCHAR(511)").postgresConstraints(List.of()).build(),
-                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("REL_FK_managed-by-Sector").dataType("TEXT").postgresConstraints(List.of()).build(),
+                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("TEXT").postgresConstraints(List.of(
                                     UniqueConstraint.builder().constraintName("UNIQUE_Namespace_REL_ID_SECTOR_MANAGES_NAMESPACE").tableName("Namespace")
                                             .columnToAddConstraintTo("REL_ID_SECTOR_MANAGES_NAMESPACE").build())).build())).build());
 
@@ -403,26 +483,26 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                     List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                     List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build(),
                 Table.builder().name("SECTOR_MANAGES_NAMESPACE").columns(
                         List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("SECTOR_MANAGES_NAMESPACE").constraintName("PK_SECTOR_MANAGES_NAMESPACE_id")
                                             .columnToAddConstraintTo("id").build())).build(),
-                            Column.builder().name("aSide_Sector").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("aSide_Sector").dataType("TEXT").postgresConstraints(List.of(
                                     UniqueConstraint.builder().constraintName("FK_SECTOR_MANAGES_NAMESPACE_aSide_Sector")
                                             .tableName("SECTOR_MANAGES_NAMESPACE").columnToAddConstraintTo("aSide_Sector").build())).build(),
-                            Column.builder().name("bSide_Namespace").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("bSide_Namespace").dataType("TEXT").postgresConstraints(List.of(
                                     UniqueConstraint.builder().constraintName("FK_SECTOR_MANAGES_NAMESPACE_bSide_Namespace")
                                             .tableName("SECTOR_MANAGES_NAMESPACE").columnToAddConstraintTo("bSide_Namespace").build())).build())).build());
 
@@ -439,19 +519,19 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                         List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build())).build(),
                 Table.builder().name("Namespace").columns(
                         List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build(),
-                            Column.builder().name("REL_FK_managed-by-Sector").dataType("VARCHAR(511)").postgresConstraints(List.of()).build(),
-                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("REL_FK_managed-by-Sector").dataType("TEXT").postgresConstraints(List.of()).build(),
+                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("TEXT").postgresConstraints(List.of(
                                     UniqueConstraint.builder().constraintName("UNIQUE_Namespace_REL_ID_SECTOR_MANAGES_NAMESPACE").tableName("Namespace")
                                             .columnToAddConstraintTo("REL_ID_SECTOR_MANAGES_NAMESPACE").build())).build())).build());
 
@@ -460,18 +540,18 @@ class BackwardCompatibilityCheckerTest {
                 Table.builder().name("Sector").columns(
                         List.of(
                             Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                             Column.builder().name("geo-location").dataType("geography").build(),
-                            Column.builder().name("REL_FK_managed-Namespace").dataType("VARCHAR(511)").postgresConstraints(List.of()).build(),
-                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("REL_FK_managed-Namespace").dataType("TEXT").postgresConstraints(List.of()).build(),
+                            Column.builder().name("REL_ID_SECTOR_MANAGES_NAMESPACE").dataType("TEXT").postgresConstraints(List.of(
                                     UniqueConstraint.builder().constraintName("UNIQUE_Sector_REL_ID_SECTOR_MANAGES_NAMESPACE").tableName("Sector")
                                             .columnToAddConstraintTo("REL_ID_SECTOR_MANAGES_NAMESPACE").build())).build())).build(),
                 Table.builder().name("Namespace").columns(
                         List.of(
-                            Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                            Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                                     PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id")
                                             .columnToAddConstraintTo("id").build())).build(),
                             Column.builder().name("name").dataType("TEXT").build())).build());

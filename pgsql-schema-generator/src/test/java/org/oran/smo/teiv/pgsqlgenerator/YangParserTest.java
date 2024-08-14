@@ -40,13 +40,13 @@ class YangParserTest {
 
         List<Module> moduleList = yangParser.returnAllModuleReferences();
 
-        Assertions.assertEquals(5, moduleList.size());
+        Assertions.assertEquals(8, moduleList.size());
 
         List<String> allModuleReferenceNames = moduleList.stream().map(Module::getName).sorted().toList();
 
-        Assertions.assertEquals(allModuleReferenceNames, Stream.of("o-ran-smo-teiv-common-yang-extensions",
-                "o-ran-smo-teiv-common-yang-types", "o-ran-smo-teiv-equipment", "o-ran-smo-teiv-rel-equipment-ran",
-                "o-ran-smo-teiv-ran").sorted().toList());
+        Assertions.assertEquals(allModuleReferenceNames, Stream.of("_3gpp-common-yang-types", "ietf-geo-location",
+                "o-ran-smo-teiv-common-yang-extensions", "o-ran-smo-teiv-common-yang-types", "o-ran-smo-teiv-equipment",
+                "o-ran-smo-teiv-rel-equipment-ran", "o-ran-smo-teiv-ran", "test-built-in-module").sorted().toList());
 
     }
 }

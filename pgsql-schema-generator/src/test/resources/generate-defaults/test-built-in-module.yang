@@ -1,0 +1,153 @@
+module test-built-in-module {
+    yang-version 1.1;
+    namespace "test-built-in-namespace";
+
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
+
+    import _3gpp-common-yang-types { prefix types3gpp; }
+
+    import ietf-geo-location {
+        prefix geo;
+        reference "RFC 9179: A YANG Grouping for Geographic Locations";
+    }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+    "Test topology model.";
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain TEST;
+
+    list EntityTypeA {
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+    }
+
+    list EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        container attributes {
+            leaf attributeA1WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                type string;
+            }
+
+            leaf attributeA2WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                type uint32;
+            }
+
+            leaf attributeA3WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                type int32;
+            }
+
+            leaf attributeA4WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                type int64;
+            }
+
+            leaf attributeA5WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                type decimal64{
+                    fraction-digits 6;
+                }
+                units "degrees";
+            }
+
+            leaf-list attributeA6WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                type string;
+            }
+
+            container attributeA7WithAttributeNameLengthLongerThanSixtyThreeCharacters {
+                uses types3gpp:PLMNId;
+            }
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ENTITYTYPEA_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS { // 0..1 to 0..1
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+            or-teiv-yext:aSide EntityTypeA;
+            type instance-identifier;
+       }
+
+        leaf used-by-entityTypeA {
+            or-teiv-yext:bSide EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters;
+            type instance-identifier;
+       }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ENTITYTYPEA_PROVIDES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS { // 0..1 to 0..n
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf-list provided-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+            or-teiv-yext:aSide EntityTypeA;
+            type instance-identifier;
+       }
+
+        leaf provided-by-entityTypeA {
+            or-teiv-yext:bSide EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters;
+            type instance-identifier;
+       }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ENTITYTYPEA_GROUPS_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS { // 0..n to 0..1
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf grouped-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+            or-teiv-yext:aSide EntityTypeA;
+            type instance-identifier;
+       }
+
+        leaf-list grouped-by-entityTypeA {
+            or-teiv-yext:bSide EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters;
+            type instance-identifier;
+       }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ENTITYTYPEA_INSTALLED_AT_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS { // 0..n to 0..m
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf-list installed-at-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+            or-teiv-yext:aSide EntityTypeA;
+            type instance-identifier;
+       }
+
+        leaf-list installed-entityTypeA {
+            or-teiv-yext:bSide EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters;
+            type instance-identifier;
+       }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS { // 0..1 to 0..1
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+            or-teiv-yext:aSide EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters;
+            type instance-identifier;
+       }
+
+        leaf used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters {
+            or-teiv-yext:bSide EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters;
+            type instance-identifier;
+       }
+    }
+}

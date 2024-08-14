@@ -23,6 +23,7 @@ package org.oran.smo.teiv.pgsqlgenerator.schema.data;
 import java.util.List;
 import java.util.Map;
 
+import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,12 @@ import org.oran.smo.teiv.pgsqlgenerator.UniqueConstraint;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CREATE;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.DEFAULT;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.GEOGRAPHY;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.GEO_LOCATION;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ID;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER_TABLE_TIES_DATA_S;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.INDEX;
 
 @Slf4j
 @Component
@@ -59,9 +64,10 @@ public class DataSchemaHelper {
         } else {
             for (Map.Entry<String, List<Table>> entry : differences.entrySet()) {
                 switch (entry.getKey()) {
-                    case CREATE -> generatedSchema.append(generateCreateStatementsFromDifferences(entry.getValue()));
+                    case DEFAULT -> generatedSchema.append(generateDefaultStatementsFromDifferences(entry.getValue()));
+                    case INDEX -> generatedSchema.append(generateIndexStatementsFromDifferences(entry.getValue()));
                     case ALTER -> generatedSchema.append(generateAlterStatementsFromDifferences(entry.getValue()));
-                    default -> generatedSchema.append(generateDefaultStatementsFromDifferences(entry.getValue()));
+                    case CREATE -> generatedSchema.append(generateCreateStatementsFromDifferences(entry.getValue()));
                 }
             }
         }
@@ -75,15 +81,17 @@ public class DataSchemaHelper {
         StringBuilder storeSchemaForCreateStatements = new StringBuilder();
         StringBuilder storeAlterStatementsForPrimaryKeyConstraints = new StringBuilder();
         StringBuilder storeAlterStatementsForAllOtherConstraints = new StringBuilder();
+        StringBuilder storeIndexStatements = new StringBuilder();
         for (Table table : tables) {
             storeAlterStatementsForPrimaryKeyConstraints.append(generateAlterStatementsForPrimaryKeyConstraints(table
                     .getColumns()));
             storeAlterStatementsForAllOtherConstraints.append(generateAlterStatementsForAllOtherConstraints(table
                     .getColumns()));
+            storeIndexStatements.append(generateIndexStatementForColumns(table.getColumns()));
             storeSchemaForCreateStatements.append(generateCreateTableStatements(table.getColumns(), table.getName()));
         }
         storeSchemaForCreateStatements.append(storeAlterStatementsForPrimaryKeyConstraints).append(
-                storeAlterStatementsForAllOtherConstraints);
+                storeAlterStatementsForAllOtherConstraints).append(storeIndexStatements);
         return storeSchemaForCreateStatements;
     }
 
@@ -158,6 +166,16 @@ public class DataSchemaHelper {
                 postgresConstraint.getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), constraintSql);
     }
 
+    private StringBuilder generateIndexStatementForColumns(List<Column> columns) {
+        StringBuilder indexStmt = new StringBuilder();
+        columns.forEach(column -> {
+            column.getPostgresIndexList().forEach(postgresIndex -> {
+                indexStmt.append(generateIndexStatement(postgresIndex));
+            });
+        });
+        return indexStmt;
+    }
+
     private String generateConstraintSql(PostgresConstraint postgresConstraint) {
         if (postgresConstraint instanceof PrimaryKeyConstraint) {
             return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "PRIMARY KEY (\"%s\")", postgresConstraint
@@ -189,28 +207,32 @@ public class DataSchemaHelper {
         StringBuilder storeSchemaForAlterStatements = new StringBuilder();
         StringBuilder storeAlterStatementsForPrimaryKeyConstraints = new StringBuilder();
         StringBuilder storeAlterStatementsForAllOtherConstraints = new StringBuilder();
+        StringBuilder storeIndexStatements = new StringBuilder();
         for (Table table : tables) {
             storeSchemaForAlterStatements.append(generateAlterStatements(table.getColumns(), table.getName()));
             storeAlterStatementsForPrimaryKeyConstraints.append(generateAlterStatementsForPrimaryKeyConstraints(table
                     .getColumns()));
             storeAlterStatementsForAllOtherConstraints.append(generateAlterStatementsForAllOtherConstraints(table
                     .getColumns()));
+            storeIndexStatements.append(generateIndexStatementForColumns(table.getColumns()));
         }
         return storeSchemaForAlterStatements.append(storeAlterStatementsForPrimaryKeyConstraints).append(
-                storeAlterStatementsForAllOtherConstraints);
+                storeAlterStatementsForAllOtherConstraints).append(storeIndexStatements);
     }
 
     /**
      * Generates SQL statements for altering tables based on mapped entity attributes.
      */
     private StringBuilder generateAlterStatements(List<Column> columns, String tableName) {
-
         StringBuilder storeSchema = new StringBuilder();
         for (Column newColumn : columns) {
-            if (newColumn.getName().equals("geo-location")) {
-                newColumn.setDataType("\"geography\"");
+            if (newColumn.getName().equals(GEO_LOCATION)) {
+                newColumn.setDataType(GEOGRAPHY);
             }
             storeSchema.append(generateAlterTableStatements(newColumn, tableName));
+            if (newColumn.getDefaultValue() != null) {
+                storeSchema.append(generateDefaultValueStatements(newColumn, tableName));
+            }
         }
         return storeSchema;
     }
@@ -238,5 +260,26 @@ public class DataSchemaHelper {
     private StringBuilder generateAlterTableStatements(Column newColumn, String tableName) {
         return new StringBuilder(String.format(ALTER_TABLE_TIES_DATA_S + "ADD COLUMN IF NOT EXISTS \"%s\" %s;%n%n",
                 tableName, newColumn.getName(), newColumn.getDataType()));
+    }
+
+    private StringBuilder generateIndexStatementsFromDifferences(List<Table> tables) {
+        StringBuilder storeSchemaForIndexStatements = new StringBuilder();
+        for (Table table : tables) {
+            StringBuilder storeSchema = new StringBuilder();
+            for (Column column : table.getColumns()) {
+                if (!column.getPostgresIndexList().isEmpty()) {
+                    column.getPostgresIndexList().forEach(index -> {
+                        storeSchema.append(generateIndexStatement(index));
+                    });
+                }
+            }
+            storeSchemaForIndexStatements.append(storeSchema);
+        }
+        return storeSchemaForIndexStatements;
+    }
+
+    private String generateIndexStatement(PostgresIndex postgresIndex) {
+        return String.format(postgresIndex.getIndexType().getCreateIndexStmt(), postgresIndex.getIndexName(), postgresIndex
+                .getTableNameToAddIndexTo(), postgresIndex.getColumnNameToAddIndexTo()) + "\n\n";
     }
 }

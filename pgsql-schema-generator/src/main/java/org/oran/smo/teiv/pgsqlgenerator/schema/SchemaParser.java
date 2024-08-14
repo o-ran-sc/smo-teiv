@@ -35,10 +35,12 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import org.oran.smo.teiv.pgsqlgenerator.Column;
+import org.oran.smo.teiv.pgsqlgenerator.IndexType;
 import org.oran.smo.teiv.pgsqlgenerator.PostgresConstraint;
 import org.oran.smo.teiv.pgsqlgenerator.ForeignKeyConstraint;
 import org.oran.smo.teiv.pgsqlgenerator.NotNullConstraint;
 import org.oran.smo.teiv.pgsqlgenerator.PgSchemaGeneratorException;
+import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.oran.smo.teiv.pgsqlgenerator.PrimaryKeyConstraint;
 import org.oran.smo.teiv.pgsqlgenerator.Table;
 import org.oran.smo.teiv.pgsqlgenerator.UniqueConstraint;
@@ -74,12 +76,12 @@ public class SchemaParser {
                         line = br.readLine();
                         List<String> relData = Arrays.asList(line.replace("\"", "").split("\\s+"));
                         identifiedRelationships.add(Relationship.builder().name(relData.get(0)).aSideAssociationName(relData
-                                .get(1)).aSideMOType(relData.get(2)).aSideMinCardinality(Long.parseLong(relData.get(3)))
-                                .aSideMaxCardinality(Long.parseLong(relData.get(4))).bSideAssociationName(relData.get(5))
-                                .bSideMOType(relData.get(6)).bSideMinCardinality(Long.parseLong(relData.get(7)))
-                                .bSideMaxCardinality(Long.parseLong(relData.get(8))).associationKind(relData.get(9))
-                                .relationshipDataLocation(relData.get(10)).connectSameEntity(Boolean.parseBoolean(relData
-                                        .get(11))).moduleReferenceName(relData.get(12)).build());
+                                .get(1)).aSideMOType(relData.get(2)).aSideMinCardinality(Long.parseLong(relData.get(4)))
+                                .aSideMaxCardinality(Long.parseLong(relData.get(5))).bSideAssociationName(relData.get(6))
+                                .bSideMOType(relData.get(7)).bSideMinCardinality(Long.parseLong(relData.get(9)))
+                                .bSideMaxCardinality(Long.parseLong(relData.get(10))).associationKind(relData.get(11))
+                                .connectSameEntity(Boolean.parseBoolean(relData.get(12))).relationshipDataLocation(relData
+                                        .get(13)).moduleReferenceName(relData.get(15)).build());
                     }
                 }
             } catch (IOException exception) {
@@ -109,6 +111,8 @@ public class SchemaParser {
                         extractTableColumns(line, identifiedTables, br);
                     } else if (line.contains("SELECT") && line.contains("ties_data.create_constraint_if_not_exists")) {
                         extractConstraints(identifiedTables, br);
+                    } else if (line.startsWith("CREATE INDEX IF NOT EXISTS")) {
+                        extractIndex(line, identifiedTables);
                     }
                 }
             } catch (IOException exception) {
@@ -216,6 +220,34 @@ public class SchemaParser {
             line = br.readLine();
         }
         identifiedTables.add(Table.builder().name(entityName).columns(identifiedColumns).build());
+    }
+
+    private static void extractIndex(String line, List<org.oran.smo.teiv.pgsqlgenerator.Table> identifiedTables)
+            throws IOException {
+        String[] valuesInQuotes = StringUtils.substringsBetween(line, "\"", "\"");
+        String indexName = valuesInQuotes[0];
+        String tableToAddIndexTo = valuesInQuotes[1];
+        String columnToAddIndexTo = valuesInQuotes[2];
+
+        List<PostgresIndex> postgresIndexList = new ArrayList<>();
+
+        identifiedTables.stream().filter(table -> table.getName().equals(tableToAddIndexTo)).findFirst().flatMap(
+                table -> table.getColumns().stream().filter(column -> column.getName().equals(columnToAddIndexTo))
+                        .findFirst()).ifPresent(column -> {
+                            if (!column.getPostgresIndexList().isEmpty()) {
+                                postgresIndexList.addAll(column.getPostgresIndexList());
+                            }
+                            String createIndexStmt = line.replace(indexName, "%s").replace(tableToAddIndexTo, "%s").replace(
+                                    columnToAddIndexTo, "%s");
+                            for (IndexType indexType : IndexType.values()) {
+                                if (indexType.getCreateIndexStmt().equals(createIndexStmt)) {
+                                    postgresIndexList.add(PostgresIndex.builder().tableNameToAddIndexTo(tableToAddIndexTo)
+                                            .columnNameToAddIndexTo(columnToAddIndexTo).indexName(indexName).indexType(
+                                                    indexType).build());
+                                }
+                            }
+                            column.setPostgresIndexList(postgresIndexList);
+                        });
     }
 
 }

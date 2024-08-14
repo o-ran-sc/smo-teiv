@@ -31,8 +31,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,8 +47,16 @@ public class TestHelper {
         return tables.stream().map(Table::getName).sorted().toList();
     }
 
+    public static List<String> extractColumnNames(List<Column> columns) {
+        return columns.stream().map(Column::getName).sorted().toList();
+    }
+
     public static List<String> extractColumnNamesForATable(List<Column> columns) {
         return columns.stream().map(Column::getName).sorted().toList();
+    }
+
+    public static List<String> extractIndexName(Column column) {
+        return column.getPostgresIndexList().stream().map(PostgresIndex::getIndexName).sorted().toList();
     }
 
     public static List<String> extractConstraintName(Collection<PostgresConstraint> postgresConstraints) {
@@ -61,10 +69,10 @@ public class TestHelper {
     }
 
     public static Map<String, List<Table>> identifiedModelChangeMapping() {
-        Map<String, List<Table>> storeIdentifiedChangesToModels = new HashMap<>();
-        storeIdentifiedChangesToModels.put("CREATE", new ArrayList<>());
-        storeIdentifiedChangesToModels.put("ALTER", new ArrayList<>());
+        Map<String, List<Table>> storeIdentifiedChangesToModels = new LinkedHashMap<>();
         storeIdentifiedChangesToModels.put("DEFAULT", new ArrayList<>());
+        storeIdentifiedChangesToModels.put("ALTER", new ArrayList<>());
+        storeIdentifiedChangesToModels.put("CREATE", new ArrayList<>());
         return storeIdentifiedChangesToModels;
     }
 

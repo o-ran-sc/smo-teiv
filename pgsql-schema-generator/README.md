@@ -50,8 +50,6 @@ A module is constructed with the following details:
 'o-ran-smo-teiv-common-yang-extensions'
 - revision: module revision.
 - content: content of the module.
-- ownerAppId: set to 'BUILT_IN_MODULE' for all modules.
-- status: set to 'IN_USAGE' for all modules.
 - availableListElements: set to all the list elements defined in the module. Identified with the help of the statement 
 with 'list' as the yang DOM element name. 
 - availableEntities: Initially constructed as empty list. This will be populated later with all the entities defined in 
@@ -66,6 +64,8 @@ Entity types are identified from the yang.
 
 An entity type is constructed with the following details: 
 - entityName: name of the entity.
+- storedAt: where the entity information is stored i.e., table name. The table name is generated as
+  '<moduleName>_<entityName>'.
 - moduleReferenceName: module to which the entity belongs. Identified by checking which of the identified modules has
   - the same namespace as the entity, and
   - the availableListElements contains the entity name
@@ -123,27 +123,31 @@ following:
   - A_SIDE
   - B_SIDE
   - RELATION
+- storedAt: table name where the relationship instances is stored. The logic for determining the table name relies on
+the cardinality of the relationship.
 
-  | Case                                                               | Relationship instance info |
-  |--------------------------------------------------------------------|----------------------------|
-  | 1:1                                                                | aSide                      |
-  | 1:N / N:1                                                          | N-side                     |
-  | N:M                                                                | relation table             |
-  | Relations connecting same Entity Types 1 : 1 (or) 1 : n (or) m : n | relation table             |
+  | Case                                                               | Relationship instance info and reference stored at? |
+  |--------------------------------------------------------------------|-----------------------------------------------------|
+  | 1:1                                                                | aSide                                               |
+  | 1:N / N:1                                                          | N-side                                              |
+  | N:M                                                                | relation table (<moduleName>_<relationName>)        |
+  | Relations connecting same Entity Types 1 : 1 (or) 1 : n (or) m : n | relation table (<moduleName>_<relationName>)        |
 
 - moduleReferenceName: module to which the relationship belongs. The relationship module is identified by identifying
 the module that contains the relationship name in the availableRelations list.
 - consumerData: sourceIds, classifiers, decorators.
+- aSideStoredAt: table name where aSide entity type instances are stored.
+- bSideStoredAt: table name where bSide entity type instances are stored.
 
 #### Indexing Support
-
-**Note:** This feature is currently **NOT** supported
 
 Indexing is supported for the identified column's based on the column's data type.
 
 Currently, we support indexing on JSONB columns.
 - GIN Index: used for columns storing object, eg, decorators.
 - GIN TRIGRAM Index: used for columns storing list of entries, eg, classifiers, sourceIds.
+
+Refer [IndexType.java](src/main/java/org/oran/smo/teiv/pgsqlgenerator/IndexType.java) for types of index supported.
 
 ### PG SQL Schema Generation
 
@@ -264,34 +268,13 @@ algorithm and used. _hash_info_ tables holds the name, hashedValue and the type 
   | includedModules | jsonb                 | aSideMO's and bSideMO's module reference name stored within the Module                                               |
   | revision        | TEXT NOT NULL         | The revision date of the file                                                                                        |
   | content         | TEXT NOT NULL         | The base64 encoded format of the corresponding schema.                                                               |
-  | ownerAppId      | VARCHAR(511) NOT NULL | The identity of the owner App.                                                                                       |
-  | status          | VARCHAR(127) NOT NULL | Current status of the module reference to track during the pod's life cycle. Needed to avoid data loss / corruption. |
-
-- **decorators:** There will be the ability for Administrators to decorate topology entities and relationships.
-  We will be storing the schemas for the decorators in this table.
-
-  | Column name                                                                                           | Type                     | Description                                                             |
-  |-------------------------------------------------------------------------------------------------------|--------------------------|-------------------------------------------------------------------------|
-  | name                                                                                                  | VARCHAR(511) PRIMARY KEY | The key of the decorator.                                               |
-  | dataType                                                                                              | VARCHAR(511)             | The data type of the decorator, needed for parsing.                     |
-  | moduleReferenceName                                                                                   | VARCHAR(511)             | References the corresponding module reference the decorator belongs to. |
-  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY              | Foreign key constraint                                                  |
-
-- **classifier:** There will be the ability for client applications to apply user-defined keywords/tags (classifiers) to
-  topology entities and relationships.
-  We will be storing the schemas for the classifiers in this table.
-
-  | Column name                                                                                           | Type                     | Description                                                              |
-  |-------------------------------------------------------------------------------------------------------|--------------------------|--------------------------------------------------------------------------|
-  | name                                                                                                  | VARCHAR(511) PRIMARY KEY | The actual classifier.                                                   |
-  | moduleReferenceName                                                                                   | VARCHAR(511)             | References the corresponding module reference the classifier belongs to. |
-  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY              | Foreign key constraint                                                   |
 
 - **entity_info:** For the entity info generation SQL entries are created and stored which will be used for execution to
 populate entity_info table.
 
   | Column name                                                                                           | Type             | Description                                                 |
   |-------------------------------------------------------------------------------------------------------|------------------|-------------------------------------------------------------|
+  | storedAt                                                                                              | TEXT PRIMARY KEY | Un-hashed table name where entity type instances are stored |
   | name                                                                                                  | TEXT NOT NULL    | The entity type name                                        |
   | moduleReferenceName                                                                                   | TEXT NOT NULL    | A reference to an associated module                         |
   | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                      |
@@ -315,6 +298,7 @@ populate entity_info table.
   | bSideMaxCardinality                                                                                   | BIGINT NOT NULL  | The maximum cardinality of the B-side of the relationship              |
   | associationKind                                                                                       | TEXT NOT NULL    | The kind of association between entities                               |
   | relationshipDataLocation                                                                              | TEXT NOT NULL    | Indicates where associated relationship data is stored                 |
+  | storedAt                                                                                              | TEXT NOT NULL    | The un-hashed table name where relation instance information is stored |
   | connectSameEntity                                                                                     | BOOLEAN NOT NULL | Indicates whether the relationship connects the same entity            |
   | moduleReferenceName                                                                                   | TEXT PRIMARY KEY | The name of the module reference associated with the relationship      |
   | FOREIGN KEY ("aSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE         | FOREIGN KEY      | Foreign key constraint                                                 |
@@ -325,6 +309,93 @@ Along with this it ensures that the structure for the model schema SQL file star
 the correct structure by importing the baseline schema information.
 
 Finally, These generated entries and structure are then used to modify the model SQL file.
+
+#### Consumer Data Schema
+Before classifying entities or relationships, a schema must be created and validated.
+It can be created, by using its own endpoint, with a Yang Module.
+The user must provide a unique module name, to avoid collision of multiple users access that are defining classifiers and decorators.
+The schema cannot be modified later on but only deleted and recreated, if needed.
+When a schema is successfully created and validated, the user can add the classifiers to the entities or relationships.
+
+##### Classifiers
+Classifiers support the following two types of 'operation', which must be identified in the body of the request:
+- merge: defined classifiers can be applied to entities and relationships within a single request.
+- delete: existing tagged classifiers can be removed.
+  **Example:**
+  In this example, user is classifying two given entity IDs and a single relationship ID with a single request.
+```
+{
+  "operation": "merge",
+  "classifiers": [
+    "module-x:Outdoor",
+    "module-y:Rural",
+    "module-z:Weekend"
+  ],
+  "entityIds": [
+    "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
+    "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+  ],
+  "relationshipIds": [
+    "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+  ]
+}
+```
+##### Decorators
+Decorators support the following two types of 'operations', which must be identified in the body of the request:
+- merge: existing decorators can be updated or applied to entities and relationships within a single request.
+- delete: existing tagged decorators can be removed.
+  **Example:**
+  In this example, user is tagging decorators with two given entity IDs and a single relationship ID with a single request.
+```
+  "operation": "merge",
+  "decorators": {
+    "module-x:location": "Stockholm",
+    "module-y:vendor": "Ericsson"
+  },
+  "entityIds": [
+    "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
+    "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+  ],
+  "relationshipIds": [
+    "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+  ]
+}
+```
+The SQL entries for consumer data include
+- **module_reference:** For the consumer module reference related module names from provided classifiers or decorators
+  retrieved from the model service are extracted and stored which will be used for
+  execution to module_reference table.
+  | Column name | Type                  | Description                                                                                                                   |
+  |-------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
+  | name        | TEXT PRIMARY KEY      | The module name                                                                                                               |
+  | namespace   | TEXT                  | The namespace the module is located                                                                                           |
+  | revision    | TEXT NOT NULL         | The revision date of the file                                                                                                 |
+  | content     | TEXT NOT NULL         | The base64 encoded format of the corresponding schema.                                                                        |
+  | ownerAppId  | VARCHAR(511) NOT NULL | The identity of the owner App.                                                                                                |
+  | status      | VARCHAR(127) NOT NULL | Current status of the consumer module reference to track during the pod's life cycle. Needed to avoid data loss / corruption. |
+
+- **decorators:** There will be the ability for Administrators to decorate topology entities and relationships.
+  We will be storing the schemas for the decorators in this table.
+  | Column name                                                                                                   | Type             | Description                                                                      |
+  |---------------------------------------------------------------------------------------------------------------|------------------|----------------------------------------------------------------------------------|
+  | name                                                                                                          | TEXT PRIMARY KEY | The key of the decorator.                                                        |
+  | dataType                                                                                                      | VARCHAR(511)     | The data type of the decorator, needed for parsing.                              |
+  | moduleReferenceName                                                                                           | TEXT             | References the corresponding consumer module reference the decorator belongs to. |
+  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                           |
+
+- **classifiers:** There will be the ability for client applications to apply user-defined keywords/tags (classifiers) to
+  topology entities and relationships.
+  We will be storing the schemas for the classifiers in this table.
+  | Column name                                                                                                   | Type             | Description                                                                       |
+  |---------------------------------------------------------------------------------------------------------------|------------------|-----------------------------------------------------------------------------------|
+  | name                                                                                                          | TEXT PRIMARY KEY | The actual classifier.                                                            |
+  | moduleReferenceName                                                                                           | TEXT             | References the corresponding consumer module reference the classifier belongs to. |
+  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                            |
+
+##### How to use classifiers and decorators
+1. Create a schema with the /schemas endpoint using Yang Module. After a successful schema creation, the topology objects are ready to be classified.
+2. Assign classifiers and/or decorators to the entities and/or relationships.
+3. Search classifiers and/or decorators by using queries.
 
 ### Skeleton Data and Model SQL Files
 

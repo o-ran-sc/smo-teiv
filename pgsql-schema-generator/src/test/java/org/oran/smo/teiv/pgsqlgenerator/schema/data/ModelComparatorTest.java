@@ -45,13 +45,13 @@ class ModelComparatorTest {
         Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                         PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                         PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build());
     //spotless:on
@@ -70,7 +70,7 @@ class ModelComparatorTest {
         // Given baseline mock data
         List<Table> baselineEntitiesTableMissing = List.of(Table.builder().name("Sector").columns(
             List.of(Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                         PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build());
@@ -78,7 +78,7 @@ class ModelComparatorTest {
         // Correct result of difference below
         Map<String, List<Table>> correctMappedDifferences = TestHelper.identifiedModelChangeMapping();
         correctMappedDifferences.get("CREATE").add(Table.builder().name("Namespace").columns(
-            List.of(Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+            List.of(Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                             PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build());
 
@@ -102,7 +102,7 @@ class ModelComparatorTest {
 
         // Given baseline mock data
         List<Table> baselineEntitiesWIthColumnAndTableMissing = List.of(Table.builder().name("Sector").columns(
-            List.of(Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+            List.of(Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                             PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").defaultValue("101").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build());
@@ -110,7 +110,7 @@ class ModelComparatorTest {
         // Correct result of difference below
         Map<String, List<Table>> correctMappedDifferences = TestHelper.identifiedModelChangeMapping();
         correctMappedDifferences.get("CREATE").add(Table.builder().name("Namespace").columns(
-            List.of(Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+            List.of(Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                             PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build());
         correctMappedDifferences.get("ALTER")
@@ -136,7 +136,7 @@ class ModelComparatorTest {
 
         // Given baseline mock data
         List<Table> baselineEntitiesWIthColumnAndTableAndDefaultValueMissing = List.of(Table.builder().name("Sector").columns(
-            List.of(Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+            List.of(Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                             PrimaryKeyConstraint.builder().tableName("Sector").constraintName("PK_Source_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build());
@@ -144,7 +144,7 @@ class ModelComparatorTest {
         // Correct result of difference below
         Map<String, List<Table>> correctMappedDifferences = TestHelper.identifiedModelChangeMapping();
         correctMappedDifferences.get("CREATE").add(Table.builder().name("Namespace").columns(
-            List.of(Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(
+            List.of(Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(
                             PrimaryKeyConstraint.builder().tableName("Namespace").constraintName("PK_Namespace_id").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build());
         correctMappedDifferences.get("ALTER")

@@ -64,7 +64,7 @@ public class RelationshipGraphGenerator {
 
     private void generateGraph(String name, List<Relationship> relationships, List<Entity> entities) throws IOException {
         MutableGraph g = prepareGraph(relationships, entities);
-        File outputFile = new File(graphOutput, name);
+        File outputFile = new File(graphOutput, name + "-rel");
         Graphviz.fromGraph(g).render(Format.SVG).toFile(outputFile);
         log.info("Graph rendered to: {}", outputFile.getAbsolutePath());
     }

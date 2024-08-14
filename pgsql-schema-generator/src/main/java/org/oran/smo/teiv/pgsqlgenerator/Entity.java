@@ -22,25 +22,28 @@ package org.oran.smo.teiv.pgsqlgenerator;
 
 import java.util.List;
 
+import lombok.Value;
 import org.oran.smo.teiv.pgsqlgenerator.schema.Table;
 import lombok.Builder;
-import lombok.Getter;
 
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CLASSIFIERS;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.DECORATORS;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.JSONB;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.SOURCE_IDS;
 
-@Getter
+@Value
 @Builder
 public class Entity implements Table {
-    private String entityName;
-    private String moduleReferenceName;
-    private List<Attribute> attributes;
+    String entityName;
+    String storedAt;
+    String moduleReferenceName;
+    List<Attribute> attributes;
     @Builder.Default
-    private List<ConsumerData> consumerData = List.of(ConsumerData.builder().name(SOURCE_IDS).dataType(JSONB).defaultValue(
-            "[]").build(), ConsumerData.builder().name(CLASSIFIERS).dataType(JSONB).defaultValue("[]").build(), ConsumerData
-                    .builder().name(DECORATORS).dataType(JSONB).defaultValue("{}").build());
+    List<ConsumerData> consumerData = List.of(ConsumerData.builder().name(SOURCE_IDS).dataType(JSONB).defaultValue("[]")
+            .indexType(IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).build(), ConsumerData.builder().name(CLASSIFIERS).dataType(
+                    JSONB).defaultValue("[]").indexType(IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).build(), ConsumerData
+                            .builder().name(DECORATORS).dataType(JSONB).defaultValue("{}").indexType(IndexType.GIN)
+                            .build());
 
     @Override
     public String getTableName() {
@@ -49,11 +52,11 @@ public class Entity implements Table {
 
     @Override
     public String getColumnsForCopyStatement() {
-        return "(\"name\", \"moduleReferenceName\")";
+        return "(\"storedAt\", \"name\", \"moduleReferenceName\")";
     }
 
     @Override
     public String getRecordForCopyStatement() {
-        return this.getEntityName() + "\t" + this.getModuleReferenceName() + "\n";
+        return this.getStoredAt() + "\t" + this.getEntityName() + "\t" + this.getModuleReferenceName() + "\n";
     }
 }

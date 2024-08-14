@@ -24,8 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+import org.oran.smo.teiv.pgsqlgenerator.HashInfoEntity;
 import org.oran.smo.teiv.pgsqlgenerator.schema.BackwardCompatibilityChecker;
 import org.oran.smo.teiv.pgsqlgenerator.schema.SchemaParser;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,7 +89,11 @@ public class ModelSchemaGenerator extends SchemaGenerator {
             backwardCompatibilityChecker.checkForNBCChangesInModel(relFromBaselineSql, relationships);
         }
         StringBuilder tiesModelSql = new StringBuilder();
-        tiesModelSql.append(prepareCopyStatement(hashInfoDataGenerator.getHashInfoRowsList().stream().toList()));
+
+        List<HashInfoEntity> hashInfoList = new ArrayList<>(hashInfoDataGenerator.getHashInfoRowsList().stream().toList());
+        hashInfoList.sort(Comparator.comparing(HashInfoEntity::getName));
+
+        tiesModelSql.append(prepareCopyStatement(hashInfoList));
         tiesModelSql.append(prepareCopyStatement(modules));
         tiesModelSql.append(prepareCopyStatement(entities));
         tiesModelSql.append(prepareCopyStatement(relationships));

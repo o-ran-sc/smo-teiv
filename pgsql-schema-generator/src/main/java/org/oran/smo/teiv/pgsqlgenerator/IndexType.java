@@ -20,20 +20,15 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator;
 
-import java.util.Collection;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import lombok.Builder;
-import lombok.Data;
+@Getter
+@AllArgsConstructor
+public enum IndexType {
+    GIN("CREATE INDEX IF NOT EXISTS \"%s\" ON ties_data.\"%s\" USING GIN (\"%s\");"),
+    GIN_TRGM_OPS_ON_LIST_AS_JSONB(
+            "CREATE INDEX IF NOT EXISTS \"%s\" ON ties_data.\"%s\" USING GIN ((\"%s\"::TEXT) gin_trgm_ops);");
 
-@Data
-@Builder
-public class Column {
-    private String name;
-    private String dataType;
-    @Builder.Default
-    private Collection<PostgresConstraint> postgresConstraints = List.of();
-    private String defaultValue;
-    @Builder.Default
-    private List<PostgresIndex> postgresIndexList = List.of();
+    private final String createIndexStmt;
 }

@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -76,9 +77,15 @@ public class DataSchemaGenerator extends SchemaGenerator {
                 log.info("Baseline EXISTS!!");
                 Path sourcePath = baselineDataSchemaFile.toPath();
                 List<String> stmts = Files.readAllLines(sourcePath);
-                List<String> commitExcludedStmts = stmts.stream().filter(line -> !line.equals("COMMIT;")).toList();
+                List<String> analyzeAndCommitExcludedStmts = new ArrayList<>();
+                for (String line : stmts) {
+                    if (line.startsWith("ANALYZE") || line.equals("COMMIT;")) {
+                        break;
+                    }
+                    analyzeAndCommitExcludedStmts.add(line);
+                }
 
-                Files.write(Paths.get(dataSchemaFileName), commitExcludedStmts, StandardOpenOption.CREATE,
+                Files.write(Paths.get(dataSchemaFileName), analyzeAndCommitExcludedStmts, StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING);
             }
             this.schema = newDataSchema;
@@ -102,8 +109,16 @@ public class DataSchemaGenerator extends SchemaGenerator {
                 tablesFromBaselineSql);
         // Generate schema from differences
         StringBuilder generatedSchema = dataSchemaHelper.generateSchemaFromDifferences(differences);
-        generatedSchema.append("\nCOMMIT;\n");
+        generatedSchema.append(generateAnalyzeTableStatement(tablesFromModelSvc));
+        generatedSchema.append("COMMIT;\n");
         this.sqlStatements = generatedSchema.toString();
+    }
+
+    private StringBuilder generateAnalyzeTableStatement(List<Table> tablesFromModelSvc) {
+        StringBuilder analyzeTableStmt = new StringBuilder();
+        tablesFromModelSvc.forEach(table -> analyzeTableStmt.append(String.format("ANALYZE ties_data.\"%s\";%n%n", table
+                .getName())));
+        return analyzeTableStmt;
     }
 
 }

@@ -32,6 +32,10 @@ schema:
     baseline:
     temp-baseline: target/01_init-oran-smo-teiv-model_baseline.sql
     output: target/01_init-oran-smo-teiv-model.sql
+  consumer-data:
+    skeleton: scripts/02_init-oran-smo-teiv-consumer-data.sql
+    baseline:
+    output: target/02_init-oran-smo-teiv-consumer-data.sql
 exclusions:
   model-names: metadata, decorators
 graphs:

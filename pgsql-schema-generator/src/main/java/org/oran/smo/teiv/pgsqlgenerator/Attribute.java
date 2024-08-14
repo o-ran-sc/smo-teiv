@@ -25,6 +25,7 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 
 @Getter
 @Builder
@@ -34,4 +35,6 @@ public class Attribute {
     @Builder.Default
     private Collection<Object> constraints = List.of();
     private String defaultValue;
+    @Singular
+    private List<IndexType> indexTypes;
 }

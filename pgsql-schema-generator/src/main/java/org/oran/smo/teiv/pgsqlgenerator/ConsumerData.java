@@ -22,6 +22,9 @@ package org.oran.smo.teiv.pgsqlgenerator;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -29,4 +32,6 @@ public class ConsumerData {
     private String name;
     private String dataType;
     private String defaultValue;
+    @Singular
+    private List<IndexType> indexTypes;
 }

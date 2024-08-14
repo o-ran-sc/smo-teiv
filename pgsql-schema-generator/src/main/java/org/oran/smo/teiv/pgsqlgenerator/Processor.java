@@ -24,9 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.EntityGraphGenerator;
+import org.oran.smo.teiv.pgsqlgenerator.schema.consumerdata.ConsumerDataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.data.DataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.model.ModelSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.RelationshipGraphGenerator;
@@ -44,6 +46,7 @@ public class Processor {
     private final YangModelProcessor yangModelProcessor;
     private final DataSchemaGenerator dataSchemaGenerator;
     private final ModelSchemaGenerator modelSchemaGenerator;
+    private final ConsumerDataSchemaGenerator consumerDataSchemaGenerator;
     private final RelationshipGraphGenerator relationshipGraphGenerator;
     private final EntityGraphGenerator entityGraphGenerator;
     @Value("${yang-model.source}")
@@ -69,6 +72,7 @@ public class Processor {
         entityGraphGenerator.generate(entitiesFromModelService);
         dataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
         modelSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
+        consumerDataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
     }
 
     /**
@@ -90,7 +94,7 @@ public class Processor {
             includedModules.removeIf(modelRef -> !moduleRefForAllEntities.contains(modelRef));
             module.setIncludedModules(includedModules);
         }
+        moduleRefFromYangParser.sort(Comparator.comparing(Module::getName));
         return moduleRefFromYangParser;
-
     }
 }

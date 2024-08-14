@@ -20,9 +20,6 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator;
 
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.BUILT_IN_MODULE_ID;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.DEFAULT_MODULE_STATUS;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -46,6 +43,7 @@ import org.oran.smo.yangtools.parser.model.ConformanceType;
 import org.oran.smo.yangtools.parser.model.YangModel;
 import org.oran.smo.yangtools.parser.model.statements.AbstractStatement;
 import org.oran.smo.yangtools.parser.model.statements.StatementModuleAndName;
+import org.oran.smo.yangtools.parser.model.yangdom.YangDomElement;
 
 @Slf4j
 @Component
@@ -68,12 +66,32 @@ public class YangParser {
             String domain = getDomain(moduleOrSubmodule);
             String namespace = getNamespace(moduleOrSubmodule);
             List<String> includedModules = getIncludedModules(moduleOrSubmodule);
+            List<String> availableRelations = getAvailableRelations(moduleOrSubmodule);
+            List<String> availableListElements = getAvailableListElements(moduleOrSubmodule);
             modules.add(Module.builder().name(moduleReferenceName).namespace(namespace).domain(domain).includedModules(
                     includedModules).revision(yangInput.getModuleIdentity().getRevision()).content(new String(yangInput
-                            .getYangInput().getInputStream().readAllBytes(), StandardCharsets.UTF_8)).ownerAppId(
-                                    BUILT_IN_MODULE_ID).status(DEFAULT_MODULE_STATUS).build());
+                            .getYangInput().getInputStream().readAllBytes(), StandardCharsets.UTF_8)).availableListElements(
+                                    availableListElements).availableRelations(availableRelations).availableEntities(
+                                            new ArrayList<>()).build());
         }
         return modules;
+    }
+
+    private List<String> getAvailableRelations(AbstractStatement statement) {
+        List<String> includedModules = new ArrayList<>();
+        statement.getChildStatements().forEach(childStatement -> {
+            String domStatement = childStatement.getDomElement().toString();
+            if (domStatement.contains("or-teiv-yext:biDirectionalTopologyRelationship")) {
+                includedModules.add(childStatement.getDomElement().getValue());
+            }
+        });
+        return includedModules;
+    }
+
+    private List<String> getAvailableListElements(AbstractStatement statement) {
+        return statement.getDomElement().getChildren().stream().filter(yangDomElement -> yangDomElement.getName().equals(
+                "list")).map(YangDomElement::getValue).toList();
+
     }
 
     private String getDomain(AbstractStatement moduleOrSubmodule) {
@@ -112,7 +130,7 @@ public class YangParser {
         final List<YangModel> yangModelInputs = new ArrayList<>();
         try {
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
-            Resource[] yangResources = resolver.getResources(yangModelDirectory + "/*.yang");
+            Resource[] yangResources = resolver.getResources(yangModelDirectory + "/**/*.yang");
             for (Resource yangResource : yangResources) {
                 yangModelInputs.add(new YangModel(new ByteArrayYangInput(yangResource.getContentAsByteArray(), Objects
                         .requireNonNull(yangResource.getFilename())), ConformanceType.IMPORT));

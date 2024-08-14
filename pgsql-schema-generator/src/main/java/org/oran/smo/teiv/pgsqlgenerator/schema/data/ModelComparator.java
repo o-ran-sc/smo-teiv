@@ -23,15 +23,18 @@ package org.oran.smo.teiv.pgsqlgenerator.schema.data;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CREATE;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.DEFAULT;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.INDEX;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.oran.smo.teiv.pgsqlgenerator.IndexType;
+import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.springframework.stereotype.Component;
 
 import org.oran.smo.teiv.pgsqlgenerator.Column;
@@ -68,10 +71,11 @@ public class ModelComparator {
     }
 
     private Map<String, List<Table>> identifiedModelChangeMapping() {
-        Map<String, List<Table>> storeIdentifiedChangesToModels = new HashMap<>();
-        storeIdentifiedChangesToModels.put(CREATE, new ArrayList<>());
-        storeIdentifiedChangesToModels.put(ALTER, new ArrayList<>());
+        Map<String, List<Table>> storeIdentifiedChangesToModels = new LinkedHashMap<>();
         storeIdentifiedChangesToModels.put(DEFAULT, new ArrayList<>());
+        storeIdentifiedChangesToModels.put(INDEX, new ArrayList<>());
+        storeIdentifiedChangesToModels.put(ALTER, new ArrayList<>());
+        storeIdentifiedChangesToModels.put(CREATE, new ArrayList<>());
         return storeIdentifiedChangesToModels;
     }
 
@@ -108,6 +112,8 @@ public class ModelComparator {
                         }
                         detectAndStoreDefaultValueChanges(tableFromModelService.getName(), columnsInBaseline,
                                 columnsFromModuleSvc);
+                        detectAndStoreNewlyAddedIndex(tableFromModelService.getName(), columnsInBaseline,
+                                columnsFromModuleSvc);
                     });
         });
     }
@@ -124,13 +130,8 @@ public class ModelComparator {
                 columnsInBaseline).contains(columnInGenerated.getName())).toList();
         identifiedChangesToModels.get(ALTER).add(Table.builder().name(tableName).columns(newColumns.stream().map(
                 column -> Column.builder().name(column.getName()).dataType(column.getDataType()).postgresConstraints(column
-                        .getPostgresConstraints()).build()).toList()).build());
-        List<Column> columnsWithDefaultValues = newColumns.stream().filter(columnIdentified -> columnIdentified
-                .getDefaultValue() != null).toList();
-        if (!columnsWithDefaultValues.isEmpty()) {
-            identifiedChangesToModels.get(DEFAULT).add(Table.builder().name(tableName).columns(columnsWithDefaultValues)
-                    .build());
-        }
+                        .getPostgresConstraints()).defaultValue(column.getDefaultValue()).postgresIndexList(column
+                                .getPostgresIndexList()).build()).toList()).build());
     }
 
     /**
@@ -150,6 +151,30 @@ public class ModelComparator {
         });
         if (!list.isEmpty()) {
             identifiedChangesToModels.get(DEFAULT).add(Table.builder().name(tableName).columns(list).build());
+        }
+    }
+
+    private void detectAndStoreNewlyAddedIndex(String tableName, List<Column> columnsInBaseline,
+            List<Column> columnsFromModuleSvc) {
+        List<Column> columnList = new ArrayList<>();
+        columnsInBaseline.forEach(columnInBaseline -> columnsFromModuleSvc.forEach(columnInGenerated -> {
+            if (columnInGenerated.getName().equals(columnInBaseline.getName())) {
+                List<IndexType> indexInBaselineSchema = columnInBaseline.getPostgresIndexList().stream().map(
+                        PostgresIndex::getIndexType).toList();
+                List<PostgresIndex> postgresIndexList = new ArrayList<>();
+                columnInGenerated.getPostgresIndexList().forEach(postgresIndex -> {
+                    if (!indexInBaselineSchema.contains(postgresIndex.getIndexType())) {
+                        postgresIndexList.add(postgresIndex);
+                    }
+                });
+                if (!postgresIndexList.isEmpty()) {
+                    columnInGenerated.setPostgresIndexList(postgresIndexList);
+                    columnList.add(columnInGenerated);
+                }
+            }
+        }));
+        if (!columnList.isEmpty()) {
+            identifiedChangesToModels.get(INDEX).add(Table.builder().name(tableName).columns(columnList).build());
         }
     }
 
