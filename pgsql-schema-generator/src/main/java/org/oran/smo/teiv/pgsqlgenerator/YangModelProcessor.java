@@ -24,18 +24,21 @@ import static org.oran.smo.teiv.pgsqlgenerator.Constants.A_SIDE;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.BIGINT;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.B_SIDE;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.DECIMAL;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.INT;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.JSONB;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.RELATION;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.TEXT;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.VARCHAR511;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import org.oran.smo.yangtools.parser.ParserExecutionContext;
@@ -62,6 +65,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class YangModelProcessor {
     private final HashMap<String, String> dataTypeMapping;
+    @Value("${exclusions.model-names}")
+    private List<String> excludedModelNames;
     private final YangDeviceModel yangDeviceModel;
     private final ModifyableFindingSeverityCalculator severityCalculator;
     private final FindingsManager findingsManager;
@@ -92,7 +97,7 @@ public class YangModelProcessor {
             {
                 put("string", TEXT);
                 put("uint32", BIGINT);
-                put("int32", BIGINT);
+                put("int32", INT);
                 put("or-teiv-types:_3GPP_FDN_Type", TEXT);
                 put("enumeration", TEXT);
                 put("types3gpp:PLMNId", JSONB);
@@ -124,12 +129,13 @@ public class YangModelProcessor {
             System.out.println("Module Name: " + yModule.getModuleName());
 
             yModule.getLists().stream().forEach(yList -> {
+                final String tableName = getTableName(yModule.getModuleName(), yList.getListName());
                 System.out.printf("\tEntity Name: %s \n", yList.getListName());
                 List<Attribute> attributes = new ArrayList<>();
                 List constraint = List.of(PrimaryKeyConstraint.builder().constraintName("PK_" + yList.getListName() + "_id")
                         .tableName(yList.getListName()).columnToAddConstraintTo("id").build());
 
-                attributes.add(Attribute.builder().name("id").dataType(VARCHAR511).constraints(constraint).build());
+                attributes.add(Attribute.builder().name("id").dataType(TEXT).constraints(constraint).build());
                 yList.getContainers().forEach(yContainer -> {
                     System.out.printf("\t\tContainer Name: %s \n", yContainer.getContainerName());
                     if (yContainer.getContainerName().equals("attributes")) {
@@ -158,8 +164,8 @@ public class YangModelProcessor {
                             System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(yLeafList.getType()
                                     .getDataType()));
 
-                            attributes.add(Attribute.builder().name(yLeafList.getLeafListName()).dataType(JSONB)
-                                    .constraints(new ArrayList()).build());
+                            attributes.add(Attribute.builder().name(yLeafList.getLeafListName()).dataType(JSONB).indexType(
+                                    IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
                         });
                         yContainer.getContainers().forEach(container -> {
 
@@ -168,8 +174,16 @@ public class YangModelProcessor {
                             System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(container.getUses()
                                     .toString()));
 
-                            attributes.add(Attribute.builder().name(container.getContainerName()).dataType(dataTypeMapping
-                                    .get(container.getUses().toString())).constraints(new ArrayList()).build());
+                            String dataType = dataTypeMapping.get(container.getUses().toString());
+                            Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
+                                    .getContainerName()).dataType(dataType).constraints(new ArrayList());
+                            if (container.getContainerName().equals("geo-location")) {
+                                dataType = dataTypeMapping.get("geo:geo-location");
+                            }
+                            if (dataType.equals(JSONB)) {
+                                attributeBuilder.indexType(IndexType.GIN);
+                            }
+                            attributes.add(attributeBuilder.build());
                         });
                         yContainer.getUses().forEach(uses -> {
 
@@ -182,10 +196,12 @@ public class YangModelProcessor {
                         });
                     }
                 });
-                entities.add(Entity.builder().entityName(yList.getListName()).moduleReferenceName(yangModel
-                        .getYangModelRoot().getModule().getModuleName()).attributes(attributes).build());
+                attributes.sort(Comparator.comparing(Attribute::getName));
+                entities.add(Entity.builder().entityName(yList.getListName()).storedAt(tableName).moduleReferenceName(
+                        yangModel.getYangModelRoot().getModule().getModuleName()).attributes(attributes).build());
             });
         });
+        entities.sort(Comparator.comparing(Entity::getStoredAt));
         return entities;
     }
 
@@ -306,24 +322,50 @@ public class YangModelProcessor {
                                     connectSameEntity = false;
                                 }
 
+                                String aSideModuleName = getSideModuleName(yangModels, aSideMoType);
+                                String bSideModuleName = getSideModuleName(yangModels, bSideMoType);
+
+                                String storedAt = "";
+                                switch (relDataLocation) {
+                                    case A_SIDE -> storedAt = getTableName(aSideModuleName, aSideMoType);
+                                    case B_SIDE -> storedAt = getTableName(bSideModuleName, bSideMoType);
+                                    case RELATION -> storedAt = getTableName(yModule.getDomElement().getValue(),
+                                            yOranSmoTeivBiDirectionalTopologyRelationship.getRelationshipName());
+                                }
+
                                 Relationship relationship = Relationship.builder().name(
                                         yOranSmoTeivBiDirectionalTopologyRelationship.getRelationshipName())
                                         .aSideAssociationName(aSide.getParentStatement().getStatementIdentifier())
-                                        .aSideMOType(aSideMoType).aSideMinCardinality(aSideMinCardinality)
-                                        .aSideMaxCardinality(aSideMaxCardinality).bSideAssociationName(bSide
-                                                .getParentStatement().getStatementIdentifier()).bSideMOType(bSideMoType)
-                                        .bSideMinCardinality(bSideMinCardinality).bSideMaxCardinality(bSideMaxCardinality)
+                                        .aSideMOType(aSideMoType).aSideModule(aSideModuleName).aSideMinCardinality(
+                                                aSideMinCardinality).aSideMaxCardinality(aSideMaxCardinality)
+                                        .bSideAssociationName(bSide.getParentStatement().getStatementIdentifier())
+                                        .bSideMOType(bSideMoType).bSideModule(bSideModuleName).bSideMinCardinality(
+                                                bSideMinCardinality).bSideMaxCardinality(bSideMaxCardinality)
                                         .relationshipDataLocation(relDataLocation).moduleReferenceName(yModule
-                                                .getModuleName()).associationKind(("BI_DIRECTIONAL"))   // Hard coded for now
-                                        .connectSameEntity(connectSameEntity).build();     // Hard coded for now
+                                                .getModuleName()).associationKind(("BI_DIRECTIONAL")).connectSameEntity(
+                                                        connectSameEntity).storedAt(storedAt).aSideStoredAt(getTableName(
+                                                                aSideModuleName, aSideMoType)).bSideStoredAt(getTableName(
+                                                                        bSideModuleName, bSideMoType)).build();     // Hard coded for now
                                 relationships.add(relationship);
                             });
         });
+        relationships.sort(Comparator.comparing(Relationship::getName));
         return relationships;
     }
 
+    private String getSideModuleName(List<YangModel> yangModels, String aSideMoType) {
+        return yangModels.stream().flatMap(ym -> ym.getYangDomDocumentRoot().getChildren().stream()).flatMap(
+                children -> children.getChildren().stream()).filter(child -> child.getValue().equals(aSideMoType)).map(
+                        child -> child.getParentElement().getValue()).findFirst().orElseThrow(
+                                () -> new NoSuchElementException("No module name found for type: " + aSideMoType));
+    }
+
+    private String getTableName(String moduleName, String name) {
+        return moduleName + "_" + name;
+    }
+
     /**
-     * Identify where relationship data should be stored
+     * Identify the type of table in which relationship should be stored.
      */
     private String getRelationshipDataLocation(long aSideMaxCardinality, long bSideMaxCardinality, String aSideMO,
             String bSideMO, String relName) {

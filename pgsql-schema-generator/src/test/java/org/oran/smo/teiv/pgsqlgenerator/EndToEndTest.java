@@ -39,6 +39,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.oran.smo.teiv.pgsqlgenerator.schema.SchemaParser;
 import lombok.extern.slf4j.Slf4j;
 
+import static org.oran.smo.teiv.pgsqlgenerator.Processor.storeRelatedModuleRefsFromIncludedModules;
+import static org.oran.smo.teiv.pgsqlgenerator.TestHelper.extractIndexName;
+
 @Slf4j
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -54,6 +57,10 @@ class EndToEndTest {
     private String expectedModelSql;
     @Value("${schema.model.output}")
     private String actualModelSql;
+    @Value("${test-result.consumer-data}")
+    private String expectedConsumerDataSql;
+    @Value("${schema.consumer-data.output}")
+    private String actualConsumerDataSql;
 
     @Value("${graphs.output}")
     private String graphOutput;
@@ -66,11 +73,13 @@ class EndToEndTest {
         processor.process();
         File generatedDataSql = new File(actualDataSql);
         File generatedModelSql = new File(actualModelSql);
+        File generatedConsumerDataSql = new File(actualConsumerDataSql);
         File generatedGraphs = new File(graphOutput);
 
         //then
         Assertions.assertTrue(generatedDataSql.exists());
         Assertions.assertTrue(generatedModelSql.exists());
+        Assertions.assertTrue(generatedConsumerDataSql.exists());
         Assertions.assertTrue(generatedGraphs.exists() && generatedGraphs.isDirectory() && generatedGraphs
                 .listFiles().length > 0);
     }
@@ -99,10 +108,10 @@ class EndToEndTest {
                 List<Column> columnsInExpected = expectedTable.getColumns();
                 List<Column> columnsInGenerated = generatedTable.getColumns();
 
-                // Check if all columns for each table were added correctly
-                Assertions.assertEquals(columnsInExpected.size(), columnsInGenerated.size());
-                List<String> allColumnNamesForATableInGeneratedResult = TestHelper.extractColumnNamesForATable(columnsInGenerated);
-                List<String> allColumnNamesForATableInExpectedResult = TestHelper.extractColumnNamesForATable(columnsInExpected);
+                    // Check if all columns for each table were added correctly
+                    Assertions.assertEquals(columnsInExpected.size(), columnsInGenerated.size());
+                    List<String> allColumnNamesForATableInGeneratedResult = TestHelper.extractColumnNames(columnsInGenerated);
+                    List<String> allColumnNamesForATableInExpectedResult = TestHelper.extractColumnNames(columnsInExpected);
 
                 // Check if generatedResult contains all columns for a table
                 Assertions.assertEquals(allColumnNamesForATableInExpectedResult, allColumnNamesForATableInGeneratedResult);
@@ -112,7 +121,7 @@ class EndToEndTest {
                         .findFirst().ifPresent(columnInGenerated -> {
 
                         if (columnInExpected.getName().equals("id")) {
-                            Assertions.assertEquals("VARCHAR(511)", columnInGenerated.getDataType());
+                            Assertions.assertEquals("TEXT", columnInGenerated.getDataType());
                             Assertions.assertTrue(TestHelper.checkIfColumnIsPrimaryKey(columnInGenerated.getPostgresConstraints()));
                         }
 
@@ -149,6 +158,19 @@ class EndToEndTest {
                                         Assertions.assertEquals(expectedFk.getReferencedTable(), actualFK.getReferencedTable());
                                     }
                                 });
+                            });
+                        }
+                        // Check if generated index matches expected index.
+                        if (!columnInExpected.getPostgresIndexList().isEmpty()) {
+                            Assertions.assertEquals(columnInExpected.getPostgresIndexList().size(), columnInGenerated.getPostgresIndexList().size());
+                            Assertions.assertEquals(extractIndexName(columnInExpected), extractIndexName(columnInGenerated));
+                            columnInExpected.getPostgresIndexList().forEach(postgresIndexInExpected -> {
+                                columnInGenerated.getPostgresIndexList().stream().filter(postgresIndexInGenerated ->
+                                    postgresIndexInGenerated.getIndexName().equals(postgresIndexInExpected.getIndexName())).findFirst().ifPresent(postgresIndexInGenerated -> {
+                                        Assertions.assertEquals(postgresIndexInExpected.getTableNameToAddIndexTo(), postgresIndexInGenerated.getTableNameToAddIndexTo());
+                                        Assertions.assertEquals(postgresIndexInExpected.getColumnNameToAddIndexTo(), postgresIndexInGenerated.getColumnNameToAddIndexTo());
+                                        Assertions.assertEquals(postgresIndexInExpected.getIndexType(), postgresIndexInGenerated.getIndexType());
+                                    });
                             });
                         }
                     });
@@ -202,18 +224,21 @@ class EndToEndTest {
     @Test
     void storeRelatedModuleRefsFromIncludedModulesTest() {
         //spotless:off
-        List<Module> mockModuleRefFromYangParser = List.of(
+        List<Module> mockModuleRefFromYangParser = new ArrayList<>();
+        mockModuleRefFromYangParser.add(
             Module.builder().name("o-ran-smo-teiv-ran-equipment")
                     .namespace("urn:rdns:o-ran:smo:teiv:o-ran-smo-teiv-ran-equipment")
                     .domain("RAN_EQUIPMENT")
                     .includedModules(new ArrayList<>(List.of( "o-ran-smo-teiv-common-yang-types",
-                            "o-ran-smo-teiv-common-yang-extensions", "ietf-geo-location"))).build(),
+                            "o-ran-smo-teiv-common-yang-extensions", "ietf-geo-location"))).build());
+        mockModuleRefFromYangParser.add(
             Module.builder().name("o-ran-smo-teiv-ran-equipment-to-logical")
                     .namespace("urn:rdns:o-ran:smo:teiv:ericsson-topologyandinventory-ran-logical-to-equipment")
                     .domain("EQUIPMENT_TO_RAN_LOGICAL")
                     .includedModules(new ArrayList<>(List.of( "o-ran-smo-teiv-common-yang-types",
                     "o-ran-smo-teiv-common-yang-extensions", "o-ran-smo-teiv-ran-logical",
-                    "o-ran-smo-teiv-ran-equipment"))).build(),
+                    "o-ran-smo-teiv-ran-equipment"))).build());
+        mockModuleRefFromYangParser.add(
             Module.builder().name("o-ran-smo-teiv-ran-oam-to-cloud")
                     .namespace("urn:rdns:o-ran:smo:teiv:o-ran-smo-teiv-ran-oam-to-cloud")
                     .domain("RAN_OAM_TO_CLOUD")
@@ -254,7 +279,7 @@ class EndToEndTest {
         );
         //spotless:on
 
-        List<Module> actualResult = Processor.storeRelatedModuleRefsFromIncludedModules(mockEntitiesFromModelSvc,
+        List<Module> actualResult = storeRelatedModuleRefsFromIncludedModules(mockEntitiesFromModelSvc,
                 mockModuleRefFromYangParser);
 
         actualResult.forEach(actual -> {

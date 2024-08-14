@@ -21,7 +21,7 @@ module o-ran-smo-teiv-rel-equipment-ran {
 
     This model contains the topology relations between Equipment and RAN.";
 
-    revision "2024-05-14" {
+    revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
     }

@@ -20,20 +20,14 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator;
 
-import java.util.Collection;
-import java.util.List;
-
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
-public class Column {
-    private String name;
-    private String dataType;
-    @Builder.Default
-    private Collection<PostgresConstraint> postgresConstraints = List.of();
-    private String defaultValue;
-    @Builder.Default
-    private List<PostgresIndex> postgresIndexList = List.of();
+public class PostgresIndex {
+    private String tableNameToAddIndexTo;
+    private String columnNameToAddIndexTo;
+    private String indexName;
+    private IndexType indexType;
 }

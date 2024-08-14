@@ -35,55 +35,47 @@ CREATE TABLE IF NOT EXISTS ties_model.execution_status (
 );
 
 CREATE TABLE IF NOT EXISTS ties_model.hash_info (
-    "name"        VARCHAR(511) PRIMARY KEY,
-    "hashedValue" VARCHAR(511) NOT NULL,
+    "name"        TEXT PRIMARY KEY,
+    "hashedValue" VARCHAR(63) NOT NULL,
     "type"        VARCHAR(511)
 );
 
 CREATE TABLE IF NOT EXISTS ties_model.module_reference (
-    "name"            VARCHAR(511) PRIMARY KEY,
-    "namespace"       VARCHAR(511),
-    "domain"          VARCHAR(511),
+    "name"            TEXT PRIMARY KEY,
+    "namespace"       TEXT,
+    "domain"          TEXT,
     "includedModules" jsonb DEFAULT '[]'::jsonb,
-    "revision"        VARCHAR(511) NOT NULL,
-    "content"         TEXT NOT NULL,
-    "ownerAppId"      VARCHAR(511) NOT NULL,
-    "status"          VARCHAR(127) NOT NULL
+    "revision"        TEXT NOT NULL,
+    "content"         TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ties_model.entity_info (
-    "name"                VARCHAR(511) PRIMARY KEY,
-    "moduleReferenceName" VARCHAR(511) NOT NULL,
+    "storedAt"            TEXT PRIMARY KEY,
+    "name"                TEXT NOT NULL,
+    "moduleReferenceName" TEXT NOT NULL,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
-    "name"                     VARCHAR(511) PRIMARY KEY,
+    "name"                     TEXT NOT NULL,
     "aSideAssociationName"     TEXT NOT NULL,
     "aSideMOType"              TEXT NOT NULL,
+    "aSideModule"              TEXT NOT NULL,
     "aSideMinCardinality"      BIGINT NOT NULL,
     "aSideMaxCardinality"      BIGINT NOT NULL,
     "bSideAssociationName"     TEXT NOT NULL,
     "bSideMOType"              TEXT NOT NULL,
+    "bSideModule"              TEXT NOT NULL,
     "bSideMinCardinality"      BIGINT NOT NULL,
     "bSideMaxCardinality"      BIGINT NOT NULL,
     "associationKind"          TEXT NOT NULL,
     "relationshipDataLocation" TEXT NOT NULL,
+    "storedAt"                 TEXT NOT NULL,
     "connectSameEntity"        BOOLEAN NOT NULL,
     "moduleReferenceName"      TEXT NOT NULL,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS ties_model.decorators (
-    "name"                VARCHAR(511) PRIMARY KEY,
-    "dataType"            VARCHAR(511) NOT NULL,
-    "moduleReferenceName" VARCHAR(511) NOT NULL,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS ties_model.classifiers (
-    "name"                VARCHAR(511) PRIMARY KEY,
-    "moduleReferenceName" VARCHAR(511) NOT NULL,
+    PRIMARY KEY ("name", "moduleReferenceName"),
+    FOREIGN KEY ("aSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE,
+    FOREIGN KEY ("bSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 

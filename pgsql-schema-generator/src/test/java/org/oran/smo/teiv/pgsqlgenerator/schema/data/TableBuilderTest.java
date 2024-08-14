@@ -20,10 +20,6 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator.schema.data;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -65,131 +61,172 @@ class TableBuilderTest {
 
     //spotless:off
     List<Entity> entities = List.of(
-            Entity.builder().entityName("Sector").attributes(
+        Entity.builder().entityName("EntityA").storedAt("module-a_EntityA").attributes(
                 List.of(
                     Attribute.builder().name("azimuth").dataType("DECIMAL").build(),
-                    Attribute.builder().name("id").dataType("VARCHAR(511)").constraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                    Attribute.builder().name("id").dataType("TEXT").constraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                             .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                     Attribute.builder().name("geo-location").dataType("geography").build(),
                     Attribute.builder().name("sectorId").dataType("jsonb").build()))
-                .moduleReferenceName("").build(),
+            .moduleReferenceName("")
+            .build(),
 
-            Entity.builder().entityName("Namespace").attributes(
+        Entity.builder().entityName("EntityB").storedAt("module-b_EntityB").attributes(
                 List.of(
-                    Attribute.builder().name("id").dataType("VARCHAR(511)").constraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                    Attribute.builder().name("id").dataType("TEXT").constraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                             .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                     Attribute.builder().name("name").dataType("TEXT").build()))
-                .moduleReferenceName("").build());
+            .build());
 
     List<List<Relationship>> relationships = List.of(
-            List.of(Relationship.builder().name("oneToOne")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(1)
-                    .bSideAssociationName("used-by-Namespace")
-                    .bSideMOType("Namespace")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(1)
-                    .relationshipDataLocation("A_SIDE")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(false)
-                    .moduleReferenceName("").build()),
-            List.of(Relationship.builder().name("oneToMany")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(1)
-                    .bSideAssociationName("used-by-Namespace")
-                    .bSideMOType("Namespace")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(100)
-                    .relationshipDataLocation("B_SIDE")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(false)
-                    .moduleReferenceName("").build()),
-            List.of(Relationship.builder().name("manyToOne")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(100)
-                    .bSideAssociationName("used-by-Namespace")
-                    .bSideMOType("Namespace")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(1)
-                    .relationshipDataLocation("A_SIDE")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(false)
-                    .moduleReferenceName("").build()),
-            List.of(Relationship.builder().name("manyToMany")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(100)
-                    .bSideAssociationName("used-by-Namespace")
-                    .bSideMOType("Namespace")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(100)
-                    .relationshipDataLocation("RELATION")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(false)
-                    .moduleReferenceName("").build()),
-            // Relationship connecting same entity 1:1
-            List.of(Relationship.builder().name("relationshipConnectingSameEntity")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(1)
-                    .bSideAssociationName("used-by-Sector")
-                    .bSideMOType("Sector")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(1)
-                    .relationshipDataLocation("RELATION")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(true)
-                    .moduleReferenceName("").build()),
-            // Relationship connecting same entity 1:N
-            List.of(Relationship.builder().name("relationshipConnectingSameEntity")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(1)
-                    .bSideAssociationName("used-by-Sector")
-                    .bSideMOType("Sector")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(100)
-                    .relationshipDataLocation("RELATION")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(true)
-                    .moduleReferenceName("").build()),
-            // Relationship connecting same entity N:1
-            List.of(Relationship.builder().name("relationshipConnectingSameEntity")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(100)
-                    .bSideAssociationName("used-by-Sector")
-                    .bSideMOType("Sector")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(1)
-                    .relationshipDataLocation("RELATION")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(true)
-                    .moduleReferenceName("").build()),
-            // Relationship connecting same entity N:M
-            List.of(Relationship.builder().name("relationshipConnectingSameEntity")
-                    .aSideAssociationName("used-Sector")
-                    .aSideMOType("Sector")
-                    .aSideMinCardinality(0)
-                    .aSideMaxCardinality(100)
-                    .bSideAssociationName("used-by-Sector")
-                    .bSideMOType("Sector")
-                    .bSideMinCardinality(0)
-                    .bSideMaxCardinality(100)
-                    .relationshipDataLocation("RELATION")
-                    .associationKind("BI_DIRECTIONAL")
-                    .connectSameEntity(true)
-                    .moduleReferenceName("").build()));
+        List.of(Relationship.builder().name("oneToOne")
+            .aSideAssociationName("used-EntityB")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(1)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityB")
+            .bSideModule("module-b")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(1)
+            .relationshipDataLocation("A_SIDE")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a_EntityA")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-b_EntityB")
+            .moduleReferenceName("").build()),
+        List.of(Relationship.builder().name("oneToMany")
+            .aSideAssociationName("used-EntityB")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(1)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityB")
+            .bSideModule("module-b")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(100)
+            .relationshipDataLocation("A_SIDE")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-b_EntityB")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-b_EntityB")
+            .moduleReferenceName("").build()),
+        List.of(Relationship.builder().name("ManyToOne")
+            .aSideAssociationName("used-EntityB")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(100)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityB")
+            .bSideModule("module-b")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(1)
+            .relationshipDataLocation("A_SIDE")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a_EntityA")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-b_EntityB")
+            .moduleReferenceName("").build()),
+        List.of(Relationship.builder().name("ManyToMany")
+            .aSideAssociationName("used-EntityB")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(100)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityB")
+            .bSideModule("module-b")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(100)
+            .relationshipDataLocation("RELATION")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a-b_ManyToMany")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-b_EntityB")
+            .moduleReferenceName("module-a-b").build()),
+        // Relationship connecting same entity 1:1
+        List.of(Relationship.builder().name("relationshipConnectingSameEntity")
+            .aSideAssociationName("used-EntityA")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(1)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityA")
+            .bSideModule("module-a")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(1)
+            .relationshipDataLocation("RELATION")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a_relationshipConnectingSameEntity")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-a_EntityA")
+            .moduleReferenceName("module-a").build()),
+        // Relationship connecting same entity 1:N
+        List.of(Relationship.builder().name("relationshipConnectingSameEntity")
+            .aSideAssociationName("used-EntityA")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(1)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityA")
+            .bSideModule("module-a")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(100)
+            .relationshipDataLocation("RELATION")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a_relationshipConnectingSameEntity")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-a_EntityA")
+            .moduleReferenceName("module-a").build()),
+        // Relationship connecting same entity N:1
+        List.of(Relationship.builder().name("relationshipConnectingSameEntity")
+            .aSideAssociationName("used-EntityA")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(100)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityA")
+            .bSideModule("module-a")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(1)
+            .relationshipDataLocation("RELATION")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a_relationshipConnectingSameEntity")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-a_EntityA")
+            .moduleReferenceName("module-a").build()),
+        // Relationship connecting same entity N:M
+        List.of(Relationship.builder().name("relationshipConnectingSameEntity")
+            .aSideAssociationName("used-EntityA")
+            .aSideMOType("EntityA")
+            .aSideModule("module-a")
+            .aSideMinCardinality(0)
+            .aSideMaxCardinality(100)
+            .bSideAssociationName("used-by-EntityA")
+            .bSideMOType("EntityA")
+            .bSideModule("module-a")
+            .bSideMinCardinality(0)
+            .bSideMaxCardinality(100)
+            .relationshipDataLocation("RELATION")
+            .associationKind("BI_DIRECTIONAL")
+            .connectSameEntity(false)
+            .storedAt("module-a_relationshipConnectingSameEntity")
+            .aSideStoredAt("module-a_EntityA")
+            .bSideStoredAt("module-a_EntityA")
+            .moduleReferenceName("module-a").build()));
     //spotless:on
 
     @Test
@@ -198,34 +235,34 @@ class TableBuilderTest {
         //spotless:off
 
         // Given
-        List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
-            List.of(
-                Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
-                        .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("sectorId").dataType("jsonb").build(),
-                Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name("REL_FK_used-Sector").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Sector_REL_FK_used-Sector").tableName("Sector")
-                                .referencedTable("Namespace").columnToAddConstraintTo("REL_FK_used-sector").build())).build(),
-                Column.builder().name("REL_ID_oneToOne").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_Sector_REL_ID_oneToOne").tableName("Sector")
-                                .columnToAddConstraintTo("REL_ID_oneToOne").build())).build(),
-                Column.builder().name("REL_CD_sourceIds_oneToOne").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType(JSONB).defaultValue("{}").build(),
+        List<Table> expectedResult = List.of(Table.builder().name("module-a_EntityA").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-a_EntityA_id")
+                        .tableName("module-a_EntityA").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("sectorId").dataType("jsonb").build(),
+                    Column.builder().name("geo-location").dataType("geography").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name("REL_FK_used-EntityB").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_MODULE-A_ENTITYA_REL_FK_USED-ENTITYB").tableName("module-a_EntityA")
+                            .referencedTable("module-b_EntityB").columnToAddConstraintTo("REL_FK_used-EntityB").build())).build(),
+                    Column.builder().name("REL_ID_oneToOne").dataType("TEXT")
+                        .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_MODULE-A_ENTITYA_REL_ID_ONETOONE").tableName("module-a_EntityA")
+                            .columnToAddConstraintTo("REL_ID_oneToOne").build())).build(),
+                    Column.builder().name("REL_CD_sourceIds_oneToOne").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType(JSONB).defaultValue("{}").build(),
                     Column.builder().name(String.format("REL_CD_%s_oneToOne", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
                     Column.builder().name(String.format("REL_CD_%s_oneToOne", DECORATORS)).dataType(JSONB).defaultValue("{}").build())).build(),
 
-        Table.builder().name("Namespace").columns(
-            List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
-                        .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("name").dataType("TEXT").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
+            Table.builder().name("module-b_EntityB").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-b_EntityB_id")
+                        .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
 
         //spotless:on
 
@@ -242,34 +279,34 @@ class TableBuilderTest {
         //spotless:off
 
         // Given
-        List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
-            List.of(
-                Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
-                        .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("sectorId").dataType("jsonb").build(),
-                Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
+        List<Table> expectedResult = List.of(Table.builder().name("module-a_EntityA").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-a_EntityA_id")
+                        .tableName("module-a_EntityA").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("sectorId").dataType("jsonb").build(),
+                    Column.builder().name("geo-location").dataType("geography").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
-        Table.builder().name("Namespace").columns(
-            List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
-                        .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("name").dataType("TEXT").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name("REL_FK_used-by-Namespace").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Namespace_REL_FK_used-by-Namespace")
-                                .tableName("Namespace").referencedTable("Sector").columnToAddConstraintTo("REL_FK_used-by-Namespace").build())).build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build(),
-                Column.builder().name("REL_ID_oneToMany").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_Namespace_REL_ID_oneToMany").tableName("Namespace")
-                                .columnToAddConstraintTo("REL_ID_oneToMany").build())).build(),
-                Column.builder().name("REL_CD_sourceIds_oneToMany").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("REL_CD_%s_oneToMany", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("REL_CD_%s_oneToMany", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
+            Table.builder().name("module-b_EntityB").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-b_EntityB_id")
+                        .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name("REL_FK_used-by-EntityA").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-b_EntityB_REL_FK_used-by-EntityA")
+                            .tableName("module-b_EntityB").referencedTable("module-a_EntityA").columnToAddConstraintTo("REL_FK_used-by-EntityA").build())).build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build(),
+                    Column.builder().name("REL_ID_oneToMany").dataType("TEXT")
+                        .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_module-b_EntityB_REL_ID_oneToMany").tableName("module-b_EntityB")
+                            .columnToAddConstraintTo("REL_ID_oneToMany").build())).build(),
+                    Column.builder().name("REL_CD_sourceIds_oneToMany").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("REL_CD_%s_oneToMany", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("REL_CD_%s_oneToMany", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
 
         // When
@@ -286,32 +323,33 @@ class TableBuilderTest {
         //spotless:off
 
         // Given
-        List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
-            List.of(
-                Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
-                        .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("sectorId").dataType("jsonb").build(),
-                Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build(),
-                Column.builder().name("REL_FK_used-Sector").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Sector_REL_FK_used-Sector").tableName("Sector")
-                                .referencedTable("Namespace").columnToAddConstraintTo("REL_FK_used-sector").build())).build(),
-                Column.builder().name("REL_ID_manyToOne").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_Sector_REL_ID_manyToOne").tableName("Sector")
-                                .columnToAddConstraintTo("REL_ID_oneToOne").build())).build(),
-                Column.builder().name("REL_CD_sourceIds_manyToOne").dataType("jsonb").defaultValue("[]").build(),
-                    Column.builder().name(String.format("REL_CD_%s_manyToOne", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                    Column.builder().name(String.format("REL_CD_%s_manyToOne", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
+        List<Table> expectedResult = List.of(Table.builder().name("module-a_EntityA").columns(
 
-        Table.builder().name("Namespace").columns(
-            List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
-                        .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("name").dataType("TEXT").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-a_EntityA_id")
+                        .tableName("module-a_EntityA").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("sectorId").dataType("jsonb").build(),
+                    Column.builder().name("geo-location").dataType("geography").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name("REL_FK_used-EntityB").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_MODULE-A_ENTITYA_REL_FK_USED-ENTITYB").tableName("module-a_EntityA")
+                            .referencedTable("module-b_EntityB").columnToAddConstraintTo("REL_FK_used-EntityB").build())).build(),
+                    Column.builder().name("REL_ID_ManyToOne").dataType("TEXT")
+                        .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_MODULE-A_ENTITYA_REL_ID_MANYTOONE").tableName("module-a_EntityA")
+                            .columnToAddConstraintTo("REL_ID_ManyToOne").build())).build(),
+                    Column.builder().name("REL_CD_sourceIds_ManyToOne").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType(JSONB).defaultValue("{}").build(),
+                    Column.builder().name(String.format("REL_CD_%s_ManyToOne", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
+                    Column.builder().name(String.format("REL_CD_%s_ManyToOne", DECORATORS)).dataType(JSONB).defaultValue("{}").build())).build(),
+
+            Table.builder().name("module-b_EntityB").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-b_EntityB_id")
+                        .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
@@ -328,37 +366,37 @@ class TableBuilderTest {
     void checkManyToManyRelationshipMappingTest() {
         //spotless:off
         // Given
-        List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
-            List.of(
-                Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
-                        .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("sectorId").dataType("jsonb").build(),
-                Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+        List<Table> expectedResult = List.of(Table.builder().name("module-a_EntityA").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-a_EntityA_id")
+                        .tableName("module-a_EntityA").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("sectorId").dataType("jsonb").build(),
+                    Column.builder().name("geo-location").dataType("geography").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
-        Table.builder().name("Namespace").columns(
-            List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
-                        .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("name").dataType("TEXT").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+            Table.builder().name("module-b_EntityB").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-b_EntityB_id")
+                        .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("name").dataType("TEXT").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
-        Table.builder().name("manyToMany").columns(
-            List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_manyToMany_id")
-                        .tableName("manyToMany").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("aSide_Sector").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_manyToMany_aSide_Sector")
-                                .tableName("manyToMany").referencedTable("Sector").columnToAddConstraintTo("aSide_Sector").build())).build(),
-                Column.builder().name("bSide_Namespace").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_manyToMany_bSide_Namespace")
-                                .tableName("manyToMany").referencedTable("Namespace").columnToAddConstraintTo("bSide_Namespace").build())).build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+            Table.builder().name("module-a-b_ManyToMany").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-a-b_ManyToMany_id")
+                        .tableName("module-a-b_ManyToMany").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("aSide_EntityA").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-a-b_ManyToMany_aSide_EntityA")
+                            .tableName("module-a-b_ManyToMany").referencedTable("module-a_EntityA").columnToAddConstraintTo("aSide_EntityA").build())).build(),
+                    Column.builder().name("bSide_EntityB").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-a-b_manyToMany_bSide_EntityB")
+                            .tableName("module-a-b_ManyToMany").referencedTable("module-b_EntityB").columnToAddConstraintTo("bSide_EntityB").build())).build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
@@ -375,40 +413,42 @@ class TableBuilderTest {
         //spotless:off
         List<Entity> sameEntities = List.of(
 
-            Entity.builder().entityName("Sector").attributes(
-                List.of(Attribute.builder().name("azimuth").dataType("DECIMAL").build(),
-                    Attribute.builder().name("id").dataType("VARCHAR(511)").constraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+            Entity.builder().entityName("EntityA").storedAt("module-a_EntityA").attributes(
+                    List.of(
+                        Attribute.builder().name("azimuth").dataType("DECIMAL").build(),
+                        Attribute.builder().name("id").dataType("TEXT").constraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                             .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
-                    Attribute.builder().name("sectorId").dataType("jsonb").build(),
-                    Attribute.builder().name("geo-location").dataType("geography").build()))
-                .moduleReferenceName("").build());
+                        Attribute.builder().name("geo-location").dataType("geography").build(),
+                        Attribute.builder().name("sectorId").dataType("jsonb").build()))
+                .moduleReferenceName("")
+                .build());
 
         // Given
-        List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
-            List.of(
-                Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
-                        .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("sectorId").dataType("jsonb").build(),
-                Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
+        List<Table> expectedResult = List.of(Table.builder().name("module-a_EntityA").columns(
+                List.of(
+                    Column.builder().name("azimuth").dataType("DECIMAL").build(),
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-a_EntityA_id")
+                        .tableName("module-a_EntityA").columnToAddConstraintTo("id").build())).build(),
+                    Column.builder().name("sectorId").dataType("jsonb").build(),
+                    Column.builder().name("geo-location").dataType("geography").build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
-        Table.builder().name("relationshipConnectingSameEntity").columns(
-            List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder()
-                        .constraintName("PK_relationshipConnectingSameEntity_id").tableName("relationshipConnectingSameEntity").columnToAddConstraintTo("id")
+            Table.builder().name("module-a_relationshipConnectingSameEntity").columns(
+                List.of(
+                    Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder()
+                        .constraintName("PK_module-a_relationshipConnectingSameEntity_id").tableName("module-a_relationshipConnectingSameEntity").columnToAddConstraintTo("id")
                         .build())).build(),
-                Column.builder().name("aSide_Sector").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_relationshipConnectingSameEntity_aSide_Sector")
-                                .tableName("relationshipConnectingSameEntity").referencedTable("Sector").columnToAddConstraintTo("aSide_Sector").build())).build(),
-                Column.builder().name("bSide_Sector").dataType("VARCHAR(511)")
-                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_relationshipConnectingSameEntity_bSide_Sector")
-                                .tableName("relationshipConnectingSameEntity").referencedTable("Sector").columnToAddConstraintTo("bSide_Sector").build())).build(),
-                Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
-                Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
+                    Column.builder().name("aSide_EntityA").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-a_relationshipConnectingSameEntity_aSide_EntityA")
+                            .tableName("module-a_relationshipConnectingSameEntity").referencedTable("module-a_EntityA").columnToAddConstraintTo("aSide_EntityA").build())).build(),
+                    Column.builder().name("bSide_EntityA").dataType("TEXT")
+                        .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-a_relationshipConnectingSameEntity_bSide_EntityA")
+                            .tableName("module-a_relationshipConnectingSameEntity").referencedTable("module-a_EntityA").columnToAddConstraintTo("bSide_EntityA").build())).build(),
+                    Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
 
         // When
@@ -450,8 +490,8 @@ class TableBuilderTest {
                     // Check if all columns for each table were added correctly
                     Assertions.assertEquals(columnsInExpected.size(), columnsInGenerated.size());
 
-                    List<String> allColumnNamesForATableInGeneratedResult = TestHelper.extractColumnNamesForATable(columnsInGenerated);
-                    List<String> allColumnNamesForATableInExpectedResult = TestHelper.extractColumnNamesForATable(columnsInExpected);
+                    List<String> allColumnNamesForATableInGeneratedResult = TestHelper.extractColumnNames(columnsInGenerated);
+                    List<String> allColumnNamesForATableInExpectedResult = TestHelper.extractColumnNames(columnsInExpected);
 
                     // Check if generatedResult contains all columns for a table
                     Assertions.assertEquals(allColumnNamesForATableInExpectedResult, allColumnNamesForATableInGeneratedResult);
@@ -461,7 +501,7 @@ class TableBuilderTest {
                             .findFirst().ifPresent(columnInGenerated -> {
 
                                 if (columnInExpected.getName().equals("id")) {
-                                    Assertions.assertEquals("VARCHAR(511)", columnInGenerated.getDataType());
+                                    Assertions.assertEquals("TEXT", columnInGenerated.getDataType());
                                     Assertions.assertTrue(TestHelper.checkIfColumnIsPrimaryKey(columnInGenerated.getPostgresConstraints()));
                                 }
 
@@ -487,10 +527,10 @@ class TableBuilderTest {
                                             .ifPresent(constraint1 -> {
 
                                                 // Check table name where constraint is to be added
-                                                Assertions.assertEquals(constraint.getTableToAddConstraintTo(), constraint.getTableToAddConstraintTo());
+                                                Assertions.assertEquals(constraint.getTableToAddConstraintTo(), constraint1.getTableToAddConstraintTo());
 
                                                 // Check column where constraint is to be added
-                                                Assertions.assertEquals(constraint.getColumnToAddConstraintTo(), constraint.getColumnToAddConstraintTo());
+                                                Assertions.assertEquals(constraint.getColumnToAddConstraintTo(), constraint1.getColumnToAddConstraintTo());
 
                                                 if (constraint instanceof ForeignKeyConstraint expectedFk) {
                                                     ForeignKeyConstraint actualFK = (ForeignKeyConstraint) constraint1;
@@ -506,16 +546,4 @@ class TableBuilderTest {
         });
         //spotless:on
     }
-
-    Collection<Object> addEModelPrimaryKeyConstraint() {
-        Collection<Object> eModelPrimaryKeyConstraint = new ArrayList<>();
-        try {
-            Constructor<PrimaryKeyConstraint> constructor = PrimaryKeyConstraint.class.getDeclaredConstructor();
-            eModelPrimaryKeyConstraint.add(constructor.newInstance());
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            log.error("Failure in tests --> Error while adding primary key constraint: " + e.getMessage());
-        }
-        return eModelPrimaryKeyConstraint;
-    }
-
 }

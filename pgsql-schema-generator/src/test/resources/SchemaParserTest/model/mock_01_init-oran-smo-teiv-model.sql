@@ -46,44 +46,34 @@ CREATE TABLE IF NOT EXISTS ties_model.module_reference (
     "domain"             VARCHAR(511),
     "includedModules"        jsonb,
     "revision"       VARCHAR(511),
-    "content"               TEXT,
-    "ownerAppId"       VARCHAR(511),
-    "status"       VARCHAR(127)
+    "content"               TEXT
 );
 
 CREATE TABLE IF NOT EXISTS ties_model.entity_info (
-    "name"                   VARCHAR(511) PRIMARY KEY,
-    "moduleReferenceName"    VARCHAR(511),
+    "storedAt"            VARCHAR(511) PRIMARY KEY,
+    "name"                VARCHAR(511) NOT NULL,
+    "moduleReferenceName" VARCHAR(511) NOT NULL,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
-    "name"      VARCHAR(511) PRIMARY KEY,
-    "aSideAssociationName"    TEXT,
-    "aSideMOType"             TEXT,
-    "aSideMinCardinality"     BIGINT,
-    "aSideMaxCardinality"     BIGINT,
-    "bSideAssociationName"    TEXT,
-    "bSideMOType"             TEXT,
-    "bSideMinCardinality"     BIGINT,
-    "bSideMaxCardinality"     BIGINT,
-    "associationKind"    TEXT,
-    "relationshipDataLocation"          TEXT,
-    "connectSameEntity"       BOOLEAN,
-    "moduleReferenceName"     TEXT,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS ties_model.decorators (
-    "name"                   VARCHAR(511) PRIMARY KEY,
-    "dataType"                   VARCHAR(511),
-    "moduleReferenceName"    VARCHAR(511),
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS ties_model.classifiers (
-    "name"                   VARCHAR(511) PRIMARY KEY,
-    "moduleReferenceName"    VARCHAR(511),
+    "name"                     VARCHAR(511) NOT NULL,
+    "aSideAssociationName"     TEXT NOT NULL,
+    "aSideMOType"              TEXT NOT NULL,
+    "aSideModule"              TEXT NOT NULL,
+    "aSideMinCardinality"      BIGINT NOT NULL,
+    "aSideMaxCardinality"      BIGINT NOT NULL,
+    "bSideAssociationName"     TEXT NOT NULL,
+    "bSideMOType"              TEXT NOT NULL,
+    "bSideModule"              TEXT NOT NULL,
+    "bSideMinCardinality"      BIGINT NOT NULL,
+    "bSideMaxCardinality"      BIGINT NOT NULL,
+    "associationKind"          TEXT NOT NULL,
+    "relationshipDataLocation" TEXT NOT NULL,
+    "connectSameEntity"        BOOLEAN NOT NULL,
+    "storedAt"                 VARCHAR(511) NOT NULL,
+    "moduleReferenceName"      TEXT NOT NULL,
+    PRIMARY KEY ("name", "moduleReferenceName"),
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 
@@ -93,15 +83,15 @@ INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_model'
 COPY ties_model.hash_info("name", "hashedValue", "type") FROM stdin;
 \.
 
-COPY ties_model.module_reference("name", "namespace", "domain", "includedModules", "revision", "content", "ownerAppId", "status") FROM stdin;
+COPY ties_model.module_reference("name", "namespace", "domain", "includedModules", "revision", "content") FROM stdin;
 \.
 
-COPY ties_model.entity_info("name", "moduleReferenceName") FROM stdin;
+COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName") FROM stdin;
 \.
 
-COPY ties_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "relationshipDataLocation", "connectSameEntity", "moduleReferenceName") FROM stdin;
-ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER	provided-lteSectorCarrier	ENodeBFunction	1	1	provided-by-enodebFunction	LTESectorCarrier	0	100	BI_DIRECTIONAL	B_SIDE	false	o-ran-smo-teiv-ran
-LTESECTORCARRIER_USES_ANTENNACAPABILITY	used-antennaCapability	LTESectorCarrier	0	1	used-by-lteSectorCarrier	AntennaCapability	0	1	BI_DIRECTIONAL	A_SIDE	false	o-ran-smo-teiv-ran
+COPY ties_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;
+ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER	provided-lteSectorCarrier	ENodeBFunction	o-ran-smo-teiv-ran	1	1	provided-by-enodebFunction	LTESectorCarrier	o-ran-smo-teiv-ran	0	100	BI_DIRECTIONAL	false	B_SIDE	o-ran-smo-teiv-ran:LTESectorCarrier	o-ran-smo-teiv-ran
+LTESECTORCARRIER_USES_ANTENNACAPABILITY	used-antennaCapability	LTESectorCarrier	o-ran-smo-teiv-ran	0	9223372036854775807	used-by-lteSectorCarrier	AntennaCapability	o-ran-smo-teiv-ran	0	1	BI_DIRECTIONAL	false	A_SIDE	o-ran-smo-teiv-ran:LTESectorCarrier	o-ran-smo-teiv-ran
 \.
 
 ;

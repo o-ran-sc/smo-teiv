@@ -32,9 +32,14 @@ schema:
     baseline: src/test/resources/baseline-schema/01_init-oran-smo-teiv-model.sql
     temp-baseline: target/test-classes/01_init-oran-smo-teiv-model_baseline.sql
     output: target/test-classes/TEST_01_init-oran-smo-teiv-model.sql
+  consumer-data:
+    skeleton: scripts/02_init-oran-smo-teiv-consumer-data.sql
+    baseline: src/test/resources/baseline-schema/02_init-oran-smo-teiv-consumer-data.sql
+    output: target/test-classes/TEST_02_init-oran-smo-teiv-consumer-data.sql
 test-result:
     data: src/test/resources/expected-db-schema/result_00_init-oran-smo-teiv-data.sql
     model: src/test/resources/expected-db-schema/result_01_init-oran-smo-teiv-model.sql
+    consumer-data: src/test/resources/expected-db-schema/result_02_init-oran-smo-teiv-consumer-data.sql
 exclusions:
   model-names: metadata, decorators
 graphs:

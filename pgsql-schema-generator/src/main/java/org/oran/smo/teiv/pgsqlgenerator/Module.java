@@ -38,8 +38,11 @@ public class Module implements Table {
     private String domain;
     private String revision;
     private String content;
-    private String ownerAppId;
-    private String status;
+    private List<String> availableListElements;
+    @Setter
+    private List<String> availableEntities;
+    @Builder.Default
+    private List<String> availableRelations = List.of();
     @Setter
     @Builder.Default
     private Collection<String> includedModules = List.of();
@@ -51,7 +54,7 @@ public class Module implements Table {
 
     @Override
     public String getColumnsForCopyStatement() {
-        return "(\"name\", \"namespace\", \"domain\", \"includedModules\", \"revision\", \"content\", \"ownerAppId\", \"status\")";
+        return "(\"name\", \"namespace\", \"domain\", \"includedModules\", \"revision\", \"content\")";
     }
 
     @Override
@@ -60,7 +63,6 @@ public class Module implements Table {
                 this.getDomain() :
                 "\\N") + "\t" + this.getIncludedModules().stream().map(moduleRef -> "\"" + moduleRef + "\"")
                         .toList() + "\t" + this.getRevision() + "\t" + Base64.getEncoder().encodeToString(this.getContent()
-                                .replaceAll("\\r\\n?", "\n").getBytes(StandardCharsets.UTF_8)) + "\t" + this
-                                        .getOwnerAppId() + "\t" + this.getStatus() + "\n";
+                                .replaceAll("\\r\\n?", "\n").getBytes(StandardCharsets.UTF_8)) + "\n";
     }
 }

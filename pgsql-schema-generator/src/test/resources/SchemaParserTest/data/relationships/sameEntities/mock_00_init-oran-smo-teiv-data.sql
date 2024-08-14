@@ -53,16 +53,16 @@ $$ language 'plpgsql';
 INSERT INTO ties_model.entity_info("schema", "status") VALUES ('ties_data', 'success');
 
 CREATE TABLE IF NOT EXISTS ties_data."Sector" (
-	"id"			 VARCHAR(511),
+	"id"			 TEXT,
 	"azimuth"			DECIMAL,
 	"sectorId"			 jsonb,
 	"geo-location"			"geography"
 );
 
 CREATE TABLE IF NOT EXISTS ties_data."REL_serviced-sector_serving-sector" (
-	"id"			VARCHAR(511),
-	"aSide_Sector"			VARCHAR(511),
-	"bSide_Sector"			VARCHAR(511)
+	"id"			TEXT,
+	"aSide_Sector"			TEXT,
+	"bSide_Sector"			TEXT
 );
 
 SELECT ties_data.create_constraint_if_not_exists(

@@ -24,6 +24,7 @@ import org.oran.smo.teiv.pgsqlgenerator.Column;
 import org.oran.smo.teiv.pgsqlgenerator.ForeignKeyConstraint;
 import org.oran.smo.teiv.pgsqlgenerator.PgSchemaGeneratorException;
 import org.oran.smo.teiv.pgsqlgenerator.PostgresConstraint;
+import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.oran.smo.teiv.pgsqlgenerator.Table;
 import org.oran.smo.teiv.pgsqlgenerator.Relationship;
 
@@ -85,12 +86,24 @@ public class BackwardCompatibilityChecker {
         }
     }
 
+    public void checkForNBCChangesInConsumerDataSchema(String baselineConsumerDataSchema,
+            String skeletonConsumerDataSchema) {
+        if (!isGreenFieldInstallation) {
+            final List<Table> baselineTables = SchemaParser.extractDataFromBaseline(baselineConsumerDataSchema);
+            final List<Table> skeletonTables = SchemaParser.extractDataFromBaseline(skeletonConsumerDataSchema);
+            checkForNBCChangesInData(baselineTables, skeletonTables);
+        } else {
+            log.info("No NBC checks done as green field installation is enabled");
+        }
+    }
+
     private void verifyTableColumns(List<Column> columnsInBaseline, List<Column> columnsInModelSvc, String tableName) {
         columnsInBaseline.forEach(baselineColumn -> {
             Optional<Column> matchingColumn = columnsInModelSvc.stream().filter(modelColumn -> modelColumn.getName().equals(
                     baselineColumn.getName())).findFirst();
             matchingColumn.ifPresentOrElse(modelColumn -> {
                 validateColumnConstraints(baselineColumn, modelColumn, tableName);
+                validateColumnIndexes(baselineColumn, modelColumn, tableName);
                 validateColumnDataType(baselineColumn, modelColumn, tableName);
             }, () -> {
                 throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
@@ -123,6 +136,32 @@ public class BackwardCompatibilityChecker {
                 throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
                         "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
                                 .getName()), new UnsupportedOperationException());
+            });
+        }
+    }
+
+    private void validateColumnIndexes(Column baselineColumn, Column modelColumn, String tableName) {
+        for (PostgresIndex indexInBaseline : baselineColumn.getPostgresIndexList()) {
+            Optional<PostgresIndex> matchingIndex = modelColumn.getPostgresIndexList().stream().filter(
+                    indexInGenerated -> indexInGenerated.getIndexName().equals(indexInBaseline.getIndexName())).findFirst();
+
+            matchingIndex.ifPresentOrElse(indexInGenerated -> {
+                String indexStatementInBaseline = String.format(indexInBaseline.getIndexType().getCreateIndexStmt(),
+                        indexInBaseline.getIndexName(), indexInBaseline.getTableNameToAddIndexTo(), indexInBaseline
+                                .getColumnNameToAddIndexTo());
+                String indexStatementInGenerated = String.format(indexInGenerated.getIndexType().getCreateIndexStmt(),
+                        indexInGenerated.getIndexName(), indexInGenerated.getTableNameToAddIndexTo(), indexInGenerated
+                                .getColumnNameToAddIndexTo());
+                if (!indexStatementInGenerated.equals(indexStatementInBaseline)) {
+                    throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
+                            "modified/removed index %s for column(%s.%s) present in baseline", indexInBaseline
+                                    .getIndexName(), tableName, baselineColumn.getName()),
+                            new UnsupportedOperationException());
+                }
+            }, () -> {
+                throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
+                        "modified/removed index %s for column(%s.%s) present in baseline", indexInBaseline.getIndexName(),
+                        tableName, baselineColumn.getName()), new UnsupportedOperationException());
             });
         }
     }

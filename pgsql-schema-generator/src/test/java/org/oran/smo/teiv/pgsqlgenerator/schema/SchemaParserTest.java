@@ -124,14 +124,14 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                         .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
 
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build());
         // spotless:on
@@ -157,13 +157,13 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                         .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").defaultValue("hello-to-the-world").build())).build());
         // spotless:on
@@ -204,13 +204,13 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                         .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build(),
                 Column.builder().name("namespaceId").dataType("DECIMAL").build())).build());
@@ -250,22 +250,22 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                                 .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("REL_FK_serviced-sector").dataType("VARCHAR(511)")
+                Column.builder().name("REL_FK_serviced-sector").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Sector_REL_FK_serviced-sector").tableName("Sector")
                                 .referencedTable("Namespace").columnToAddConstraintTo("REL_FK_serviced-sector").build())).build(),
-                Column.builder().name("REL_ID_serviced-sector_serving-namespace").dataType("VARCHAR(511)")
+                Column.builder().name("REL_ID_serviced-sector_serving-namespace").dataType("TEXT")
                         .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_Sector_REL_ID_serviced-sector_serving-namespace")
                                 .tableName("Sector").columnToAddConstraintTo("REL_ID_serviced-sector_serving-namespace").build())).build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build(),
-                Column.builder().name("REL_FK_serving-namespace").dataType("VARCHAR(511)")
+                Column.builder().name("REL_FK_serving-namespace").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Namespace_REL_FK_serving-namespace").tableName("Namespace")
                                 .referencedTable("Sector").columnToAddConstraintTo("REL_FK_serving-namespace").build())).build())).build());
 
@@ -292,19 +292,19 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                         .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build(),
-                Column.builder().name("REL_FK_serving-namespace").dataType("VARCHAR(511)")
+                Column.builder().name("REL_FK_serving-namespace").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Namespace_REL_FK_serving-namespace")
                                 .tableName("Namespace").referencedTable("Sector").columnToAddConstraintTo("REL_FK_serving-namespace").build())).build(),
-                Column.builder().name("REL_ID_serviced-sector_serving-namespace").dataType("VARCHAR(511)")
+                Column.builder().name("REL_ID_serviced-sector_serving-namespace").dataType("TEXT")
                         .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_Namespace_REL_ID_serviced-sector_serving-namespace")
                                 .tableName("Namespace").columnToAddConstraintTo("REL_ID_serviced-sector_serving-namespace").build())).build())).build());
 
@@ -331,19 +331,19 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                     .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build(),
-                Column.builder().name("REL_FK_serviced-sector").dataType("VARCHAR(511)")
+                Column.builder().name("REL_FK_serviced-sector").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_Sector_REL_FK_serviced-sector").tableName("Sector").referencedTable("Namespace")
                                 .columnToAddConstraintTo("REL_FK_serviced-sector").build())).build(),
-                Column.builder().name("REL_ID_serviced-sector_serving-namespace").dataType("VARCHAR(511)")
+                Column.builder().name("REL_ID_serviced-sector_serving-namespace").dataType("TEXT")
                         .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_Sector_REL_ID_serviced-sector_serving-namespace").tableName("Sector")
                                 .columnToAddConstraintTo("REL_ID_serviced-sector_serving-namespace").build())).build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build());
         // spotless:on
@@ -369,23 +369,23 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                         .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
         Table.builder().name("Namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Namespace_id")
                         .tableName("Namespace").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("name").dataType("TEXT").build())).build(),
         Table.builder().name("REL_serviced-sector_serving-namespace").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_REL_serviced-sector_serving-namespace_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_REL_serviced-sector_serving-namespace_id")
                         .tableName("REL_serviced-sector_serving-namespace").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("aSide_Sector").dataType("VARCHAR(511)")
+                Column.builder().name("aSide_Sector").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_REL_serviced-sector_serving-namespace_aSide_Sector")
                                 .tableName("REL_serviced-sector_serving-namespace").referencedTable("Sector").columnToAddConstraintTo("aSide_Sector").build())).build(),
-                Column.builder().name("bSide_Namespace").dataType("VARCHAR(511)")
+                Column.builder().name("bSide_Namespace").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_REL_serviced-sector_serving-namespace_bSide_Namespace")
                                 .tableName("REL_serviced-sector_serving-namespace").referencedTable("Namespace").columnToAddConstraintTo("bSide_Namespace").build())).build())).build());
         // spotless:on
@@ -411,18 +411,18 @@ class SchemaParserTest {
         List<Table> expectedResult = List.of(Table.builder().name("Sector").columns(
             List.of(
                 Column.builder().name("azimuth").dataType("DECIMAL").build(),
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_Sector_id")
                         .tableName("Sector").columnToAddConstraintTo("id").build())).build(),
                 Column.builder().name("sectorId").dataType("jsonb").build(),
                 Column.builder().name("geo-location").dataType("geography").build())).build(),
         Table.builder().name("REL_serviced-sector_serving-sector").columns(
             List.of(
-                Column.builder().name("id").dataType("VARCHAR(511)").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_REL_serviced-sector_serving-sector_id")
+                Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_REL_serviced-sector_serving-sector_id")
                         .tableName("REL_serviced-sector_serving-sector").columnToAddConstraintTo("id").build())).build(),
-                Column.builder().name("aSide_Sector").dataType("VARCHAR(511)")
+                Column.builder().name("aSide_Sector").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_REL_serviced-sector_serving-sector_aSide_Sector")
                                 .tableName("REL_serviced-sector_serving-sector").referencedTable("Sector").columnToAddConstraintTo("aSide_Sector").build())).build(),
-                Column.builder().name("bSide_Sector").dataType("VARCHAR(511)")
+                Column.builder().name("bSide_Sector").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_REL_serviced-sector_serving-sector_bSide_Sector")
                                 .tableName("REL_serviced-sector_serving-sector").referencedTable("Sector").columnToAddConstraintTo("bSide_Sector").build())).build())).build());
         // spotless:on
@@ -454,8 +454,8 @@ class SchemaParserTest {
                 // Check if all columns for each table were added correctly
                 Assertions.assertEquals(columnsInExpected.size(), columnsInGenerated.size());
 
-                List<String> allColumnNamesForATableInGeneratedResult = TestHelper.extractColumnNamesForATable(columnsInGenerated);
-                List<String> allColumnNamesForATableInExpectedResult = TestHelper.extractColumnNamesForATable(columnsInExpected);
+                List<String> allColumnNamesForATableInGeneratedResult = TestHelper.extractColumnNames(columnsInGenerated);
+                List<String> allColumnNamesForATableInExpectedResult = TestHelper.extractColumnNames(columnsInExpected);
 
                 // Check if generatedResult contains all columns for a table
                 Assertions.assertEquals(allColumnNamesForATableInExpectedResult, allColumnNamesForATableInGeneratedResult);
@@ -465,7 +465,7 @@ class SchemaParserTest {
                     .findFirst().ifPresent(columnInGenerated -> {
 
                         if (columnInExpected.getName().equals("id")) {
-                            Assertions.assertEquals("VARCHAR(511)", columnInGenerated.getDataType());
+                            Assertions.assertEquals("TEXT", columnInGenerated.getDataType());
                             Assertions.assertTrue(TestHelper.checkIfColumnIsPrimaryKey(columnInGenerated.getPostgresConstraints()));
                         }
 
