@@ -32,6 +32,7 @@ import lombok.Singular;
 public class Attribute {
     private String name;
     private String dataType;
+    private String yangDataType;
     @Builder.Default
     private Collection<Object> constraints = List.of();
     private String defaultValue;

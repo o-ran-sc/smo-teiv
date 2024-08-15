@@ -135,7 +135,8 @@ public class YangModelProcessor {
                 List constraint = List.of(PrimaryKeyConstraint.builder().constraintName("PK_" + yList.getListName() + "_id")
                         .tableName(yList.getListName()).columnToAddConstraintTo("id").build());
 
-                attributes.add(Attribute.builder().name("id").dataType(TEXT).constraints(constraint).build());
+                attributes.add(Attribute.builder().name("id").yangDataType("string").dataType(TEXT).constraints(constraint)
+                        .build());
                 yList.getContainers().forEach(yContainer -> {
                     System.out.printf("\t\tContainer Name: %s \n", yContainer.getContainerName());
                     if (yContainer.getContainerName().equals("attributes")) {
@@ -149,12 +150,13 @@ public class YangModelProcessor {
 
                             if (yLeaf.getDefault() != null) {
 
-                                attributes.add(Attribute.builder().name(yLeaf.getLeafName()).dataType(dataTypeMapping.get(
-                                        yLeaf.getType().getDataType())).defaultValue(yLeaf.getDefault().getValue())
-                                        .constraints(new ArrayList()).build());
+                                attributes.add(Attribute.builder().name(yLeaf.getLeafName()).yangDataType(yLeaf.getType()
+                                        .getDataType()).dataType(dataTypeMapping.get(yLeaf.getType().getDataType()))
+                                        .defaultValue(yLeaf.getDefault().getValue()).constraints(new ArrayList()).build());
                             } else {
-                                attributes.add(Attribute.builder().name(yLeaf.getLeafName()).dataType(dataTypeMapping.get(
-                                        yLeaf.getType().getDataType())).constraints(new ArrayList()).build());
+                                attributes.add(Attribute.builder().name(yLeaf.getLeafName()).yangDataType(yLeaf.getType()
+                                        .getDataType()).dataType(dataTypeMapping.get(yLeaf.getType().getDataType()))
+                                        .constraints(new ArrayList()).build());
                             }
                         });
                         yContainer.getLeafLists().forEach(yLeafList -> {
@@ -164,8 +166,9 @@ public class YangModelProcessor {
                             System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(yLeafList.getType()
                                     .getDataType()));
 
-                            attributes.add(Attribute.builder().name(yLeafList.getLeafListName()).dataType(JSONB).indexType(
-                                    IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
+                            attributes.add(Attribute.builder().name(yLeafList.getLeafListName()).yangDataType(yLeafList
+                                    .getType().getDataType()).dataType(JSONB).indexType(
+                                            IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
                         });
                         yContainer.getContainers().forEach(container -> {
 
@@ -176,7 +179,8 @@ public class YangModelProcessor {
 
                             String dataType = dataTypeMapping.get(container.getUses().toString());
                             Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
-                                    .getContainerName()).dataType(dataType).constraints(new ArrayList());
+                                    .getContainerName()).yangDataType(dataType).dataType(dataType).constraints(
+                                            new ArrayList());
                             if (container.getContainerName().equals("geo-location")) {
                                 dataType = dataTypeMapping.get("geo:geo-location");
                             }
@@ -191,8 +195,8 @@ public class YangModelProcessor {
 
                             attributes.add(Attribute.builder().name(uses.getDomElement().getValue().substring(uses
                                     .getDomElement().getValue().indexOf(':') + 1, uses.getDomElement().getValue().length()))
-                                    .dataType(dataTypeMapping.get(uses.getDomElement().getValue())).constraints(
-                                            new ArrayList()).build());
+                                    .yangDataType(uses.getDomElement().getValue()).dataType(dataTypeMapping.get(uses
+                                            .getDomElement().getValue())).constraints(new ArrayList()).build());
                         });
                     }
                 });

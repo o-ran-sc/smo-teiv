@@ -20,29 +20,21 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator.grapghgenerator;
 
-import guru.nidi.graphviz.attribute.Arrow;
-import guru.nidi.graphviz.attribute.Color;
-import guru.nidi.graphviz.attribute.EndLabel;
-import guru.nidi.graphviz.attribute.Shape;
-import guru.nidi.graphviz.model.Factory;
-import guru.nidi.graphviz.model.MutableGraph;
-import guru.nidi.graphviz.model.MutableNode;
-import lombok.extern.slf4j.Slf4j;
-import guru.nidi.graphviz.attribute.Label;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
 import org.oran.smo.teiv.pgsqlgenerator.Relationship;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class RelationshipGraphGenerator {
+public class RelationshipGraphGeneratorUml {
 
     @Value("${graphs.generate}")
     private boolean generateRelationshipGraph;
@@ -67,35 +59,34 @@ public class RelationshipGraphGenerator {
     }
 
     private void generateGraph(String name, List<Relationship> relationships, List<Entity> entities) throws IOException {
-        MutableGraph g = prepareGraph(relationships, entities);
-        File outputFile = new File(graphOutput, name + "-rel");
-        Graphviz.fromGraph(g).render(Format.SVG).toFile(outputFile);
-        log.info("Graph rendered to: {}", outputFile.getAbsolutePath());
+        String plantUmlSource = prepareGraph(relationships, entities);
+        File outputFile = new File(graphOutput, name + "-rel.puml");
+        try (PrintWriter writer = new PrintWriter(outputFile)) {
+            writer.write(plantUmlSource);
+        }
+        log.info("PUML generated at: {}", outputFile.getAbsolutePath());
     }
 
-    private MutableGraph prepareGraph(List<Relationship> moduleRelationships, List<Entity> moduleEntities) {
-        MutableGraph g = Factory.mutGraph("moduleName").setDirected(true).linkAttrs().add(Color.DARKSLATEGRAY4).nodeAttrs()
-                .add(Shape.BOX);
-        for (Entity moduleEntity : moduleEntities) {
-            MutableNode node = Factory.mutNode(moduleEntity.getEntityName());
-            g.add(node);
+    private String prepareGraph(List<Relationship> relationships, List<Entity> entities) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("@startuml\n");
+        sb.append("skinparam componentStyle rectangle\n");
+        for (Entity entity : entities) {
+            sb.append(String.format("class %s {\n", entity.getEntityName()));
+            sb.append("}\n");
         }
-        for (Relationship moduleRelationship : moduleRelationships) {
-            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideMOType());
-            g.add(nodeA);
-            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideMOType());
-            g.add(nodeB);
+        for (Relationship relationship : relationships) {
+            String label = relationship.getName().split("_")[1];
+            String aSideCardinality = getCardinality(relationship.getASideMinCardinality(), relationship
+                    .getASideMaxCardinality());
+            String bSideCardinality = getCardinality(relationship.getBSideMinCardinality(), relationship
+                    .getBSideMaxCardinality());
 
-            String label = moduleRelationship.getName().split("_")[1];
-            Label aSideCardinality = Label.of(getCardinality(moduleRelationship.getASideMinCardinality(), moduleRelationship
-                    .getASideMaxCardinality()));
-            Label bSideCardinality = Label.of(getCardinality(moduleRelationship.getBSideMinCardinality(), moduleRelationship
-                    .getBSideMaxCardinality()));
-
-            g.add(nodeA.addLink(Factory.to(nodeB).with(Label.of(label), EndLabel.head(aSideCardinality, null, null),
-                    EndLabel.tail(bSideCardinality, null, null), Arrow.VEE)));
+            sb.append(String.format("%s \"%s\" --> \"%s\" %s : %s\n", relationship.getASideMOType(), aSideCardinality,
+                    bSideCardinality, relationship.getBSideMOType(), label));
         }
-        return g;
+        sb.append("@enduml\n");
+        return sb.toString();
     }
 
     private String getCardinality(long minCardinality, long maxCardinality) {
@@ -103,10 +94,6 @@ public class RelationshipGraphGenerator {
     }
 
     private String formatCardinality(long cardinality) {
-        if (cardinality == Long.MAX_VALUE) {
-            return "*";
-        } else {
-            return String.valueOf(cardinality);
-        }
+        return cardinality == Long.MAX_VALUE ? "*" : String.valueOf(cardinality);
     }
 }

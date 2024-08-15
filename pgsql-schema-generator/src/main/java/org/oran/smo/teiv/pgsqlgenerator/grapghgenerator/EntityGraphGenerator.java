@@ -90,7 +90,8 @@ public class EntityGraphGenerator {
         String label = "<TABLE border='1' cellborder='0' cellspacing='0' cellpadding='4'>";
         for (Attribute attribute : attributes) {
             label = label.concat("<TR> <TD bgcolor='#EEEEEE' align='left'>" + attribute
-                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + attribute.getDataType() + "</TD> </TR>");
+                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + attribute
+                            .getYangDataType() + "</TD> </TR>");
         }
         label = label.concat("</TABLE>");
         MutableNode attributeNode = Factory.mutNode(moduleEntity.getEntityName() + "-attributes").attrs().add(Label.html(

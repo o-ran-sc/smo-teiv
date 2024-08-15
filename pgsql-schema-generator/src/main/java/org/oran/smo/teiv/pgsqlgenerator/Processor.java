@@ -28,6 +28,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.EntityGraphGenerator;
+import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.EntityGraphGeneratorUml;
+import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.RelationshipGraphGeneratorUml;
 import org.oran.smo.teiv.pgsqlgenerator.schema.consumerdata.ConsumerDataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.data.DataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.model.ModelSchemaGenerator;
@@ -48,7 +50,9 @@ public class Processor {
     private final ModelSchemaGenerator modelSchemaGenerator;
     private final ConsumerDataSchemaGenerator consumerDataSchemaGenerator;
     private final RelationshipGraphGenerator relationshipGraphGenerator;
+    private final RelationshipGraphGeneratorUml relationshipGraphGeneratorUml;
     private final EntityGraphGenerator entityGraphGenerator;
+    private final EntityGraphGeneratorUml entityGraphGeneratorUml;
     @Value("${yang-model.source}")
     private String yangModelDirectory;
 
@@ -69,7 +73,9 @@ public class Processor {
         List<Relationship> relationshipsFromModelService = yangModelProcessor.getRelationshipsFromYang(pathToImplementing);
 
         relationshipGraphGenerator.generate(relationshipsFromModelService, entitiesFromModelService);
+        relationshipGraphGeneratorUml.generate(relationshipsFromModelService, entitiesFromModelService);
         entityGraphGenerator.generate(entitiesFromModelService);
+        entityGraphGeneratorUml.generate(entitiesFromModelService);
         dataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
         modelSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
         consumerDataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
