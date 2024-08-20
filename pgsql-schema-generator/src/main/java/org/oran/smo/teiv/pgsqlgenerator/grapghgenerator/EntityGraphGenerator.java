@@ -65,12 +65,14 @@ public class EntityGraphGenerator {
         MutableGraph g = prepareGraph(entities, name);
         File outputFile = new File(graphOutput, name);
         Graphviz.fromGraph(g).render(Format.SVG).toFile(outputFile);
+        Graphviz.fromGraph(g).render(Format.DOT).toFile(outputFile);
         log.info("Graph rendered to: {}", outputFile.getAbsolutePath());
     }
 
     private MutableGraph prepareGraph(List<Entity> moduleEntities, String moduleName) {
         MutableGraph g = Factory.mutGraph(moduleName).setDirected(true).graphAttrs().add(Rank.dir(RankDir.LEFT_TO_RIGHT))
-                .nodeAttrs().add(Shape.RECT, Style.BOLD, Color.BLACK, Style.FILLED, Color.LIGHTGRAY.fill());
+                .nodeAttrs().add(Shape.RECT, Style.BOLD, Color.BLACK, Style.FILLED, Color.LIGHTGRAY.fill(), Font.name(
+                        "Arial"));
         MutableNode moduleNameNode = Factory.mutNode(moduleName).attrs().add(Color.LIGHTBLUE.fill());
         g.add(moduleNameNode);
         for (Entity moduleEntity : moduleEntities) {
