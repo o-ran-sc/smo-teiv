@@ -21,8 +21,11 @@
 package org.oran.smo.teiv.pgsqlgenerator.grapghgenerator;
 
 import guru.nidi.graphviz.attribute.Arrow;
+import guru.nidi.graphviz.attribute.Attributes;
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.EndLabel;
+import guru.nidi.graphviz.attribute.Font;
+import guru.nidi.graphviz.attribute.ForAll;
 import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
@@ -70,12 +73,15 @@ public class RelationshipGraphGenerator {
         MutableGraph g = prepareGraph(relationships, entities);
         File outputFile = new File(graphOutput, name + "-rel");
         Graphviz.fromGraph(g).render(Format.SVG).toFile(outputFile);
+        Graphviz.fromGraph(g).render(Format.DOT).toFile(outputFile);
         log.info("Graph rendered to: {}", outputFile.getAbsolutePath());
     }
 
     private MutableGraph prepareGraph(List<Relationship> moduleRelationships, List<Entity> moduleEntities) {
-        MutableGraph g = Factory.mutGraph("moduleName").setDirected(true).linkAttrs().add(Color.DARKSLATEGRAY4).nodeAttrs()
-                .add(Shape.BOX);
+        Attributes<ForAll> arialFont = Font.name("Arial");
+        MutableGraph g = Factory.mutGraph("moduleName").setDirected(true).linkAttrs()
+                .add(Color.DARKSLATEGRAY4, arialFont).nodeAttrs()
+                .add(Shape.BOX, arialFont);
         for (Entity moduleEntity : moduleEntities) {
             MutableNode node = Factory.mutNode(moduleEntity.getEntityName());
             g.add(node);
