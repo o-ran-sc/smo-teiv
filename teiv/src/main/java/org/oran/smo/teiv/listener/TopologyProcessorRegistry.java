@@ -20,7 +20,6 @@
  */
 package org.oran.smo.teiv.listener;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import io.cloudevents.CloudEvent;
@@ -41,11 +40,7 @@ public class TopologyProcessorRegistry {
     private final MergeTopologyProcessor mergeTopologyProcessor;
     private final DeleteTopologyProcessor deleteTopologyProcessor;
     private final SourceEntityDeleteTopologyProcessor sourceEntityDeleteTopologyProcessor;
-    private final SourceEntityDeleteTopologyProcessorV1 sourceEntityDeleteTopologyProcessorV1;
     private final UnsupportedTopologyEventProcessor unsupportedTopologyEventProcessor;
-
-    @Value("${feature_flags.use_alternate_delete_logic}")
-    private boolean useAlternateDeleteLogic;
 
     public TopologyProcessor getProcessor(CloudEvent event) {
         String cloudEventType = getCloudEventType(event);
@@ -68,9 +63,7 @@ public class TopologyProcessorRegistry {
             case TiesConstants.CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE -> {
                 log.debug("Source Entity Delete CloudEvent received with id: {}", event.getId());
                 metrics.incrementNumReceivedCloudEventSourceEntityDelete();
-                return useAlternateDeleteLogic ?
-                        sourceEntityDeleteTopologyProcessorV1 :
-                        sourceEntityDeleteTopologyProcessor;
+                return sourceEntityDeleteTopologyProcessor;
             }
             default -> {
                 metrics.incrementNumReceivedCloudEventNotSupported();

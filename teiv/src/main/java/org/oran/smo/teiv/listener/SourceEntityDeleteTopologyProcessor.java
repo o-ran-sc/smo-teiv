@@ -48,9 +48,7 @@ import org.oran.smo.teiv.service.TiesDbService;
 @Slf4j
 @AllArgsConstructor
 @Profile("ingestion")
-
 public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
-
     private final TiesDbService tiesDbService;
     private final ObjectMapper objectMapper;
     private final CustomMetrics customMetrics;
@@ -86,8 +84,8 @@ public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
         List<OperationResult> operationResults = new ArrayList<>();
         try {
             List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
-            SchemaRegistry.getEntityTypesWithCmId().forEach(entityType -> dbOperations.add(dslContext -> {
-                List<String> results = tiesDbOperations.selectByCmHandle(dslContext, entityType.getTableName(),
+            SchemaRegistry.getEntityTypes().forEach(entityType -> dbOperations.add(dslContext -> {
+                List<String> results = tiesDbOperations.selectByCmHandleFormSourceIds(dslContext, entityType.getTableName(),
                         sourceEntityDelete.value);
                 if (!results.isEmpty()) {
                     for (String result : results) {

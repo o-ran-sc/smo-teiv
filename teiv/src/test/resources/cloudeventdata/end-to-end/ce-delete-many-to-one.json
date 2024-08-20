@@ -9,14 +9,14 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-cloud:NodeCluster": [
+                "o-ran-smo-teiv-ran-cloud:NodeCluster": [
                     {
                         "id": "NodeCluster_1"
                     }
                 ]
             },
             {
-                "o-ran-smo-teiv-cloud:CloudSite": [
+                "o-ran-smo-teiv-ran-cloud:CloudSite": [
                     {
                         "id": "CloudSite_1"
                     }
@@ -25,7 +25,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-cloud:NODECLUSTER_LOCATED_AT_CLOUDSITE": [
+                "o-ran-smo-teiv-ran-cloud:NODECLUSTER_LOCATED_AT_CLOUDSITE": [
                     {
                         "id": "relation_1"
                     }

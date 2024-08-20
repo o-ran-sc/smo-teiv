@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-cloud:Namespaceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
+                "o-ran-smo-teiv-ran-cloud:Namespaceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
                     {
                         "id": "Namespace_1",
                         "attributes": {
@@ -25,7 +25,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
+                "o-ran-smo-teiv-ran-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
                     {
                         "id": "ManagedElement_1",
                         "attributes": {
@@ -59,7 +59,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-cloud:CloudNativeSystemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm": [
+                "o-ran-smo-teiv-ran-cloud:CloudNativeSystemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm": [
                     {
                         "id": "CloudNativeSystem_1",
                         "attributes": {
@@ -81,7 +81,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-cloud:CloudNativeApplicationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn": [
+                "o-ran-smo-teiv-ran-cloud:CloudNativeApplicationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn": [
                     {
                         "id": "CloudNativeApplication_1",
                         "attributes": {
@@ -103,7 +103,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn": [
+                "o-ran-smo-teiv-ran-logical:GNBDUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn": [
                     {
                         "id": "GNBDUFunction_1",
                         "attributes": {
@@ -141,7 +141,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-logical:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "NRCellDU_1",
                         "attributes": {
@@ -201,7 +201,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
+                "o-ran-smo-teiv-ran-equipment:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
                     {
                         "id": "AntennaModule_1",
                         "attributes": {
@@ -243,7 +243,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-cloud:CLOUDNATIVEAPPLICATIONNNNNNNNNNN_DEPLOYED_ON_NAMESPACEEEEEEEEEEE": [
+                "o-ran-smo-teiv-ran-cloud:CLOUDNATIVEAPPLICATIONNNNNNNNNNN_DEPLOYED_ON_NAMESPACEEEEEEEEEEE": [
                     {
                         "id": "CLOUDNATIVEAPPLICATION_DEPLOYED_ON_NAMESPACE_relation_1",
                         "aSide": "CloudNativeApplication_1",
@@ -262,7 +262,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-oam-to-cloud:MANAGEDELEMENTTTTTTTTTTT_DEPLOYED_AS_CLOUDNATIVESYSTEMMMMMMMMMMM": [
+                "o-ran-smo-teiv-ran-oam-to-cloud:MANAGEDELEMENTTTTTTTTTTT_DEPLOYED_AS_CLOUDNATIVESYSTEMMMMMMMMMMM": [
                     {
                         "id": "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM_relation_1",
                         "aSide": "ManagedElement_1",
@@ -281,7 +281,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-oam-to-cloud:MANAGEDELEMENTTTTTTTTT_REALISED_BY_CLOUDNATIVEAPPLICATIONNNNNNNN": [
+                "o-ran-smo-teiv-ran-oam-to-cloud:MANAGEDELEMENTTTTTTTTT_REALISED_BY_CLOUDNATIVEAPPLICATIONNNNNNNN": [
                     {
                         "id": "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION_relation_1",
                         "aSide": "ManagedElement_1",
@@ -290,7 +290,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran-to-cloud:GNBDUFUNCTIONNNNNNNNN_REALISED_BY_CLOUDNATIVEAPPLICATIONNNNNNNNN": [
+                "o-ran-smo-teiv-ran-logical-to-cloud:GNBDUFUNCTIONNNNNNNNN_REALISED_BY_CLOUDNATIVEAPPLICATIONNNNNNNNN": [
                     {
                         "id": "GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION_relation_1",
                         "aSide": "GNBDUFunction_1",
@@ -304,7 +304,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-oam-to-ran:MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_GNBDUFUNCTIONNNNNNNNNNNNNNN": [
+                "o-ran-smo-teiv-ran-oam-to-logical:MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_GNBDUFUNCTIONNNNNNNNNNNNNNN": [
                     {
                         "id": "MANAGEDELEMENT_MANAGES_GNBDUFUNCTION_relation_1",
                         "aSide": "ManagedElement_1",
@@ -313,7 +313,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFUNCTIONNNNNNNNNNNNNNUUU_PROVIDES_NRCELLDUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-logical:GNBDUFUNCTIONNNNNNNNNNNNNNUUU_PROVIDES_NRCELLDUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "GNBDUFUNCTION_PROVIDES_NRCELLDU_relation_1",
                         "aSide": "GNBDUFunction_1",
@@ -337,7 +337,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE": [
+                "o-ran-smo-teiv-ran-equipment:ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE": [
                     {
                         "id": "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE_relation_1",
                         "aSide": "AntennaModule_1",
@@ -351,7 +351,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE": [
+                "o-ran-smo-teiv-ran-equipment:ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE": [
                     {
                         "id": "ANTENNAMODULE_DEPLOYED_ON_ANTENNAMODULE_relation_1",
                         "aSide": "AntennaModule_5",

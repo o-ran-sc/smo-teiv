@@ -20,14 +20,15 @@
  */
 package org.oran.smo.teiv.controller.health;
 
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
+import org.oran.smo.teiv.exposure.spi.ModelRepository;
+import org.oran.smo.teiv.service.SchemaCleanUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,28 +55,21 @@ class TiesExposureHealthIndicatorTest {
 
     @MockBean
     private PostgresSchemaLoader postgresSchemaLoader;
+    @MockBean
+    ModelRepository modelRepository;
+    @MockBean
+    SchemaCleanUpService schemaCleanUpService;
 
-    @AfterEach
-    protected void tearDown() {
-        healthStatus.setSchemaInitialized(false);
-    }
+    @MockBean
+    private SchemaHandler schemaHandler;
+
+    @MockBean
+    private DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka;
 
     @Test
     void upAndHealthy() throws Exception {
-        mvc.perform(get(readinessProbePath).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(
-                content().json("{'status' : 'UP'}"));
-        mvc.perform(get(livenessProbePath).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(
-                content().json("{'status' : 'UP'}"));
-        mvc.perform(get(tiesExposureProbePath).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-                .andExpect(content().json(String.format("{'status':'UP','details':{'UP': '%s is UP and Healthy.'}}",
-                        SERVICE_NAME)));
-    }
-
-    @Test
-    void upSchemaServiceLoaded() throws Exception {
-        SchemaHandler schemaHandlerSpy = Mockito.spy(new SchemaHandler(postgresSchemaLoader, healthStatus));
-        schemaHandlerSpy.initializeSchema();
-        Assertions.assertTrue(healthStatus.isSchemaInitialized());
+        healthStatus.setSchemaInitialized(true);
+        doReturn(true).when(dependentServiceAvailabilityKafka).checkService();
         mvc.perform(get(readinessProbePath).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(
                 content().json("{'status' : 'UP'}"));
         mvc.perform(get(livenessProbePath).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(
@@ -88,6 +82,7 @@ class TiesExposureHealthIndicatorTest {
     @Test
     void downSchemaServiceNotLoaded() throws Exception {
         healthStatus.setSchemaInitialized(false);
+        doReturn(true).when(dependentServiceAvailabilityKafka).checkService();
         performReadinessGroupProbesDownWithMessage(" Schema is yet to be initialized.");
     }
 

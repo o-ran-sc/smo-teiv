@@ -49,13 +49,15 @@
 
 grammar tiesPath ;
 
-tiesPath : ( prefix | incorrectPrefix ) multipleLeafConditions? textFunctionCondition? containsFunctionCondition? ancestorAxis? invalidPostFix? containerName? fieldLeaf?;
+tiesPath : ( prefix | incorrectPrefix ) multipleLeafConditions? containsTextFunctionCondition? textFunctionCondition? containsFunctionCondition? ancestorAxis? invalidPostFix? containerName? fieldLeaf?;
 
 ancestorAxis : SLASH KW_ANCESTOR COLONCOLON ancestorPath ;
 
 ancestorPath : yangElement ( SLASH yangElement)* ;
 
-textFunctionCondition : SLASH leafName OB KW_TEXT_FUNCTION EQ StringLiteral CB ;
+textFunctionCondition : OB KW_TEXT_FUNCTION EQ StringLiteral CB ;
+
+containsTextFunctionCondition : OB KW_CONTAINS_FUNCTION OP KW_TEXT_FUNCTION COMMA StringLiteral CP CB ;
 
 containsFunctionCondition : OB KW_CONTAINS_FUNCTION OP AT leafName COMMA StringLiteral CP CB ;
 
@@ -79,7 +81,8 @@ leafName : QName ;
 
 booleanOperators : ( KW_AND | KW_OR ) ;
 
-comparativeOperators : ( EQ | GT | LT | GE | LE ) ;
+// Onnly EQ supported for now
+comparativeOperators : ( EQ /*| GT | LT | GE | LE */ ) ;
 
 invalidPostFix : (AT | CB | COLONCOLON | comparativeOperators ).+ ;
 

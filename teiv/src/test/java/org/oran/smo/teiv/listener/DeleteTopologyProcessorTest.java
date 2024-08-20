@@ -20,16 +20,17 @@
  */
 package org.oran.smo.teiv.listener;
 
-import org.oran.smo.teiv.schema.MockSchemaLoader;
-import org.oran.smo.teiv.schema.SchemaLoader;
-import org.oran.smo.teiv.schema.SchemaLoaderException;
-import org.oran.smo.teiv.service.TiesDbService;
-import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
-import org.oran.smo.teiv.service.cloudevent.data.Entity;
-import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
-import org.oran.smo.teiv.startup.SchemaHandler;
-import org.oran.smo.teiv.utils.CloudEventTestUtil;
-import io.cloudevents.CloudEvent;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,12 +40,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import io.cloudevents.CloudEvent;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
+import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
+import org.oran.smo.teiv.service.cloudevent.data.Entity;
+import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
+import org.oran.smo.teiv.startup.SchemaHandler;
+import org.oran.smo.teiv.utils.CloudEventTestUtil;
 
 @SpringBootTest
 @ActiveProfiles({ "test", "ingestion" })
@@ -69,7 +75,7 @@ class DeleteTopologyProcessorTest {
     @Test
     void testDeleteCloudNativeApplicationEntity1() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("delete", "{}");
-        String entityType = "CloudNativeApplication";
+        String entityType = "NFDeployment";
         Map<String, Object> yangParserOutputMapBSide = new HashMap<>();
         Entity entity = new Entity("", entityType, "cloud_id_1", yangParserOutputMapBSide, List.of());
 

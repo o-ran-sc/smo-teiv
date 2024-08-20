@@ -20,11 +20,10 @@
  */
 package org.oran.smo.teiv.schema;
 
-import org.oran.smo.teiv.exposure.spi.DataPersistanceService;
-import org.oran.smo.teiv.exposure.spi.impl.DataPersistanceServiceImpl;
+import org.oran.smo.teiv.exposure.consumerdata.ConsumerDataRepositoryImpl;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -35,15 +34,15 @@ import static org.mockito.Mockito.when;
 
 public class ConsumerDataCacheTest {
 
-    private static final DataPersistanceService dataPersistanceService = mock(DataPersistanceServiceImpl.class);
-    private final ConsumerDataCache underTest = new ConsumerDataCache(dataPersistanceService);
+    private static final ConsumerDataRepositoryImpl DATA_REPOSITORY = mock(ConsumerDataRepositoryImpl.class);
+    private final ConsumerDataCache underTest = new ConsumerDataCache(DATA_REPOSITORY);
 
     @BeforeAll
     static void beforeAll() {
-        when(dataPersistanceService.loadClassifiers()).thenReturn(Set.of("gnbdu-function-model:Rural",
+        when(DATA_REPOSITORY.loadClassifiers()).thenReturn(Set.of("gnbdu-function-model:Rural",
                 "gnbcucp-gnbcuup-model:Weekend"));
-        when(dataPersistanceService.loadDecorators()).thenReturn(Map.of("gnbdu-function-model:location", DataType.PRIMITIVE,
-                "gnbcucp-gnbcuup-model:metadata", DataType.CONTAINER));
+        when(DATA_REPOSITORY.loadDecorators()).thenReturn(Map.of("gnbdu-function-model:location", YangDataTypes.STRING,
+                "gnbcucp-gnbcuup-model:metadata", YangDataTypes.BOOLEAN));
     }
 
     @Test
@@ -62,7 +61,7 @@ public class ConsumerDataCacheTest {
 
     @Test
     void testGetDecorators() {
-        assertEquals(Map.of("gnbdu-function-model:location", DataType.PRIMITIVE, "gnbcucp-gnbcuup-model:metadata",
-                DataType.CONTAINER), underTest.getDecorators());
+        assertEquals(Map.of("gnbdu-function-model:location", YangDataTypes.STRING, "gnbcucp-gnbcuup-model:metadata",
+                YangDataTypes.BOOLEAN), underTest.getDecorators());
     }
 }

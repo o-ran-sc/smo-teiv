@@ -23,11 +23,9 @@ package org.oran.smo.teiv.config;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Data
-@Profile("ingestion")
 public class KafkaConfig {
 
     private final TopologyIngestion topologyIngestion;
@@ -35,17 +33,20 @@ public class KafkaConfig {
     @Data
     @Configuration
     public static class TopologyIngestion {
-        @Value("${kafka.topology-ingestion.consumer.topic.name}")
+        @Value("${kafka.topology-ingestion.topic.name}")
         private String topicName;
 
-        @Value("${kafka.topology-ingestion.consumer.topic.partitions}")
+        @Value("${kafka.topology-ingestion.topic.partitions}")
         private int partitions;
 
-        @Value("${kafka.topology-ingestion.consumer.topic.replicas}")
+        @Value("${kafka.topology-ingestion.topic.replicas}")
         private int replicas;
 
-        @Value("${kafka.topology-ingestion.consumer.topic.retention-ms}")
+        @Value("${kafka.topology-ingestion.topic.retention-ms}")
         private String retention;
+
+        @Value("${kafka.topology-ingestion.topic.retention-bytes}")
+        private String retentionBytes;
 
         @Value("${kafka.topology-ingestion.consumer.group-id}")
         private String groupId;

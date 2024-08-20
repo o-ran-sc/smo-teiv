@@ -20,57 +20,56 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.Condition;
 import org.jooq.SelectField;
-import org.jooq.util.xml.jaxb.Table;
+import org.oran.smo.teiv.schema.DataType;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Data
+@Builder(builderMethodName = "hiddenBuilder")
 @Slf4j
 public class FilterCriteria {
+    @NonNull
     private final String domain;
-    private List<TargetObject> targets = new ArrayList<>();
-    private LogicalBlock scope;
+    private final ResolvingTopologyObjectType resolvingTopologyObjectType;
+    private List<InnerFilterCriteria> filterCriteriaList;
 
-    public FilterCriteria(String domain) {
-        this.domain = domain;
+    public static FilterCriteriaBuilder builder(final String domain) {
+        return hiddenBuilder().domain(domain);
     }
 
-    public Condition getCondition() {
-        return scope.getCondition();
-    }
+    public Map<SelectField, Map<SelectField, DataType>> getSelects() {
+        Map<SelectField, Map<SelectField, DataType>> selectFields = new HashMap<>();
 
-    public Set<Table> getTables() {
-        Set<Table> tables = new HashSet<>();
-        tables.addAll(scope.getTables());
-
-        targets.forEach(t -> tables.add(getTablesFromTarget(t)));
-
-        return tables;
-    }
-
-    public Set<SelectField> getSelects() {
-        Set<SelectField> selectFields = new HashSet<>();
-
-        targets.forEach(t -> selectFields.add(getSelectFromTarget(t)));
+        filterCriteriaList.forEach(t -> {
+            Map<SelectField, Map<SelectField, DataType>> selects = t.getSelects();
+            for (Map.Entry<SelectField, Map<SelectField, DataType>> select : selects.entrySet()) {
+                if (!selectFields.containsKey(select.getKey())) {
+                    selectFields.put(select.getKey(), new HashMap<>());
+                }
+                selectFields.get(select.getKey()).putAll(select.getValue());
+            }
+        });
 
         return selectFields;
     }
 
-    private SelectField getSelectFromTarget(TargetObject t) {
-        log.trace(t.toString());
-        return null;
-    }
+    @Getter
+    @AllArgsConstructor
+    public enum ResolvingTopologyObjectType {
+        RELATIONSHIP(true, false),
+        ENTITY(false, true),
+        ALL(true, true);
 
-    @SuppressWarnings("squid:S4144")
-    private Table getTablesFromTarget(TargetObject t) {
-        log.trace(t.toString());
-        return null;
+        private final boolean resolveRelationships;
+        private final boolean resolveEntities;
     }
 }

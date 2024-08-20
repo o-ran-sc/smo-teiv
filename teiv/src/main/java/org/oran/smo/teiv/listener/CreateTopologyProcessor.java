@@ -52,6 +52,7 @@ public class CreateTopologyProcessor implements TopologyProcessor {
             customMetrics.incrementNumUnsuccessfullyParsedCreateCloudEvents();
             return;
         }
+        parsedCloudEventData.sort();
         stopWatch.stop();
         customMetrics.recordCloudEventCreateParseTime(stopWatch.lastTaskInfo().getTimeNanos());
         customMetrics.incrementNumSuccessfullyParsedCreateCloudEvents();

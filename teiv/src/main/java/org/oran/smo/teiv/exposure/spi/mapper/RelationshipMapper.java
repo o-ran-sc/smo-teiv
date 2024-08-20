@@ -20,25 +20,33 @@
  */
 package org.oran.smo.teiv.exposure.spi.mapper;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Record;
 import org.jooq.Result;
 
-import org.oran.smo.teiv.schema.RelationType;
-import lombok.RequiredArgsConstructor;
+import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
+import org.oran.smo.teiv.exposure.utils.RequestDetails;
+import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.firstHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.prevHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.validateOffset;
+
+@Component
 public class RelationshipMapper extends ResponseMapper {
-    final RelationType relationType;
-
-    @Override
-    public Map<String, Object> map(final Result<Record> record) {
-        final Map<String, List<Object>> relationshipMap = new HashMap<>();
-        relationshipMap.put(relationType.getFullyQualifiedName(), List.of(createProperties(record.get(0), relationType)));
-        return Collections.unmodifiableMap(relationshipMap);
+    public OranTeivRelationshipsResponseMessage mapRelationships(final Result<Record> results,
+            final RequestDetails requestDetails) {
+        //Pair<items, totalCount>
+        final Pair<List<Object>, Integer> pair = getItemsWithTotalCount(results);
+        int totalCount = pair.getRight();
+        validateOffset(requestDetails.getOffset(), totalCount);
+        return OranTeivRelationshipsResponseMessage.builder().items(pair.getLeft()).first(firstHref(requestDetails)).prev(
+                prevHref(requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails,
+                        totalCount)).last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
     }
 }

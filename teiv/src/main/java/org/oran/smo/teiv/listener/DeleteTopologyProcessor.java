@@ -24,7 +24,6 @@ import io.cloudevents.CloudEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +31,7 @@ import org.jooq.DSLContext;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
+import org.oran.smo.teiv.schema.RelationshipDataLocation;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.service.TiesDbOperations;
 import org.oran.smo.teiv.service.TiesDbService;
@@ -64,6 +64,7 @@ public class DeleteTopologyProcessor implements TopologyProcessor {
             customMetrics.incrementNumUnsuccessfullyParsedDeleteCloudEvents();
             return;
         }
+        parsedCloudEventData.sort();
         stopWatch.stop();
         customMetrics.recordCloudEventDeleteParseTime(stopWatch.lastTaskInfo().getTimeNanos());
         customMetrics.incrementNumSuccessfullyParsedDeleteCloudEvents();
@@ -75,23 +76,20 @@ public class DeleteTopologyProcessor implements TopologyProcessor {
 
         parsedCloudEventData.getEntities().forEach(entity -> {
             EntityType entityType = SchemaRegistry.getEntityTypeByName(entity.getType());
-            dbOperations.add(dslContext -> operationResults.addAll(
-                    tiesDbOperations.deleteEntity(dslContext, entityType, entity.getId())));
+            dbOperations.add(dslContext -> operationResults
+                .addAll(tiesDbOperations.deleteEntity(dslContext, entityType, entity.getId())));
         });
 
         parsedCloudEventData.getRelationships().forEach(relationship -> {
             RelationType relationType = SchemaRegistry.getRelationTypeByName(relationship.getType());
-            switch (Objects.requireNonNull(relationType).getRelationshipStorageLocation()) {
-                case RELATION -> dbOperations.add(dslContext -> {
-                    Optional<OperationResult> operationResult = tiesDbOperations.deleteManyToManyRelationByRelationId(
-                            dslContext, relationType.getTableName(), relationship.getId());
-                    operationResult.ifPresent(operationResults::add);
-                });
-                case A_SIDE, B_SIDE -> dbOperations.add(dslContext -> {
-                    Optional<OperationResult> operationResult = tiesDbOperations.deleteRelationFromEntityTableByRelationId(
-                            dslContext, relationship.getId(), relationType);
-                    operationResult.ifPresent(operationResults::add);
-                });
+            if (Objects.requireNonNull(relationType)
+                .getRelationshipStorageLocation() == RelationshipDataLocation.RELATION) {
+                dbOperations.add(dslContext -> tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
+                    relationType, relationship.getId()).ifPresent(operationResults::add));
+            } else {
+                dbOperations
+                    .add(dslContext -> tiesDbOperations.deleteRelationFromEntityTableByRelationId(dslContext,
+                        relationship.getId(), relationType).ifPresent(operationResults::add));
             }
         });
 
@@ -99,7 +97,7 @@ public class DeleteTopologyProcessor implements TopologyProcessor {
             tiesDbService.execute(dbOperations);
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
-                    CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
+                CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedDeleteCloudEvents();
             return;
         }

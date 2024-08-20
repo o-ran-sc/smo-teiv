@@ -56,4 +56,9 @@ public class DataSourceConfig {
     public DSLContext dslContextRead() {
         return DSL.using(dataSourceRead(), SQLDialect.POSTGRES);
     }
+
+    @Bean(name = "readWriteDataDslContext")
+    public DSLContext dslContextReadWrite() {
+        return DSL.using(dataSourceWrite(), SQLDialect.POSTGRES);
+    }
 }

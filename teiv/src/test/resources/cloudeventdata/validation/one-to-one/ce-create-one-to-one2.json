@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-oam:ManagedElement": [
+                "o-ran-smo-teiv-ran-oam:ManagedElement": [
                     {
                         "id": "ManagedElement_O2O_2",
                         "attributes": {
@@ -19,7 +19,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-cloud:CloudNativeSystem": [
+                "o-ran-smo-teiv-ran-cloud:CloudNativeSystem": [
                     {
                         "id": "CloudNativeSystem_2",
                         "attributes": {
@@ -31,7 +31,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-oam-to-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
+                "o-ran-smo-teiv-ran-oam-to-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
                     {
                         "id": "Relation_OneToOne_1",
                         "aSide": "ManagedElement_O2O_2",

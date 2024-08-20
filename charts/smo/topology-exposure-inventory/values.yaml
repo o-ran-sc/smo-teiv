@@ -174,9 +174,6 @@ application: &applicationConfig
         retry-attempts: 10
         retry-backoff-ms: 200
 
-  feature_flags:
-    use_alternate_delete_logic: false
-
 topology-exposure:
   name: topology-exposure
   namespace: default

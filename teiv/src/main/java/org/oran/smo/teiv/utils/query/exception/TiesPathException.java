@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class TiesPathException extends RuntimeException {
@@ -80,6 +81,10 @@ public class TiesPathException extends RuntimeException {
         return clientException("Grammar Error", "ID is not considered to be an attribute");
     }
 
+    public static TiesPathException invalidQueryError() {
+        return clientException("Invalid query", "The provided query in scopeFilter is invalid");
+    }
+
     public static TiesPathException entityNameError(String entity) {
         return clientException("Grammar Error", String.format("%s is not a valid entity", entity));
     }
@@ -87,6 +92,29 @@ public class TiesPathException extends RuntimeException {
     public static TiesPathException invalidTopologyObject(String topologyObject) {
         return clientException("Invalid topology object", String.format(
                 "%s did not match any topology objects in the given domain", topologyObject));
+    }
+
+    public static TiesPathException invalidInnerContainer(String innerContainer) {
+        return clientException("Invalid data in scopeFilter", String.format("Unable to resolve %s", innerContainer));
+    }
+
+    public static TiesPathException invalidTargetFilter(Set<String> params) {
+        return clientException("Invalid targetFilter content", String.format(
+                "%s did not match any topology objects in the given domain", String.join(", ", params)));
+    }
+
+    public static TiesPathException invalidTargetFilter() {
+        return clientException("Invalid targetFilter content", "Given targetFilters could not be resolved");
+    }
+
+    public static TiesPathException invalidTargetFilterScopeFilterCombination() {
+        return clientException("Invalid targetFilter and scopeFilter content",
+                "Given targetFilter and scopeFilter can not be combined");
+    }
+
+    public static TiesPathException invalidScopeFilter(String leaf) {
+        return clientException("Invalid scopeFilter content", String.format(
+                "%s did not match any topology objects in the given domain", leaf));
     }
 
     public static TiesPathException ambiguousTopologyObject(String topologyObject) {
@@ -113,8 +141,8 @@ public class TiesPathException extends RuntimeException {
         return clientException("Filter Error", "TopologyObjects given in scopeFilter and targetFilter are not matching");
     }
 
-    private static TiesPathException clientExceptionWithDefaultResponse(final String message, final String details) {
-        return new TiesPathException(message, details, HttpStatus.BAD_REQUEST, defaultResponse);
+    public static TiesPathException invalidQueryCondition(String details) {
+        return clientException("Invalid query condition", details);
     }
 
     private TiesPathException(final String message, final String details, final HttpStatus httpStatus,

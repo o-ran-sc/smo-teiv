@@ -25,6 +25,7 @@ import java.util.Locale;
 public enum DataType {
     PRIMITIVE,
     DECIMAL,
+    INTEGER,
     BIGINT,
     CONTAINER,
     GEOGRAPHIC;
@@ -33,6 +34,7 @@ public enum DataType {
         return switch (dbDatatype.toUpperCase(Locale.US)) {
             case "TEXT", "VARCHAR" -> PRIMITIVE;
             case "NUMERIC", "DECIMAL" -> DECIMAL;
+            case "INT4" -> INTEGER;
             case "BIGINT", "INT8" -> BIGINT;
             case "JSONB" -> CONTAINER;
             case "GEOGRAPHY" -> GEOGRAPHIC;

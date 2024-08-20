@@ -20,9 +20,9 @@
  */
 package org.oran.smo.teiv.schema;
 
-import org.oran.smo.teiv.exposure.spi.DataPersistanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.oran.smo.teiv.exposure.consumerdata.ConsumerDataRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,20 +38,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConsumerDataCache {
 
-    private final DataPersistanceService dataPersistanceService;
+    private final ConsumerDataRepository consumerDataRepository;
 
     @Cacheable("classifiers")
     public Set<String> getClassifiers() {
-        return Collections.unmodifiableSet(dataPersistanceService.loadClassifiers());
+        return Collections.unmodifiableSet(consumerDataRepository.loadClassifiers());
     }
 
     @Cacheable("decorators")
-    public Map<String, DataType> getDecorators() {
-        return Collections.unmodifiableMap(dataPersistanceService.loadDecorators());
+    public Map<String, YangDataTypes> getDecorators() {
+        return Collections.unmodifiableMap(consumerDataRepository.loadDecorators());
     }
 
     @Cacheable("validClassifiers")
-    public Set<String> getValidClassifiers(String partialClassifier) {
+    public Set<String> getValidClassifiers(final String partialClassifier) {
         return getClassifiers().stream().filter(c -> c.contains(partialClassifier)).collect(Collectors.toSet());
     }
 

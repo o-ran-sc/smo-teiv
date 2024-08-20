@@ -60,6 +60,8 @@ spring.datasource.read.maximum-pool-size: 2
 spring.datasource.write.maximum-pool-size: 2
 spring.caching.consumer-data-ttl-ms: 60000
 
+consumer-data.batch-size: 50
+
 kafka:
   server:
     bootstrap-server-host: kafka
@@ -74,12 +76,13 @@ kafka:
     retry-attempts: 3
     retry-interval-ms: 1000
   topology-ingestion:
+    topic:
+      name: topology-inventory-ingestion
+      partitions: 4
+      replicas: 1
+      retention-ms: 7200000
+      retention-bytes: 104857600
     consumer:
-      topic:
-        name: topology-inventory-ingestion
-        partitions: 4
-        replicas: 1
-        retention-ms: 86400000
       group-id: topology-inventory-ingestion-consumer
       auto-offset-reset: earliest
       max-poll-records: 500
@@ -95,6 +98,3 @@ database:
     deadlock:
       retry-attempts: 3
       retry-backoff-ms: 200
-
-feature_flags:
-  use_alternate_delete_logic: false

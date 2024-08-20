@@ -23,20 +23,34 @@ package org.oran.smo.teiv.listener;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
+import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.oran.smo.teiv.service.models.OperationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,25 +58,30 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import org.oran.smo.teiv.CustomMetrics;
-import org.oran.smo.teiv.schema.EntityType;
-import org.oran.smo.teiv.schema.SchemaRegistry;
-import org.oran.smo.teiv.service.TiesDbService;
-import org.oran.smo.teiv.startup.SchemaHandler;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
+
+import org.oran.smo.teiv.CustomMetrics;
+import org.oran.smo.teiv.schema.BidiDbNameMapper;
+import org.oran.smo.teiv.schema.EntityType;
+import org.oran.smo.teiv.schema.SchemaRegistry;
+import org.oran.smo.teiv.service.TiesDbOperations;
+import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.startup.SchemaHandler;
 
 @SpringBootTest
 @AutoConfigureJson
 @ActiveProfiles({ "test", "ingestion" })
 class SourceEntityDeleteTopologyProcessorTest {
+
     @Autowired
     private SourceEntityDeleteTopologyProcessor sourceEntityDeleteTopologyProcessor;
-
     @Autowired
     CustomMetrics metrics;
     @MockBean
     private TiesDbService tiesDbService;
+    @MockBean
+    private TiesDbOperations tiesDbOperations;
     @MockBean
     private SchemaHandler schemaHandler;
 
@@ -111,17 +130,17 @@ class SourceEntityDeleteTopologyProcessorTest {
     void testSourceEntityDeleteUponRuntimeExceptionDuringDeletion() {
         //given
         try (MockedStatic<SchemaRegistry> mockedSchemaRegistry = Mockito.mockStatic(SchemaRegistry.class)) {
-            EntityType entityType = Mockito.mock(EntityType.class);
+            EntityType entityType = mock(EntityType.class);
             CloudEvent event = CloudEventBuilder.v1().withId("test-id").withType("ran-logical.source-entity-delete")
                     .withSource(URI.create("http://localhost:8080/test-source")).withDataContentType("application/json")
                     .withDataSchema(URI.create("http://localhost:8080/schema/v1/source-entity-delete")).withData(
                             "{\"type\":\"cmHandle\",\"value\":\"abc\"}".getBytes(StandardCharsets.UTF_8)).build();
-            mockedSchemaRegistry.when(SchemaRegistry::getEntityTypesWithCmId).thenReturn(List.of(entityType));
+            mockedSchemaRegistry.when(SchemaRegistry::getEntityTypes).thenReturn(List.of(entityType));
             doThrow(new RuntimeException()).when(tiesDbService).execute(anyList());
             //when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
             //then
-            mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypesWithCmId, times(1));
+            mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypes, times(1));
             verify(tiesDbService, times(1)).execute(anyList());
 
             assertEquals(1, metrics.getNumSuccessfullyParsedSourceEntityDeleteCloudEvents().count());
@@ -131,6 +150,59 @@ class SourceEntityDeleteTopologyProcessorTest {
             assertEquals(1, metrics.getCloudEventSourceEntityDeleteParseTime().count());
             assertTrue(metrics.getCloudEventSourceEntityDeleteParseTime().totalTime(TimeUnit.NANOSECONDS) > 0);
             assertEquals(0, metrics.getCloudEventSourceEntityDeletePersistTime().count());
+        }
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    void testSourceEntityDelete() throws NoSuchFieldException {
+        //given
+        try (MockedStatic<SchemaRegistry> mockedSchemaRegistry = Mockito.mockStatic(SchemaRegistry.class)) {
+            DSLContext stream = mock(DSLContext.class);
+            CloudEvent event = CloudEventBuilder.v1().withId("test-id").withType("ran-logical.source-entity-delete")
+                    .withSource(URI.create("http://localhost:8080/test-source")).withDataContentType("application/json")
+                    .withDataSchema(URI.create("http://localhost:8080/schema/v1/source-entity-delete")).withData(
+                            "{\"type\":\"cmHandle\",\"value\":\"395221E080CCF0FD1924103B15873814\"}".getBytes(
+                                    StandardCharsets.UTF_8)).build();
+
+            Map<String, String> mockNameMap = new HashMap<>();
+            mockNameMap.put("GNBDUFunction", "GNBDUFunction");
+            Field nameMapField = BidiDbNameMapper.class.getDeclaredField("nameMap");
+            nameMapField.setAccessible(true);
+            nameMapField.set(null, mockNameMap);
+
+            OperationResult mockOperationResult = mock(OperationResult.class);
+            EntityType gnbduFunction = EntityType.builder().name("GNBDUFunction").build();
+            when(SchemaRegistry.getEntityTypes()).thenReturn(List.of(gnbduFunction));
+            when(tiesDbOperations.selectByCmHandleFormSourceIds(any(), anyString(), anyString())).thenReturn(List.of(
+                    "result1"));
+            when(tiesDbOperations.deleteEntity(any(), any(), anyString())).thenReturn(List.of(mockOperationResult));
+            doAnswer(new Answer<Void>() {
+                @Override
+                public Void answer(InvocationOnMock invocation) {
+                    List<Consumer<DSLContext>> consumers = invocation.getArgument(0);
+                    consumers.forEach(consumer -> {
+                        consumer.accept(stream);
+                    });
+                    return null;
+                }
+            }).when(tiesDbService).execute(anyList());
+            //when
+            assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
+            //then
+            mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypes, times(1));
+            verify(tiesDbService, atLeastOnce()).execute(anyList());
+            verify(tiesDbOperations, atLeastOnce()).selectByCmHandleFormSourceIds(any(), anyString(), anyString());
+            verify(tiesDbOperations, atLeastOnce()).deleteEntity(any(), any(), anyString());
+
+            assertEquals(1, metrics.getNumSuccessfullyParsedSourceEntityDeleteCloudEvents().count());
+            assertEquals(0, metrics.getNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents().count());
+            assertEquals(1, metrics.getNumSuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
+            assertEquals(0, metrics.getNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
+            assertEquals(1, metrics.getCloudEventSourceEntityDeleteParseTime().count());
+            assertEquals(1, metrics.getCloudEventSourceEntityDeletePersistTime().count());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

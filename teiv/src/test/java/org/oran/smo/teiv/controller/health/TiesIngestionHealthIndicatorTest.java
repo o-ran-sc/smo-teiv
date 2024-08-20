@@ -29,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.oran.smo.teiv.exposure.spi.ModelRepository;
+import org.oran.smo.teiv.service.SchemaCleanUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +46,7 @@ import org.oran.smo.teiv.startup.SchemaHandler;
 @AutoConfigureMockMvc
 @SpringBootTest(properties = { "spring.profiles.active=test,ingestion", "management.endpoint.health.probes.enabled=true",
         "management.endpoint.health.group.readiness.include=readinessState,tiesIngestion" })
-public class TiesIngestionHealthIndicatorTest {
+class TiesIngestionHealthIndicatorTest {
     private final String readinessProbePath = "/actuator/health/readiness";
     private final String livenessProbePath = "/actuator/health/liveness";
     private final String tiesIngestionProbePath = "/actuator/health/tiesIngestion";
@@ -62,6 +64,10 @@ public class TiesIngestionHealthIndicatorTest {
 
     @MockBean
     PostgresSchemaLoader postgresSchemaLoader;
+    @MockBean
+    ModelRepository modelRepository;
+    @MockBean
+    SchemaCleanUpService schemaCleanUpService;
 
     @AfterEach
     protected void tearDown() {
@@ -91,7 +97,8 @@ public class TiesIngestionHealthIndicatorTest {
 
     @Test
     void downKafkaUnavailable() throws Exception {
-        SchemaHandler schemaHandlerSpy = Mockito.spy(new SchemaHandler(postgresSchemaLoader, healthStatus));
+        SchemaHandler schemaHandlerSpy = Mockito.spy(new SchemaHandler(postgresSchemaLoader, healthStatus, modelRepository,
+                schemaCleanUpService));
         schemaHandlerSpy.initializeSchema();
         assertTrue(healthStatus.isSchemaInitialized());
         doReturn(false).when(spiedDependentServiceAvailabilityKafka).checkService();

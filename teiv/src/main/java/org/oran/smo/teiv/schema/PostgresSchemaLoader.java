@@ -27,7 +27,7 @@ import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL;
 import static org.jooq.impl.DSL.field;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,31 +40,32 @@ import org.jooq.Record3;
 import org.jooq.SelectConditionStep;
 import org.jooq.SelectJoinStep;
 import org.springframework.stereotype.Component;
-
-import org.oran.smo.teiv.exception.TiesException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exposure.spi.Module;
 
 @Slf4j
 @Component
 public class PostgresSchemaLoader extends SchemaLoader {
-    private final DSLContext readDataDslContext;
+    private final DSLContext readWriteDataDslContext;
     private final ObjectMapper objectMapper;
 
-    public PostgresSchemaLoader(DSLContext readDataDslContext, ObjectMapper objectMapper) {
-        this.readDataDslContext = readDataDslContext;
+    public PostgresSchemaLoader(DSLContext readWriteDataDslContext, ObjectMapper objectMapper) {
+        this.readWriteDataDslContext = readWriteDataDslContext;
         this.objectMapper = objectMapper;
     }
 
     @Override
     protected void loadBidiDbNameMapper() {
         log.debug("Start loading bidirectional DB name mapper");
-        SelectJoinStep<Record> records = readDataDslContext.select().from(String.format(TIES_MODEL, "hash_info"));
+        SelectJoinStep<Record> records = readWriteDataDslContext.select().from(String.format(TIES_MODEL, "hash_info"));
         Map<String, String> hash = new HashMap<>();
         Map<String, String> reverseHash = new HashMap<>();
-        records.forEach(record -> {
-            hash.put((String) record.get("name"), (String) record.get("hashedValue"));
-            reverseHash.put((String) record.get("hashedValue"), (String) record.get("name"));
+        records.forEach(entry -> {
+            hash.put((String) entry.get("name"), (String) entry.get("hashedValue"));
+            reverseHash.put((String) entry.get("hashedValue"), (String) entry.get("name"));
         });
         BidiDbNameMapper.initialize(hash, reverseHash);
         log.debug("BidiDBNameMapper initialized successfully");
@@ -73,15 +74,16 @@ public class PostgresSchemaLoader extends SchemaLoader {
     @Override
     public void loadModules() throws SchemaLoaderException {
         log.debug("Start loading modules");
-        SelectConditionStep<Record> moduleRecords = runMethodSafe(() -> readDataDslContext.select().from(String.format(
-                TIES_MODEL, "module_reference")).where(field("domain").isNotNull()));
+        SelectConditionStep<Record> moduleRecords = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
+                TIES_MODEL, "module_reference")).where(field("name").isNotNull()));
         Map<String, Module> moduleMap = new HashMap<>();
         for (Record moduleRecord : moduleRecords) {
             JSONB includedModules = (JSONB) moduleRecord.get("includedModules");
             try {
                 List<String> modules = objectMapper.readValue(includedModules.data(), List.class);
                 Module module = Module.builder().name((String) moduleRecord.get("name")).namespace((String) moduleRecord
-                        .get("namespace")).domain((String) moduleRecord.get("domain")).includedModuleNames(modules).build();
+                        .get("namespace")).domain((String) moduleRecord.get("domain")).includedModuleNames(modules).content(
+                                (String) moduleRecord.get("content")).build();
                 moduleMap.put(module.getName(), module);
             } catch (IOException e) {
                 log.error("Exception occurred while retrieving included modules.", e);
@@ -98,67 +100,75 @@ public class PostgresSchemaLoader extends SchemaLoader {
     @Override
     public void loadEntityTypes() {
         log.debug("Start loading entities");
-        Map<String, EntityType> entityTypeMap = new HashMap<>();
-        Map<String, EntityType.EntityTypeBuilder> entityTypeBuilderMap = new HashMap<>();
-        SelectJoinStep<Record> entityInfoRecords = runMethodSafe(() -> readDataDslContext.select().from(String.format(
+        List<EntityType> entityTypes = new ArrayList<>();
+        final String tableName = "table_name";
+        final String columnName = "column_name";
+        SelectConditionStep<Record3<Object, Object, Object>> tableDetails = runMethodSafe(() -> readWriteDataDslContext
+                .select(field(tableName), field(columnName), field("udt_name")).from("information_schema.columns").where(
+                        field("table_schema").equal(TIES_DATA_SCHEMA)));
+
+        SelectJoinStep<Record> entityInfoRecords = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
                 TIES_MODEL, "entity_info")));
+
         entityInfoRecords.forEach(entityInfoRecord -> {
             String name = (String) entityInfoRecord.get("name");
-            EntityType.EntityTypeBuilder entityTypeBuilder = EntityType.builder().name(name).module(SchemaRegistry
-                    .getModuleByName((String) entityInfoRecord.get("moduleReferenceName")));
-            entityTypeBuilderMap.put(name, entityTypeBuilder);
-        });
-        //load attributes
-        String tableName = "table_name";
-        String columnName = "column_name";
-        SelectConditionStep<Record3<Object, Object, Object>> record3s = runMethodSafe(() -> readDataDslContext.select(field(
-                tableName), field(columnName), field("udt_name")).from("information_schema.columns").where(field(
-                        "table_schema").equal(TIES_DATA_SCHEMA)));
-        entityTypeBuilderMap.keySet().forEach(entityName -> {
+            final String storedAt = (String) entityInfoRecord.get("storedAt");
+
+            //load attributes
             Map<String, DataType> fields = new HashMap<>();
-            record3s.stream().filter(record3 -> entityName.equals(getModelledName((String) record3.get(tableName))))
+            tableDetails.stream().filter(record3 -> storedAt.equals(getModelledName((String) record3.get(tableName))))
                     .forEach(record3 -> {
                         String colName = getModelledName((String) record3.get(columnName));
                         fields.put(colName, DataType.fromDbDataType((String) record3.get("udt_name")));
                     });
-            entityTypeBuilderMap.get(entityName).fields(Collections.unmodifiableMap(fields));
+
+            final EntityType entityType = EntityType.builder().name(name).tableName(storedAt).fields(fields).module(
+                    SchemaRegistry.getModuleByName((String) entityInfoRecord.get("moduleReferenceName"))).build();
+            entityTypes.add(entityType);
         });
 
-        for (var entityTypeBuilder : entityTypeBuilderMap.entrySet()) {
-            entityTypeMap.put(entityTypeBuilder.getKey(), entityTypeBuilder.getValue().build());
-        }
-
-        SchemaRegistry.initializeEntityTypes(entityTypeMap);
+        SchemaRegistry.initializeEntityTypes(entityTypes);
         log.debug("Entities initialized successfully");
     }
 
     @Override
-    public void loadRelationTypes() {
+    public void loadRelationTypes() throws SchemaLoaderException {
         log.debug("Start loading relations");
-        Map<String, RelationType> relationTypeMap = new HashMap<>();
-        SelectJoinStep<Record> relationInfoResult = runMethodSafe(() -> readDataDslContext.select().from(String.format(
+        List<RelationType> relationTypes = new ArrayList<>();
+        SelectJoinStep<Record> relationInfoResult = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
                 TIES_MODEL, "relationship_info")));
-        relationInfoResult.forEach(result -> {
+        for (Record entry : relationInfoResult) {
             //build associations
-            Association aSideAssociation = Association.builder().name(((String) result.get("aSideAssociationName")))
-                    .minCardinality((long) (result.get("aSideMinCardinality"))).maxCardinality((long) (result.get(
+            Association aSideAssociation = Association.builder().name(((String) entry.get("aSideAssociationName")))
+                    .minCardinality((long) (entry.get("aSideMinCardinality"))).maxCardinality((long) (entry.get(
                             "aSideMaxCardinality"))).build();
-            Association bSideAssociation = Association.builder().name(((String) result.get("bSideAssociationName")))
-                    .minCardinality((long) (result.get("bSideMinCardinality"))).maxCardinality((long) (result.get(
+            Association bSideAssociation = Association.builder().name(((String) entry.get("bSideAssociationName")))
+                    .minCardinality((long) (entry.get("bSideMinCardinality"))).maxCardinality((long) (entry.get(
                             "bSideMaxCardinality"))).build();
 
-            RelationType relationType = RelationType.builder().name((String) result.get("name")).aSideAssociation(
-                    aSideAssociation).aSide(SchemaRegistry.getEntityTypeByName((String) result.get("aSideMOType")))
-                    .bSideAssociation(bSideAssociation).bSide(SchemaRegistry.getEntityTypeByName((String) result.get(
-                            "bSideMOType"))).relationshipStorageLocation(RelationshipDataLocation.valueOf((String) result
-                                    .get("relationshipDataLocation"))).connectsSameEntity((Boolean) (result.get(
-                                            "connectSameEntity"))).module(SchemaRegistry.getModuleByName((String) result
-                                                    .get("moduleReferenceName"))).build();
-            relationTypeMap.put(relationType.getName(), relationType);
-        });
+            final EntityType aSide;
+            final EntityType bSide;
+            try {
+                aSide = SchemaRegistry.getEntityTypeByModuleAndName((String) entry.get("aSideModule"), (String) entry.get(
+                        "aSideMOType"));
+                bSide = SchemaRegistry.getEntityTypeByModuleAndName((String) entry.get("bSideModule"), (String) entry.get(
+                        "bSideMOType"));
+            } catch (SchemaRegistryException e) {
+                log.error("Error while getting aside / bSide entity type.", e);
+                throw new SchemaLoaderException(e.getMessage(), e.getCause());
+            }
+
+            RelationType relationType = RelationType.builder().name((String) entry.get("name")).aSideAssociation(
+                    aSideAssociation).aSide(aSide).bSideAssociation(bSideAssociation).bSide(bSide)
+                    .relationshipStorageLocation(RelationshipDataLocation.valueOf((String) entry.get(
+                            "relationshipDataLocation"))).connectsSameEntity((Boolean) (entry.get("connectSameEntity")))
+                    .tableName((String) entry.get("storedAt")).module(SchemaRegistry.getModuleByName((String) entry.get(
+                            "moduleReferenceName"))).build();
+            relationTypes.add(relationType);
+        }
 
         //load registry
-        SchemaRegistry.initializeRelationTypes(relationTypeMap);
+        SchemaRegistry.initializeRelationTypes(relationTypes);
         log.debug("Relations initialized successfully");
     }
 

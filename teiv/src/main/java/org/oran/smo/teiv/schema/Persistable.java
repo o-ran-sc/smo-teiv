@@ -20,9 +20,17 @@
  */
 package org.oran.smo.teiv.schema;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jooq.Field;
+import org.jooq.JSONB;
+
+import static org.jooq.impl.DSL.field;
+import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
+import static org.oran.smo.teiv.utils.PersistableUtil.getFullyQualifiedNameWithColumnName;
+import static org.oran.smo.teiv.utils.TiesConstants.*;
 
 public interface Persistable {
 
@@ -42,18 +50,43 @@ public interface Persistable {
     String getIdColumnName();
 
     /**
-     * Gets all the column names.
+     * Gets the column name used for storing the unique identifier.
      *
-     * @return the list of column names
+     * @return the id column name with table name
      */
-    List<String> getAttributeColumnsWithId();
+    String getIdColumnNameWithTableName();
+
+    /**
+     * Gets specific columns.
+     *
+     * @param attributes
+     *     specific attributes names
+     *
+     * @return the list of columns
+     */
+    Map<Field, DataType> getSpecificAttributeColumns(List<String> attributes);
 
     /**
      * Gets all the columns names as list of {@link Field}
      *
+     *
      * @return the list of {@link Field}
      */
-    List<Field> getAllFieldsWithId();
+    default List<Field> getAllFieldsWithId() {
+        List<Field> result = new ArrayList<>(getSpecificAttributeColumns(List.of()).keySet());
+        String fullyQuelifiedName = getFullyQualifiedName();
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getIdColumnName())).as(hashAlias(
+                getFullyQualifiedNameWithColumnName(fullyQuelifiedName, ID_COLUMN_NAME))));
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getSourceIdsColumnName()), JSONB.class).as(
+                hashAlias(getFullyQualifiedNameWithColumnName(fullyQuelifiedName, SOURCE_IDS))));
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getClassifiersColumnName()), JSONB.class).as(
+                hashAlias(getFullyQualifiedNameWithColumnName(fullyQuelifiedName, CLASSIFIERS))));
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getDecoratorsColumnName()), JSONB.class).as(
+                hashAlias(getFullyQualifiedNameWithColumnName(fullyQuelifiedName, DECORATORS))));
+        return result;
+    }
+
+    List<String> getAttributeNames();
 
     /**
      * Gets sourceIds column name as String
@@ -61,4 +94,34 @@ public interface Persistable {
      * @return the String value of sourceIds column
      */
     String getSourceIdsColumnName();
+
+    /**
+     * Gets classifiers column name as String
+     *
+     * @return the String value of classifiers column
+     */
+    String getClassifiersColumnName();
+
+    /**
+     * Gets decorators column name as String
+     *
+     * @return the String value of decorators column
+     */
+    String getDecoratorsColumnName();
+
+    String getName();
+
+    /**
+     * Gets the fully qualified name of the entity. Format - <moduleNameReference>:<entityName>
+     *
+     * @return the fully qualified name
+     */
+    String getFullyQualifiedName();
+
+    /**
+     * Gets the category of the persistable. e.g.: "relationship", "entity"
+     *
+     * @return category as a String
+     */
+    String getCategory();
 }

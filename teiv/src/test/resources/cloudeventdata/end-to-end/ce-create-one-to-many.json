@@ -9,31 +9,37 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-oam:ManagedElement": [
+                "o-ran-smo-teiv-ran-oam:ManagedElement": [
                     {
                         "id": "ManagedElement_1",
                         "attributes": {
 
                         },
-                        "sourceIds": []
+                        "sourceIds": [
+                            "urn:3gpp:dn:fdn1",
+                            "urn:cmHandle:1234"
+                        ]
                     }
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:ENodeBFunction": [
+                "o-ran-smo-teiv-ran-logical:ENodeBFunction": [
                     {
                         "id": "ENodeBFunction_1",
                         "attributes": {
 
                         },
-                        "sourceIds": []
+                        "sourceIds": [
+                            "urn:3gpp:dn:fdn1",
+                            "urn:cmHandle:1234"
+                        ]
                     }
                 ]
             }
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-oam-to-ran:MANAGEDELEMENT_MANAGES_ENODEBFUNCTION": [
+                "o-ran-smo-teiv-ran-oam-to-logical:MANAGEDELEMENT_MANAGES_ENODEBFUNCTION": [
                     {
                         "id": "relation_1",
                         "aSide": "ManagedElement_1",

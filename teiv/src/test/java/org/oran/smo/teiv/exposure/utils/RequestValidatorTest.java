@@ -25,7 +25,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import org.oran.smo.teiv.exception.TiesException;
-import org.oran.smo.teiv.schema.SchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.schema.MockSchemaLoader;
 
@@ -35,7 +34,7 @@ class RequestValidatorTest {
 
     @BeforeAll
     static void setUp() throws SchemaLoaderException {
-        SchemaLoader mockSchemaLoader = new MockSchemaLoader();
+        MockSchemaLoader mockSchemaLoader = new MockSchemaLoader();
         mockSchemaLoader.loadSchemaRegistry();
         requestValidator = new RequestValidator();
     }
@@ -72,17 +71,6 @@ class RequestValidatorTest {
                 "ANTENNAMODULE_INSTALLED_AT_SITE", "EQUIPMENT"));
         Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateRelationshipTypeInDomain(
                 "ANTENNAMODULE_INSTALLED_AT_SITE", "RAN"));
-    }
-
-    @Test
-    void testValidateFiltersForRelationships() {
-        Assertions.assertDoesNotThrow(() -> requestValidator.validateFiltersForRelationships(null, null));
-        Assertions.assertDoesNotThrow(() -> requestValidator.validateFiltersForRelationships(null,
-                "/GNBDUFunction/attributes[contains (@fdn, \"Hungary\")]"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateFiltersForRelationships(
-                "/attributes", "/GNBDUFunction/attributes[contains (@fdn, \"Hungary\")]"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateFiltersForRelationships(null,
-                "/attributes[contains (@fdn, \"Hungary\")]"));
     }
 
 }

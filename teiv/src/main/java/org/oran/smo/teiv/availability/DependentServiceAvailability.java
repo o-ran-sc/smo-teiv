@@ -29,8 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class DependentServiceAvailability {
-    protected String serviceName;
-
     protected int retryIntervalMs;
 
     protected int retryAttempts;
@@ -41,7 +39,7 @@ public abstract class DependentServiceAvailability {
      * @return true once service is reached, false if max retries exhausted
      */
     public boolean checkService() {
-        RetryTemplate retryTemplate = RetryOperationUtils.getRetryTemplate(serviceName,
+        RetryTemplate retryTemplate = RetryOperationUtils.getRetryTemplate(getServiceName(),
                 UnsatisfiedExternalDependencyException.class, retryAttempts, retryIntervalMs);
         try {
             return retryTemplate.execute(retryContext -> isServiceAvailable());
@@ -50,6 +48,11 @@ public abstract class DependentServiceAvailability {
         }
         return false; // exhausted retries
     }
+
+    /**
+     * @return Name of the service, e.g.: Kafka.
+     */
+    protected abstract String getServiceName();
 
     abstract boolean isServiceAvailable() throws UnsatisfiedExternalDependencyException;
 }

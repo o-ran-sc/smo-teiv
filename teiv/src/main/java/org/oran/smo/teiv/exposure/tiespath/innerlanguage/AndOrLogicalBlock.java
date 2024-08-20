@@ -22,7 +22,9 @@ package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jooq.util.xml.jaxb.Table;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jooq.Field;
+import org.jooq.Table;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,5 +41,17 @@ public abstract class AndOrLogicalBlock extends LogicalBlock {
         tables.addAll(children.get(0).getTables());
         tables.addAll(children.get(1).getTables());
         return tables;
+    }
+
+    @Override
+    public Set<Pair<String, Field>> getJoinCondition() {
+        Set<Pair<String, Field>> tables = new HashSet<>();
+        tables.addAll(children.get(0).getJoinCondition());
+        tables.addAll(children.get(1).getJoinCondition());
+        return tables;
+    }
+
+    public void addChild(LogicalBlock logicalBlock) {
+        children.add(logicalBlock);
     }
 }

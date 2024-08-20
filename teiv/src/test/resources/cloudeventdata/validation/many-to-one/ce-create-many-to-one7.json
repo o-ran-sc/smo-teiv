@@ -7,14 +7,16 @@
     "datacontenttype": "application/json",
     "dataschema": "https://ties:8080/schemas/v1/r1-topology",
     "data": {
-        "relationships": {
-            "o-ran-smo-teiv-ran:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
-                {
-                    "id": "Relation_ManyToOne_1",
-                    "aSide": "NRSectorCarrier_1",
-                    "bSide": "AntennaCapability_1"
-                }
-            ]
-        }
+        "relationships": [
+            {
+                "o-ran-smo-teiv-ran-logical:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
+                    {
+                        "id": "Relation_ManyToOne_1",
+                        "aSide": "NRSectorCarrier_1",
+                        "bSide": "AntennaCapability_1"
+                    }
+                ]
+            }
+        ]
     }
 }

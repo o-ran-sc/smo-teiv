@@ -23,7 +23,6 @@ package org.oran.smo.teiv.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import lombok.Data;
 
@@ -31,7 +30,6 @@ import org.oran.smo.teiv.service.kafka.KafkaAddressSupplier;
 
 @Configuration
 @Data
-@Profile("ingestion")
 @Slf4j
 public class KafkaAdminConfig {
 

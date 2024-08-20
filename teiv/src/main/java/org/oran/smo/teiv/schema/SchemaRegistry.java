@@ -20,31 +20,43 @@
  */
 package org.oran.smo.teiv.schema;
 
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_DOMAIN;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_MODULE;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_DOMAIN;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_MODULE;
+
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.Cacheable;
-
-import jakarta.annotation.Nullable;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import lombok.experimental.UtilityClass;
 
-import org.oran.smo.teiv.exception.TiesException;
+import jakarta.annotation.Nullable;
 
+import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exposure.spi.Module;
+
+@Slf4j
 @UtilityClass
 public class SchemaRegistry {
     @Getter
     private static Map<String, Module> moduleRegistry;
-    private static Map<String, EntityType> entityTypeRegistry;
-    private static Map<String, RelationType> relationTypeRegistry;
+    @Getter
+    private static List<EntityType> entityTypes;
+    @Getter
+    private static List<RelationType> relationTypes;
 
     //Modules section
-
     /**
      * Initializes the modules. Once set cannot be overridden.
      *
@@ -74,8 +86,8 @@ public class SchemaRegistry {
      * @return the {@link Module}
      */
     public static Module getModuleByDomain(String domain) {
-        return moduleRegistry.values().stream().filter(module -> module.getDomain().equals(domain)).findFirst().orElseThrow(
-                () -> TiesException.unknownDomain(domain, getDomains()));
+        return moduleRegistry.values().stream().filter(module -> module.getDomain() != null && module.getDomain().equals(
+                domain)).findFirst().orElseThrow(() -> TiesException.unknownDomain(domain, getDomains()));
     }
 
     /**
@@ -87,7 +99,7 @@ public class SchemaRegistry {
      */
     public static List<String> getIncludedDomains(String domain) {
         return getModuleByDomain(domain).getIncludedModuleNames().stream().map(moduleName -> getModuleByName(moduleName)
-                .getDomain()).toList();
+                .getDomain()).filter(Objects::nonNull).toList();
     }
 
     /**
@@ -97,47 +109,95 @@ public class SchemaRegistry {
      */
     @Cacheable("availableDomains")
     public static Set<String> getDomains() {
-        return moduleRegistry.values().stream().map(Module::getDomain).collect(Collectors.toCollection(TreeSet::new));
+        return moduleRegistry.values().stream().map(Module::getDomain).filter(Objects::nonNull).collect(Collectors
+                .toCollection(TreeSet::new));
     }
 
     //Entities section
+
     /**
      * Initializes the entity types. Once set cannot be overridden.
      *
      * @param entityTypes
      *     - entity types
      */
-    static void initializeEntityTypes(Map<String, EntityType> entityTypes) {
-        entityTypeRegistry = Collections.unmodifiableMap(entityTypes);
+    static void initializeEntityTypes(final List<EntityType> entityTypes) {
+        entityTypes.sort(Comparator.comparing(EntityType::getName));
+        SchemaRegistry.entityTypes = Collections.unmodifiableList(entityTypes);
     }
 
     /**
-     * Gets the list of supported {@link EntityType} from the entity type registry.
+     * Gets all the supported entity names.
      *
-     * @return the list of {@link EntityType}
+     * @return the list of entity names
      */
-    public static List<EntityType> getEntityTypes() {
-        return entityTypeRegistry.values().stream().toList();
+    public static List<String> getEntityNames() {
+        return entityTypes.stream().map(EntityType::getName).toList();
     }
 
     /**
-     * Gets all the supported entity names from the entity type registry.
-     *
-     * @return the set of entity names
-     */
-    public static Set<String> getEntityNames() {
-        return entityTypeRegistry.keySet();
-    }
-
-    /**
-     * Gets the {@link EntityType} by the given name.
+     * Deprecated: Gets the {@link EntityType} by the given name.
      *
      * @param name
      *     - entity name
      * @return the {@link EntityType}
+     * @deprecated Use {@link #getEntityTypeByDomainAndName(String, String)} or
+     *     {@link #getEntityTypeByModuleAndName(String, String)} instead.
      */
+    @Nullable
+    @Deprecated(since = "Entity type should be retrieved by supplying the domain or module name")
     public static EntityType getEntityTypeByName(String name) {
-        return entityTypeRegistry.get(name);
+        return entityTypes.stream().filter(entityType -> entityType.getName().equals(name)).findFirst().orElseGet(() -> {
+            log.warn("Unknown entity name: {}", name);
+            return null;
+        });
+    }
+
+    /**
+     * Gets the {@link EntityType} by the given module name and the entity type name.
+     * Since TIES supports TEIV as top level domain on the exposure side, there is possibility to return more than one
+     * EntityType for a given name
+     * with domain as TIEV.
+     *
+     * @param domain
+     *     - name of the domain
+     * @param entityTypeName
+     *     - name of the entityType
+     * @return the list of {@link EntityType}
+     * @throws SchemaRegistryException
+     *     if entity type is not found in the domain
+     */
+    public static List<EntityType> getEntityTypeByDomainAndName(final String domain, final String entityTypeName)
+            throws SchemaRegistryException {
+        final List<EntityType> matchedEntityTypes = entityTypes.stream().filter(entityType -> entityType.getModule()
+                .getDomain().equals(domain) && entityType.getName().equals(entityTypeName)).toList();
+        if (matchedEntityTypes.isEmpty()) {
+            log.warn("Domain: {} does not contain the entity type: {}", domain, entityTypeName);
+            throw new SchemaRegistryException(ENTITY_NOT_FOUND_IN_DOMAIN, String.format(
+                    "Entity type: %s not found in domain: %s", entityTypeName, domain));
+        }
+        return matchedEntityTypes;
+    }
+
+    /**
+     * Gets the {@link EntityType} by the given module name and the entity type name.
+     *
+     * @param moduleName
+     *     - name of the module
+     * @param entityTypeName
+     *     - name of the entityType
+     * @return the list of {@link EntityType}
+     * @throws SchemaRegistryException
+     *     if entity type is not found in the module
+     */
+    public static EntityType getEntityTypeByModuleAndName(final String moduleName, final String entityTypeName)
+            throws SchemaRegistryException {
+        return entityTypes.stream().filter(entityType -> entityType.getModule().getName().equals(moduleName) && entityType
+                .getName().equals(entityTypeName)).findFirst().orElseThrow(() -> {
+                    log.warn("Module: {} does not contain the entity type: {}", moduleName, entityTypeName);
+                    return new SchemaRegistryException(ENTITY_NOT_FOUND_IN_MODULE, String.format(
+                            "Entity type: %s not found in module: %s", entityTypeName, moduleName));
+                });
     }
 
     /**
@@ -149,7 +209,7 @@ public class SchemaRegistry {
      */
     public static List<EntityType> getEntityTypesByDomain(String domain) {
         List<String> domains = getIncludedDomains(domain);
-        return entityTypeRegistry.values().stream().filter(entityType -> {
+        return entityTypes.stream().filter(entityType -> {
             String entityDomain = entityType.getModule().getDomain();
             return domains.contains(entityDomain) || entityDomain.equals(domain);
         }).toList();
@@ -167,70 +227,90 @@ public class SchemaRegistry {
         return getEntityTypesByDomain(domain).stream().map(EntityType::getName).sorted().toList();
     }
 
-    public static boolean isValidEntityName(String entityName) {
-        return entityTypeRegistry.containsKey(entityName);
-    }
-
-    public static boolean hasDirectHopBetween(String entityName1, String entityName2) {
-        return hasDirectHopBetween(entityName1, entityName2, null);
-    }
-
-    public static boolean hasDirectHopBetween(String entity1, String entity2, List<String> relationships) {
-        return getRelationTypes().stream().anyMatch(relationType -> (relationships == null || relationships
-                .isEmpty() || relationships.contains(relationType.getName())) && ((relationType.getASide().getName().equals(
-                        entity1) && relationType.getBSide().getName().equals(entity2)) || (relationType.getASide().getName()
-                                .equals(entity2) && relationType.getBSide().getName().equals(entity1))));
-    }
-
-    /**
-     * Gets all managed objects with cmId attribute
-     *
-     * @return a list of managed objects
-     */
-    public static List<EntityType> getEntityTypesWithCmId() {
-        return entityTypeRegistry.values().stream().filter(entityType -> entityType.getFields().containsKey("cmId"))
-                .toList();
-    }
-
     //Relations section
+
     /**
      * Initializes the relation types. Once set cannot be overridden.
      *
      * @param relationTypes
      *     - relation types
      */
-    static void initializeRelationTypes(Map<String, RelationType> relationTypes) {
-        relationTypeRegistry = Collections.unmodifiableMap(relationTypes);
+    static void initializeRelationTypes(final List<RelationType> relationTypes) {
+        relationTypes.sort(Comparator.comparing(RelationType::getName));
+        SchemaRegistry.relationTypes = Collections.unmodifiableList(relationTypes);
     }
 
     /**
-     * Gets all the supported {@link RelationType} from the relation type registry.
+     * Gets all the supported relation names.
      *
-     * @return the list of {@link RelationType}
+     * @return the list of relation names.
      */
-    public static List<RelationType> getRelationTypes() {
-        return relationTypeRegistry.values().stream().toList();
+    public static List<String> getRelationNames() {
+        return relationTypes.stream().map(RelationType::getName).toList();
     }
 
     /**
-     * Gets all the supported relation names from the relation type registry.
+     * Deprecated: Gets the relation type by the given name.
      *
-     * @return the set of relation names.
-     */
-    public static Set<String> getRelationNames() {
-        return relationTypeRegistry.keySet();
-    }
-
-    /**
-     * Gets the relation type by the given name.
-     *
-     * @param relationName
-     *     - relation relationName
+     * @param name
+     *     - relation name
      * @return the {@link RelationType}
+     * @deprecated Use {@link #getRelationTypeByDomainAndName(String, String)} or
+     *     {@link #getRelationTypeByModuleAndName(String, String)} instead.
      */
     @Nullable
-    public static RelationType getRelationTypeByName(String relationName) {
-        return relationTypeRegistry.get(relationName);
+    @Deprecated(since = "Relation type should be retrieved by supplying the domain or module name")
+    public static RelationType getRelationTypeByName(String name) {
+        return relationTypes.stream().filter(entityType -> entityType.getName().equals(name)).findFirst().orElseGet(() -> {
+            log.warn("Unknown relationship name: {}", name);
+            return null;
+        });
+    }
+
+    /**
+     * Gets the {@link RelationType} (could be more than one when domain is TEIV) by the given module name and the relation
+     * type
+     * name.
+     *
+     * @param domain
+     *     - name of the domain
+     * @param relationTypeName
+     *     - name of the relation type
+     * @return the list of {@link RelationType}
+     * @throws SchemaRegistryException
+     *     if relation type is not found in the domain
+     */
+    public static List<RelationType> getRelationTypeByDomainAndName(final String domain, final String relationTypeName)
+            throws SchemaRegistryException {
+        final List<RelationType> matchedRelationTypes = relationTypes.stream().filter(relationType -> relationType
+                .getModule().getDomain().equals(domain) && relationType.getName().equals(relationTypeName)).toList();
+        if (matchedRelationTypes.isEmpty()) {
+            log.warn("Domain: {} does not contain the relation type: {}", domain, relationTypeName);
+            throw new SchemaRegistryException(RELATIONSHIP_NOT_FOUND_IN_DOMAIN, String.format(
+                    "Relation type: %s not found in domain: %s", relationTypeName, domain));
+        }
+        return matchedRelationTypes;
+    }
+
+    /**
+     * Gets the {@link RelationType} by the given module name and the relation type name.
+     *
+     * @param moduleName
+     *     - name of the module
+     * @param relationTypeName
+     *     - name of the relation type
+     * @return the {@link RelationType}
+     * @throws SchemaRegistryException
+     *     if relation type is not found in the module
+     */
+    public static RelationType getRelationTypeByModuleAndName(final String moduleName, final String relationTypeName)
+            throws SchemaRegistryException {
+        return relationTypes.stream().filter(relationType -> relationType.getModule().getName().equals(
+                moduleName) && relationType.getName().equals(relationTypeName)).findFirst().orElseThrow(() -> {
+                    log.warn("Module: {} does not contain the relation type: {}", moduleName, relationTypeName);
+                    return new SchemaRegistryException(RELATIONSHIP_NOT_FOUND_IN_MODULE, String.format(
+                            "Relation type: %s not found in module: %s", relationTypeName, moduleName));
+                });
     }
 
     /**
@@ -241,7 +321,7 @@ public class SchemaRegistry {
      * @return the list of the {@link RelationType}
      */
     public static List<RelationType> getRelationTypesByEntityName(final String entityName) {
-        return relationTypeRegistry.values().stream().filter(relationType -> relationType.getASide().getName().equals(
+        return relationTypes.stream().filter(relationType -> relationType.getASide().getName().equals(
                 entityName) || relationType.getBSide().getName().equals(entityName)).toList();
     }
 
@@ -251,8 +331,7 @@ public class SchemaRegistry {
 
     public static List<String> getAssociationNamesByEntityName(final String entityName) {
         return getRelationTypesByEntityName(entityName).stream().map(relationType -> {
-            RelationshipDataLocation relDataLocation = relationType.getRelationshipStorageLocation();
-            if (relDataLocation.equals(RelationshipDataLocation.A_SIDE)) {
+            if (relationType.getASide().getName().equals(entityName)) {
                 return relationType.getASideAssociation().getName();
             } else {
                 return relationType.getBSideAssociation().getName();
@@ -269,7 +348,7 @@ public class SchemaRegistry {
      */
     public static List<RelationType> getRelationTypesByDomain(String domain) {
         List<String> includedDomains = getIncludedDomains(domain);
-        return relationTypeRegistry.values().stream().filter(relationType -> {
+        return relationTypes.stream().filter(relationType -> {
             String relDomain = relationType.getModule().getDomain();
             return includedDomains.contains(relDomain) || relDomain.equals(domain);
         }).toList();
@@ -287,34 +366,42 @@ public class SchemaRegistry {
         return getRelationTypesByDomain(domain).stream().map(RelationType::getName).sorted().toList();
     }
 
-    public static boolean doesEntityContainsAttribute(String entityName, String attributeName) {
-        if (entityName == null) {
-            return false;
+    /**
+     * Gets the relation names for a given entity by the given domain.
+     *
+     * @param entityName
+     *     - entity name
+     * @param domain
+     *     - name of the domain
+     * @return the list of relation names
+     */
+    @Cacheable("relationTypesByDomain")
+    public static List<RelationType> getRelationNamesForEntityByDomain(final String entityName, final String domain) {
+        return getRelationTypesByDomain(domain).stream().filter(relationType -> relationType.getASide().getName().equals(
+                entityName) || relationType.getBSide().getName().equals(entityName)).toList();
+    }
+
+    public static List<RelationType> getAllRelationNamesByAssociationName(String associationName) {
+        return relationTypes.stream().filter(relationType -> relationType.getASideAssociation().getName().equals(
+                associationName) || relationType.getBSideAssociation().getName().equals(associationName)).toList();
+    }
+
+    public static String getReferenceColumnName(RelationType relationType) {
+        if (relationType.getRelationshipStorageLocation().equals(RelationshipDataLocation.A_SIDE)) {
+            return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TiesConstants.QUOTED_STRING,
+                    relationType.bSideColumnName());
+        } else if (relationType.getRelationshipStorageLocation().equals(RelationshipDataLocation.B_SIDE)) {
+            return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TiesConstants.QUOTED_STRING,
+                    relationType.aSideColumnName());
         }
-        EntityType entityType = getEntityTypeByName(entityName);
-        if (entityType == null) {
-            return false;
+        return Objects.requireNonNull(relationType).getTableName() + "." + relationType.getIdColumnName();
+    }
+
+    public static EntityType getEntityTypeOnAssociationSide(RelationType relationType, String associationName) {
+        boolean isAssociationASide = relationType.getASideAssociation().getName().equals(associationName);
+        if (isAssociationASide) {
+            return relationType.getASide();
         }
-        return entityType.getAttributeNames().contains(attributeName);
-    }
-
-    public static List<RelationType> getRelationTypesBetweenEntities(String entity1, String entity2,
-            List<String> relationships) {
-        return getRelationTypes().stream().filter(relationType -> (relationships == null || relationships
-                .isEmpty() || relationships.contains(relationType.getName())) && ((relationType.getASide().getName().equals(
-                        entity1) && relationType.getBSide().getName().equals(entity2)) || (relationType.getBSide().getName()
-                                .equals(entity1) && relationType.getASide().getName().equals(entity2)))).toList();
-    }
-
-    public static Boolean isEntityPartOfRelationships(String entity, List<String> relationships) {
-        return getRelationTypes().stream().anyMatch(relationType -> relationships.isEmpty() || (relationships.contains(
-                relationType.getName()) && (relationType.getASide().getName().equals(entity) || relationType.getBSide()
-                        .getName().equals(entity))));
-    }
-
-    public static String getRelationNameByAssociationName(String associationName) {
-        return getRelationTypes().stream().filter(relationType -> relationType.getASideAssociation().getName().equals(
-                associationName) || relationType.getBSideAssociation().getName().equals(associationName)).map(
-                        RelationType::getName).findFirst().get();
+        return relationType.getBSide();
     }
 }

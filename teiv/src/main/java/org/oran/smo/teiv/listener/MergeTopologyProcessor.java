@@ -60,6 +60,7 @@ public class MergeTopologyProcessor implements TopologyProcessor {
             customMetrics.incrementNumUnsuccessfullyParsedMergeCloudEvents();
             return;
         }
+        parsedCloudEventData.sort();
         stopWatch.stop();
         customMetrics.recordCloudEventMergeParseTime(stopWatch.lastTaskInfo().getTimeNanos());
         customMetrics.incrementNumSuccessfullyParsedMergeCloudEvents();

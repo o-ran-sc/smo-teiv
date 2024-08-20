@@ -74,4 +74,12 @@ public class Relationship extends ModuleObject {
         };
     }
 
+    public String getStoringTablePrimaryKey() {
+        RelationType relationType = SchemaRegistry.getRelationTypeByName(getType());
+        return switch (relationType.getRelationshipStorageLocation()) {
+            case RELATION -> getId();
+            case A_SIDE -> getASide();
+            case B_SIDE -> getBSide();
+        };
+    }
 }

@@ -38,4 +38,16 @@ public class CloudEventUtil {
         return String.format("CloudEvent{id=%s, source=%s, type=%s, dataschema=%s, data=%s}", cloudEvent.getId(), cloudEvent
                 .getSource(), cloudEvent.getType(), cloudEvent.getDataSchema(), cloudEventData);
     }
+
+    public static boolean hasInvalidCharacter(String id) {
+        if (id == null || id.isEmpty()) {
+            return false;
+        }
+        // Characters that are permitted in URL components according to RFC3986, https://datatracker.ietf.org/doc/html/rfc3986,
+        // as well as the ':' character which is used in IDs
+        final String permittedCharactersPattern = "[-!$&'()*+,:;=._~0-9a-zA-Z]+";
+        // General delimiters meant for delimiting URL components - these are not expected to be part of an id (: excluded)
+        final String forbiddenCharactersPattern = "[\\[\\]/?#@]+";
+        return (!id.matches(permittedCharactersPattern) || id.matches(forbiddenCharactersPattern));
+    }
 }

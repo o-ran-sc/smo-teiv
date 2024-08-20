@@ -22,17 +22,13 @@
 <configuration>
     <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <version>0.3.0</version>
-            <includeContext>false</includeContext>
-            <includeTags>false</includeTags>
 
             <fieldNames>
-                <level>[ignore]</level>
-                <version>version</version>
+                <version>
+                    <fieldName>version</fieldName>
+                    <version>1.2.0</version>
+                </version>
                 <timestamp>timestamp</timestamp>
-                <thread>thread</thread>
-                <logger>logger</logger>
-                <levelValue>[ignore]</levelValue>
             </fieldNames>
 
             <!-- Add fields from MDC [user and correlation_id] -->
@@ -42,8 +38,29 @@
                     <omitEmptyFields>true</omitEmptyFields>
                     <pattern>
                         {
-                        "service_id": "${SERVICE_ID:-unknown}",
-                        "correlation_id": "%mdc{X-B3-TraceId}"
+                            "service_id": "${SERVICE_ID:-unknown}",
+                            "message": "%msg"
+                        }
+                    </pattern>
+                </pattern>
+                <pattern>
+                    <omitEmptyFields>true</omitEmptyFields>
+                    <pattern>
+                        {
+                            "facility": "%X{facility}",
+                            "subject": "%X{subject}",
+                            "extra_data": {
+                                "logger": "%logger",
+                                "thread_info": {
+                                    "thread_name": "%thread"
+                                },
+                                "dst": {
+                                    "trace_id": "%mdc{traceId}"
+                                },
+                                "exception": {
+                                    "stack_trace": "%xEx"
+                                }
+                            }
                         }
                     </pattern>
                 </pattern>
@@ -52,8 +69,10 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="json"/>
     </root>
+
+    <logger name="/" level="${ROOT_LOG_LEVEL:-INFO}"/>
 </configuration>
 

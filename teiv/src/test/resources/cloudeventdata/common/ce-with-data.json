@@ -86,27 +86,34 @@
                 "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER": [
                     {
                         "id": "relationshipId",
-                        "aSide": "entityId_1",
+                        "aSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,GNBDUFunction=gnbdu04,NRCellDU=NR-Cell-07",
                         "bSide": "entityId_2"
                     },
                     {
                         "id": "relationshipId2",
                         "aSide": "entityId_3",
-                        "bSide": "entityId_4"
+                        "bSide": "entityId_4",
+                        "sourceIds": [
+                            "source10",
+                            "source20"
+                        ]
                     }
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFunctionRealisedByCloudNativeApplication": [
+                "o-ran-smo-teiv-ran:GNBDUFUNCTION_PROVIDES_NRCELLDU": [
                     {
-                        "id": "relationshipId3",
+                        "id": "urn:o-ran:smo:teiv:sha512:GNBDUFUNCTION_PROVIDES_NRCELLDU=89FE9A4ED8451D779865C389900E247B13E360B0A4175EBA80AA9B384BFA4C688F17865AFD934085B0235BCA66128F2E6D4CE6953EAAB2EDEBD94B3683C1A064",
                         "aSide": "entityId_5",
-                        "bSide": "entityId_6"
+                        "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,GNBDUFunction=gnbdu04,NRCellDU=NR-Cell-07"
                     },
                     {
                         "id": "relationshipId4",
                         "aSide": "entityId_5",
-                        "bSide": "entityId_7"
+                        "bSide": "entityId_3",
+                        "sourceIds": [
+                            "source21"
+                        ]
                     }
                 ]
             }

@@ -20,55 +20,53 @@
  */
 package org.oran.smo.teiv.schema;
 
+import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getDbName;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.RELATION;
+import static org.jooq.impl.DSL.field;
+import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
+import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.REL_FK;
 import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
-import static org.jooq.impl.DSL.field;
+import org.oran.smo.teiv.exposure.spi.Module;
 
 import java.util.List;
 import java.util.Map;
 
-import org.jooq.Field;
-import org.jooq.JSONB;
-
 import lombok.Builder;
-import lombok.Getter;
 import lombok.Singular;
-import lombok.ToString;
+import lombok.Value;
+import org.jooq.Field;
 
-@Getter
+@Value
 @Builder
-@ToString
 public class RelationType implements Persistable {
     private static final String REL_ID_COL_PREFIX = "REL_ID_%s";
     private static final String REL_FK_COL_PREFIX = "REL_FK_%s";
     private static final String A_SIDE_PREFIX = "aSide_%s";
     private static final String B_SIDE_PREFIX = "bSide_%s";
     private static final String REL_SOURCE_IDS_COL_PREFIX = "REL_CD_sourceIds_%s";
+    private static final String REL_CLASSIFIERS_COL_PREFIX = "REL_CD_classifiers_%s";
+    private static final String REL_DECORATORS_COL_PREFIX = "REL_CD_decorators_%s";
 
-    private String name;
-    private Association aSideAssociation;
-    private EntityType aSide;
-    private Association bSideAssociation;
-    private EntityType bSide;
+    String name;
+    Association aSideAssociation;
+    EntityType aSide;
+    Association bSideAssociation;
+    EntityType bSide;
     @Singular
-    private Map<String, DataType> attributes;
-    private boolean connectsSameEntity;
-    private RelationshipDataLocation relationshipStorageLocation;
-    private Module module;
+    Map<String, DataType> attributes;
+    boolean connectsSameEntity;
+    RelationshipDataLocation relationshipStorageLocation;
+    String tableName;
+    Module module;
 
     @Override
     public String getTableName() {
-        return switch (relationshipStorageLocation) {
-            case RELATION -> String.format(TIES_DATA, getDbName(name));
-            case A_SIDE -> aSide.getTableName();
-            case B_SIDE -> bSide.getTableName();
-        };
+        return String.format(TIES_DATA, getDbName(this.tableName));
     }
 
     @Override
@@ -81,17 +79,28 @@ public class RelationType implements Persistable {
     }
 
     @Override
-    public List<String> getAttributeColumnsWithId() {
+    public String getIdColumnNameWithTableName() {
+        if (relationshipStorageLocation.equals(RELATION)) {
+            return getTableName() + "." + String.format(QUOTED_STRING, ID_COLUMN_NAME);
+        } else {
+            return getTableName() + "." + String.format(QUOTED_STRING, getDbName(String.format(REL_ID_COL_PREFIX, name)));
+        }
+    }
+
+    @Override
+    public Map<Field, DataType> getSpecificAttributeColumns(List<String> attributes) {
         // attributes are yet to be supported for relations
-        return List.of();
+        return Map.of();
     }
 
     @Override
     public List<Field> getAllFieldsWithId() {
-        return List.of(field(getTableName() + "." + String.format(QUOTED_STRING, aSideColumnName())), field(
-                getTableName() + "." + String.format(QUOTED_STRING, bSideColumnName())), field(getTableName() + "." + String
-                        .format(QUOTED_STRING, getIdColumnName())), field(getTableName() + "." + String.format(
-                                QUOTED_STRING, getSourceIdsColumnName()), JSONB.class));
+        List<Field> result = Persistable.super.getAllFieldsWithId();
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, aSideColumnName())).as(hashAlias(
+                getFullyQualifiedName() + ".aSide")));
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, bSideColumnName())).as(hashAlias(
+                getFullyQualifiedName() + ".bSide")));
+        return result;
     }
 
     /**
@@ -111,6 +120,24 @@ public class RelationType implements Persistable {
             return getDbName(CONSUMER_DATA_PREFIX + SOURCE_IDS);
         } else {
             return getDbName(String.format(REL_SOURCE_IDS_COL_PREFIX, name));
+        }
+    }
+
+    @Override
+    public String getClassifiersColumnName() {
+        if (relationshipStorageLocation.equals(RELATION)) {
+            return getDbName(CONSUMER_DATA_PREFIX + CLASSIFIERS);
+        } else {
+            return getDbName(String.format(REL_CLASSIFIERS_COL_PREFIX, name));
+        }
+    }
+
+    @Override
+    public String getDecoratorsColumnName() {
+        if (relationshipStorageLocation.equals(RELATION)) {
+            return getDbName(CONSUMER_DATA_PREFIX + DECORATORS);
+        } else {
+            return getDbName(String.format(REL_DECORATORS_COL_PREFIX, name));
         }
     }
 
@@ -140,31 +167,9 @@ public class RelationType implements Persistable {
         };
     }
 
-    /**
-     * Gets the fully qualified name of the entity.
-     * Format - <moduleNameReference>:<relationName>
-     *
-     * @return the fully qualified name
-     */
+    @Override
     public String getFullyQualifiedName() {
-        return String.format("%s:%s", this.getModule().getName(), this.getName());
-    }
-
-    public String getTableNameWithoutSchema() {
-        return switch (relationshipStorageLocation) {
-            case RELATION -> name;
-            case A_SIDE -> aSide.getName();
-            case B_SIDE -> bSide.getName();
-        };
-    }
-
-    /**
-     * Gets the bSide relationship foreign key column name for the entity.
-     *
-     * @return the bSide foreign key column name, or null if not found.
-     */
-    public String getReferenceColumnOnBSide() {
-        return getDbName(REL_FK + this.getBSideAssociation().getName());
+        return String.format("%s:%s", module.getName(), name);
     }
 
     public String getNotStoringSideTableName() {
@@ -199,4 +204,13 @@ public class RelationType implements Persistable {
         };
     }
 
+    public List<String> getAttributeNames() {
+        // attributes are yet to be supported for relations
+        return List.of();
+    }
+
+    @Override
+    public String getCategory() {
+        return "relationship";
+    }
 }

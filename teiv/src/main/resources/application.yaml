@@ -72,6 +72,9 @@ spring:
   caching:
     consumer-data-ttl-ms: 60000
 
+consumer-data:
+  batch-size: 100
+
 endpoints.health.sensitive: "false"
 info.app.name: '@name@'
 info.app.description: Topology Exposure and Inventory Service
@@ -116,12 +119,13 @@ kafka:
     retry-attempts: 2147483647
     retry-interval-ms: 1000
   topology-ingestion:
+    topic:
+      name: topology-inventory-ingestion
+      partitions: 4
+      replicas: 3
+      retention-ms: 86400000
+      retention-bytes: 104857600
     consumer:
-      topic:
-        name: topology-inventory-ingestion
-        partitions: 4
-        replicas: 3
-        retention-ms: 86400000
       group-id: topology-inventory-ingestion-consumer
       auto-offset-reset: earliest
       max-poll-records: 500
@@ -137,6 +141,3 @@ database:
     deadlock:
       retry-attempts: 10
       retry-backoff-ms: 200
-
-feature_flags:
-  use_alternate_delete_logic: false

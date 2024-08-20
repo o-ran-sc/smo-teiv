@@ -23,6 +23,7 @@ package org.oran.smo.teiv.service.cloudevent.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -31,4 +32,25 @@ public class ParsedCloudEventData {
 
     private List<Entity> entities;
     private List<Relationship> relationships;
+
+    /**
+     * Sorts the entity and relationship list by type and id.
+     * The goal is to decrease the possibility of deadlocks in the database by executing the database operations in the same
+     * order in every pod's every consumer.
+     * For example: 2 transactions are trying to update both entity1 and entity2. If
+     * they both start with entity1, then one transaction gets the row level lock on entity1 and can go ahead while the
+     * other is blocked.
+     * If it's not sorted, then the first transaction can get the lock for entity1, the other gets the lock for entity2, and
+     * it's a deadlock.
+     */
+    public void sort() {
+        if (entities != null) {
+            entities = getEntities().stream().sorted(Comparator.comparing(Entity::getType).thenComparing(Entity::getId))
+                    .toList();
+        }
+        if (relationships != null) {
+            relationships = getRelationships().stream().sorted(Comparator.comparing(Relationship::getType).thenComparing(
+                    Relationship::getStoringTablePrimaryKey)).toList();
+        }
+    }
 }

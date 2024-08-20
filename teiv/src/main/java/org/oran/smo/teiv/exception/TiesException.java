@@ -21,6 +21,9 @@
 package org.oran.smo.teiv.exception;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 
@@ -36,6 +39,11 @@ public class TiesException extends RuntimeException {
 
     public static TiesException unknownModule(final String module) {
         return clientException("Unknown module", String.format("Unknown module: %s", module));
+    }
+
+    public static TiesException unknownTopologyObjectType(final String topologyObject) {
+        return serverException("Unknown topology object type", String.format("Unknown topology object type: %s",
+                topologyObject), null);
     }
 
     //  Request validation
@@ -74,6 +82,10 @@ public class TiesException extends RuntimeException {
         return clientException("Invalid schema name", String.format("Invalid schema name: %s", name));
     }
 
+    public static TiesException invalidFileInput(final String error) {
+        return clientException("Invalid file input", String.format("Invalid file input: %s", error));
+    }
+
     public static TiesException schemaNotOwned(final String name) {
         return new TiesException("Forbidden", String.format("Schema %s is not owned by user", name), HttpStatus.FORBIDDEN,
                 null);
@@ -83,14 +95,49 @@ public class TiesException extends RuntimeException {
         return serverException("Sql exception during query execution", "Please check the logs for more details", null);
     }
 
+    public static TiesException unParsedTopologyObjectType(String topologyObjectName) {
+        return serverException(String.format("Un parsed topology object type: %s", topologyObjectName),
+                "Please check the logs for more details", null);
+    }
+
+    public static TiesException invalidContainerType(String containerType) {
+        return serverException(String.format("Invalid container type: %s", containerType),
+                "Please check the logs for more details", null);
+    }
+
+    public static TiesException invalidAssociationType(final String association) {
+        return serverException(String.format("Invalid association type: %s", association),
+                "Please check the logs for more details", null);
+    }
+
     public static TiesException resourceNotFoundException() {
         return new TiesException("Resource Not Found", "The requested resource is not found", HttpStatus.NOT_FOUND, null);
+    }
+
+    public static TiesException resourceNotFoundException(Set<String> entityIds, Set<String> relationshipIds) {
+        return new TiesException("Resource Not Found", String.format(
+                "The requested resource with the following ids cannot be found. Entities: %s Relationships: %s", entityIds,
+                relationshipIds), HttpStatus.NOT_FOUND, null);
+    }
+
+    public static TiesException invalidClassifiersException(List<String> classifiers) {
+        return new TiesException("Invalid classifiers", String.format("The provided classifiers are invalid %s",
+                classifiers), HttpStatus.NOT_FOUND, null);
+    }
+
+    public static TiesException invalidDecoratorsException(Map<String, String> problems) {
+        return new TiesException("Invalid decorators", String.format("The provided decorators are invalid %s", problems),
+                HttpStatus.NOT_FOUND, null);
     }
 
     public static TiesException invalidValueException(String valueName, Integer valueLimit, Boolean isLowerLimit) {
         return clientException("Invalid Value", String.format("%s cannot be %s than %d", valueName, isLowerLimit ?
                 "larger" :
                 "lower", valueLimit));
+    }
+
+    public static TiesException invalidJsonFormat(Exception exception) {
+        return serverException("Invalid json format", "Please check the logs for more details", exception);
     }
 
     public static TiesException serverException(String message, String details, Exception exception) {

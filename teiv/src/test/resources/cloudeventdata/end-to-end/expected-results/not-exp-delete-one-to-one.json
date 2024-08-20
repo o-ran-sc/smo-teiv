@@ -1,0 +1,11 @@
+{
+    "163276fa439cdfccabb80f7acacb6fa638e8d314": [
+        "relation_11",
+        "relation_12"
+    ],
+    "o-ran-smo-teiv-ran-oam_ManagedElement": [
+        "ManagedElement_2",
+        "relation_11",
+        "relation_12"
+    ]
+}

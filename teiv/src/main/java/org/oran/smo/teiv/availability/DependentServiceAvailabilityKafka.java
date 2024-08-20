@@ -20,11 +20,11 @@
  */
 package org.oran.smo.teiv.availability;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-@Profile("ingestion")
+@RequiredArgsConstructor
 public class DependentServiceAvailabilityKafka extends DependentServiceAvailability {
 
     @Getter
@@ -49,10 +49,9 @@ public class DependentServiceAvailabilityKafka extends DependentServiceAvailabil
     @Setter
     private Integer listTopicTimeout = null;
 
-    public DependentServiceAvailabilityKafka(KafkaAdminConfig kafkaAdminConfig, KafkaAdmin kafkaAdmin) {
-        this.kafkaAdminConfig = kafkaAdminConfig;
-        this.kafkaAdmin = kafkaAdmin;
-        serviceName = "Kafka";
+    @Override
+    protected String getServiceName() {
+        return "Kafka";
     }
 
     @Value("${kafka.availability.retry-interval-ms}")

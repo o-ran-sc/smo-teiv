@@ -20,77 +20,136 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
-import java.util.Arrays;
+import static org.jooq.impl.DSL.condition;
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.table;
+
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jooq.SelectField;
+import org.jooq.Table;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exposure.consumerdata.ConsumerDataValidator;
+import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
+import org.oran.smo.teiv.exposure.tiespath.resolver.ScopeResolver;
+import org.oran.smo.teiv.exposure.tiespath.resolver.TargetResolver;
 import org.oran.smo.teiv.schema.DataType;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
 
 class FilterCriteriaTest {
+
+    private static BasePathRefinement basePathRefinement;
+    private static ConsumerDataValidator consumerDataValidator;
+    private final TargetResolver targetResolver = new TargetResolver();
+    private final ScopeResolver scopeResolver = new ScopeResolver();
+
+    @BeforeAll
+    static void setUp() throws SchemaLoaderException {
+        new MockSchemaLoader().loadSchemaRegistry();
+        basePathRefinement = new BasePathRefinement(consumerDataValidator);
+    }
+
     @Test
     void testFilterCriteria() {
-        FilterCriteria filterCriteria = new FilterCriteria("RAN_LOGICAL");
-        TargetObject targetObject = TargetObject.builder("GNBDUFunction").container(ContainerType.ATTRIBUTES).params(List
-                .of("gNBId")).build();
-        filterCriteria.setTargets(List.of(targetObject));
-        ScopeObject scopeObject = new ScopeObject("GNDBUFunction", ContainerType.ATTRIBUTES, "gNBIDLength",
-                QueryFunction.EQ, "1", DataType.BIGINT);
-        ScopeLogicalBlock logicalBlock = new ScopeLogicalBlock(scopeObject);
+        InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
+        List<TargetObject> targetObjects = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId)");
+        filterCriteria.setTargets(targetObjects);
+        LogicalBlock logicalBlock = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1]");
         filterCriteria.setScope(logicalBlock);
-
         Assertions.assertEquals(1, filterCriteria.getTargets().size());
-        Assertions.assertEquals("RAN_LOGICAL", filterCriteria.getDomain());
         Assertions.assertEquals(QueryFunction.EQ, ((ScopeLogicalBlock) filterCriteria.getScope()).getScopeObject()
                 .getQueryFunction());
+        Assertions.assertEquals("gNBIdLength", ((ScopeLogicalBlock) filterCriteria.getScope()).getScopeObject().getLeaf());
+        Assertions.assertEquals(ContainerType.ATTRIBUTES, ((ScopeLogicalBlock) filterCriteria.getScope()).getScopeObject()
+                .getContainer());
+
     }
 
     @Test
     void testGetTables() {
-        FilterCriteria filterCriteria = new FilterCriteria("RAN_LOGICAL");
-        TargetObject targetObject = TargetObject.builder("GNBDUFunction").container(ContainerType.ATTRIBUTES).params(List
-                .of("gNBId", "gNBIdLength")).build();
-        filterCriteria.setTargets(Arrays.asList(targetObject));
-        OrLogicalBlock orLogicalBlock = new OrLogicalBlock();
-        ScopeObject scopeObject1 = new ScopeObject("GNBDUFunction", ContainerType.ATTRIBUTES, "gNBIdLength",
-                QueryFunction.EQ, "1", DataType.BIGINT);
-        ScopeObject scopeObject2 = new ScopeObject("GNBDUFunction", ContainerType.ATTRIBUTES, "gNBId", QueryFunction.EQ,
-                "8", DataType.BIGINT);
-        ScopeLogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(scopeObject1);
-        ScopeLogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(scopeObject2);
-        orLogicalBlock.setChildren(Arrays.asList(scopeLogicalBlock1, scopeLogicalBlock2));
-        filterCriteria.setScope(orLogicalBlock);
+        InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
+        List<TargetObject> targetObjects = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId,gNBIdLength)");
+        filterCriteria.setTargets(targetObjects);
+        targetObjects.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
+        LogicalBlock logicalBlock = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1 or @gNBId=8]");
+        ((OrLogicalBlock) logicalBlock).getChildren().forEach(l -> ((ScopeLogicalBlock) l).getScopeObject()
+                .setTopologyObjectType(TopologyObjectType.ENTITY));
+        filterCriteria.setScope(logicalBlock);
+        basePathRefinement.resolveUndefinedTopologyObjectTypes(FilterCriteria.builder("RAN").filterCriteriaList(List.of(
+                filterCriteria)).build());
 
-        Set<SelectField> expected = new HashSet<>();
-        expected.add(null);
-        Assertions.assertEquals(expected, filterCriteria.getTables());
+        Set<Table> result = new HashSet<>();
+        result.add(table("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\""));
+
+        Assertions.assertEquals(result, filterCriteria.getTables());
+
+        InnerFilterCriteria filterCriteria2 = new InnerFilterCriteria(null, null);
+        List<TargetObject> targetObjects2 = targetResolver.resolve("GNBDUFUNCTION_PROVIDES_NRCELLDU", null);
+        filterCriteria2.setTargets(targetObjects2);
+        LogicalBlock logicalBlock2 = scopeResolver.resolve("NRCellDU", "/attributes[@nCI=12]");
+        filterCriteria2.setScope(logicalBlock2);
+        basePathRefinement.resolveUndefinedTopologyObjectTypes(FilterCriteria.builder("RAN").filterCriteriaList(List.of(
+                filterCriteria2)).build());
+
+        result.clear();
+
+        result.add(table("ties_data.\"o-ran-smo-teiv-ran_NRCellDU\""));
+
+        Assertions.assertEquals(result, filterCriteria2.getTables());
+
+        InnerFilterCriteria filterCriteria3 = new InnerFilterCriteria(null, null);
+        List<TargetObject> targetObjects3 = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId,gNBIdLength)");
+        filterCriteria3.setTargets(targetObjects3);
+        LogicalBlock logicalBlock3 = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1 or @gNBId=8]");
+        filterCriteria3.setScope(logicalBlock3);
+
+        Assertions.assertThrows(TiesException.class, filterCriteria3::getTables);
+
     }
 
     @Test
     void testGetSelects() {
-        FilterCriteria filterCriteria = new FilterCriteria("RAN_LOGICAL");
-
-        TargetObject targetObject = TargetObject.builder("GNBDUFunction").container(ContainerType.ATTRIBUTES).params(List
-                .of("gNBId", "gNBIdLength")).build();
-        filterCriteria.setTargets(Arrays.asList(targetObject));
-
-        Set<SelectField> expected = new HashSet<>();
-        expected.add(null);
+        InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
+        List<TargetObject> targetObjects = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId,gNBIdLength)");
+        targetObjects.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
+        filterCriteria.setTargets(targetObjects);
+        Map<SelectField, Map<SelectField, DataType>> expected = new HashMap<>();
+        expected.put(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
+                "o-ran-smo-teiv-ran:GNBDUFunction.id"), new HashMap<>());
+        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
+                "o-ran-smo-teiv-ran:GNBDUFunction.id")).put(field(
+                        "ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBId\"").as(
+                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), DataType.BIGINT);
+        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
+                "o-ran-smo-teiv-ran:GNBDUFunction.id")).put(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"")
+                        .as("o-ran-smo-teiv-ran:GNBDUFunction.id"), DataType.PRIMITIVE);
+        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
+                "o-ran-smo-teiv-ran:GNBDUFunction.id")).put(field(
+                        "ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBIdLength\"").as(
+                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBIdLength"), DataType.INTEGER);
         Assertions.assertEquals(expected, filterCriteria.getSelects());
     }
 
     @Test
     void testGetCondition() {
-        FilterCriteria filterCriteria = new FilterCriteria("RAN_LOGICAL");
-        ScopeObject scopeObject = new ScopeObject("GNBDUFunction", ContainerType.ATTRIBUTES, QueryFunction.EQ, "1",
-                DataType.BIGINT);
-        ScopeLogicalBlock scopeLogicalBlock = new ScopeLogicalBlock(scopeObject);
-        filterCriteria.setScope(scopeLogicalBlock);
-
-        Assertions.assertEquals(null, filterCriteria.getCondition());
+        InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
+        LogicalBlock logicalBlock = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1]");
+        filterCriteria.setScope(logicalBlock);
+        filterCriteria.setTargets(List.of());
+        basePathRefinement.resolveUndefinedTopologyObjectTypes(FilterCriteria.builder("RAN").filterCriteriaList(List.of(
+                filterCriteria)).build());
+        basePathRefinement.validateScopeParametersDataType(FilterCriteria.builder("RAN").filterCriteriaList(List.of(
+                filterCriteria)).build());
+        Assertions.assertEquals(condition(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBIdLength\"").eq(1))
+                .toString(), filterCriteria.getCondition().toString());
     }
 }

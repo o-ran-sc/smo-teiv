@@ -20,7 +20,27 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
+import lombok.Getter;
+import org.oran.smo.teiv.utils.query.exception.TiesPathException;
+
+@Getter
 public enum QueryFunction {
-    EQ,
-    CONTAINS
+    EQ("="),
+    CONTAINS("contains"),
+    NOT_NULL("notNull");
+
+    private final String value;
+
+    QueryFunction(String value) {
+        this.value = value;
+    }
+
+    public static QueryFunction fromValue(String value) {
+        for (QueryFunction queryFunction : QueryFunction.values()) {
+            if (queryFunction.getValue().equals(value)) {
+                return queryFunction;
+            }
+        }
+        throw TiesPathException.grammarError("Unsupported operation: " + value);
+    }
 }

@@ -28,7 +28,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.YangModelException;
 import org.oran.smo.yangtools.parser.data.YangData;
+import org.oran.smo.yangtools.parser.findings.FindingSeverity;
 import org.oran.smo.yangtools.parser.findings.ModuleAndFindingTypeAndSchemaNodePathFilterPredicate;
 import org.oran.smo.yangtools.parser.input.BufferedStreamYangInput;
 import org.oran.smo.yangtools.parser.input.ByteArrayYangInput;
@@ -37,6 +40,7 @@ import org.oran.smo.yangtools.parser.model.YangModel;
 import org.oran.smo.yangtools.parser.model.statements.StatementModuleAndName;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.oran.smo.yangtools.parser.model.yangdom.YangDomElement;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -51,6 +55,11 @@ import org.oran.smo.yangtools.parser.model.ConformanceType;
 import org.oran.smo.yangtools.parser.model.statements.AbstractStatement;
 import org.oran.smo.teiv.api.model.OranTeivSchema;
 import org.oran.smo.teiv.api.model.OranTeivHref;
+import org.springframework.web.multipart.MultipartFile;
+
+import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TiesConstants.INVALID_SCHEMA;
+import static org.oran.smo.teiv.utils.TiesConstants.SEMICOLON_SEPARATION;
 
 @Service
 @Slf4j
@@ -82,6 +91,67 @@ public class YangParser {
         context.setFailFast(false);
         yangDeviceModel.parseIntoYangModels(context, yangModels);
         return yangDeviceModel;
+    }
+
+    /**
+     * Validating yang file from /schemas POST request
+     *
+     * @return map of validated and parsed yang
+     */
+    public Map<String, Object> validateSchemasYang(MultipartFile file) throws YangModelException {
+
+        Map<String, Object> result = new HashMap<>();
+
+        YangDeviceModel yangDeviceModel = new YangDeviceModel("r1");
+        YangModel inputYangModel = null;
+        final List<YangModel> yangModels = new ArrayList<>();
+        try {
+            inputYangModel = new YangModel(new ByteArrayYangInput(file.getBytes(), "requestYang"), ConformanceType.IMPORT);
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
+            Resource[] yangResourcesImplement = resolver.getResources("classpath:models/*.yang");
+            Resource[] yangResourcesImport = resolver.getResources("classpath:models/import/*.yang");
+
+            for (Resource yangResource : yangResourcesImplement) {
+                yangModels.add(new YangModel(new ByteArrayYangInput(yangResource.getContentAsByteArray(), Objects
+                        .requireNonNull(yangResource.getFilename())), ConformanceType.IMPLEMENT));
+            }
+
+            for (Resource yangResource : yangResourcesImport) {
+                yangModels.add(new YangModel(new ByteArrayYangInput(yangResource.getContentAsByteArray(), Objects
+                        .requireNonNull(yangResource.getFilename())), ConformanceType.IMPORT));
+            }
+
+            yangModels.add(inputYangModel);
+        } catch (final IOException ex) {
+            log.error("Unable to load schema", ex);
+        }
+
+        final ModifyableFindingSeverityCalculator severityCalculator = new ModifyableFindingSeverityCalculator();
+        final FindingsManager findingsManager = new FindingsManager(severityCalculator);
+        findingsManager.addFilterPredicate(ModuleAndFindingTypeAndSchemaNodePathFilterPredicate.fromString("ietf-*;*;*"));
+        findingsManager.addFilterPredicate(ModuleAndFindingTypeAndSchemaNodePathFilterPredicate.fromString("_3gpp*;*;*"));
+        final ParserExecutionContext context = new ParserExecutionContext(findingsManager);
+        context.setIgnoreImportedProtocolAccessibleObjects(true);
+        context.setFailFast(false);
+        yangDeviceModel.parseIntoYangModels(context, yangModels);
+        checkFindings(context.getFindingsManager(), severityCalculator);
+
+        assert inputYangModel != null;
+        String prefixName = null;
+
+        for (YangDomElement children : inputYangModel.getYangDomDocumentRoot().getChildren().get(0).getChildren()) {
+            if (children.getValue().contains("common-yang-types")) {
+                prefixName = children.getChildren().get(0).getValue();
+                break;
+            }
+        }
+
+        result.put("classifiers", getClassifiers(inputYangModel.getYangDomDocumentRoot().getChildren().get(0).getChildren(),
+                prefixName));
+        result.put("decorators", getDecorators(inputYangModel.getYangDomDocumentRoot().getChildren().get(0).getChildren()));
+        result.put("moduleName", inputYangModel.getModuleIdentity().getModuleName());
+        result.put("revision", inputYangModel.getModuleIdentity().getRevision());
+        return result;
     }
 
     /**
@@ -158,6 +228,63 @@ public class YangParser {
             throw new IOException("Findings when parsing yang: " + jsonNode);
         }
         return yangDataDomDocument;
+    }
+
+    private List<String> getClassifiers(List<YangDomElement> elements, String prefixName) {
+
+        List<String> result = new ArrayList<>();
+        String formattedName = String.format(SEMICOLON_SEPARATION, prefixName, CLASSIFIERS);
+
+        elements.stream().filter(element -> element.getName().contains("identity")).forEach(element -> {
+            String childValue = element.getChildren().get(0).getValue();
+
+            if (!childValue.equals(formattedName)) {
+                List<YangDomElement> domElement = element.getParentElement().getChildren().stream().filter(parent -> parent
+                        .getName().contains("identity")).filter(parent -> parent.getValue().equals(childValue) && parent
+                                .getChildren().get(0).getValue().equals(formattedName)).toList();
+
+                if (domElement.isEmpty()) {
+                    throw TiesException.invalidSchema("Invalid classifier " + element.getValue());
+                } else {
+                    result.add(element.getValue());
+                }
+            } else {
+                result.add(element.getValue());
+            }
+        });
+
+        return result;
+    }
+
+    private Map<String, String> getDecorators(List<YangDomElement> elements) {
+        Map<String, String> result = new HashMap<>();
+
+        elements.forEach(keys -> {
+            if (keys.getValue().contains("decorators")) {
+                keys.getChildren().forEach(values -> result.put(values.getValue(), switch (values.getChildren().get(0)
+                        .getValue()) {
+                    case "string" -> "TEXT";
+                    case "boolean" -> "BOOLEAN";
+                    case "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64" -> "INT";
+                    default -> throw TiesException.invalidFileInput("Invalid data type");
+                }));
+            }
+        });
+
+        return result;
+    }
+
+    private static void checkFindings(FindingsManager findingsManager,
+            ModifyableFindingSeverityCalculator severityCalculator) {
+        for (Finding finding : findingsManager.getAllFindings()) {
+            if (severityCalculator.calculateSeverity(finding.getFindingType()).equals(FindingSeverity.ERROR)) {
+                if (finding.getMessage().contains("exception") || finding.getFindingType().contains("UNSPECIFIED_ERROR")) {
+                    throw TiesException.invalidFileInput(INVALID_SCHEMA);
+                } else {
+                    throw TiesException.invalidFileInput(finding.getMessage());
+                }
+            }
+        }
     }
 
     private static YangDataDomDocumentRoot parse(final String yangTopology) throws IOException {
