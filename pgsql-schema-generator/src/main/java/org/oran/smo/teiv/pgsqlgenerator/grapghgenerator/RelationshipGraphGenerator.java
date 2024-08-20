@@ -70,6 +70,7 @@ public class RelationshipGraphGenerator {
         MutableGraph g = prepareGraph(relationships, entities);
         File outputFile = new File(graphOutput, name + "-rel");
         Graphviz.fromGraph(g).render(Format.SVG).toFile(outputFile);
+        Graphviz.fromGraph(g).render(Format.DOT).toFile(outputFile);
         log.info("Graph rendered to: {}", outputFile.getAbsolutePath());
     }
 

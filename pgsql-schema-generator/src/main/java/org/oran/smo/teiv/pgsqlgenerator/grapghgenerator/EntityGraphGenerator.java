@@ -65,6 +65,7 @@ public class EntityGraphGenerator {
         MutableGraph g = prepareGraph(entities, name);
         File outputFile = new File(graphOutput, name);
         Graphviz.fromGraph(g).render(Format.SVG).toFile(outputFile);
+        Graphviz.fromGraph(g).render(Format.DOT).toFile(outputFile);
         log.info("Graph rendered to: {}", outputFile.getAbsolutePath());
     }
 
