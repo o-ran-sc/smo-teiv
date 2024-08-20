@@ -39,6 +39,30 @@
       },
       "revId": "5d8bec593b86bceee8aeef2042f5a1ec079f2c67",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51b2d1e2_b8d20079",
+        "filename": "pgsql-schema-generator/src/test/resources/SchemaParserTest/data/entities/mock_00_init-oran-smo-teiv-data.sql",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-08-20T11:46:58Z",
+      "side": 1,
+      "message": "This is correct.",
+      "parentUuid": "aa707e23_3fba7861",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 13
+      },
+      "revId": "5d8bec593b86bceee8aeef2042f5a1ec079f2c67",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
