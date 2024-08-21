@@ -46,6 +46,52 @@
       },
       "revId": "d9fc72545b033789e0d4c95fcbb45c804cb77226",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2ad21f1_8d2adb0b",
+        "filename": "pgsql-schema-generator/src/main/java/org/oran/smo/teiv/pgsqlgenerator/grapghgenerator/EntityGraphGenerator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-08-21T12:10:35Z",
+      "side": 1,
+      "message": "Can I suggest add .add(Font.name(\"arial\"))  here ... or something similar (Helvetica, Sans-Serif) ... just not the current default Times \nSee https://graphviz.org/docs/attrs/fontname/",
+      "range": {
+        "startLine": 73,
+        "startChar": 85,
+        "endLine": 73,
+        "endChar": 88
+      },
+      "revId": "d9fc72545b033789e0d4c95fcbb45c804cb77226",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af9b4d26_916b0d3f",
+        "filename": "pgsql-schema-generator/src/main/java/org/oran/smo/teiv/pgsqlgenerator/grapghgenerator/RelationshipGraphGenerator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-08-21T12:10:35Z",
+      "side": 1,
+      "message": "See other comment about graph attributes font-name",
+      "range": {
+        "startLine": 78,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "d9fc72545b033789e0d4c95fcbb45c804cb77226",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
