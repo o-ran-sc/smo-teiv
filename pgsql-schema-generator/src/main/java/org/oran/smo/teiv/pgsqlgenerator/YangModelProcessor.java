@@ -178,8 +178,14 @@ public class YangModelProcessor {
                                     .toString()));
 
                             String dataType = dataTypeMapping.get(container.getUses().toString());
+                            String yangDataType;
+                            if (!container.getUses().isEmpty()) {
+                                yangDataType = container.getUses().get(0).getDomElement().getValue();
+                            } else {
+                                yangDataType = container.getContainerName();
+                            }
                             Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
-                                    .getContainerName()).yangDataType(dataType).dataType(dataType).constraints(
+                                    .getContainerName()).yangDataType(yangDataType).dataType(dataType).constraints(
                                             new ArrayList());
                             if (container.getContainerName().equals("geo-location")) {
                                 dataType = dataTypeMapping.get("geo:geo-location");
