@@ -18,7 +18,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *  ============LICENSE_END=========================================================
  */
-package org.oran.smo.teiv.pgsqlgenerator.grapghgenerator;
+package org.oran.smo.teiv.pgsqlgenerator.graphgenerator;
 
 import java.io.File;
 import java.io.IOException;

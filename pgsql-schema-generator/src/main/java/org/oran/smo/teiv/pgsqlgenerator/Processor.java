@@ -27,13 +27,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.EntityGraphGenerator;
-import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.EntityGraphGeneratorUml;
-import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.RelationshipGraphGeneratorUml;
+import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.EntityGraphGenerator;
+import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.EntityGraphGeneratorUml;
+import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.RelationshipGraphGeneratorUml;
 import org.oran.smo.teiv.pgsqlgenerator.schema.consumerdata.ConsumerDataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.data.DataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.model.ModelSchemaGenerator;
-import org.oran.smo.teiv.pgsqlgenerator.grapghgenerator.RelationshipGraphGenerator;
+import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.RelationshipGraphGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;

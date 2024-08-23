@@ -179,8 +179,8 @@ public class YangModelProcessor {
 
                             String dataType = dataTypeMapping.get(container.getUses().toString());
                             Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
-                                    .getContainerName()).yangDataType(dataType).dataType(dataType).constraints(
-                                            new ArrayList());
+                                    .getContainerName()).yangDataType("<< Refer to Module >>").dataType(dataType)
+                                    .constraints(new ArrayList());
                             if (container.getContainerName().equals("geo-location")) {
                                 dataType = dataTypeMapping.get("geo:geo-location");
                             }
