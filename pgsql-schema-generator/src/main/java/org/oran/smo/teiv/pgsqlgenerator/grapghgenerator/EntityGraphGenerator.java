@@ -27,6 +27,7 @@ import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.oran.smo.teiv.pgsqlgenerator.Attribute;
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
 import org.springframework.beans.factory.annotation.Value;
@@ -92,13 +93,18 @@ public class EntityGraphGenerator {
         String label = "<TABLE border='1' cellborder='0' cellspacing='0' cellpadding='4'>";
         for (Attribute attribute : attributes) {
             label = label.concat("<TR> <TD bgcolor='#EEEEEE' align='left'>" + attribute
-                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + attribute
-                            .getYangDataType() + "</TD> </TR>");
+                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + escapeHtml(attribute
+                            .getYangDataType()) + "</TD> </TR>");
         }
         label = label.concat("</TABLE>");
         MutableNode attributeNode = Factory.mutNode(moduleEntity.getEntityName() + "-attributes").attrs().add(Label.html(
                 label));
         graph.add(attributeNode);
         graph.add(moduleNode.addLink(attributeNode));
+    }
+
+    private String escapeHtml(String text) {
+        return StringUtils.replaceEach(text, new String[] { "<", ">" },
+                new String[] { "&lt;", "&gt;" });
     }
 }
