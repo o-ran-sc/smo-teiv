@@ -24,24 +24,24 @@ BEGIN;
 CREATE SCHEMA IF NOT EXISTS ties_consumer_data;
 
 CREATE TABLE IF NOT EXISTS ties_consumer_data."module_reference" (
-    "name"                   VARCHAR(511) PRIMARY KEY,
-    "namespace"              VARCHAR(511),
-    "revision"       VARCHAR(511),
-    "content"               TEXT,
-    "ownerAppId"       VARCHAR(511),
-    "status"       VARCHAR(127)
-);
-
-CREATE TABLE IF NOT EXISTS ties_consumer_data."classifiers" (
-    "name"                VARCHAR(511) PRIMARY KEY,
-    "moduleReferenceName" VARCHAR(511) NOT NULL,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data."module_reference" ("name") ON DELETE CASCADE
+    "name"            TEXT PRIMARY KEY,
+    "namespace"       TEXT,
+    "revision"        TEXT NOT NULL,
+    "content"         TEXT NOT NULL,
+    "ownerAppId"      VARCHAR(511) NOT NULL,
+    "status"          VARCHAR(127) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ties_consumer_data."decorators" (
-    "name"                VARCHAR(511) PRIMARY KEY,
+    "name"                TEXT PRIMARY KEY,
     "dataType"            VARCHAR(511) NOT NULL,
-    "moduleReferenceName" VARCHAR(511) NOT NULL,
+    "moduleReferenceName" TEXT NOT NULL,
+    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data."module_reference" ("name") ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ties_consumer_data."classifiers" (
+    "name"                TEXT PRIMARY KEY,
+    "moduleReferenceName" TEXT NOT NULL,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data."module_reference" ("name") ON DELETE CASCADE
 );
 

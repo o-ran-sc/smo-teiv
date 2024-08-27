@@ -37,69 +37,33 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "name": "ENODEBFUNCTION_PROVIDES_EUTRANCELL",
+                        "name": "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION",
                         "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/ENODEBFUNCTION_PROVIDES_EUTRANCELL/relationships"
+                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER",
+                        "name": "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION",
                         "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER/relationships"
+                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_OCUCPFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "EUTRANCELL_USES_LTESECTORCARRIER",
+                        "name": "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION",
                         "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/EUTRANCELL_USES_LTESECTORCARRIER/relationships"
+                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_OCUUPFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "GNBCUCPFUNCTION_PROVIDES_NRCELLCU",
+                        "name": "MANAGEDELEMENT_MANAGES_ODUFUNCTION",
                         "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/GNBCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRCELLDU",
+                        "name": "MANAGEDELEMENT_MANAGES_ORUFUNCTION",
                         "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRCELLDU/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "LTESECTORCARRIER_USES_ANTENNACAPABILITY",
-                        "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/LTESECTORCARRIER_USES_ANTENNACAPABILITY/relationships"
-                        }
-                    },
-                    {
-                        "name": "MANAGEDELEMENT_MANAGES_ENODEBFUNCTION",
-                        "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ENODEBFUNCTION/relationships"
-                        }
-                    },
-                    {
-                        "name": "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION",
-                        "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION/relationships"
-                        }
-                    },
-                    {
-                        "name": "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION",
-                        "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION/relationships"
-                        }
-                    },
-                    {
-                        "name": "MANAGEDELEMENT_MANAGES_GNBDUFUNCTION",
-                        "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships"
+                            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ORUFUNCTION/relationships"
                         }
                     },
                     {
@@ -115,9 +79,21 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "SECTOR_GROUPS_EUTRANCELL",
+                        "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types/SECTOR_GROUPS_EUTRANCELL/relationships"
+                            "href": "/domains/REL_OAM_RAN/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRCELLDU",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_PROVIDES_NRCELLDU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
                         }
                     },
                     {
@@ -142,11 +118,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/REL_OAM_RAN/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 15
+                "totalCount": 11
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(15)
+                    occurrence(11)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].relationships.href', byEquality())
@@ -170,14 +146,6 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[9].relationships.href', byEquality())
                 jsonPath('$.items[10].name', byEquality())
                 jsonPath('$.items[10].relationships.href', byEquality())
-                jsonPath('$.items[11].name', byEquality())
-                jsonPath('$.items[11].relationships.href', byEquality())
-                jsonPath('$.items[12].name', byEquality())
-                jsonPath('$.items[12].relationships.href', byEquality())
-                jsonPath('$.items[13].name', byEquality())
-                jsonPath('$.items[13].relationships.href', byEquality())
-                jsonPath('$.items[14].name', byEquality())
-                jsonPath('$.items[14].relationships.href', byEquality())
             }
         }
     },
@@ -207,48 +175,6 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "ENODEBFUNCTION_PROVIDES_EUTRANCELL",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ENODEBFUNCTION_PROVIDES_EUTRANCELL/relationships"
-                        }
-                    },
-                    {
-                        "name": "ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "EUTRANCELL_USES_LTESECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/EUTRANCELL_USES_LTESECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBCUCPFUNCTION_PROVIDES_NRCELLCU",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/GNBCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRCELLDU",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRCELLDU/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "LTESECTORCARRIER_USES_ANTENNACAPABILITY",
-                        "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/LTESECTORCARRIER_USES_ANTENNACAPABILITY/relationships"
-                        }
-                    },
-                    {
                         "name": "NRCELLDU_USES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
@@ -261,15 +187,27 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "SECTOR_GROUPS_ANTENNAMODULE",
+                        "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_ANTENNAMODULE/relationships"
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
                         }
                     },
                     {
-                        "name": "SECTOR_GROUPS_EUTRANCELL",
+                        "name": "ODUFUNCTION_PROVIDES_NRCELLDU",
                         "relationships": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_EUTRANCELL/relationships"
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_PROVIDES_NRCELLDU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                        }
+                    },
+                    {
+                        "name": "SECTOR_GROUPS_ANTENNAMODULE",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_ANTENNAMODULE/relationships"
                         }
                     },
                     {
@@ -294,7 +232,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/REL_EQUIPMENT_RAN/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 14
+                "totalCount": 9
             }''')
         }
     },
@@ -312,48 +250,6 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "name": "ENODEBFUNCTION_PROVIDES_EUTRANCELL",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/ENODEBFUNCTION_PROVIDES_EUTRANCELL/relationships"
-                        }
-                    },
-                    {
-                        "name": "ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "EUTRANCELL_USES_LTESECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/EUTRANCELL_USES_LTESECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBCUCPFUNCTION_PROVIDES_NRCELLCU",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/GNBCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRCELLDU",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRCELLDU/relationships"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
-                        }
-                    },
-                    {
-                        "name": "LTESECTORCARRIER_USES_ANTENNACAPABILITY",
-                        "relationships": {
-                            "href": "/domains/RAN/relationship-types/LTESECTORCARRIER_USES_ANTENNACAPABILITY/relationships"
-                        }
-                    },
-                    {
                         "name": "NRCELLDU_USES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
@@ -366,9 +262,21 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "SECTOR_GROUPS_EUTRANCELL",
+                        "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
-                            "href": "/domains/RAN/relationship-types/SECTOR_GROUPS_EUTRANCELL/relationships"
+                            "href": "/domains/RAN/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRCELLDU",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ODUFUNCTION_PROVIDES_NRCELLDU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
                         }
                     },
                     {
@@ -393,7 +301,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/RAN/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 11
+                "totalCount": 6
             }''')
         }
     },
@@ -423,15 +331,9 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "ENODEBFUNCTION_PROVIDES_EUTRANCELL",
+                        "name": "CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/ENODEBFUNCTION_PROVIDES_EUTRANCELL/relationships"
-                        }
-                    },
-                    {
-                        "name": "ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER",
-                        "relationships": {
-                            "href": "/domains/TEIV/relationship-types/ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER/relationships"
+                            "href": "/domains/TEIV/relationship-types/CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT/relationships"
                         }
                     },
                     {
@@ -465,57 +367,81 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "EUTRANCELL_USES_LTESECTORCARRIER",
+                        "name": "MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/EUTRANCELL_USES_LTESECTORCARRIER/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF/relationships"
                         }
                     },
                     {
-                        "name": "GNBCUCPFUNCTION_PROVIDES_NRCELLCU",
+                        "name": "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/GNBCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRCELLDU",
+                        "name": "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/GNBDUFUNCTION_PROVIDES_NRCELLDU/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_OCUCPFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER",
+                        "name": "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_OCUUPFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "LTESECTORCARRIER_USES_ANTENNACAPABILITY",
+                        "name": "MANAGEDELEMENT_MANAGES_ODUFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/LTESECTORCARRIER_USES_ANTENNACAPABILITY/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "MANAGEDELEMENT_MANAGES_ENODEBFUNCTION",
+                        "name": "MANAGEDELEMENT_MANAGES_ORUFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_ENODEBFUNCTION/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_ORUFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION",
+                        "name": "NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION/relationships"
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE/relationships"
                         }
                     },
                     {
-                        "name": "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION",
+                        "name": "NFDEPLOYMENT_SERVES_OCUCPFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION/relationships"
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_OCUCPFUNCTION/relationships"
                         }
                     },
                     {
-                        "name": "MANAGEDELEMENT_MANAGES_GNBDUFUNCTION",
+                        "name": "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships"
+                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "NFDEPLOYMENT_SERVES_OCUCPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_OCUCPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "NFDEPLOYMENT_SERVES_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "NFDEPLOYMENT_SERVES_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "NODECLUSTER_LOCATED_AT_OCLOUDSITE",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/NODECLUSTER_LOCATED_AT_OCLOUDSITE/relationships"
                         }
                     },
                     {
@@ -531,15 +457,33 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "SECTOR_GROUPS_ANTENNAMODULE",
+                        "name": "OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/SECTOR_GROUPS_ANTENNAMODULE/relationships"
+                            "href": "/domains/TEIV/relationship-types/OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER/relationships"
                         }
                     },
                     {
-                        "name": "SECTOR_GROUPS_EUTRANCELL",
+                        "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/SECTOR_GROUPS_EUTRANCELL/relationships"
+                            "href": "/domains/TEIV/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRCELLDU",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ODUFUNCTION_PROVIDES_NRCELLDU/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                        }
+                    },
+                    {
+                        "name": "SECTOR_GROUPS_ANTENNAMODULE",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/SECTOR_GROUPS_ANTENNAMODULE/relationships"
                         }
                     },
                     {
@@ -564,7 +508,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 23
+                "totalCount": 29
             }''')
         }
     },
@@ -582,7 +526,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown domain",
-                "details": "Unknown domain: INVALID, known domains: [EQUIPMENT, OAM, RAN, REL_EQUIPMENT_RAN, REL_OAM_RAN, TEIV, TEST]"
+                "details": "Unknown domain: INVALID, known domains: [CLOUD, EQUIPMENT, OAM, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, TEIV, TEST]"
             }''')
         }
     }

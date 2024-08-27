@@ -47,15 +47,15 @@ class RequestValidatorTest {
 
     @Test
     void testValidateEntityType() {
-        Assertions.assertDoesNotThrow(() -> requestValidator.validateEntityType("GNBDUFunction"));
+        Assertions.assertDoesNotThrow(() -> requestValidator.validateEntityType("ODUFunction"));
         Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateEntityType("InvalidEntity"));
     }
 
     @Test
     void testValidateEntityTypeInDomain() {
-        Assertions.assertDoesNotThrow(() -> requestValidator.validateEntityTypeInDomain("GNBCUUPFunction", "RAN"));
+        Assertions.assertDoesNotThrow(() -> requestValidator.validateEntityTypeInDomain("OCUUPFunction", "RAN"));
         Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateEntityTypeInDomain(
-                "GNBDU_FUNCTION", "EQUIPMENT"));
+                "ODU_FUNCTION", "EQUIPMENT"));
     }
 
     @Test

@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getEntitiesByDomain - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123]"
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123]"
         }
         response {
             status OK()
@@ -37,53 +37,53 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Budapest",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,GNBDUFunction=10"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBDUFunction=14"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,GNBDUFunction=16"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123]"
                 },
                 "first": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123]"
                 },
                 "prev": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123]"
                 },
                 "next": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123]"
                 },
                 "last": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123]"
                 },
                 "totalCount": 3
             }''')
@@ -91,9 +91,9 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(3)
                 })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
             }
         }
     },
@@ -101,7 +101,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getEntitiesByDomain - CONTAINS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
         }
         response {
             status OK()
@@ -111,53 +111,53 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 456
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,GNBDUFunction=13"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,ODUFunction=13"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBDUFunction=14"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,GNBDUFunction=16"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "first": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "prev": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "next": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "last": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "totalCount": 3
             }''')
@@ -165,9 +165,9 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(3)
                 })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
             }
         }
     },
@@ -175,7 +175,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getEntitiesByDomain - EQUALS and CONTAINS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123];/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123];/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
         }
         response {
             status OK()
@@ -185,42 +185,42 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBDUFunction=14"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "decorators": {
                                     "test-app-module:textdata": "Stockholm",
                                     "test-app-module:intdata": 123
                                 },
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,GNBDUFunction=16"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123];/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123];/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "first": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123];/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123];/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "prev": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123];/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123];/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "next": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123];/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123];/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "last": {
-                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/GNBDUFunction/decorators&scopeFilter=/GNBDUFunction/decorators[@test-app-module:intdata=123];/GNBDUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
+                    "href": "/domains/RAN/entities?offset=0&limit=100&targetFilter=/ODUFunction/decorators&scopeFilter=/ODUFunction/decorators[@test-app-module:intdata=123];/ODUFunction/decorators[contains(@test-app-module:textdata,'Stock')]"
                 },
                 "totalCount": 2
             }''')
@@ -228,8 +228,8 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(2)
                 })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
             }
         }
     }

@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jooq.JSONB;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -64,7 +63,8 @@ class SchemaRegistryTest {
         Set<String> expectedModuleNames = Set.of("o-ran-smo-teiv-oam", "o-ran-smo-teiv-ran", "o-ran-smo-teiv-equipment",
                 "o-ran-smo-teiv-rel-oam-ran", "o-ran-smo-teiv-rel-equipment-ran", TEIV_DOMAIN,
                 "_3gpp-common-yang-extensions", "_3gpp-common-yang-types", "ietf-geo-location", "ietf-inet-types",
-                "ietf-yang-types", "o-ran-smo-teiv-common-yang-extensions", "o-ran-smo-teiv-common-yang-types");
+                "ietf-yang-types", "o-ran-smo-teiv-common-yang-extensions", "o-ran-smo-teiv-common-yang-types",
+                "o-ran-smo-teiv-rel-oam-cloud", "o-ran-smo-teiv-cloud", "o-ran-smo-teiv-rel-cloud-ran");
         //when
         Set<String> moduleNames = SchemaRegistry.getModuleRegistry().keySet();
         //then
@@ -93,7 +93,8 @@ class SchemaRegistryTest {
     @Test
     void testGetAllDomainsIncludingRootDomain() {
         //given
-        Set<String> expectedDomains = Set.of(TEIV_DOMAIN, "EQUIPMENT", "REL_EQUIPMENT_RAN", "OAM", "REL_OAM_RAN", "RAN");
+        Set<String> expectedDomains = Set.of(TEIV_DOMAIN, "EQUIPMENT", "REL_EQUIPMENT_RAN", "OAM", "REL_OAM_RAN", "RAN",
+                "CLOUD", "REL_CLOUD_RAN", "REL_OAM_CLOUD");
         //when
         Set<String> actualDomains = SchemaRegistry.getDomains();
         //then
@@ -122,37 +123,37 @@ class SchemaRegistryTest {
     @Test
     void testGetEntityTypeByDomainAndName() throws SchemaRegistryException {
         //when
-        List<EntityType> entityTypes = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "GNBDUFunction");
+        List<EntityType> entityTypes = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "ODUFunction");
         //then
         assertEquals(1, entityTypes.size());
         EntityType entityType = entityTypes.get(0);
-        assertEquals("GNBDUFunction", entityType.getName());
+        assertEquals("ODUFunction", entityType.getName());
         assertEquals("RAN", entityType.getModule().getDomain());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
-                .getEntityTypeByDomainAndName("OAM", "GNBDUFunction"));
+                .getEntityTypeByDomainAndName("OAM", "ODUFunction"));
         assertEquals(ENTITY_NOT_FOUND_IN_DOMAIN, exception.getErrorCode());
     }
 
     @Test
     void testGetEntityTypeByModuleAndName() throws SchemaRegistryException {
         //when
-        EntityType entityType = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "GNBDUFunction");
+        EntityType entityType = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals("GNBDUFunction", entityType.getName());
+        assertEquals("ODUFunction", entityType.getName());
         assertEquals("RAN", entityType.getModule().getDomain());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
-                .getEntityTypeByDomainAndName("o-ran-smo-teiv-oam", "GNBDUFunction"));
+                .getEntityTypeByDomainAndName("o-ran-smo-teiv-oam", "ODUFunction"));
         assertEquals(ENTITY_NOT_FOUND_IN_DOMAIN, exception.getErrorCode());
     }
 
     @Test
     void testGetEntityNames() {
         //given
-        List<String> expectedEntityName = List.of("AntennaCapability", "AntennaModule", "ENodeBFunction", "EUtranCell",
-                "GNBCUCPFunction", "GNBCUUPFunction", "GNBDUFunction", "LTESectorCarrier", "ManagedElement", "NRCellCU",
-                "NRCellDU", "NRSectorCarrier", "Sector", "Site");
+        List<String> expectedEntityName = List.of("AntennaCapability", "AntennaModule", "ORUFunction", "OCUCPFunction",
+                "OCUUPFunction", "ODUFunction", "ManagedElement", "NRCellCU", "CloudifiedNF", "NRCellDU", "NRSectorCarrier",
+                "Sector", "Site", "NearRTRICFunction", "NFDeployment", "OCloudNamespace", "NodeCluster", "OCloudSite");
         //when
         List<String> actualEntityNames = SchemaRegistry.getEntityNames();
         //then
@@ -163,50 +164,48 @@ class SchemaRegistryTest {
     @Test
     void testGetTableNameForEntity() throws SchemaRegistryException {
         //given
-        EntityType gnbduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "GNBDUFunction");
+        EntityType oduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\"", gnbduFunction.getTableName());
+        assertEquals("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFunction.getTableName());
     }
 
     @Test
     void testGetClassifiersColumnNameForEntity() throws SchemaRegistryException {
         //given
-        EntityType gnbduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "GNBDUFunction");
+        EntityType oduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals("CD_classifiers", gnbduFunction.getClassifiersColumnName());
+        assertEquals("CD_classifiers", oduFunction.getClassifiersColumnName());
     }
 
     @Test
     void testGetDecoratorsColumnNameForEntity() throws SchemaRegistryException {
         //given
-        EntityType gnbduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "GNBDUFunction");
+        EntityType oduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals("CD_decorators", gnbduFunction.getDecoratorsColumnName());
+        assertEquals("CD_decorators", oduFunction.getDecoratorsColumnName());
     }
 
     @Test
     void testGetFieldsForEntity() throws SchemaRegistryException {
         //given
-        EntityType gnbduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "GNBDUFunction");
+        EntityType oduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals(Set.of(field("dUpLMNId", JSONB.class).as("o-ran-smo-teiv-ran:GNBDUFunction.attr.dUpLMNId"), field(
-                "gNBDUId").as("o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBDUId"), field("gNBId").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), field("gNBIdLength").as(
-                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBIdLength"), field("id").as(
-                                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), field("CD_sourceIds").as(
-                                                "o-ran-smo-teiv-ran:GNBDUFunction.sourceIds"), field("CD_classifiers").as(
-                                                        "o-ran-smo-teiv-ran:GNBDUFunction.classifiers"), field(
-                                                                "CD_decorators").as(
-                                                                        "o-ran-smo-teiv-ran:GNBDUFunction.decorators")),
-                new HashSet<>(gnbduFunction.getAllFieldsWithId()));
+        assertEquals(Set.of(field("gNBDUId").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"), field("gNBId").as(
+                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), field("gNBIdLength").as(
+                        "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), field("id").as(
+                                "o-ran-smo-teiv-ran:ODUFunction.id"), field("CD_sourceIds").as(
+                                        "o-ran-smo-teiv-ran:ODUFunction.sourceIds"), field("CD_classifiers").as(
+                                                "o-ran-smo-teiv-ran:ODUFunction.classifiers"), field("CD_decorators").as(
+                                                        "o-ran-smo-teiv-ran:ODUFunction.decorators")), new HashSet<>(
+                                                                oduFunction.getAllFieldsWithId()));
     }
 
     @Test
     void testGetEntityTypesByDomain() {
         //given
-        List<String> expectedEntities = List.of("AntennaCapability", "AntennaModule", "ENodeBFunction", "EUtranCell",
-                "GNBCUCPFunction", "GNBCUUPFunction", "GNBDUFunction", "LTESectorCarrier", "NRCellCU", "NRCellDU",
-                "NRSectorCarrier", "Sector", "Site");
+        List<String> expectedEntities = List.of("AntennaCapability", "AntennaModule", "ORUFunction", "OCUCPFunction",
+                "OCUUPFunction", "ODUFunction", "NRCellCU", "NRCellDU", "NRSectorCarrier", "Sector", "Site",
+                "NearRTRICFunction");
         //when
         List<String> equipmentToRanEntityTypes = SchemaRegistry.getEntityNamesByDomain("REL_EQUIPMENT_RAN");
         //then
@@ -218,14 +217,16 @@ class SchemaRegistryTest {
     @Test
     void getRelationNames() {
         List<String> expectedRelationNames = List.of("ANTENNAMODULE_SERVES_ANTENNACAPABILITY",
-                "NRSECTORCARRIER_USES_ANTENNACAPABILITY", "GNBDUFUNCTION_PROVIDES_NRCELLDU",
-                "EUTRANCELL_USES_LTESECTORCARRIER", "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION", "SECTOR_GROUPS_EUTRANCELL",
-                "NRCELLDU_USES_NRSECTORCARRIER", "MANAGEDELEMENT_MANAGES_ENODEBFUNCTION",
-                "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION", "MANAGEDELEMENT_MANAGES_GNBDUFUNCTION",
-                "SECTOR_GROUPS_ANTENNAMODULE", "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER", "SECTOR_GROUPS_NRCELLDU",
-                "ENODEBFUNCTION_PROVIDES_EUTRANCELL", "ANTENNAMODULE_INSTALLED_AT_SITE",
-                "ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER", "GNBCUCPFUNCTION_PROVIDES_NRCELLCU",
-                "LTESECTORCARRIER_USES_ANTENNACAPABILITY");
+                "NRSECTORCARRIER_USES_ANTENNACAPABILITY", "ODUFUNCTION_PROVIDES_NRCELLDU",
+                "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION",
+                "NRCELLDU_USES_NRSECTORCARRIER", "MANAGEDELEMENT_MANAGES_ORUFUNCTION",
+                "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "MANAGEDELEMENT_MANAGES_ODUFUNCTION", "SECTOR_GROUPS_ANTENNAMODULE",
+                "ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "SECTOR_GROUPS_NRCELLDU", "ANTENNAMODULE_INSTALLED_AT_SITE",
+                "MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF", "NFDEPLOYMENT_SERVES_MANAGEDELEMENT",
+                "NFDEPLOYMENT_SERVES_ODUFUNCTION", "OCUCPFUNCTION_PROVIDES_NRCELLCU", "NFDEPLOYMENT_SERVES_OCUCPFUNCTION",
+                "NFDEPLOYMENT_SERVES_OCUUPFUNCTION", "NFDEPLOYMENT_SERVES_NEARRTRICFUNCTION",
+                "NODECLUSTER_LOCATED_AT_OCLOUDSITE", "OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER",
+                "NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE", "CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT");
         //when
         List<String> relationNames = SchemaRegistry.getRelationNames();
         //then
@@ -236,11 +237,11 @@ class SchemaRegistryTest {
     @Test
     void testGetRelationTypeByName() {
         //given
-        Association expectedASideAssociation = new Association("managed-gnbcucpFunction", 1, 1);
+        Association expectedASideAssociation = new Association("managed-ocucpFunction", 1, 1);
         Association expectedBSideAssociation = new Association("managed-by-managedElement", 0, 9223372036854775807L);
         //when
         RelationType managedElementManagesGnbcucpfunction = SchemaRegistry.getRelationTypeByName(
-                "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION");
+                "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
         assertEquals(expectedASideAssociation.toString(), managedElementManagesGnbcucpfunction.getASideAssociation()
                 .toString());
@@ -251,11 +252,11 @@ class SchemaRegistryTest {
     @Test
     void testGetRelationTypeByModuleAndName() throws SchemaRegistryException {
         //given
-        Association expectedASideAssociation = new Association("managed-gnbcucpFunction", 1, 1);
+        Association expectedASideAssociation = new Association("managed-ocucpFunction", 1, 1);
         Association expectedBSideAssociation = new Association("managed-by-managedElement", 0, 9223372036854775807L);
         //when
         RelationType managedElementManagesGnbcucpfunction = SchemaRegistry.getRelationTypeByModuleAndName(
-                "o-ran-smo-teiv-rel-oam-ran", "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION");
+                "o-ran-smo-teiv-rel-oam-ran", "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
         assertEquals(expectedASideAssociation.toString(), managedElementManagesGnbcucpfunction.getASideAssociation()
                 .toString());
@@ -263,18 +264,18 @@ class SchemaRegistryTest {
                 .toString());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
-                .getRelationTypeByModuleAndName("o-ran-smo-teiv-ran", "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION"));
+                .getRelationTypeByModuleAndName("o-ran-smo-teiv-ran", "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"));
         assertEquals(RELATIONSHIP_NOT_FOUND_IN_MODULE, exception.getErrorCode());
     }
 
     @Test
     void testGetRelationTypeByDomainAndName() throws SchemaRegistryException {
         //given
-        Association expectedASideAssociation = new Association("managed-gnbcucpFunction", 1, 1);
+        Association expectedASideAssociation = new Association("managed-ocucpFunction", 1, 1);
         Association expectedBSideAssociation = new Association("managed-by-managedElement", 0, 9223372036854775807L);
         //when
         List<RelationType> relationTypes = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN",
-                "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION");
+                "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
         assertEquals(1, relationTypes.size());
         RelationType managedElementManagesGnbcucpfunction = relationTypes.get(0);
@@ -284,7 +285,7 @@ class SchemaRegistryTest {
                 .toString());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
-                .getRelationTypeByDomainAndName("OAM", "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION"));
+                .getRelationTypeByDomainAndName("OAM", "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"));
         assertEquals(RELATIONSHIP_NOT_FOUND_IN_DOMAIN, exception.getErrorCode());
     }
 
@@ -308,11 +309,11 @@ class SchemaRegistryTest {
     @Test
     void testGetFullyQualifiedNameForRelation() throws SchemaRegistryException {
         //given
-        RelationType gnbduFunctionRealisedByCloudnativeapplication = SchemaRegistry.getRelationTypeByModuleAndName(
+        RelationType oduFunctionRealisedByCloudnativeapplication = SchemaRegistry.getRelationTypeByModuleAndName(
                 "o-ran-smo-teiv-equipment", "ANTENNAMODULE_INSTALLED_AT_SITE");
         //then
-        assertEquals("o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE",
-                gnbduFunctionRealisedByCloudnativeapplication.getFullyQualifiedName());
+        assertEquals("o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE", oduFunctionRealisedByCloudnativeapplication
+                .getFullyQualifiedName());
     }
 
     @Test
@@ -325,7 +326,7 @@ class SchemaRegistryTest {
         RelationType manyToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         RelationType oneToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         RelationType manyToOne = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
                 "ANTENNAMODULE_INSTALLED_AT_SITE");
         //then
@@ -340,7 +341,7 @@ class SchemaRegistryTest {
         RelationType manyToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         RelationType oneToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         RelationType manyToOne = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
                 "ANTENNAMODULE_INSTALLED_AT_SITE");
         //then
@@ -353,30 +354,30 @@ class SchemaRegistryTest {
     void testGetClassifiersColumnNameForRelationType() throws SchemaRegistryException {
         //when
         RelationType relationType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         //then
-        assertEquals("REL_CD_classifiers_GNBDUFUNCTION_PROVIDES_NRCELLDU", relationType.getClassifiersColumnName());
+        assertEquals("REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRCELLDU", relationType.getClassifiersColumnName());
     }
 
     @Test
     void testGetDecoratorsColumnNameForRelationType() throws SchemaRegistryException {
         //when
         RelationType relationType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         //then
-        assertEquals("REL_CD_decorators_GNBDUFUNCTION_PROVIDES_NRCELLDU", relationType.getDecoratorsColumnName());
+        assertEquals("REL_CD_decorators_ODUFUNCTION_PROVIDES_NRCELLDU", relationType.getDecoratorsColumnName());
     }
 
     @Test
     void testGetIdColumnNameRelationTest() throws SchemaRegistryException {
         //given
         String expectedManyToManyId = "id";
-        String expectedOneToManyId = "REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU";
+        String expectedOneToManyId = "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU";
         //when
         RelationType manyToManyRelation = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         RelationType oneToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         //then
         assertEquals(expectedManyToManyId, manyToManyRelation.getIdColumnName());
         assertEquals(expectedOneToManyId, oneToMany.getIdColumnName());
@@ -386,12 +387,12 @@ class SchemaRegistryTest {
     void testGetASideColumnNameForRelationType() throws SchemaRegistryException {
         //given
         String expectedManyToMany = "aSide_AntennaModule";
-        String expectedOneToMany = "REL_FK_provided-by-gnbduFunction";
+        String expectedOneToMany = "REL_FK_provided-by-oduFunction";
         //when
         RelationType manyToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         RelationType oneToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         //then
         assertEquals(expectedManyToMany, manyToMany.aSideColumnName());
         assertEquals(expectedOneToMany, oneToMany.aSideColumnName());
@@ -406,7 +407,7 @@ class SchemaRegistryTest {
         RelationType manyToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         RelationType oneToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU");
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
         //then
         assertEquals(expectedManyToMAny, manyToMany.bSideColumnName());
         assertEquals(expectedOneToMany, oneToMany.bSideColumnName());
@@ -442,13 +443,12 @@ class SchemaRegistryTest {
     @Test
     void testGetRelationTypesByDomain() {
         //given
-        List<String> expectedRelations = List.of("ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER",
-                "ENODEBFUNCTION_PROVIDES_EUTRANCELL", "LTESECTORCARRIER_USES_ANTENNACAPABILITY", "SECTOR_GROUPS_EUTRANCELL",
-                "SECTOR_GROUPS_NRCELLDU", "NRCELLDU_USES_NRSECTORCARRIER", "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU", "NRSECTORCARRIER_USES_ANTENNACAPABILITY",
-                "GNBCUCPFUNCTION_PROVIDES_NRCELLCU", "EUTRANCELL_USES_LTESECTORCARRIER",
-                "MANAGEDELEMENT_MANAGES_ENODEBFUNCTION", "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION",
-                "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION", "MANAGEDELEMENT_MANAGES_GNBDUFUNCTION");
+        List<String> expectedRelations = List.of("SECTOR_GROUPS_NRCELLDU", "NRCELLDU_USES_NRSECTORCARRIER",
+                "ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "ODUFUNCTION_PROVIDES_NRCELLDU",
+                "NRSECTORCARRIER_USES_ANTENNACAPABILITY", "OCUCPFUNCTION_PROVIDES_NRCELLCU",
+                "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION",
+                "MANAGEDELEMENT_MANAGES_ODUFUNCTION", "MANAGEDELEMENT_MANAGES_ORUFUNCTION",
+                "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION");
         //when
         List<String> oamToRanRelations = SchemaRegistry.getRelationNamesByDomain("REL_OAM_RAN");
         //then
@@ -458,22 +458,18 @@ class SchemaRegistryTest {
 
     @Test
     void getAttributeColumnsWithFilterTest() throws SchemaRegistryException {
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"dUpLMNId\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.attr.dUpLMNId"), DataType.CONTAINER), SchemaRegistry
-                        .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "GNBDUFunction").getSpecificAttributeColumns(
-                                List.of("dUpLMNId")));
         Assertions.assertEquals(Map.of(field("ties_data.\"AntennaModule\".\"geo-location\"").as(
                 "o-ran-smo-teiv-equipment:AntennaModule.attr.geo-location"), DataType.GEOGRAPHIC), SchemaRegistry
                         .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment", "AntennaModule")
                         .getSpecificAttributeColumns(List.of("geo-location")));
         Assertions.assertEquals(Map.of(), SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").getSpecificAttributeColumns(List.of()));
+                "ODUFUNCTION_PROVIDES_NRSECTORCARRIER").getSpecificAttributeColumns(List.of()));
     }
 
     @Test
     void testGetAttributeNamesForRelation() throws SchemaRegistryException {
         Assertions.assertEquals(Collections.emptyList(), SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
-                "GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").getAttributeNames());
+                "ODUFUNCTION_PROVIDES_NRSECTORCARRIER").getAttributeNames());
     }
 
     @Test

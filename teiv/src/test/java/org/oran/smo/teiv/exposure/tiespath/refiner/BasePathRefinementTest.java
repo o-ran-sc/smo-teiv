@@ -69,7 +69,7 @@ class BasePathRefinementTest {
     private final TargetResolver targetResolver = new TargetResolver();
     private final ScopeResolver scopeResolver = new ScopeResolver();
 
-    private static final String GNBDU_FUNCTION = "GNBDUFunction";
+    private static final String ODU_FUNCTION = "ODUFunction";
 
     @BeforeAll
     static void setUp() throws SchemaLoaderException {
@@ -81,7 +81,7 @@ class BasePathRefinementTest {
     @Test
     void testRefinementOrchestration() {
         LogicalBlock logicalBlock = scopeResolver.process(null, "/attributes[@gNBCUName='someCUCPName']");
-        List<TargetObject> targets = targetResolver.resolve(null, "/GNBCUCPFunction/attributes");
+        List<TargetObject> targets = targetResolver.resolve(null, "/OCUCPFunction/attributes");
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").filterCriteriaList(List.of(InnerFilterCriteria
                 .builder().targets(targets).scope(logicalBlock).build())).resolvingTopologyObjectType(
                         FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
@@ -89,13 +89,13 @@ class BasePathRefinementTest {
         basePathRefinement.refine(filterCriteria);
 
         LogicalBlock expectedLogicalBlock = scopeResolver.process(null, "/attributes[@gNBCUName='someCUCPName']");
-        List<TargetObject> expectedTargets = targetResolver.resolve(null, "/GNBCUCPFunction/attributes");
+        List<TargetObject> expectedTargets = targetResolver.resolve(null, "/OCUCPFunction/attributes");
         FilterCriteria expectedFilterCriteria = FilterCriteria.builder("RAN").filterCriteriaList(List.of(InnerFilterCriteria
                 .builder().targets(expectedTargets).scope(expectedLogicalBlock).build())).resolvingTopologyObjectType(
                         FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
 
         ScopeObject expectedScopeObject = ((ScopeLogicalBlock) expectedLogicalBlock).getScopeObject();
-        expectedScopeObject.setTopologyObject("GNBCUCPFunction");
+        expectedScopeObject.setTopologyObject("OCUCPFunction");
         expectedScopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
         expectedScopeObject.setContainer(ContainerType.ATTRIBUTES);
         expectedScopeObject.setLeaf("gNBCUName");
@@ -122,36 +122,36 @@ class BasePathRefinementTest {
                         QueryFunction.EQ).leaf(ID_COLUMN_NAME).parameter("me1").build();
         Assertions.assertEquals(scopeObjectResult1, ((ScopeLogicalBlock) logicalBlock1).getScopeObject());
 
-        LogicalBlock logicalBlock2 = scopeResolver.process(GNBDU_FUNCTION, "/managed-by-managedElement");
+        LogicalBlock logicalBlock2 = scopeResolver.process(ODU_FUNCTION, "/managed-by-managedElement");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock2).build()));
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(filterCriteria);
 
-        ScopeObject scopeObjectResult2 = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ASSOCIATION)
+        ScopeObject scopeObjectResult2 = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ASSOCIATION)
                 .innerContainer(List.of("managed-by-managedElement")).resolverDataType(ResolverDataType.NOT_NULL)
                 .queryFunction(QueryFunction.NOT_NULL).build();
         Assertions.assertEquals(scopeObjectResult2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
 
-        LogicalBlock logicalBlock3 = scopeResolver.process(null, "/GNBDUFUNCTION_PROVIDES_NRCELLDU");
+        LogicalBlock logicalBlock3 = scopeResolver.process(null, "/ODUFUNCTION_PROVIDES_NRCELLDU");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock3).build()));
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(filterCriteria);
 
         ScopeObject scopeObjectResult3 = ScopeObject.builder(WILDCARD).container(ContainerType.RELATION).innerContainer(List
-                .of("GNBDUFUNCTION_PROVIDES_NRCELLDU")).resolverDataType(ResolverDataType.NOT_NULL).queryFunction(
+                .of("ODUFUNCTION_PROVIDES_NRCELLDU")).resolverDataType(ResolverDataType.NOT_NULL).queryFunction(
                         QueryFunction.NOT_NULL).build();
         Assertions.assertEquals(scopeObjectResult3, ((ScopeLogicalBlock) logicalBlock3).getScopeObject());
 
-        LogicalBlock logicalBlock4 = scopeResolver.process(null, "/GNBDUFunction[@id='gnbdu1']");
+        LogicalBlock logicalBlock4 = scopeResolver.process(null, "/ODUFunction[@id='gnbdu1']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock4).build()));
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(filterCriteria);
 
-        ScopeObject scopeObjectResult4 = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ID).resolverDataType(
+        ScopeObject scopeObjectResult4 = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ID).resolverDataType(
                 ResolverDataType.STRING).queryFunction(QueryFunction.EQ).parameter("gnbdu1").build();
         Assertions.assertEquals(scopeObjectResult4, ((ScopeLogicalBlock) logicalBlock4).getScopeObject());
 
-        LogicalBlock logicalBlock5 = scopeResolver.process("NRCellDU", "/GNBDUFunction[@id='GNBDU_1']");
+        LogicalBlock logicalBlock5 = scopeResolver.process("NRCellDU", "/ODUFunction[@id='ODU_1']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock5).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement
@@ -174,7 +174,7 @@ class BasePathRefinementTest {
 
             Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement
                     .processTopologyObjectsWithContainerTypeNull(filterCriteria));
-            utilities.when(() -> SchemaRegistry.getAssociationNamesByEntityName(GNBDU_FUNCTION)).thenReturn(Arrays.asList(
+            utilities.when(() -> SchemaRegistry.getAssociationNamesByEntityName(ODU_FUNCTION)).thenReturn(Arrays.asList(
                     "RelationAndAssociation"));
             utilities.when(() -> SchemaRegistry.getRelationNamesByDomain("RAN")).thenReturn(Arrays.asList(
                     "RelationAndAssociation"));
@@ -206,7 +206,7 @@ class BasePathRefinementTest {
     @Test
     void testResolveWildCardObjectsInScopeAndTarget_1() {
         InnerFilterCriteria filterCriteria = InnerFilterCriteria.builder().targets(targetResolver.resolve(null,
-                "/GNBDUFunction/attributes(gNBDUId); /GNBDUFunction/attributes(gNBId); /attributes(name)")).scope(
+                "/ODUFunction/attributes(gNBDUId); /ODUFunction/attributes(gNBId); /attributes(name)")).scope(
                         EmptyLogicalBlock.getInstance()).build();
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.resolveWildCardObjectsInScopeAndTarget(
@@ -215,20 +215,19 @@ class BasePathRefinementTest {
 
     @Test
     void testResolveWildCardObjectsInScopeAndTarget_2() {
-        //root:GNBDUFunction
+        //root:ODUFunction
         //Target: /attributes(gNBId); /attributes(dUpLMNId)
         //Scope: /attribute[gNBIdLength = 2]
         InnerFilterCriteria filterCriteria = InnerFilterCriteria.builder().build();
         filterCriteria.setTargets(targetResolver.resolve(null,
-                "/GNBDUFunction/attributes(dUpLMNId); /GNBDUFunction/attributes(gNBId)"));
-        filterCriteria.setScope(scopeResolver.resolve(null, "/GNBDUFunction/attributes[@gNBIdLength=2]"));
+                "/ODUFunction/attributes(dUpLMNId); /ODUFunction/attributes(gNBId)"));
+        filterCriteria.setScope(scopeResolver.resolve(null, "/ODUFunction/attributes[@gNBIdLength=2]"));
 
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf(
-                "gNBIdLength").queryFunction(QueryFunction.EQ).parameter("2").resolverDataType(ResolverDataType.INTEGER)
-                .build();
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBIdLength")
+                .queryFunction(QueryFunction.EQ).parameter("2").resolverDataType(ResolverDataType.INTEGER).build();
         LogicalBlock scopeResult1 = new ScopeLogicalBlock(scopeObject1);
 
-        TargetObject targetObjectResult = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).params(
+        TargetObject targetObjectResult = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).params(
                 new ArrayList<>(Arrays.asList("dUpLMNId", "gNBId"))).build();
         List<TargetObject> resultTargetObjects = new ArrayList<>();
         resultTargetObjects.add(targetObjectResult);
@@ -292,51 +291,51 @@ class BasePathRefinementTest {
         filterCriteria.setTargets(targetResolver.resolve(null, null));
         filterCriteria.setScope(scopeResolver.resolve(null, "/attributes[@gNBId = 6 and @gNBIdLength = 1]"));
 
-        ScopeLogicalBlock GNBCUUPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("GNBCUUPFunction").container(
+        ScopeLogicalBlock OCUUPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("OCUUPFunction").container(
                 ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("6").resolverDataType(
                         ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBDUFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        ScopeLogicalBlock ODUFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("6").resolverDataType(
                         ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBCUCPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("GNBCUCPFunction").container(
+        ScopeLogicalBlock OCUCPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("OCUCPFunction").container(
                 ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("6").resolverDataType(
                         ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBCUUPFunctionPgNBIdLength = new ScopeLogicalBlock(ScopeObject.builder("GNBCUUPFunction")
-                .container(ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1")
-                .resolverDataType(ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBDUFunctionPgNBIdLength = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        ScopeLogicalBlock OCUUPFunctionPgNBIdLength = new ScopeLogicalBlock(ScopeObject.builder("OCUUPFunction").container(
                 ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1")
                 .resolverDataType(ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBCUCPFunctionPgNBIdLength = new ScopeLogicalBlock(ScopeObject.builder("GNBCUCPFunction")
-                .container(ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1")
+        ScopeLogicalBlock ODUFunctionPgNBIdLength = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
+                ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1")
+                .resolverDataType(ResolverDataType.INTEGER).build());
+        ScopeLogicalBlock OCUCPFunctionPgNBIdLength = new ScopeLogicalBlock(ScopeObject.builder("OCUCPFunction").container(
+                ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1")
                 .resolverDataType(ResolverDataType.INTEGER).build());
 
-        AndLogicalBlock GNBCUUPFunction = new AndLogicalBlock();
-        AndLogicalBlock GNBDUFunction = new AndLogicalBlock();
-        AndLogicalBlock GNBCUCPFunction = new AndLogicalBlock();
+        AndLogicalBlock OCUUPFunction = new AndLogicalBlock();
+        AndLogicalBlock ODUFunction = new AndLogicalBlock();
+        AndLogicalBlock OCUCPFunction = new AndLogicalBlock();
 
-        GNBCUCPFunction.getChildren().add(GNBCUCPFunctionPgNBId);
-        GNBCUCPFunction.getChildren().add(GNBCUCPFunctionPgNBIdLength);
-        GNBCUUPFunction.getChildren().add(GNBCUUPFunctionPgNBId);
-        GNBCUUPFunction.getChildren().add(GNBCUUPFunctionPgNBIdLength);
-        GNBDUFunction.getChildren().add(GNBDUFunctionPgNBId);
-        GNBDUFunction.getChildren().add(GNBDUFunctionPgNBIdLength);
+        OCUCPFunction.getChildren().add(OCUCPFunctionPgNBId);
+        OCUCPFunction.getChildren().add(OCUCPFunctionPgNBIdLength);
+        OCUUPFunction.getChildren().add(OCUUPFunctionPgNBId);
+        OCUUPFunction.getChildren().add(OCUUPFunctionPgNBIdLength);
+        ODUFunction.getChildren().add(ODUFunctionPgNBId);
+        ODUFunction.getChildren().add(ODUFunctionPgNBIdLength);
 
         OrLogicalBlock or1 = new OrLogicalBlock();
         OrLogicalBlock or2 = new OrLogicalBlock();
 
         or1.getChildren().add(or2);
-        or1.getChildren().add(GNBDUFunction);
-        or2.getChildren().add(GNBCUCPFunction);
-        or2.getChildren().add(GNBCUUPFunction);
+        or1.getChildren().add(ODUFunction);
+        or2.getChildren().add(OCUCPFunction);
+        or2.getChildren().add(OCUUPFunction);
 
-        TargetObject targetObjectResult5_1 = TargetObject.builder("GNBCUUPFunction").container(ContainerType.ID).build();
-        TargetObject targetObjectResult5_2 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ID).build();
-        TargetObject targetObjectResult5_3 = TargetObject.builder("GNBCUCPFunction").container(ContainerType.ID).build();
+        TargetObject targetObjectResult5_1 = TargetObject.builder("OCUUPFunction").container(ContainerType.ID).build();
+        TargetObject targetObjectResult5_2 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ID).build();
+        TargetObject targetObjectResult5_3 = TargetObject.builder("OCUCPFunction").container(ContainerType.ID).build();
         List<TargetObject> resultTargetObjects5_1 = new ArrayList<>();
+        resultTargetObjects5_1.add(targetObjectResult5_3);
         resultTargetObjects5_1.add(targetObjectResult5_1);
         resultTargetObjects5_1.add(targetObjectResult5_2);
-        resultTargetObjects5_1.add(targetObjectResult5_3);
 
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
@@ -470,61 +469,61 @@ class BasePathRefinementTest {
         filterCriteria.setTargets(targetResolver.resolve(null, "/attributes; /id"));
         filterCriteria.setScope(scopeResolver.resolve(null, "/id[@id = \"testId\"]; /attributes[@gNBId = 6]"));
 
-        ScopeLogicalBlock GNBCUUPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("GNBCUUPFunction").container(
+        ScopeLogicalBlock OCUUPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("OCUUPFunction").container(
                 ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("6").resolverDataType(
                         ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBDUFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        ScopeLogicalBlock ODUFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("6").resolverDataType(
                         ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBCUCPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("GNBCUCPFunction").container(
+        ScopeLogicalBlock OCUCPFunctionPgNBId = new ScopeLogicalBlock(ScopeObject.builder("OCUCPFunction").container(
                 ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("6").resolverDataType(
                         ResolverDataType.INTEGER).build());
-        ScopeLogicalBlock GNBCUUPFunctionPid = new ScopeLogicalBlock(ScopeObject.builder("GNBCUUPFunction").container(
+        ScopeLogicalBlock OCUUPFunctionPid = new ScopeLogicalBlock(ScopeObject.builder("OCUUPFunction").container(
                 ContainerType.ID).queryFunction(QueryFunction.EQ).parameter("testId").resolverDataType(
                         ResolverDataType.STRING).build());
-        ScopeLogicalBlock GNBDUFunctionPid = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        ScopeLogicalBlock ODUFunctionPid = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ID).queryFunction(QueryFunction.EQ).parameter("testId").resolverDataType(
                         ResolverDataType.STRING).build());
-        ScopeLogicalBlock GNBCUCPFunctionPid = new ScopeLogicalBlock(ScopeObject.builder("GNBCUCPFunction").container(
+        ScopeLogicalBlock OCUCPFunctionPid = new ScopeLogicalBlock(ScopeObject.builder("OCUCPFunction").container(
                 ContainerType.ID).queryFunction(QueryFunction.EQ).parameter("testId").resolverDataType(
                         ResolverDataType.STRING).build());
 
-        AndLogicalBlock GNBCUUPFunction = new AndLogicalBlock();
-        GNBCUUPFunction.getChildren().add(GNBCUUPFunctionPgNBId);
-        GNBCUUPFunction.getChildren().add(GNBCUUPFunctionPid);
+        AndLogicalBlock OCUUPFunction = new AndLogicalBlock();
+        OCUUPFunction.getChildren().add(OCUUPFunctionPgNBId);
+        OCUUPFunction.getChildren().add(OCUUPFunctionPid);
 
-        AndLogicalBlock GNBDUFunction = new AndLogicalBlock();
-        GNBDUFunction.getChildren().add(GNBDUFunctionPgNBId);
-        GNBDUFunction.getChildren().add(GNBDUFunctionPid);
+        AndLogicalBlock ODUFunction = new AndLogicalBlock();
+        ODUFunction.getChildren().add(ODUFunctionPgNBId);
+        ODUFunction.getChildren().add(ODUFunctionPid);
 
-        AndLogicalBlock GNBCUCPFunction = new AndLogicalBlock();
-        GNBCUCPFunction.getChildren().add(GNBCUCPFunctionPgNBId);
-        GNBCUCPFunction.getChildren().add(GNBCUCPFunctionPid);
+        AndLogicalBlock OCUCPFunction = new AndLogicalBlock();
+        OCUCPFunction.getChildren().add(OCUCPFunctionPgNBId);
+        OCUCPFunction.getChildren().add(OCUCPFunctionPid);
 
         OrLogicalBlock or1 = new OrLogicalBlock();
         OrLogicalBlock or2 = new OrLogicalBlock();
 
         or1.getChildren().add(or2);
-        or1.getChildren().add(GNBDUFunction);
-        or2.getChildren().add(GNBCUCPFunction);
-        or2.getChildren().add(GNBCUUPFunction);
+        or1.getChildren().add(ODUFunction);
+        or2.getChildren().add(OCUCPFunction);
+        or2.getChildren().add(OCUUPFunction);
 
-        TargetObject targetObjectResult11_1 = TargetObject.builder("GNBCUUPFunction").container(ContainerType.ID).build();
-        TargetObject targetObjectResult11_2 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ID).build();
-        TargetObject targetObjectResult11_3 = TargetObject.builder("GNBCUCPFunction").container(ContainerType.ID).build();
-        TargetObject targetObjectResult11_4 = TargetObject.builder("GNBCUUPFunction").container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult11_1 = TargetObject.builder("OCUUPFunction").container(ContainerType.ID).build();
+        TargetObject targetObjectResult11_2 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ID).build();
+        TargetObject targetObjectResult11_3 = TargetObject.builder("OCUCPFunction").container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
-        TargetObject targetObjectResult11_5 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult11_4 = TargetObject.builder("OCUUPFunction").container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
-        TargetObject targetObjectResult11_6 = TargetObject.builder("GNBCUCPFunction").container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult11_5 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
+        TargetObject targetObjectResult11_6 = TargetObject.builder("OCUCPFunction").container(ContainerType.ID).build();
         List<TargetObject> resultTargetObjects11_1 = new ArrayList<>();
+        resultTargetObjects11_1.add(targetObjectResult11_3);
         resultTargetObjects11_1.add(targetObjectResult11_4);
         resultTargetObjects11_1.add(targetObjectResult11_5);
         resultTargetObjects11_1.add(targetObjectResult11_6);
         resultTargetObjects11_1.add(targetObjectResult11_1);
         resultTargetObjects11_1.add(targetObjectResult11_2);
-        resultTargetObjects11_1.add(targetObjectResult11_3);
 
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
@@ -557,43 +556,52 @@ class BasePathRefinementTest {
         filterCriteria2.setTargets(targetResolver.resolve(null, "/attributes"));
         filterCriteria2.setScope(scopeResolver.resolve(null, "/managed-by-managedElement[@id = \"me1\"]"));
 
-        TargetObject targetObjectResult13_1 = TargetObject.builder("GNBCUUPFunction").container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult13_1 = TargetObject.builder("OCUUPFunction").container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
-        TargetObject targetObjectResult13_2 = TargetObject.builder("ENodeBFunction").container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult13_2 = TargetObject.builder("ORUFunction").container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
-        TargetObject targetObjectResult13_3 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult13_3 = TargetObject.builder("NearRTRICFunction").container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
-        TargetObject targetObjectResult13_4 = TargetObject.builder("GNBCUCPFunction").container(ContainerType.ATTRIBUTES)
+        TargetObject targetObjectResult13_4 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES)
+                .isAllParamQueried(true).build();
+        TargetObject targetObjectResult13_5 = TargetObject.builder("OCUCPFunction").container(ContainerType.ATTRIBUTES)
                 .isAllParamQueried(true).build();
         List<TargetObject> resultTargetObjectsResult13_1 = new ArrayList<>();
-        resultTargetObjectsResult13_1.add(targetObjectResult13_1);
-        resultTargetObjectsResult13_1.add(targetObjectResult13_2);
         resultTargetObjectsResult13_1.add(targetObjectResult13_3);
+        resultTargetObjectsResult13_1.add(targetObjectResult13_2);
+        resultTargetObjectsResult13_1.add(targetObjectResult13_5);
+        resultTargetObjectsResult13_1.add(targetObjectResult13_1);
         resultTargetObjectsResult13_1.add(targetObjectResult13_4);
 
-        ScopeLogicalBlock GNBCUUPFunction = new ScopeLogicalBlock(ScopeObject.builder("GNBCUUPFunction").container(
+        ScopeLogicalBlock NearRTRICFunction = new ScopeLogicalBlock(ScopeObject.builder("NearRTRICFunction").container(
                 ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id").queryFunction(
                         QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock ENodeBFunction = new ScopeLogicalBlock(ScopeObject.builder("ENodeBFunction").container(
+        ScopeLogicalBlock ORUFunction = new ScopeLogicalBlock(ScopeObject.builder("ORUFunction").container(
                 ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id").queryFunction(
                         QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock GNBDUFunction = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        ScopeLogicalBlock OCUUPFunction = new ScopeLogicalBlock(ScopeObject.builder("OCUUPFunction").container(
                 ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id").queryFunction(
                         QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock GNBCUCPFunction = new ScopeLogicalBlock(ScopeObject.builder("GNBCUCPFunction").container(
+        ScopeLogicalBlock ODUFunction = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
+                ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id").queryFunction(
+                        QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
+        ScopeLogicalBlock OCUCPFunction = new ScopeLogicalBlock(ScopeObject.builder("OCUCPFunction").container(
                 ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id").queryFunction(
                         QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
 
         AndOrLogicalBlock or1 = new OrLogicalBlock();
         AndOrLogicalBlock or2 = new OrLogicalBlock();
         AndOrLogicalBlock or3 = new OrLogicalBlock();
+        AndOrLogicalBlock or4 = new OrLogicalBlock();
 
-        or3.getChildren().add(ENodeBFunction);
-        or3.getChildren().add(GNBCUCPFunction);
+        or4.getChildren().add(NearRTRICFunction);
+        or4.getChildren().add(OCUCPFunction);
+        or3.getChildren().add(or4);
+        or3.getChildren().add(OCUUPFunction);
         or2.getChildren().add(or3);
-        or2.getChildren().add(GNBCUUPFunction);
+        or2.getChildren().add(ODUFunction);
         or1.getChildren().add(or2);
-        or1.getChildren().add(GNBDUFunction);
+        or1.getChildren().add(ORUFunction);
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(FilterCriteria.builder("RAN").filterCriteriaList(List
                 .of(filterCriteria2)).build());
@@ -608,9 +616,9 @@ class BasePathRefinementTest {
     void testResolveWildCardObjectsInScopeAndTarget_14() {
         InnerFilterCriteria filterCriteria = InnerFilterCriteria.builder().build();
         filterCriteria.setTargets(targetResolver.resolve(null, null));
-        filterCriteria.setScope(scopeResolver.resolve(null, "/GNBDUFunction[@id = \"testId\"]"));
+        filterCriteria.setScope(scopeResolver.resolve(null, "/ODUFunction[@id = \"testId\"]"));
 
-        TargetObject targetObjectResult9_1 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ID)
+        TargetObject targetObjectResult9_1 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ID)
                 .isAllParamQueried(false).build();
 
         List<TargetObject> resultTargetObjects9_1 = new ArrayList<>();
@@ -626,10 +634,10 @@ class BasePathRefinementTest {
     @Test
     void testResolveWildCardObjectsInScopeAndTarget_15() {
         InnerFilterCriteria filterCriteria = InnerFilterCriteria.builder().build();
-        filterCriteria.setTargets(targetResolver.resolve(null, "/GNBDUFUNCTION_PROVIDES_NRCELLDU"));
+        filterCriteria.setTargets(targetResolver.resolve(null, "/ODUFUNCTION_PROVIDES_NRCELLDU"));
         filterCriteria.setScope(scopeResolver.resolve(null, "/id[text() = \"testId\"]"));
 
-        ScopeObject scopeObject = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").container(ContainerType.ID)
+        ScopeObject scopeObject = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").container(ContainerType.ID)
                 .parameter("testId").queryFunction(QueryFunction.EQ).resolverDataType(ResolverDataType.STRING).build();
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(FilterCriteria.builder("RAN").filterCriteriaList(List
@@ -647,30 +655,28 @@ class BasePathRefinementTest {
         //Scope: /managed-by-managedElement[id = "me1"]
         InnerFilterCriteria filterCriteria2 = InnerFilterCriteria.builder().build();
         filterCriteria2.setTargets(targetResolver.resolve(null,
-                "/MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION/decorators; /MANAGEDELEMENT_MANAGES_ENODEBFUNCTION/decorators"));
+                "/MANAGEDELEMENT_MANAGES_OCUCPFUNCTION/decorators; /MANAGEDELEMENT_MANAGES_OCUUPFUNCTION/decorators"));
         filterCriteria2.setScope(scopeResolver.resolve(null, "/managed-by-managedElement[@id = \"me1\"]"));
 
-        TargetObject targetObjectResult13_1 = TargetObject.builder("MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION").container(
+        TargetObject targetObjectResult13_1 = TargetObject.builder("MANAGEDELEMENT_MANAGES_OCUCPFUNCTION").container(
                 ContainerType.DECORATORS).build();
-        TargetObject targetObjectResult13_2 = TargetObject.builder("MANAGEDELEMENT_MANAGES_ENODEBFUNCTION").container(
+        TargetObject targetObjectResult13_2 = TargetObject.builder("MANAGEDELEMENT_MANAGES_OCUUPFUNCTION").container(
                 ContainerType.DECORATORS).build();
         List<TargetObject> resultTargetObjectsResult13_1 = new ArrayList<>();
-        resultTargetObjectsResult13_1.add(targetObjectResult13_1);
         resultTargetObjectsResult13_1.add(targetObjectResult13_2);
+        resultTargetObjectsResult13_1.add(targetObjectResult13_1);
 
-        ScopeLogicalBlock GNBCUCPFunction = new ScopeLogicalBlock(ScopeObject.builder(
-                "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION").container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1")
-                .resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock ENodeBFunction = new ScopeLogicalBlock(ScopeObject.builder(
-                "MANAGEDELEMENT_MANAGES_ENODEBFUNCTION").container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1")
-                .resolverDataType(ResolverDataType.STRING).build());
+        ScopeLogicalBlock OCUCPFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_OCUCPFUNCTION")
+                .container(ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id")
+                .queryFunction(QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
+        ScopeLogicalBlock OCUUPFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_OCUUPFUNCTION")
+                .container(ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id")
+                .queryFunction(QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
 
         AndOrLogicalBlock or1 = new OrLogicalBlock();
 
-        or1.getChildren().add(GNBCUCPFunction);
-        or1.getChildren().add(ENodeBFunction);
+        or1.getChildren().add(OCUUPFunction);
+        or1.getChildren().add(OCUCPFunction);
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(FilterCriteria.builder("RAN").filterCriteriaList(List
                 .of(filterCriteria2)).build());
@@ -690,46 +696,53 @@ class BasePathRefinementTest {
         filterCriteria2.setTargets(targetResolver.resolve(null, "/decorators"));
         filterCriteria2.setScope(scopeResolver.resolve(null, "/managed-by-managedElement[@id = \"me1\"]"));
 
-        TargetObject targetObjectResult13_1 = TargetObject.builder("MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION").container(
+        TargetObject targetObjectResult13_1 = TargetObject.builder("MANAGEDELEMENT_MANAGES_OCUCPFUNCTION").container(
                 ContainerType.DECORATORS).build();
-        TargetObject targetObjectResult13_2 = TargetObject.builder("MANAGEDELEMENT_MANAGES_ENODEBFUNCTION").container(
+        TargetObject targetObjectResult13_2 = TargetObject.builder("MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION").container(
                 ContainerType.DECORATORS).build();
-        TargetObject targetObjectResult13_3 = TargetObject.builder("MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION").container(
+        TargetObject targetObjectResult13_3 = TargetObject.builder("MANAGEDELEMENT_MANAGES_OCUUPFUNCTION").container(
                 ContainerType.DECORATORS).build();
-        TargetObject targetObjectResult13_4 = TargetObject.builder("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION").container(
+        TargetObject targetObjectResult13_4 = TargetObject.builder("MANAGEDELEMENT_MANAGES_ODUFUNCTION").container(
+                ContainerType.DECORATORS).build();
+        TargetObject targetObjectResult13_5 = TargetObject.builder("MANAGEDELEMENT_MANAGES_ORUFUNCTION").container(
                 ContainerType.DECORATORS).build();
         List<TargetObject> resultTargetObjectsResult13_1 = new ArrayList<>();
+        resultTargetObjectsResult13_1.add(targetObjectResult13_3);
+        resultTargetObjectsResult13_1.add(targetObjectResult13_5);
+        resultTargetObjectsResult13_1.add(targetObjectResult13_4);
         resultTargetObjectsResult13_1.add(targetObjectResult13_1);
         resultTargetObjectsResult13_1.add(targetObjectResult13_2);
-        resultTargetObjectsResult13_1.add(targetObjectResult13_3);
-        resultTargetObjectsResult13_1.add(targetObjectResult13_4);
 
-        ScopeLogicalBlock GNBCUUPFunction = new ScopeLogicalBlock(ScopeObject.builder(
-                "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION").container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1")
-                .resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock ENodeBFunction = new ScopeLogicalBlock(ScopeObject.builder(
-                "MANAGEDELEMENT_MANAGES_ENODEBFUNCTION").container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1")
-                .resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock GNBDUFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION")
+        ScopeLogicalBlock OCUUPFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_OCUUPFUNCTION")
                 .container(ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id")
                 .queryFunction(QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
-        ScopeLogicalBlock GNBCUCPFunction = new ScopeLogicalBlock(ScopeObject.builder(
-                "MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION").container(ContainerType.ASSOCIATION).innerContainer(List.of(
+        ScopeLogicalBlock NearRTRICFunction = new ScopeLogicalBlock(ScopeObject.builder(
+                "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION").container(ContainerType.ASSOCIATION).innerContainer(List.of(
                         "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1")
                 .resolverDataType(ResolverDataType.STRING).build());
+        ScopeLogicalBlock ODUFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ODUFUNCTION")
+                .container(ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id")
+                .queryFunction(QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
+        ScopeLogicalBlock OCUCPFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_OCUCPFUNCTION")
+                .container(ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id")
+                .queryFunction(QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
+        ScopeLogicalBlock ORUFunction = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ORUFUNCTION")
+                .container(ContainerType.ASSOCIATION).innerContainer(List.of("managed-by-managedElement")).leaf("id")
+                .queryFunction(QueryFunction.EQ).parameter("me1").resolverDataType(ResolverDataType.STRING).build());
 
         AndOrLogicalBlock or1 = new OrLogicalBlock();
         AndOrLogicalBlock or2 = new OrLogicalBlock();
         AndOrLogicalBlock or3 = new OrLogicalBlock();
+        AndOrLogicalBlock or4 = new OrLogicalBlock();
 
-        or3.getChildren().add(ENodeBFunction);
-        or3.getChildren().add(GNBCUCPFunction);
+        or4.getChildren().add(NearRTRICFunction);
+        or4.getChildren().add(OCUCPFunction);
+        or3.getChildren().add(or4);
+        or3.getChildren().add(OCUUPFunction);
         or2.getChildren().add(or3);
-        or2.getChildren().add(GNBCUUPFunction);
+        or2.getChildren().add(ODUFunction);
         or1.getChildren().add(or2);
-        or1.getChildren().add(GNBDUFunction);
+        or1.getChildren().add(ORUFunction);
 
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(FilterCriteria.builder("REL_OAM_RAN")
                 .filterCriteriaList(List.of(filterCriteria2)).build());
@@ -743,18 +756,18 @@ class BasePathRefinementTest {
     @Test
     void testResolveUndefinedTopologyObjects_Entity() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
-        TargetObject targetObject = TargetObject.builder(GNBDU_FUNCTION).build();
-        ScopeObject scopeObject = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBId")
+        TargetObject targetObject = TargetObject.builder(ODU_FUNCTION).build();
+        ScopeObject scopeObject = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBId")
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
         LogicalBlock scope = new ScopeLogicalBlock(scopeObject);
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
                 targetObject))).scope(scope).build()));
 
         try (MockedStatic<SchemaRegistry> utilities = Mockito.mockStatic(SchemaRegistry.class)) {
-            utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(GNBDU_FUNCTION,
+            utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(ODU_FUNCTION,
                     "NRCellDU"));
             utilities.when(() -> SchemaRegistry.getRelationNamesByDomain("RAN")).thenReturn(Arrays.asList(
-                    "GNBDUFUNCTION_PROVIDES_NRCELLDU"));
+                    "ODUFUNCTION_PROVIDES_NRCELLDU"));
 
             basePathRefinement.resolveUndefinedTopologyObjectTypes(filterCriteria);
 
@@ -776,18 +789,18 @@ class BasePathRefinementTest {
     @Test
     void testResolveUndefinedTopologyObjects_Relation() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
-        TargetObject targetObject = TargetObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").build();
-        ScopeObject scopeObject = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").container(ContainerType.ID)
+        TargetObject targetObject = TargetObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").build();
+        ScopeObject scopeObject = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").container(ContainerType.ID)
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.PRIMITIVE).build();
         LogicalBlock scope = new ScopeLogicalBlock(scopeObject);
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
                 targetObject))).scope(scope).build()));
 
         try (MockedStatic<SchemaRegistry> utilities = Mockito.mockStatic(SchemaRegistry.class)) {
-            utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(GNBDU_FUNCTION,
+            utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(ODU_FUNCTION,
                     "NRCellDU"));
             utilities.when(() -> SchemaRegistry.getRelationNamesByDomain("RAN")).thenReturn(Arrays.asList(
-                    "GNBDUFUNCTION_PROVIDES_NRCELLDU"));
+                    "ODUFUNCTION_PROVIDES_NRCELLDU"));
 
             basePathRefinement.resolveUndefinedTopologyObjectTypes(filterCriteria);
 
@@ -809,15 +822,15 @@ class BasePathRefinementTest {
                 targetObject))).scope(scope).build()));
 
         try (MockedStatic<SchemaRegistry> utilities = Mockito.mockStatic(SchemaRegistry.class)) {
-            utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(GNBDU_FUNCTION,
+            utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(ODU_FUNCTION,
                     "NRCellDU", "EntityAndRelation"));
             utilities.when(() -> SchemaRegistry.getRelationNamesByDomain("RAN")).thenReturn(Arrays.asList(
-                    "GNBDUFUNCTION_PROVIDES_NRCELLDU", "EntityAndRelation"));
+                    "ODUFUNCTION_PROVIDES_NRCELLDU", "EntityAndRelation"));
             // Error thrown because of invalid topology object in targetFilter
             Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.resolveUndefinedTopologyObjectTypes(
                     filterCriteria));
 
-            targetObject.setTopologyObject(GNBDU_FUNCTION);
+            targetObject.setTopologyObject(ODU_FUNCTION);
 
             // Error thrown because of invalid topology object in scopeFilter
             Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.resolveUndefinedTopologyObjectTypes(
@@ -842,8 +855,8 @@ class BasePathRefinementTest {
     void testValidateContainers() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
 
-        TargetObject targetObject0 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ID).params(
-                new ArrayList<>(Arrays.asList("gNBId"))).build();
+        TargetObject targetObject0 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ID).params(new ArrayList<>(
+                Arrays.asList("gNBId"))).build();
         targetObject0.setTopologyObjectType(TopologyObjectType.ENTITY);
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
                 targetObject0))).build()));
@@ -851,13 +864,13 @@ class BasePathRefinementTest {
         // Reason: container:ID, params is not empty
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateContainers(filterCriteria));
 
-        TargetObject targetObject1 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).params(
+        TargetObject targetObject1 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).params(
                 new ArrayList<>(Arrays.asList("gNBId", "gNBIdLength", "notValidAttribute1", "notValidAttribute2"))).build();
         targetObject1.setTopologyObjectType(TopologyObjectType.ENTITY);
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(List.of(targetObject1))
                 .build()));
 
-        ScopeObject scopeObject = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBId")
+        ScopeObject scopeObject = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBId")
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
 
         scopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
@@ -868,7 +881,7 @@ class BasePathRefinementTest {
         // Reason: invalid attributes in ENTITY type targetObject
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateContainers(filterCriteria));
 
-        TargetObject targetObject2 = TargetObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").container(
+        TargetObject targetObject2 = TargetObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").container(
                 ContainerType.ATTRIBUTES).topologyObjectType(TopologyObjectType.RELATION).params(new ArrayList<>(Arrays
                         .asList("notValidAttribute1", "notValidAttribute2"))).build();
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
@@ -879,7 +892,7 @@ class BasePathRefinementTest {
 
         scopeObject.setLeaf("notValidAttribute");
 
-        TargetObject targetObject3 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES)
+        TargetObject targetObject3 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES)
                 .topologyObjectType(TopologyObjectType.ENTITY).params(new ArrayList<>(Arrays.asList("gNBId",
                         "gNBIdLength"))).build();
         targetObject3.setTopologyObjectType(TopologyObjectType.ENTITY);
@@ -893,7 +906,7 @@ class BasePathRefinementTest {
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateContainers(filterCriteria));
 
-        TargetObject targetObject4 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.SOURCE_IDS)
+        TargetObject targetObject4 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.SOURCE_IDS)
                 .topologyObjectType(TopologyObjectType.ENTITY).params(new ArrayList<>(Arrays.asList("gNBId"))).build();
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
                 targetObject4))).scope(scopeLogicalBlock).build()));
@@ -905,7 +918,7 @@ class BasePathRefinementTest {
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateContainers(filterCriteria));
 
-        TargetObject targetObject5 = TargetObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").container(
+        TargetObject targetObject5 = TargetObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").container(
                 ContainerType.SOURCE_IDS).topologyObjectType(TopologyObjectType.RELATION).params(new ArrayList<>(Arrays
                         .asList("InvalidSourceIdParam"))).build();
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
@@ -921,7 +934,7 @@ class BasePathRefinementTest {
     @Test
     void testValidateContainers_Associations() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
-        ScopeObject scopeObject = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ASSOCIATION).leaf("nCI")
+        ScopeObject scopeObject = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ASSOCIATION).leaf("nCI")
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
         scopeObject.setInnerContainer(Arrays.asList("provided-nrCellDu"));
         scopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
@@ -951,7 +964,7 @@ class BasePathRefinementTest {
         // Reason: no association name added in innerContainer list for scopeObject in case of association containerType
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateContainers(filterCriteria));
 
-        scopeObject.setTopologyObject("GNBDUFUNCTION_PROVIDES_NRCELLDU");
+        scopeObject.setTopologyObject("ODUFUNCTION_PROVIDES_NRCELLDU");
         scopeObject.setTopologyObjectType(TopologyObjectType.RELATION);
         scopeObject.setInnerContainer(Arrays.asList("provided-nrCellDu"));
 
@@ -974,28 +987,28 @@ class BasePathRefinementTest {
     void testValidateScopeParametersDataType() {
         // for gNBId attribute the BIGINT dataType is set
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
-        LogicalBlock logicalBlock1 = scopeResolver.process(GNBDU_FUNCTION, "/attributes[@gNBId=21]");
+        LogicalBlock logicalBlock1 = scopeResolver.process(ODU_FUNCTION, "/attributes[@gNBId=21]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock1).build()));
 
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
         Assertions.assertEquals(DataType.BIGINT, ((ScopeLogicalBlock) logicalBlock1).getScopeObject().getDataType());
 
         // error reason: for gNBId attribute string value is not accepted
-        LogicalBlock logicalBlock2 = scopeResolver.process(GNBDU_FUNCTION, "/attributes[@gNBId='abc']");
+        LogicalBlock logicalBlock2 = scopeResolver.process(ODU_FUNCTION, "/attributes[@gNBId='abc']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock2).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));
 
         // error reason: id value should be entered as string (' ')
-        LogicalBlock logicalBlock3 = scopeResolver.process(GNBDU_FUNCTION, "/GNBDUFunction[@id=1]");
+        LogicalBlock logicalBlock3 = scopeResolver.process(ODU_FUNCTION, "/ODUFunction[@id=1]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock3).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));
 
         // scopeFilter: /managed-by-managedElement[@id='me1'] -> dataType is set to PRIMITIVE
-        ScopeLogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).innerContainer(
+        ScopeLogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).innerContainer(
                 new ArrayList<>(Arrays.asList("managed-by-managedElement"))).container(ContainerType.ASSOCIATION)
                 .topologyObjectType(TopologyObjectType.ENTITY).queryFunction(QueryFunction.EQ).leaf(ID_COLUMN_NAME)
                 .parameter("me1").resolverDataType(ResolverDataType.STRING).build());
@@ -1006,7 +1019,7 @@ class BasePathRefinementTest {
         Assertions.assertEquals(DataType.PRIMITIVE, scopeLogicalBlock1.getScopeObject().getDataType());
 
         // error reason: scopeFilter: /managed-by-managedElement[@id=1] -> ResolverDataType is INTEGER, but in case of id it should be STRING
-        ScopeLogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).innerContainer(
+        ScopeLogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).innerContainer(
                 new ArrayList<>(Arrays.asList("managed-by-managedElement"))).container(ContainerType.ASSOCIATION)
                 .topologyObjectType(TopologyObjectType.ENTITY).queryFunction(QueryFunction.EQ).leaf(ID_COLUMN_NAME)
                 .parameter("1").resolverDataType(ResolverDataType.INTEGER).build());
@@ -1016,7 +1029,7 @@ class BasePathRefinementTest {
                 filterCriteria));
 
         // error reason: scopeFilter: /provided-nrCellDu[@cellLocalId=1] -> only id can be queried for associations
-        ScopeLogicalBlock scopeLogicalBlock3 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).innerContainer(
+        ScopeLogicalBlock scopeLogicalBlock3 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).innerContainer(
                 new ArrayList<>(Arrays.asList("provided-nrCellDu"))).container(ContainerType.ASSOCIATION)
                 .topologyObjectType(TopologyObjectType.ENTITY).queryFunction(QueryFunction.EQ).leaf("cellLocalId")
                 .parameter("1").resolverDataType(ResolverDataType.INTEGER).build());
@@ -1026,28 +1039,28 @@ class BasePathRefinementTest {
                 filterCriteria));
 
         // for id the PRIMITIVE dataType is set
-        LogicalBlock logicalBlock4 = scopeResolver.process(GNBDU_FUNCTION, "/GNBDUFunction[@id='gnbdu1']");
+        LogicalBlock logicalBlock4 = scopeResolver.process(ODU_FUNCTION, "/ODUFunction[@id='odu1']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock4).build()));
 
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
         Assertions.assertEquals(DataType.PRIMITIVE, ((ScopeLogicalBlock) logicalBlock4).getScopeObject().getDataType());
 
         // error reason: for id INTEGER ResolverDataType is not accepted
-        LogicalBlock logicalBlock5 = scopeResolver.process(GNBDU_FUNCTION, "/GNBDUFunction[@id=1]");
+        LogicalBlock logicalBlock5 = scopeResolver.process(ODU_FUNCTION, "/ODUFunction[@id=1]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock5).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));
 
         // error reason: for gNBCUName attribute INTEGER ResolverDataType is not accepted
-        LogicalBlock logicalBlock6 = scopeResolver.process("GNBCUCPFunction", "/attributes[@gNBCUName=1]");
+        LogicalBlock logicalBlock6 = scopeResolver.process("OCUCPFunction", "/attributes[@gNBCUName=1]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock6).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));
 
         // for sourceIds container PRIMITIVE dataType is set
-        LogicalBlock logicalBlock7 = scopeResolver.process(GNBDU_FUNCTION, "/sourceIds[@items = 'someSourceId']");
+        LogicalBlock logicalBlock7 = scopeResolver.process(ODU_FUNCTION, "/sourceIds[@items = 'someSourceId']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock7).build()));
 
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
@@ -1055,52 +1068,52 @@ class BasePathRefinementTest {
         Assertions.assertEquals(DataType.PRIMITIVE, scopeLogicalBlock1.getScopeObject().getDataType());
 
         // error reason: for sourceIds container INTEGER dataType is not accepted
-        LogicalBlock logicalBlock8 = scopeResolver.process(GNBDU_FUNCTION, "/sourceIds[@items = 1]");
+        LogicalBlock logicalBlock8 = scopeResolver.process(ODU_FUNCTION, "/sourceIds[@items = 1]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock8).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));
 
         // for decorators container PRIMITIVE dataType is accepted
-        LogicalBlock logicalBlock9 = scopeResolver.process(GNBDU_FUNCTION, "/decorators[@module-x:stringdata = 'ORAN']");
+        LogicalBlock logicalBlock9 = scopeResolver.process(ODU_FUNCTION, "/decorators[@module-x:stringdata = 'ORAN']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock9).build()));
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateScopeParametersDataType(filterCriteria));
 
         // for decorators container INTEGER dataType is accepted
-        LogicalBlock logicalBlock10 = scopeResolver.process(GNBDU_FUNCTION, "/decorators[@module-x:intdata = 2]");
+        LogicalBlock logicalBlock10 = scopeResolver.process(ODU_FUNCTION, "/decorators[@module-x:intdata = 2]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock10).build()));
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateScopeParametersDataType(filterCriteria));
 
-        LogicalBlock logicalBlock11 = scopeResolver.process(GNBDU_FUNCTION,
+        LogicalBlock logicalBlock11 = scopeResolver.process(ODU_FUNCTION,
                 "/decorators[contains(@gnbdu-function-model:location, 'Stock')]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock11).build()));
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateScopeParametersDataType(filterCriteria));
 
         //For classifiers container PRIMITIVE dataType is accepted
-        LogicalBlock logicalBlock12 = scopeResolver.process(GNBDU_FUNCTION,
+        LogicalBlock logicalBlock12 = scopeResolver.process(ODU_FUNCTION,
                 "/classifiers[@item = 'gnbdu-function-model:Rural']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock12).build()));
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateScopeParametersDataType(filterCriteria));
 
         //For classifiers container INTEGER dataType is NOT accepted
-        LogicalBlock logicalBlock13 = scopeResolver.process(GNBDU_FUNCTION, "/classifiers[@item = 23 ]");
+        LogicalBlock logicalBlock13 = scopeResolver.process(ODU_FUNCTION, "/classifiers[@item = 23 ]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock13).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));
 
         //for complex attribute INTEGER is accepted
-        LogicalBlock logicalBlock14 = scopeResolver.process(GNBDU_FUNCTION, "/attributes/dUpLMNId[@mnc = 2]");
+        LogicalBlock logicalBlock14 = scopeResolver.process(ODU_FUNCTION, "/attributes/dUpLMNId[@mnc = 2]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock14).build()));
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateScopeParametersDataType(filterCriteria));
 
         //for complex attribute PRIMITIVE is accepted
-        LogicalBlock logicalBlock15 = scopeResolver.process(GNBDU_FUNCTION, "/attributes/dUpLMNId[@mnc = 'some value']");
+        LogicalBlock logicalBlock15 = scopeResolver.process(ODU_FUNCTION, "/attributes/dUpLMNId[@mnc = 'some value']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock15).build()));
 
         Assertions.assertDoesNotThrow(() -> basePathRefinement.validateScopeParametersDataType(filterCriteria));
@@ -1109,8 +1122,8 @@ class BasePathRefinementTest {
     @Test
     void testCheckIfTargetMatchesWithScope() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
-        TargetObject targetObject1 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).params(List
-                .of("gNBId", "gNBIdLength")).build();
+        TargetObject targetObject1 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).params(List.of(
+                "gNBId", "gNBIdLength")).build();
         TargetObject targetObject2 = TargetObject.builder("NRCellDU").container(ContainerType.ATTRIBUTES).params(List.of(
                 "nCI")).build();
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().targets(new ArrayList<>(Arrays.asList(
@@ -1118,9 +1131,9 @@ class BasePathRefinementTest {
 
         OrLogicalBlock orLogicalBlock1 = new OrLogicalBlock();
 
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf(
-                "gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBId")
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBIdLength")
+                .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
+        ScopeObject scopeObject2 = ScopeObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).leaf("gNBId")
                 .queryFunction(QueryFunction.EQ).parameter("8").dataType(DataType.BIGINT).build();
 
         ScopeLogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(scopeObject1);
@@ -1165,8 +1178,8 @@ class BasePathRefinementTest {
     @Test
     void testSplitFilterCriteria() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
-        TargetObject targetObject1 = TargetObject.builder(GNBDU_FUNCTION).container(ContainerType.ATTRIBUTES).params(List
-                .of("gNBId", "gNBIdLength")).build();
+        TargetObject targetObject1 = TargetObject.builder(ODU_FUNCTION).container(ContainerType.ATTRIBUTES).params(List.of(
+                "gNBId", "gNBIdLength")).build();
         TargetObject targetObject2 = TargetObject.builder("NRCellDU").container(ContainerType.ATTRIBUTES).params(List.of(
                 "nCI")).build();
         TargetObject targetObject3 = TargetObject.builder("NRCellDU").container(ContainerType.ATTRIBUTES).params(List.of(
@@ -1174,10 +1187,10 @@ class BasePathRefinementTest {
         TargetObject targetObject4 = TargetObject.builder("EUtranCell").container(ContainerType.ATTRIBUTES).params(List.of(
                 "earFcn", "fdn")).isAllParamQueried(true).build();
 
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).leaf("leaf1").build();
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).leaf("leaf1").build();
         ScopeObject scopeObject2 = ScopeObject.builder("NRCellDU").leaf("leaf1").build();
         ScopeObject scopeObject3 = ScopeObject.builder("EUtranCell").leaf("leaf1").build();
-        ScopeObject scopeObject4 = ScopeObject.builder(GNBDU_FUNCTION).leaf("leaf2").build();
+        ScopeObject scopeObject4 = ScopeObject.builder(ODU_FUNCTION).leaf("leaf2").build();
         ScopeObject scopeObject5 = ScopeObject.builder("NRCellDU").leaf("leaf2").build();
         ScopeObject scopeObject6 = ScopeObject.builder("EUtranCell").leaf("leaf2").build();
 
@@ -1293,16 +1306,16 @@ class BasePathRefinementTest {
         OrLogicalBlock orLogicalBlockChild1 = new OrLogicalBlock();
         OrLogicalBlock orLogicalBlockChild2 = new OrLogicalBlock();
 
-        LogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        LogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1").dataType(
                         DataType.BIGINT).build());
-        LogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        LogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("2").dataType(
                         DataType.BIGINT).build());
-        LogicalBlock scopeLogicalBlock3 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        LogicalBlock scopeLogicalBlock3 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("3").dataType(
                         DataType.BIGINT).build());
-        LogicalBlock scopeLogicalBlock4 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).container(
+        LogicalBlock scopeLogicalBlock4 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).container(
                 ContainerType.ATTRIBUTES).leaf("gNBIdLength").queryFunction(QueryFunction.EQ).parameter("4").dataType(
                         DataType.BIGINT).build());
 

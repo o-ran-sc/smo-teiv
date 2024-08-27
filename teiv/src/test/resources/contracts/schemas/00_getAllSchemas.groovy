@@ -47,7 +47,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "_3gpp-common-yang-types",
                         "domain": "",
-                        "revision": "2023-11-06",
+                        "revision": "2022-07-26",
                         "content": {
                             "href": "/schemas/_3gpp-common-yang-types/content"
                         }
@@ -74,6 +74,14 @@ import org.springframework.cloud.contract.spec.Contract
                         "revision": "2013-07-15",
                         "content": {
                             "href": "/schemas/ietf-yang-types/content"
+                        }
+                    },
+                    {
+                        "name": "o-ran-smo-teiv-cloud",
+                        "domain": "CLOUD",
+                        "revision": "2024-07-15",
+                        "content": {
+                        "href": "/schemas/o-ran-smo-teiv-cloud/content"
                         }
                     },
                     {
@@ -111,9 +119,17 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-05-24",
+                        "revision": "2024-07-15",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
+                        }
+                    },
+                    {
+                        "name": "o-ran-smo-teiv-rel-cloud-ran",
+                        "domain": "REL_CLOUD_RAN",
+                        "revision": "2024-07-15",
+                        "content": {
+                            "href": "/schemas/o-ran-smo-teiv-rel-cloud-ran/content"
                         }
                     },
                     {
@@ -125,9 +141,17 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "o-ran-smo-teiv-rel-oam-cloud",
+                        "domain": "REL_OAM_CLOUD",
+                        "revision": "2024-07-15",
+                        "content": {
+                            "href": "/schemas/o-ran-smo-teiv-rel-oam-cloud/content"
+                        }
+                    },
+                    {
                         "name": "o-ran-smo-teiv-rel-oam-ran",
                         "domain": "REL_OAM_RAN",
-                        "revision": "2024-05-24",
+                        "revision": "2024-07-15",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-rel-oam-ran/content"
                         }
@@ -204,11 +228,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=0&limit=500"
                 },
-                "totalCount": 19
+                "totalCount": 22
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(19)
+                    occurrence(22)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].domain', byEquality())
@@ -282,6 +306,18 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[18].domain', byEquality())
                 jsonPath('$.items[18].revision', byEquality())
                 jsonPath('$.items[18].content.href', byEquality())
+                jsonPath('$.items[19].name', byEquality())
+                jsonPath('$.items[19].domain', byEquality())
+                jsonPath('$.items[19].revision', byEquality())
+                jsonPath('$.items[19].content.href', byEquality())
+                jsonPath('$.items[20].name', byEquality())
+                jsonPath('$.items[20].domain', byEquality())
+                jsonPath('$.items[20].revision', byEquality())
+                jsonPath('$.items[20].content.href', byEquality())
+                jsonPath('$.items[21].name', byEquality())
+                jsonPath('$.items[21].domain', byEquality())
+                jsonPath('$.items[21].revision', byEquality())
+                jsonPath('$.items[21].content.href', byEquality())
             }
         }
     },
@@ -320,9 +356,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/schemas?offset=1&limit=1"
                 },
                 "last": {
-                    "href": "/schemas?offset=18&limit=1"
+                    "href": "/schemas?offset=21&limit=1"
                 },
-                "totalCount": 19
+                "totalCount": 22
             }''')
         }
     },
@@ -356,11 +392,11 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "o-ran-smo-teiv-common-yang-extensions",
-                        "domain": "",
-                        "revision": "2024-05-24",
+                        "name": "o-ran-smo-teiv-cloud",
+                        "domain": "CLOUD",
+                        "revision": "2024-07-15",
                         "content": {
-                            "href": "/schemas/o-ran-smo-teiv-common-yang-extensions/content"
+                            "href": "/schemas/o-ran-smo-teiv-cloud/content"
                         }
                     }
                 ],
@@ -377,9 +413,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/schemas?offset=6&limit=3"
                 },
                 "last": {
-                    "href": "/schemas?offset=18&limit=3"
+                    "href": "/schemas?offset=21&limit=3"
                 },
-                "totalCount": 19
+                "totalCount": 22
             }''')
         }
     },
@@ -399,7 +435,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-05-24",
+                        "revision": "2024-07-15",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
                         }
@@ -446,9 +482,17 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "o-ran-smo-teiv-rel-cloud-ran",
+                        "domain": "REL_CLOUD_RAN",
+                        "revision": "2024-07-15",
+                        "content": {
+                            "href": "/schemas/o-ran-smo-teiv-rel-cloud-ran/content"
+                        }
+                    },
+                    {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-05-24",
+                        "revision": "2024-07-15",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
                         }
@@ -456,7 +500,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-rel-equipment-ran",
                         "domain": "REL_EQUIPMENT_RAN",
-                        "revision": "2024-05-24",
+                        "revision": "2024-07-15",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-rel-equipment-ran/content"
                         }
@@ -477,7 +521,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=0&limit=500&domain=.*RAN.*"
                 },
-                "totalCount": 3
+                "totalCount": 4
             }''')
         }
     },

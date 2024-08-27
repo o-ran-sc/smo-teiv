@@ -37,6 +37,15 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
+                        "name": "CLOUD",
+                        "entityTypes": {
+                            "href": "/domains/CLOUD/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/CLOUD/relationship-types"
+                        }
+                    },
+                    {
                         "name": "EQUIPMENT",
                         "entityTypes": {
                             "href": "/domains/EQUIPMENT/entity-types"
@@ -64,12 +73,30 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "REL_CLOUD_RAN",
+                        "entityTypes": {
+                            "href": "/domains/REL_CLOUD_RAN/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/REL_CLOUD_RAN/relationship-types"
+                        }
+                    },
+                    {
                         "name": "REL_EQUIPMENT_RAN",
                         "entityTypes": {
                             "href": "/domains/REL_EQUIPMENT_RAN/entity-types"
                         },
                         "relationshipTypes": {
                             "href": "/domains/REL_EQUIPMENT_RAN/relationship-types"
+                        }
+                    },
+                    {
+                        "name": "REL_OAM_CLOUD",
+                        "entityTypes": {
+                            "href": "/domains/REL_OAM_CLOUD/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/REL_OAM_CLOUD/relationship-types"
                         }
                     },
                     {
@@ -115,11 +142,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains?offset=0&limit=500"
                 },
-                "totalCount": 7
+                "totalCount": 10
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(7)
+                    occurrence(10)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entityTypes.href', byEquality())
@@ -142,6 +169,15 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[6].name', byEquality())
                 jsonPath('$.items[6].entityTypes.href', byEquality())
                 jsonPath('$.items[6].relationshipTypes.href', byEquality())
+                jsonPath('$.items[7].name', byEquality())
+                jsonPath('$.items[7].entityTypes.href', byEquality())
+                jsonPath('$.items[7].relationshipTypes.href', byEquality())
+                jsonPath('$.items[8].name', byEquality())
+                jsonPath('$.items[8].entityTypes.href', byEquality())
+                jsonPath('$.items[8].relationshipTypes.href', byEquality())
+                jsonPath('$.items[9].name', byEquality())
+                jsonPath('$.items[9].entityTypes.href', byEquality())
+                jsonPath('$.items[9].relationshipTypes.href', byEquality())
             }
         }
     },
@@ -159,6 +195,15 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
+                        "name": "OAM",
+                        "entityTypes": {
+                            "href": "/domains/OAM/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/OAM/relationship-types"
+                        }
+                    },
+                    {
                         "name": "RAN",
                         "entityTypes": {
                             "href": "/domains/RAN/entity-types"
@@ -168,21 +213,12 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "REL_EQUIPMENT_RAN",
+                        "name": "REL_CLOUD_RAN",
                         "entityTypes": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/entity-types"
+                            "href": "/domains/REL_CLOUD_RAN/entity-types"
                         },
                         "relationshipTypes": {
-                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types"
-                        }
-                    },
-                    {
-                        "name": "REL_OAM_RAN",
-                        "entityTypes": {
-                            "href": "/domains/REL_OAM_RAN/entity-types"
-                        },
-                        "relationshipTypes": {
-                            "href": "/domains/REL_OAM_RAN/relationship-types"
+                            "href": "/domains/REL_CLOUD_RAN/relationship-types"
                         }
                     }
                 ],
@@ -199,9 +235,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/domains?offset=5&limit=3"
                 },
                 "last": {
-                    "href": "/domains?offset=5&limit=3"
+                    "href": "/domains?offset=8&limit=3"
                 },
-                "totalCount": 7
+                "totalCount": 10
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
@@ -233,7 +269,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid Value",
-                "details": "Offset cannot be larger than 6"
+                "details": "Offset cannot be larger than 9"
             }''')
         }
     }

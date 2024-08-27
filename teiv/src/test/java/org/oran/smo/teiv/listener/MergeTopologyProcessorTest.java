@@ -83,7 +83,7 @@ class MergeTopologyProcessorTest {
     @Test
     void testMergeGNBDUFunctionEntity1() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("merge", "{}");
-        String entityType = "GNBDUFunction";
+        String entityType = "ODUFunction";
         Map<String, Object> yangParserOutputMapBSide = new HashMap<>();
         Entity entity = new Entity("", entityType, "cloud_id_1", yangParserOutputMapBSide, List.of());
 

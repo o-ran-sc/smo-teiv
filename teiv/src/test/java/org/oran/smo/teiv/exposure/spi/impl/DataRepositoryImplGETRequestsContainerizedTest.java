@@ -101,7 +101,8 @@ class DataRepositoryImplGETRequestsContainerizedTest {
         Assertions.assertFalse(schemaByName.isPresent());
 
         Module schema = Module.builder().name(moduleName).namespace("new-namespace").domain("NEW_DOMAIN").content(
-                "yang content {} \n\n \t\t\t;").ownerAppId("APP").status(ModuleStatus.IN_USAGE).build();
+                "yang content {} \n\n \t\t\t;").ownerAppId("APP").status(ModuleStatus.IN_USAGE).revision("2024-07-15")
+                .build();
 
         modelRepository.createModule(schema);
 

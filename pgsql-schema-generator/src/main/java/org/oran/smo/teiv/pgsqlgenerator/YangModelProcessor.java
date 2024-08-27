@@ -170,6 +170,17 @@ public class YangModelProcessor {
                                     .getType().getDataType()).dataType(JSONB).indexType(
                                             IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
                         });
+                        yContainer.getLists().forEach(yListAttr -> {
+
+                            System.out.printf("\t\t\tLeaf Name: %s \n", yListAttr.getListName());
+                            System.out.printf("\t\t\t\tLeaf Type: %s \n", yListAttr.getUses());
+                            System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(yListAttr.getUses()
+                                    .toString()));
+
+                            attributes.add(Attribute.builder().name(yListAttr.getListName()).yangDataType(yListAttr
+                                    .getUses().toString()).dataType(JSONB).indexType(
+                                            IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
+                        });
                         yContainer.getContainers().forEach(container -> {
 
                             System.out.printf("\t\t\tContainer Name: %s \n", container.getContainerName());
@@ -178,12 +189,12 @@ public class YangModelProcessor {
                                     .toString()));
 
                             String dataType = dataTypeMapping.get(container.getUses().toString());
-                            Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
-                                    .getContainerName()).yangDataType("<< Refer to Module >>").dataType(dataType)
-                                    .constraints(new ArrayList());
                             if (container.getContainerName().equals("geo-location")) {
                                 dataType = dataTypeMapping.get("geo:geo-location");
                             }
+                            Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
+                                    .getContainerName()).yangDataType("<< Refer to Module >>").dataType(dataType)
+                                    .constraints(new ArrayList());
                             if (dataType.equals(JSONB)) {
                                 attributeBuilder.indexType(IndexType.GIN);
                             }

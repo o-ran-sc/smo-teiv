@@ -48,12 +48,12 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.ID).topologyObjectType(
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.ID).topologyObjectType(
                 TopologyObjectType.ENTITY).build());
 
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), PRIMITIVE)), filterCriteria.getSelects());
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE)),
+                filterCriteria.getSelects());
     }
 
     @Test
@@ -61,16 +61,13 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of("gNBDUId", "dUpLMNId")).container(
+        targets.add(TargetObject.builder("ODUFunction").params(List.of("gNBDUId", "dUpLMNId")).container(
                 ContainerType.ATTRIBUTES).topologyObjectType(TopologyObjectType.ENTITY).build());
 
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), PRIMITIVE, field("ties_data.\"GNBDUFunction\".\"gNBDUId\"")
-                                .as("o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBDUId"), BIGINT, field(
-                                        "ties_data.\"GNBDUFunction\".\"dUpLMNId\"").as(
-                                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.dUpLMNId"), CONTAINER)),
-                filterCriteria.getSelects());
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
+                        "ties_data.\"ODUFunction\".\"gNBDUId\"").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"),
+                        BIGINT)), filterCriteria.getSelects());
     }
 
     @Test
@@ -78,19 +75,17 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.ATTRIBUTES)
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.ATTRIBUTES)
                 .topologyObjectType(TopologyObjectType.ENTITY).isAllParamQueried(true).build());
 
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), PRIMITIVE, field("ties_data.\"GNBDUFunction\".\"gNBId\"")
-                                .as("o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), BIGINT, field(
-                                        "ties_data.\"GNBDUFunction\".\"gNBIdLength\"").as(
-                                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBIdLength"), INTEGER, field(
-                                                        "ties_data.\"GNBDUFunction\".\"dUpLMNId\"").as(
-                                                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.dUpLMNId"),
-                        CONTAINER, field("ties_data.\"GNBDUFunction\".\"gNBDUId\"").as(
-                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBDUId"), BIGINT)), filterCriteria.getSelects());
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
+                        "ties_data.\"ODUFunction\".\"gNBId\"").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), BIGINT,
+                        field("ties_data.\"ODUFunction\".\"gNBIdLength\"").as(
+                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), INTEGER, field(
+                                        "ties_data.\"ODUFunction\".\"gNBDUId\"").as(
+                                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"), BIGINT)), filterCriteria
+                                                        .getSelects());
     }
 
     @Test
@@ -98,15 +93,13 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.DECORATORS)
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.DECORATORS)
                 .topologyObjectType(TopologyObjectType.ENTITY).build());
 
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), PRIMITIVE, field(
-                                "ties_data.\"GNBDUFunction\".\"CD_decorators\"").as(
-                                        "o-ran-smo-teiv-ran:GNBDUFunction.decorators"), CONTAINER)), filterCriteria
-                                                .getSelects());
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
+                        "ties_data.\"ODUFunction\".\"CD_decorators\"").as("o-ran-smo-teiv-ran:ODUFunction.decorators"),
+                        CONTAINER)), filterCriteria.getSelects());
     }
 
     @Test
@@ -114,15 +107,13 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.CLASSIFIERS)
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.CLASSIFIERS)
                 .topologyObjectType(TopologyObjectType.ENTITY).build());
 
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), PRIMITIVE, field(
-                                "ties_data.\"GNBDUFunction\".\"CD_classifiers\"").as(
-                                        "o-ran-smo-teiv-ran:GNBDUFunction.classifiers"), CONTAINER)), filterCriteria
-                                                .getSelects());
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
+                        "ties_data.\"ODUFunction\".\"CD_classifiers\"").as("o-ran-smo-teiv-ran:ODUFunction.classifiers"),
+                        CONTAINER)), filterCriteria.getSelects());
     }
 
     @Test
@@ -130,15 +121,13 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.SOURCE_IDS)
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.SOURCE_IDS)
                 .topologyObjectType(TopologyObjectType.ENTITY).build());
 
-        Assertions.assertEquals(Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), Map.of(field("ties_data.\"GNBDUFunction\".\"id\"").as(
-                        "o-ran-smo-teiv-ran:GNBDUFunction.id"), PRIMITIVE, field(
-                                "ties_data.\"GNBDUFunction\".\"CD_sourceIds\"").as(
-                                        "o-ran-smo-teiv-ran:GNBDUFunction.sourceIds"), CONTAINER)), filterCriteria
-                                                .getSelects());
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
+                        "ties_data.\"ODUFunction\".\"CD_sourceIds\"").as("o-ran-smo-teiv-ran:ODUFunction.sourceIds"),
+                        CONTAINER)), filterCriteria.getSelects());
     }
 
     @Test
@@ -231,7 +220,7 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.CLASSIFIERS)
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.CLASSIFIERS)
                 .topologyObjectType(TopologyObjectType.UNDEFINED).build());
 
         Assertions.assertThrowsExactly(TiesException.class, filterCriteria::getSelects);
@@ -242,7 +231,7 @@ public class SelectBlockTest {
         List<TargetObject> targets = new ArrayList<>();
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
 
-        targets.add(TargetObject.builder("GNBDUFunction").params(List.of()).container(ContainerType.ASSOCIATION)
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.ASSOCIATION)
                 .topologyObjectType(TopologyObjectType.ENTITY).build());
 
         Assertions.assertThrowsExactly(TiesException.class, filterCriteria::getSelects);

@@ -14,105 +14,129 @@ module o-ran-smo-teiv-rel-oam-ran {
     organization "ORAN";
     contact "The Authors";
     description
-    "RAN O&M to Logical topology model.
+        "RAN O&M to Logical topology model.
 
-    This model contains the RAN O&M to Logical topology relations
+        This model contains the RAN O&M to Logical topology relations
 
-    Copyright (C) 2024 Ericsson
-    Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+        Copyright (C) 2024 Ericsson
+        Modifications Copyright (C) 2024 OpenInfra Foundation Europe
 
-    Licensed under the Apache License, Version 2.0 (the \"License\");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+        Licensed under the Apache License, Version 2.0 (the \"License\");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an \"AS IS\" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an \"AS IS\" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
 
-    SPDX-License-Identifier: Apache-2.0";
+        SPDX-License-Identifier: Apache-2.0";
 
     revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
     }
 
+    revision "2024-07-15" {
+        description "This revision aligns O-RAN Work Group 10 Stage 2 Specification (O-RAN.WG10.TE&IV-CIMI.0-R004.v02.00)";
+        or-teiv-yext:label 0.4.0;
+    }
+
     or-teiv-yext:domain REL_OAM_RAN;
 
-    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_ENODEBFUNCTION {   // 1 to 0..n
+    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_ODUFUNCTION {    // 1 to 0..n
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
 
-        leaf-list managed-enodebFunction {
-            description "Managed Element manages eNodeB Function.";
+        leaf-list managed-oduFunction {
+            description "Managed Element manages O-DU Function.";
             or-teiv-yext:aSide or-teiv-oam:ManagedElement;
             type instance-identifier;
         }
 
         leaf managed-by-managedElement {
-            description "eNodeB Function managed by Managed Element.";
-            or-teiv-yext:bSide or-teiv-ran:ENodeBFunction;
+            description "O-DU Function managed by Managed Element.";
+            or-teiv-yext:bSide or-teiv-ran:ODUFunction;
             type instance-identifier;
             mandatory true;
         }
     }
 
-    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_GNBDUFUNCTION {    // 1 to 0..n
+    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_OCUCPFUNCTION {    // 1 to 0..n
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
 
-        leaf-list managed-gnbduFunction {
-            description "Managed Element manages gNodeB-DU Function.";
+        leaf-list managed-ocucpFunction {
+            description "Managed Element manages O-CU-CP Function.";
             or-teiv-yext:aSide or-teiv-oam:ManagedElement;
             type instance-identifier;
         }
 
         leaf managed-by-managedElement {
-            description "gNodeB-DU Function managed by Managed Element.";
-            or-teiv-yext:bSide or-teiv-ran:GNBDUFunction;
+            description "O-CU-CP Function managed by Managed Element.";
+            or-teiv-yext:bSide or-teiv-ran:OCUCPFunction;
             type instance-identifier;
             mandatory true;
         }
     }
 
-    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION {    // 1 to 0..n
+    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_OCUUPFUNCTION {    // 1 to 0..n
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
 
-        leaf-list managed-gnbcucpFunction {
-            description "Managed Element manages gNodeB-CU-CP Function.";
+        leaf-list managed-ocuupFunction {
+            description "Managed Element manages O-CU-UP Function.";
             or-teiv-yext:aSide or-teiv-oam:ManagedElement;
             type instance-identifier;
         }
 
         leaf managed-by-managedElement {
-            description "gNodeB-CU-CP Function managed by Managed Element.";
-            or-teiv-yext:bSide or-teiv-ran:GNBCUCPFunction;
+            description "O-CU-UP Function managed by Managed Element.";
+            or-teiv-yext:bSide or-teiv-ran:OCUUPFunction;
             type instance-identifier;
             mandatory true;
         }
     }
 
-    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION {    // 1 to 0..n
+    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_ORUFUNCTION {    // 1 to 0..n
 
         uses or-teiv-types:Top_Grp_Type;
         key id;
 
-        leaf-list managed-gnbcuupFunction {
-            description "Managed Element manages gNodeB-CU-UP Function.";
+        leaf-list managed-oruFunction {
+            description "Managed Element manages O-RU Function.";
             or-teiv-yext:aSide or-teiv-oam:ManagedElement;
             type instance-identifier;
         }
 
         leaf managed-by-managedElement {
-            description "gNodeB-CU-UP Function managed by Managed Element.";
-            or-teiv-yext:bSide or-teiv-ran:GNBCUUPFunction;
+            description "O-RU Function managed by Managed Element.";
+            or-teiv-yext:bSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+            mandatory true;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION {    // 1 to 0..n
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf-list managed-nearRTRICFunction {
+            description "Managed Element manages Near RT RIC Function.";
+            or-teiv-yext:aSide or-teiv-oam:ManagedElement;
+            type instance-identifier;
+        }
+
+        leaf managed-by-managedElement {
+            description "Near RT RIC Function managed by Managed Element.";
+            or-teiv-yext:bSide or-teiv-ran:NearRTRICFunction;
             type instance-identifier;
             mandatory true;
         }

@@ -494,7 +494,7 @@ import org.springframework.cloud.contract.spec.Contract
                     '  } ' +
                     '   ' +
                     '  augment /test:decorators { ' +
-                    '        leaf select*fromgnbcucpfunction { ' +
+                    '        leaf select*fromocucpfunction { ' +
                     '            type string; ' +
                     '        } ' +
                     '    leaf vendor { ' +
@@ -521,7 +521,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
-                    "details": "Invalid file input: 'select*fromgnbcucpfunction' is not a valid YANG identifier."
+                    "details": "Invalid file input: 'select*fromocucpfunction' is not a valid YANG identifier."
                 }''')
         }
     },
@@ -562,7 +562,7 @@ import org.springframework.cloud.contract.spec.Contract
                     '        } ' +
                     '    } ' +
                     '   ' +
-                    '  identity UPDATEties_model.module_referenceSETstatusDELETINGWHEREnamegnbdu-function-model { ' +
+                    '  identity UPDATEties_model.module_referenceSETstatusDELETINGWHEREnameodu-function-model { ' +
                     '    base test:classifiers; ' +
                     '  } ' +
                     '  ' +

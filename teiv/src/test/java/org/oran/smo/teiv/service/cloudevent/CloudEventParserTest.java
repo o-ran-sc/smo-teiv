@@ -88,7 +88,7 @@ class CloudEventParserTest {
         assertEquals("NRCELLDU_USES_NRSECTORCARRIER", relationship.getType());
         assertEquals("relationshipId", relationship.getId());
         assertEquals(
-                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,GNBDUFunction=gnbdu04,NRCellDU=NR-Cell-07",
+                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07",
                 relationship.getASide());
         assertEquals("entityId_2", relationship.getBSide());
         assertEquals(null, relationship.getSourceIds());
@@ -103,18 +103,18 @@ class CloudEventParserTest {
 
         relationship = parsedCloudEventData.getRelationships().get(2);
         assertEquals("o-ran-smo-teiv-ran", relationship.getModule());
-        assertEquals("GNBDUFUNCTION_PROVIDES_NRCELLDU", relationship.getType());
+        assertEquals("ODUFUNCTION_PROVIDES_NRCELLDU", relationship.getType());
         assertEquals(
-                "urn:o-ran:smo:teiv:sha512:GNBDUFUNCTION_PROVIDES_NRCELLDU=89FE9A4ED8451D779865C389900E247B13E360B0A4175EBA80AA9B384BFA4C688F17865AFD934085B0235BCA66128F2E6D4CE6953EAAB2EDEBD94B3683C1A064",
+                "urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=89FE9A4ED8451D779865C389900E247B13E360B0A4175EBA80AA9B384BFA4C688F17865AFD934085B0235BCA66128F2E6D4CE6953EAAB2EDEBD94B3683C1A064",
                 relationship.getId());
         assertEquals("entityId_5", relationship.getASide());
         assertEquals(
-                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,GNBDUFunction=gnbdu04,NRCellDU=NR-Cell-07",
+                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07",
                 relationship.getBSide());
 
         relationship = parsedCloudEventData.getRelationships().get(3);
         assertEquals("o-ran-smo-teiv-ran", relationship.getModule());
-        assertEquals("GNBDUFUNCTION_PROVIDES_NRCELLDU", relationship.getType());
+        assertEquals("ODUFUNCTION_PROVIDES_NRCELLDU", relationship.getType());
         assertEquals("relationshipId4", relationship.getId());
         assertEquals("entityId_5", relationship.getASide());
         assertEquals("entityId_3", relationship.getBSide());

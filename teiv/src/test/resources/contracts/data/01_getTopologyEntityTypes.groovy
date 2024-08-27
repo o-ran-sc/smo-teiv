@@ -89,42 +89,6 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "ENodeBFunction",
-                        "entities": {
-                            "href": "/domains/REL_OAM_RAN/entity-types/ENodeBFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "EUtranCell",
-                        "entities": {
-                            "href": "/domains/REL_OAM_RAN/entity-types/EUtranCell/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBCUCPFunction",
-                        "entities": {
-                            "href": "/domains/REL_OAM_RAN/entity-types/GNBCUCPFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBCUUPFunction",
-                        "entities": {
-                            "href": "/domains/REL_OAM_RAN/entity-types/GNBCUUPFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFunction",
-                        "entities": {
-                            "href": "/domains/REL_OAM_RAN/entity-types/GNBDUFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "LTESectorCarrier",
-                        "entities": {
-                            "href": "/domains/REL_OAM_RAN/entity-types/LTESectorCarrier/entities"
-                        }
-                    },
-                    {
                         "name": "ManagedElement",
                         "entities": {
                             "href": "/domains/REL_OAM_RAN/entity-types/ManagedElement/entities"
@@ -149,6 +113,36 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "NearRTRICFunction",
+                        "entities": {
+                            "href": "/domains/REL_OAM_RAN/entity-types/NearRTRICFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFunction",
+                        "entities": {
+                            "href": "/domains/REL_OAM_RAN/entity-types/OCUCPFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFunction",
+                        "entities": {
+                            "href": "/domains/REL_OAM_RAN/entity-types/OCUUPFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "ODUFunction",
+                        "entities": {
+                            "href": "/domains/REL_OAM_RAN/entity-types/ODUFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "ORUFunction",
+                        "entities": {
+                            "href": "/domains/REL_OAM_RAN/entity-types/ORUFunction/entities"
+                        }
+                    },
+                    {
                         "name": "Sector",
                         "entities": {
                             "href": "/domains/REL_OAM_RAN/entity-types/Sector/entities"
@@ -169,134 +163,6 @@ import org.springframework.cloud.contract.spec.Contract
                 },
                 "last": {
                     "href": "/domains/REL_OAM_RAN/entity-types?offset=0&limit=500"
-                },
-                "totalCount": 12
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(12)
-                })
-                jsonPath('$.items[0].name', byEquality())
-                jsonPath('$.items[0].entities.href', byEquality())
-                jsonPath('$.items[1].name', byEquality())
-                jsonPath('$.items[1].entities.href', byEquality())
-                jsonPath('$.items[2].name', byEquality())
-                jsonPath('$.items[2].entities.href', byEquality())
-                jsonPath('$.items[3].name', byEquality())
-                jsonPath('$.items[3].entities.href', byEquality())
-                jsonPath('$.items[4].name', byEquality())
-                jsonPath('$.items[4].entities.href', byEquality())
-                jsonPath('$.items[5].name', byEquality())
-                jsonPath('$.items[5].entities.href', byEquality())
-                jsonPath('$.items[6].name', byEquality())
-                jsonPath('$.items[6].entities.href', byEquality())
-                jsonPath('$.items[7].name', byEquality())
-                jsonPath('$.items[7].entities.href', byEquality())
-                jsonPath('$.items[8].name', byEquality())
-                jsonPath('$.items[8].entities.href', byEquality())
-                jsonPath('$.items[9].name', byEquality())
-                jsonPath('$.items[9].entities.href', byEquality())
-                jsonPath('$.items[10].name', byEquality())
-                jsonPath('$.items[10].entities.href', byEquality())
-                jsonPath('$.items[11].name', byEquality())
-                jsonPath('$.items[11].entities.href', byEquality())
-            }
-        }
-    },
-    Contract.make {
-        description "SUCCESS - 200: Get all the available topology entity types in RAN domain."
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                    {
-                        "name": "AntennaCapability",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/AntennaCapability/entities"
-                        }
-                    },
-                    {
-                        "name": "ENodeBFunction",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/ENodeBFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "EUtranCell",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/EUtranCell/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBCUCPFunction",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/GNBCUCPFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBCUUPFunction",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/GNBCUUPFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFunction",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/GNBDUFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "LTESectorCarrier",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/LTESectorCarrier/entities"
-                        }
-                    },
-                    {
-                        "name": "NRCellCU",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/NRCellCU/entities"
-                        }
-                    },
-                    {
-                        "name": "NRCellDU",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/NRCellDU/entities"
-                        }
-                    },
-                    {
-                        "name": "NRSectorCarrier",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/NRSectorCarrier/entities"
-                        }
-                    },
-                    {
-                        "name": "Sector",
-                        "entities": {
-                            "href": "/domains/RAN/entity-types/Sector/entities"
-                        }
-                    }
-                ],
-                "self": {
-                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
-                },
-                "first": {
-                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
-                },
-                "prev": {
-                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
-                },
-                "next": {
-                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
-                },
-                "last": {
-                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
                 },
                 "totalCount": 11
             }''')
@@ -330,6 +196,124 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "SUCCESS - 200: Get all the available topology entity types in RAN domain."
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entity-types"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "name": "AntennaCapability",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/AntennaCapability/entities"
+                        }
+                    },
+                    {
+                        "name": "NRCellCU",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/NRCellCU/entities"
+                        }
+                    },
+                    {
+                        "name": "NRCellDU",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/NRCellDU/entities"
+                        }
+                    },
+                    {
+                        "name": "NRSectorCarrier",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/NRSectorCarrier/entities"
+                        }
+                    },
+                    {
+                        "name": "NearRTRICFunction",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/NearRTRICFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFunction",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/OCUCPFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFunction",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/OCUUPFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "ODUFunction",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/ODUFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "ORUFunction",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/ORUFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "Sector",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/Sector/entities"
+                        }
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
+                },
+                "first": {
+                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
+                },
+                "next": {
+                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
+                },
+                "last": {
+                    "href": "/domains/RAN/entity-types?offset=0&limit=500"
+                },
+                "totalCount": 10
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(10)
+                })
+                jsonPath('$.items[0].name', byEquality())
+                jsonPath('$.items[0].entities.href', byEquality())
+                jsonPath('$.items[1].name', byEquality())
+                jsonPath('$.items[1].entities.href', byEquality())
+                jsonPath('$.items[2].name', byEquality())
+                jsonPath('$.items[2].entities.href', byEquality())
+                jsonPath('$.items[3].name', byEquality())
+                jsonPath('$.items[3].entities.href', byEquality())
+                jsonPath('$.items[4].name', byEquality())
+                jsonPath('$.items[4].entities.href', byEquality())
+                jsonPath('$.items[5].name', byEquality())
+                jsonPath('$.items[5].entities.href', byEquality())
+                jsonPath('$.items[6].name', byEquality())
+                jsonPath('$.items[6].entities.href', byEquality())
+                jsonPath('$.items[7].name', byEquality())
+                jsonPath('$.items[7].entities.href', byEquality())
+                jsonPath('$.items[8].name', byEquality())
+                jsonPath('$.items[8].entities.href', byEquality())
+                jsonPath('$.items[9].name', byEquality())
+                jsonPath('$.items[9].entities.href', byEquality())
+            }
+        }
+    },
+    Contract.make {
         description "SUCCESS - 200: Get all the available topology entity types in TEIV domain (includes all the supported topology domains)."
         request {
             method GET()
@@ -355,15 +339,9 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "ENodeBFunction",
+                        "name": "CloudifiedNF",
                         "entities": {
-                            "href": "/domains/TEIV/entity-types/ENodeBFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "EUtranCell",
-                        "entities": {
-                            "href": "/domains/TEIV/entity-types/EUtranCell/entities"
+                            "href": "/domains/TEIV/entity-types/CloudifiedNF/entities"
                         }
                     },
                     {
@@ -379,33 +357,15 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "GNBCUCPFunction",
-                        "entities": {
-                            "href": "/domains/TEIV/entity-types/GNBCUCPFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBCUUPFunction",
-                        "entities": {
-                            "href": "/domains/TEIV/entity-types/GNBCUUPFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "GNBDUFunction",
-                        "entities": {
-                            "href": "/domains/TEIV/entity-types/GNBDUFunction/entities"
-                        }
-                    },
-                    {
-                        "name": "LTESectorCarrier",
-                        "entities": {
-                            "href": "/domains/TEIV/entity-types/LTESectorCarrier/entities"
-                        }
-                    },
-                    {
                         "name": "ManagedElement",
                         "entities": {
                             "href": "/domains/TEIV/entity-types/ManagedElement/entities"
+                        }
+                    },
+                    {
+                        "name": "NFDeployment",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/NFDeployment/entities"
                         }
                     },
                     {
@@ -424,6 +384,54 @@ import org.springframework.cloud.contract.spec.Contract
                         "name": "NRSectorCarrier",
                         "entities": {
                             "href": "/domains/TEIV/entity-types/NRSectorCarrier/entities"
+                        }
+                    },
+                    {
+                        "name": "NearRTRICFunction",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/NearRTRICFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "NodeCluster",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/NodeCluster/entities"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFunction",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/OCUCPFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFunction",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/OCUUPFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "OCloudNamespace",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/OCloudNamespace/entities"
+                        }
+                    },
+                    {
+                        "name": "OCloudSite",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/OCloudSite/entities"
+                        }
+                    },
+                    {
+                        "name": "ODUFunction",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/ODUFunction/entities"
+                        }
+                    },
+                    {
+                        "name": "ORUFunction",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/ORUFunction/entities"
                         }
                     },
                     {
@@ -454,11 +462,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/entity-types?offset=0&limit=500"
                 },
-                "totalCount": 16
+                "totalCount": 20
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(16)
+                    occurrence(20)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entities.href', byEquality())
@@ -492,6 +500,14 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[14].entities.href', byEquality())
                 jsonPath('$.items[15].name', byEquality())
                 jsonPath('$.items[15].entities.href', byEquality())
+                jsonPath('$.items[16].name', byEquality())
+                jsonPath('$.items[16].entities.href', byEquality())
+                jsonPath('$.items[17].name', byEquality())
+                jsonPath('$.items[17].entities.href', byEquality())
+                jsonPath('$.items[18].name', byEquality())
+                jsonPath('$.items[18].entities.href', byEquality())
+                jsonPath('$.items[19].name', byEquality())
+                jsonPath('$.items[19].entities.href', byEquality())
             }
         }
     },
@@ -509,7 +525,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown domain",
-                "details": "Unknown domain: INVALID, known domains: [EQUIPMENT, OAM, RAN, REL_EQUIPMENT_RAN, REL_OAM_RAN, TEIV, TEST]"
+                "details": "Unknown domain: INVALID, known domains: [CLOUD, EQUIPMENT, OAM, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, TEIV, TEST]"
             }''')
         }
     },
@@ -527,7 +543,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid Value",
-                "details": "Offset cannot be larger than 15"
+                "details": "Offset cannot be larger than 19"
             }''')
         }
     }

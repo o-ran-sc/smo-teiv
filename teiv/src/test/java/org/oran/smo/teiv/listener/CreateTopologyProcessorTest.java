@@ -80,9 +80,9 @@ class CreateTopologyProcessorTest {
     }
 
     @Test
-    void testCreateGNBDUFunctionEntity1() {
+    void testCreateODUFunctionEntity1() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("create", "{}");
-        String entityType = "GNBDUFunction";
+        String entityType = "ODUFunction";
         Map<String, Object> yangParserOutputMapBSide = new HashMap<>();
         Entity entity = new Entity("", entityType, "cloud_id_1", yangParserOutputMapBSide, List.of());
 

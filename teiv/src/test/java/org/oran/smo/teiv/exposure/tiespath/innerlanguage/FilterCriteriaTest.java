@@ -61,9 +61,9 @@ class FilterCriteriaTest {
     @Test
     void testFilterCriteria() {
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
-        List<TargetObject> targetObjects = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId)");
+        List<TargetObject> targetObjects = targetResolver.resolve("ODUFunction", "/attributes(gNBId)");
         filterCriteria.setTargets(targetObjects);
-        LogicalBlock logicalBlock = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1]");
+        LogicalBlock logicalBlock = scopeResolver.resolve("ODUFunction", "/attributes[@gNBIdLength=1]");
         filterCriteria.setScope(logicalBlock);
         Assertions.assertEquals(1, filterCriteria.getTargets().size());
         Assertions.assertEquals(QueryFunction.EQ, ((ScopeLogicalBlock) filterCriteria.getScope()).getScopeObject()
@@ -77,10 +77,10 @@ class FilterCriteriaTest {
     @Test
     void testGetTables() {
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
-        List<TargetObject> targetObjects = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId,gNBIdLength)");
+        List<TargetObject> targetObjects = targetResolver.resolve("ODUFunction", "/attributes(gNBId,gNBIdLength)");
         filterCriteria.setTargets(targetObjects);
         targetObjects.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
-        LogicalBlock logicalBlock = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1 or @gNBId=8]");
+        LogicalBlock logicalBlock = scopeResolver.resolve("ODUFunction", "/attributes[@gNBIdLength=1 or @gNBId=8]");
         ((OrLogicalBlock) logicalBlock).getChildren().forEach(l -> ((ScopeLogicalBlock) l).getScopeObject()
                 .setTopologyObjectType(TopologyObjectType.ENTITY));
         filterCriteria.setScope(logicalBlock);
@@ -88,12 +88,12 @@ class FilterCriteriaTest {
                 filterCriteria)).build());
 
         Set<Table> result = new HashSet<>();
-        result.add(table("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\""));
+        result.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
 
         Assertions.assertEquals(result, filterCriteria.getTables());
 
         InnerFilterCriteria filterCriteria2 = new InnerFilterCriteria(null, null);
-        List<TargetObject> targetObjects2 = targetResolver.resolve("GNBDUFUNCTION_PROVIDES_NRCELLDU", null);
+        List<TargetObject> targetObjects2 = targetResolver.resolve("ODUFUNCTION_PROVIDES_NRCELLDU", null);
         filterCriteria2.setTargets(targetObjects2);
         LogicalBlock logicalBlock2 = scopeResolver.resolve("NRCellDU", "/attributes[@nCI=12]");
         filterCriteria2.setScope(logicalBlock2);
@@ -107,9 +107,9 @@ class FilterCriteriaTest {
         Assertions.assertEquals(result, filterCriteria2.getTables());
 
         InnerFilterCriteria filterCriteria3 = new InnerFilterCriteria(null, null);
-        List<TargetObject> targetObjects3 = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId,gNBIdLength)");
+        List<TargetObject> targetObjects3 = targetResolver.resolve("ODUFunction", "/attributes(gNBId,gNBIdLength)");
         filterCriteria3.setTargets(targetObjects3);
-        LogicalBlock logicalBlock3 = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1 or @gNBId=8]");
+        LogicalBlock logicalBlock3 = scopeResolver.resolve("ODUFunction", "/attributes[@gNBIdLength=1 or @gNBId=8]");
         filterCriteria3.setScope(logicalBlock3);
 
         Assertions.assertThrows(TiesException.class, filterCriteria3::getTables);
@@ -119,37 +119,35 @@ class FilterCriteriaTest {
     @Test
     void testGetSelects() {
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
-        List<TargetObject> targetObjects = targetResolver.resolve("GNBDUFunction", "/attributes(gNBId,gNBIdLength)");
+        List<TargetObject> targetObjects = targetResolver.resolve("ODUFunction", "/attributes(gNBId,gNBIdLength)");
         targetObjects.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
         filterCriteria.setTargets(targetObjects);
         Map<SelectField, Map<SelectField, DataType>> expected = new HashMap<>();
-        expected.put(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id"), new HashMap<>());
-        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id")).put(field(
-                        "ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBId\"").as(
-                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBId"), DataType.BIGINT);
-        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id")).put(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"")
-                        .as("o-ran-smo-teiv-ran:GNBDUFunction.id"), DataType.PRIMITIVE);
-        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\"").as(
-                "o-ran-smo-teiv-ran:GNBDUFunction.id")).put(field(
-                        "ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBIdLength\"").as(
-                                "o-ran-smo-teiv-ran:GNBDUFunction.attr.gNBIdLength"), DataType.INTEGER);
+        expected.put(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                new HashMap<>());
+        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"))
+                .put(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"gNBId\"").as(
+                        "o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), DataType.BIGINT);
+        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"))
+                .put(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                        DataType.PRIMITIVE);
+        expected.get(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"))
+                .put(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"gNBIdLength\"").as(
+                        "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), DataType.INTEGER);
         Assertions.assertEquals(expected, filterCriteria.getSelects());
     }
 
     @Test
     void testGetCondition() {
         InnerFilterCriteria filterCriteria = new InnerFilterCriteria(null, null);
-        LogicalBlock logicalBlock = scopeResolver.resolve("GNBDUFunction", "/attributes[@gNBIdLength=1]");
+        LogicalBlock logicalBlock = scopeResolver.resolve("ODUFunction", "/attributes[@gNBIdLength=1]");
         filterCriteria.setScope(logicalBlock);
         filterCriteria.setTargets(List.of());
         basePathRefinement.resolveUndefinedTopologyObjectTypes(FilterCriteria.builder("RAN").filterCriteriaList(List.of(
                 filterCriteria)).build());
         basePathRefinement.validateScopeParametersDataType(FilterCriteria.builder("RAN").filterCriteriaList(List.of(
                 filterCriteria)).build());
-        Assertions.assertEquals(condition(field("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBIdLength\"").eq(1))
+        Assertions.assertEquals(condition(field("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"gNBIdLength\"").eq(1))
                 .toString(), filterCriteria.getCondition().toString());
     }
 }

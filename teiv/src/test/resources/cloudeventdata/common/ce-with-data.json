@@ -86,7 +86,7 @@
                 "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER": [
                     {
                         "id": "relationshipId",
-                        "aSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,GNBDUFunction=gnbdu04,NRCellDU=NR-Cell-07",
+                        "aSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07",
                         "bSide": "entityId_2"
                     },
                     {
@@ -101,11 +101,11 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFUNCTION_PROVIDES_NRCELLDU": [
+                "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU": [
                     {
-                        "id": "urn:o-ran:smo:teiv:sha512:GNBDUFUNCTION_PROVIDES_NRCELLDU=89FE9A4ED8451D779865C389900E247B13E360B0A4175EBA80AA9B384BFA4C688F17865AFD934085B0235BCA66128F2E6D4CE6953EAAB2EDEBD94B3683C1A064",
+                        "id": "urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=89FE9A4ED8451D779865C389900E247B13E360B0A4175EBA80AA9B384BFA4C688F17865AFD934085B0235BCA66128F2E6D4CE6953EAAB2EDEBD94B3683C1A064",
                         "aSide": "entityId_5",
-                        "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,GNBDUFunction=gnbdu04,NRCellDU=NR-Cell-07"
+                        "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07"
                     },
                     {
                         "id": "relationshipId4",

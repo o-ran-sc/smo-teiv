@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getEntitiesByDomain - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?targetFilter=/GNBDUFunction/classifiers&scopeFilter=/GNBDUFunction/classifiers[@item='test-app-module:Rural']"
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()
@@ -37,43 +37,43 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "classifiers": [
                                     "test-app-module:Rural",
                                     "test-app-module:Weekend"
                                 ],
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBDUFunction=14"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "classifiers": [
                                     "test-app-module:Indoor",
                                     "test-app-module:Rural",
                                     "test-app-module:Weekend"
                                 ],
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,GNBDUFunction=16"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/GNBDUFunction/classifiers&scopeFilter=/GNBDUFunction/classifiers[@item='test-app-module:Rural']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
                 },
                 "first": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/GNBDUFunction/classifiers&scopeFilter=/GNBDUFunction/classifiers[@item='test-app-module:Rural']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
                 },
                 "prev": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/GNBDUFunction/classifiers&scopeFilter=/GNBDUFunction/classifiers[@item='test-app-module:Rural']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
                 },
                 "next": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/GNBDUFunction/classifiers&scopeFilter=/GNBDUFunction/classifiers[@item='test-app-module:Rural']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
                 },
                 "last": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/GNBDUFunction/classifiers&scopeFilter=/GNBDUFunction/classifiers[@item='test-app-module:Rural']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
                 },
                 "totalCount": 2
             }''')
@@ -81,8 +81,8 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(2)
                 })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
             }
         }
     },
@@ -100,35 +100,35 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "classifiers": [
+                                    "test-app-module:Rural"
+                                ],
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=93"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "classifiers": [
                                     "test-app-module:Rural",
                                     "test-app-module:Weekend"
                                 ],
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBDUFunction=14"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:GNBDUFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
                                 "classifiers": [
                                     "test-app-module:Indoor",
                                     "test-app-module:Rural",
                                     "test-app-module:Weekend"
                                 ],
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,GNBDUFunction=16"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "classifiers": [
-                                    "test-app-module:Rural"
-                                ],
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,GNBDUFunction=19,NRCellDU=93"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                             }
                         ]
                     }
@@ -154,9 +154,9 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(3)
                 })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:GNBDUFunction[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
             }
         }
     },

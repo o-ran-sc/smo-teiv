@@ -51,42 +51,42 @@ class ScopeLogicalBlockTest {
 
         Set<Table> resultTables = new HashSet<>();
 
-        ScopeObject scopeObject = ScopeObject.builder("GNBDUFunction").container(ContainerType.ASSOCIATION).leaf("id")
+        ScopeObject scopeObject = ScopeObject.builder("ODUFunction").container(ContainerType.ASSOCIATION).leaf("id")
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
         scopeObject.setInnerContainer(Arrays.asList("provided-nrCellDu"));
         scopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
 
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFunction").container(ContainerType.ATTRIBUTES).leaf(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFunction").container(ContainerType.ATTRIBUTES).leaf(
                 "gNBIdLength").queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.INTEGER).build();
         scopeObject1.setTopologyObjectType(TopologyObjectType.ENTITY);
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFunction").container(ContainerType.ATTRIBUTES).leaf("gNBId")
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFunction").container(ContainerType.ATTRIBUTES).leaf("gNBId")
                 .queryFunction(QueryFunction.EQ).parameter("8").dataType(DataType.BIGINT).build();
         scopeObject2.setTopologyObjectType(TopologyObjectType.ENTITY);
 
-        ScopeObject scopeObject3 = ScopeObject.builder("GNBDUFunction").container(ContainerType.ATTRIBUTES).leaf("gNBId")
+        ScopeObject scopeObject3 = ScopeObject.builder("ODUFunction").container(ContainerType.ATTRIBUTES).leaf("gNBId")
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
         scopeObject3.setTopologyObjectType(TopologyObjectType.UNDEFINED);
 
-        ScopeObject scopeObject4 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").container(ContainerType.ID)
+        ScopeObject scopeObject4 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").container(ContainerType.ID)
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.PRIMITIVE).build();
         scopeObject4.setTopologyObjectType(TopologyObjectType.RELATION);
 
-        ScopeObject scopeObject5 = ScopeObject.builder("GNBDUFunction").container(ContainerType.ASSOCIATION).leaf("id")
+        ScopeObject scopeObject5 = ScopeObject.builder("ODUFunction").container(ContainerType.ASSOCIATION).leaf("id")
                 .queryFunction(QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
         scopeObject5.setInnerContainer(Arrays.asList("managed-by-managedElement"));
         scopeObject5.setTopologyObjectType(TopologyObjectType.ENTITY);
 
-        ScopeObject scopeObject6 = ScopeObject.builder("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION").container(
+        ScopeObject scopeObject6 = ScopeObject.builder("MANAGEDELEMENT_MANAGES_ODUFUNCTION").container(
                 ContainerType.ASSOCIATION).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1").dataType(
                         DataType.PRIMITIVE).build();
         scopeObject6.setInnerContainer(Arrays.asList("managed-by-managedElement"));
         scopeObject6.setTopologyObjectType(TopologyObjectType.RELATION);
 
-        ScopeObject scopeObject7 = ScopeObject.builder("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION").container(
+        ScopeObject scopeObject7 = ScopeObject.builder("MANAGEDELEMENT_MANAGES_ODUFUNCTION").container(
                 ContainerType.ASSOCIATION).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1").dataType(
                         DataType.PRIMITIVE).build();
-        scopeObject7.setInnerContainer(Arrays.asList("provided-by-gnbduFunction"));
+        scopeObject7.setInnerContainer(Arrays.asList("provided-by-oduFunction"));
         scopeObject7.setTopologyObjectType(TopologyObjectType.RELATION);
 
         ScopeLogicalBlock scopeLogicalBlock = new ScopeLogicalBlock(scopeObject);
@@ -102,11 +102,11 @@ class ScopeLogicalBlockTest {
         Assertions.assertEquals(resultTables, scopeLogicalBlock.getTables());
         resultTables.clear();
 
-        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\""));
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock1.getTables());
         resultTables.clear();
 
-        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\""));
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock2.getTables());
         resultTables.clear();
 
@@ -116,11 +116,11 @@ class ScopeLogicalBlockTest {
         Assertions.assertEquals(resultTables, scopeLogicalBlock4.getTables());
         resultTables.clear();
 
-        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\""));
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock5.getTables());
         resultTables.clear();
 
-        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\""));
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock6.getTables());
         resultTables.clear();
 

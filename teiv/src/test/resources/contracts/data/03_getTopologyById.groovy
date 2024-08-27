@@ -50,10 +50,10 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 200: Get topology for GNBDUFunction entity with id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,GNBDUFunction=9' with REL_EQUIPMENT_RAN (domain including other domains)."
+        description "SUCCESS - 200: Get topology for ODUFunction entity with id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9' with REL_EQUIPMENT_RAN (domain including other domains)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/GNBDUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,GNBDUFunction=9"
+            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
         }
         response {
             status OK()
@@ -61,7 +61,7 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/yang.data+json')
             }
             body('''{
-                "o-ran-smo-teiv-ran:GNBDUFunction": [
+                "o-ran-smo-teiv-ran:ODUFunction": [
                     {
                         "decorators": {
                             "test-app-module:textdata": "ORAN"
@@ -71,17 +71,13 @@ import org.springframework.cloud.contract.spec.Contract
                             "test-app-module:Weekend"
                         ],
                         "attributes": {
-                            "dUpLMNId": {
-                                "mcc": "123",
-                                "mnc": "82"
-                            },
                             "gNBDUId": null,
                             "gNBId": 9,
                             "gNBIdLength": 1
                         },
-                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,GNBDUFunction=9",
+                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9",
                         "sourceIds": [
-                            "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,GNBDUFunction=9",
+                            "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9",
                             "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"
                         ]
                     }
@@ -90,10 +86,10 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "ERROR - 400: Get topology for GNBDUFunction entity with non existing id 'non-existing-id'."
+        description "ERROR - 400: Get topology for ODUFunction entity with non existing id 'non-existing-id'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/GNBDUFunction/entities/non-existing-id"
+            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/non-existing-id"
         }
         response {
             status NOT_FOUND()

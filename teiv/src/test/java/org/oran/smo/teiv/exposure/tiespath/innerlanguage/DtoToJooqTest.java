@@ -45,8 +45,8 @@ import org.oran.smo.teiv.schema.SchemaLoaderException;
 
 class DtoToJooqTest {
 
-    private static final String GNBCUCP_FUNCTION = "GNBCUCPFunction";
-    private static final String GNBDU_FUNCTION = "GNBDUFunction";
+    private static final String OCUCP_FUNCTION = "OCUCPFunction";
+    private static final String ODU_FUNCTION = "ODUFunction";
     private static final String ANTENNA_CAPABILITY = "AntennaCapability";
     private static final String ANTENNA_MODULE = "AntennaModule";
     private static final String MANAGED_ELEMENT = "ManagedElement";
@@ -61,11 +61,11 @@ class DtoToJooqTest {
     @Test
     void testConditions_relationIsNotNull() {
         ScopeObject scopeObject1 = ScopeObject.builder(MANAGED_ELEMENT).topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.RELATION).innerContainer(List.of("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION"))
+                .container(ContainerType.RELATION).innerContainer(List.of("MANAGEDELEMENT_MANAGES_ODUFUNCTION"))
                 .queryFunction(QueryFunction.NOT_NULL).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.RELATION).innerContainer(List.of("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION"))
+        ScopeObject scopeObject2 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+                .container(ContainerType.RELATION).innerContainer(List.of("MANAGEDELEMENT_MANAGES_ODUFUNCTION"))
                 .queryFunction(QueryFunction.NOT_NULL).build();
 
         LogicalBlock lb1 = new ScopeLogicalBlock(scopeObject1);
@@ -76,8 +76,8 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"REL_ID_MANAGEDELEMENT_MANAGES_GNBDUFUNCTION\" is not null\n" +
-                "  or ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"REL_ID_MANAGEDELEMENT_MANAGES_GNBDUFUNCTION\" is not null\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION\" is not null\n" +
+                "  or ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION\" is not null\n")
             .toString(), olb1.getCondition().toString());
         // spotless:on
     }
@@ -238,15 +238,15 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_entityAttributes_containerObject() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).innerContainer(List.of("dUpLMNId")).leaf("mnc").queryFunction(
                         QueryFunction.EQ).parameter("789").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject2 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).innerContainer(List.of("dUpLMNId")).leaf("mcc").queryFunction(
                         QueryFunction.CONTAINS).parameter("456").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject invalidQueryFunction = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject invalidQueryFunction = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).innerContainer(List.of("dUpLMNId")).leaf("mcc").queryFunction(
                         QueryFunction.NOT_NULL).parameter("456").dataType(DataType.PRIMITIVE).build();
 
@@ -260,8 +260,8 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"dUpLMNId\" -> 'mnc' = '\"789\"'\n" +
-                "  or ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"dUpLMNId\" ->> 'mcc' like '%456%'\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"dUpLMNId\" -> 'mnc' = '\"789\"'\n" +
+                "  or ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"dUpLMNId\" ->> 'mcc' like '%456%'\n")
             .toString(), actualCondition.toString());
 
         assertThrows(TiesPathException.class, new ScopeLogicalBlock(invalidQueryFunction)::getCondition);
@@ -270,15 +270,15 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_entityAttributes_containerObject_multipleElements() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).innerContainer(List.of("dUpLMNId", "mcc")).leaf("mcca").queryFunction(
                         QueryFunction.EQ).parameter("789").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject11 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject11 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).innerContainer(List.of("dUpLMNId", "mcc")).leaf("mccb").queryFunction(
                         QueryFunction.EQ).parameter("789").dataType(DataType.INTEGER).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject2 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).innerContainer(List.of("dUpLMNId", "mcc")).leaf("mcca").queryFunction(
                         QueryFunction.CONTAINS).parameter("789").dataType(DataType.PRIMITIVE).build();
 
@@ -296,9 +296,9 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"dUpLMNId\" -> 'mcc' -> 'mcca' = '\"789\"'\n" +
-                "  or ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"dUpLMNId\" -> 'mcc' -> 'mccb' = '789'\n" +
-                "  or ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"dUpLMNId\" -> 'mcc' ->> 'mcca' like '%789%'\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"dUpLMNId\" -> 'mcc' -> 'mcca' = '\"789\"'\n" +
+                "  or ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"dUpLMNId\" -> 'mcc' -> 'mccb' = '789'\n" +
+                "  or ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"dUpLMNId\" -> 'mcc' ->> 'mcca' like '%789%'\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
@@ -378,11 +378,11 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_entityAttributes() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).leaf("gNBId").queryFunction(QueryFunction.EQ).parameter("1").dataType(
                         DataType.BIGINT).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject2 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ATTRIBUTES).leaf("decimalId").queryFunction(QueryFunction.EQ).parameter("2.5")
                 .dataType(DataType.DECIMAL).build();
 
@@ -412,8 +412,8 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"gNBId\" = 1\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"decimalId\" = 2.5\n" +
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"gNBId\" = 1\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"decimalId\" = 2.5\n" +
                 "  and ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"nRPCI\" like (('%' || replace(\n" +
                 "    replace(\n" +
                 "      replace('ABC789', '!', '!!'),\n" +
@@ -430,11 +430,11 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_relationshipAttributes() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.ATTRIBUTES).leaf("rel_column1").queryFunction(
                         QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.ATTRIBUTES).leaf("rel_column2").queryFunction(
                         QueryFunction.EQ).parameter("ABC789").dataType(DataType.PRIMITIVE).build();
 
@@ -456,7 +456,7 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_undefinedAttributes_throws() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
                 TopologyObjectType.UNDEFINED).container(ContainerType.ATTRIBUTES).leaf("rel_column1").queryFunction(
                         QueryFunction.EQ).parameter("1").dataType(DataType.BIGINT).build();
 
@@ -468,15 +468,15 @@ class DtoToJooqTest {
     @Test
     void testConditions_relation() {
         ScopeObject scopeObject1 = ScopeObject.builder(NR_CELL_DU).topologyObjectType(TopologyObjectType.ENTITY).container(
-                ContainerType.RELATION).innerContainer(List.of("GNBDUFUNCTION_PROVIDES_NRCELLDU")).queryFunction(
+                ContainerType.RELATION).innerContainer(List.of("ODUFUNCTION_PROVIDES_NRCELLDU")).queryFunction(
                         QueryFunction.EQ).parameter("urn:base64:TWFuYWdlZEV").dataType(DataType.PRIMITIVE).build();
 
         ScopeObject scopeObject2 = ScopeObject.builder("NRSectorCarrier").topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.RELATION).innerContainer(List.of("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER"))
+                .container(ContainerType.RELATION).innerContainer(List.of("ODUFUNCTION_PROVIDES_NRSECTORCARRIER"))
                 .queryFunction(QueryFunction.EQ).parameter("urn:base64:TWFuYWdlZEW").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject3 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.RELATION).innerContainer(List.of("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER")).leaf(
+        ScopeObject scopeObject3 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+                .container(ContainerType.RELATION).innerContainer(List.of("ODUFUNCTION_PROVIDES_NRSECTORCARRIER")).leaf(
                         "id").queryFunction(QueryFunction.EQ).parameter("urn:base64:TWFuYWdlZEZ").dataType(
                                 DataType.PRIMITIVE).build();
 
@@ -494,9 +494,9 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU\" = 'urn:base64:TWFuYWdlZEV'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" = 'urn:base64:TWFuYWdlZEW'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" = 'urn:base64:TWFuYWdlZEZ'\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU\" = 'urn:base64:TWFuYWdlZEV'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" = 'urn:base64:TWFuYWdlZEW'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" = 'urn:base64:TWFuYWdlZEZ'\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
@@ -504,15 +504,15 @@ class DtoToJooqTest {
     @Test
     void testConditions_relation_throws() {
         ScopeObject scopeObject1 = ScopeObject.builder("NOT_ENTITY").topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.RELATION).innerContainer(List.of("GNBDUFUNCTION_PROVIDES_NRCELLDU")).leaf("id")
+                .container(ContainerType.RELATION).innerContainer(List.of("ODUFUNCTION_PROVIDES_NRCELLDU")).leaf("id")
                 .queryFunction(QueryFunction.EQ).parameter("urn:base64:TWFuYWdlZEZ").dataType(DataType.PRIMITIVE).build();
 
         ScopeObject scopeObject2 = ScopeObject.builder("NOT_RELATION").topologyObjectType(TopologyObjectType.RELATION)
-                .container(ContainerType.RELATION).innerContainer(List.of("GNBDUFUNCTION_PROVIDES_NRCELLDU")).leaf("id")
+                .container(ContainerType.RELATION).innerContainer(List.of("ODUFUNCTION_PROVIDES_NRCELLDU")).leaf("id")
                 .queryFunction(QueryFunction.EQ).parameter("urn:base64:TWFuYWdlZEZ").dataType(DataType.PRIMITIVE).build();
 
         ScopeObject scopeObject3 = ScopeObject.builder("NOT_RELATION").topologyObjectType(TopologyObjectType.RELATION)
-                .container(ContainerType.RELATION).innerContainer(List.of("GNBDUFUNCTION_PROVIDES_NRCELLDU")).leaf("id")
+                .container(ContainerType.RELATION).innerContainer(List.of("ODUFUNCTION_PROVIDES_NRCELLDU")).leaf("id")
                 .queryFunction(QueryFunction.CONTAINS).parameter("urn:base64:TWFuYWdlZEZ").dataType(DataType.PRIMITIVE)
                 .build();
 
@@ -527,7 +527,7 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_entityId() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.ID).queryFunction(QueryFunction.EQ).parameter("ABC123").dataType(
                         DataType.PRIMITIVE).build();
 
@@ -545,7 +545,7 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\" = 'ABC123'\n" +
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\" = 'ABC123'\n" +
                 "  and ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"id\" like (('%' || replace(\n" +
                 "    replace(\n" +
                 "      replace('DEF456', '!', '!!'),\n" +
@@ -561,11 +561,11 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_relationId() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.ID).queryFunction(QueryFunction.EQ).parameter(
                         "urn:base64:TWFuYWdlZEV").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.ID).queryFunction(QueryFunction.CONTAINS).parameter(
                         "urn:base64:TWFuYWdlZEW").dataType(DataType.PRIMITIVE).build();
 
@@ -579,8 +579,8 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU\" = 'urn:base64:TWFuYWdlZEV'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" like (('%' || replace(\n" +
+                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU\" = 'urn:base64:TWFuYWdlZEV'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" like (('%' || replace(\n" +
                 "    replace(\n" +
                 "      replace('urn:base64:TWFuYWdlZEW', '!', '!!'),\n" +
                 "      '%',\n" +
@@ -595,11 +595,11 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_relationIdIsNotNull() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.ID).queryFunction(QueryFunction.NOT_NULL).dataType(
                         DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.ID).queryFunction(QueryFunction.NOT_NULL).dataType(
                         DataType.PRIMITIVE).build();
 
@@ -613,19 +613,19 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU\" is not null\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" is not null\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU\" is not null\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_ID_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" is not null\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_idThrows() {
-        ScopeLogicalBlock undefinedTOType = new ScopeLogicalBlock(ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU")
+        ScopeLogicalBlock undefinedTOType = new ScopeLogicalBlock(ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU")
                 .topologyObjectType(TopologyObjectType.UNDEFINED).container(ContainerType.ID).queryFunction(
                         QueryFunction.EQ).parameter("urn:base64:TWFuYWdlZEV").dataType(DataType.PRIMITIVE).build());
 
-        ScopeLogicalBlock invalidTopologyObjectType = new ScopeLogicalBlock(ScopeObject.builder("GNBDUFunction")
+        ScopeLogicalBlock invalidTopologyObjectType = new ScopeLogicalBlock(ScopeObject.builder("ODUFunction")
                 .topologyObjectType(TopologyObjectType.UNDEFINED).container(ContainerType.ID).queryFunction(
                         QueryFunction.NOT_NULL).parameter("urn:base64:TWFuYWdlZEV").dataType(DataType.PRIMITIVE).build());
 
@@ -635,11 +635,11 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_entityAssociation_oneToMany1() {
-        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("ENodeBFunction").topologyObjectType(
+        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("ORUFunction").topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of(
                         "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1").build());
 
-        ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(
+        ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of(
                         "managed-by-managedElement")).leaf(null).queryFunction(QueryFunction.NOT_NULL).parameter(null)
                 .build());
@@ -651,8 +651,8 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_ENodeBFunction\".\"REL_FK_managed-by-managedElement\" = 'me1'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\" = 'me1'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
@@ -661,12 +661,11 @@ class DtoToJooqTest {
     void testConditions_entityAssociation_oneToMany2() {
         ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder(MANAGED_ELEMENT).topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "managed-gnbduFunction")).leaf("id").queryFunction(QueryFunction.EQ).parameter("gnbdu1").build());
+                        "managed-oduFunction")).leaf("id").queryFunction(QueryFunction.EQ).parameter("odu1").build());
 
         ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder(MANAGED_ELEMENT).topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "managed-gnbcucpFunction")).leaf(null).queryFunction(QueryFunction.NOT_NULL).parameter(null)
-                .build());
+                        "managed-ocucpFunction")).leaf(null).queryFunction(QueryFunction.NOT_NULL).parameter(null).build());
 
         AndOrLogicalBlock alb = new AndLogicalBlock();
         alb.setChildren(List.of(scopeObject1, scopeObject2));
@@ -675,9 +674,9 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\" = 'gnbdu1'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBCUCPFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\" = 'odu1'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
@@ -783,7 +782,7 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_entityAssociation_oneToMany1Contains() {
-        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("ENodeBFunction").topologyObjectType(
+        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("ORUFunction").topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of(
                         "managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.CONTAINS).parameter("me1")
                 .build());
@@ -791,7 +790,7 @@ class DtoToJooqTest {
         Condition actualCondition = scopeObject1.getCondition();
         // spotless:off
         assertEquals(
-            ("ties_data.\"o-ran-smo-teiv-ran_ENodeBFunction\".\"REL_FK_managed-by-managedElement\"like(('%'||replace(" + "\n" +
+            ("ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\"like(('%'||replace(" + "\n" +
                 "replace(" +"\n"+
                 "replace('me1','!','!!')," + "\n" +
                 "'%'," + "\n" +
@@ -853,12 +852,12 @@ class DtoToJooqTest {
 
     @Test
     void testConditions_relationAssociation_oneToMany1() {
-        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ENODEBFUNCTION")
+        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ORUFUNCTION")
                 .topologyObjectType(TopologyObjectType.RELATION).container(ContainerType.ASSOCIATION).innerContainer(List
                         .of("managed-by-managedElement")).leaf("id").queryFunction(QueryFunction.EQ).parameter("me1")
                 .build());
 
-        ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION")
+        ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ODUFUNCTION")
                 .topologyObjectType(TopologyObjectType.RELATION).container(ContainerType.ASSOCIATION).innerContainer(List
                         .of("managed-by-managedElement")).leaf(null).queryFunction(QueryFunction.NOT_NULL).parameter(null)
                 .build());
@@ -870,20 +869,19 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_ENodeBFunction\".\"REL_FK_managed-by-managedElement\" = 'me1'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\" = 'me1'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_relationAssociation_oneToMany2() {
-        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ENODEBFUNCTION")
+        ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ORUFUNCTION")
                 .topologyObjectType(TopologyObjectType.RELATION).container(ContainerType.ASSOCIATION).innerContainer(List
-                        .of("managed-enodebFunction")).leaf("id").queryFunction(QueryFunction.EQ).parameter("enbf1")
-                .build());
+                        .of("managed-oruFunction")).leaf("id").queryFunction(QueryFunction.EQ).parameter("oruf1").build());
 
-        ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_GNBDUFUNCTION")
+        ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder("MANAGEDELEMENT_MANAGES_ODUFUNCTION")
                 .topologyObjectType(TopologyObjectType.RELATION).container(ContainerType.ASSOCIATION).innerContainer(List
                         .of("managed-by-managedElement")).leaf(null).queryFunction(QueryFunction.NOT_NULL).parameter(null)
                 .build());
@@ -895,9 +893,9 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_ENodeBFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_ENodeBFunction\".\"id\" = 'enbf1'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"id\" = 'oruf1'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
@@ -1005,20 +1003,20 @@ class DtoToJooqTest {
     @Test
     void testConditions_entityAssociation_throws() {
         ScopeLogicalBlock scopeObject1 = new ScopeLogicalBlock(ScopeObject.builder("CloudNativeApplication").container(
-                ContainerType.ASSOCIATION).innerContainer(List.of("realised-gnbduFunction")).leaf("id").queryFunction(
-                        QueryFunction.CONTAINS).parameter("gnbdu1").build());
+                ContainerType.ASSOCIATION).innerContainer(List.of("realised-oduFunction")).leaf("id").queryFunction(
+                        QueryFunction.CONTAINS).parameter("odu1").build());
         assertThrows(TiesPathException.class, scopeObject1::getCondition);
     }
 
     @Test
     void testConditions_entityClassifiers() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.CLASSIFIERS).leaf(ITEM).queryFunction(QueryFunction.CONTAINS).parameter(
-                        "gnbdu-function-model:Ru").dataType(DataType.CONTAINER).build();
+                        "odu-function-model:Ru").dataType(DataType.CONTAINER).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject2 = ScopeObject.builder(OCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.CLASSIFIERS).leaf(ITEM).queryFunction(QueryFunction.EQ).parameter(
-                        "gnbcucp-function-model:Weekend").dataType(DataType.CONTAINER).build();
+                        "ocucp-function-model:Weekend").dataType(DataType.CONTAINER).build();
 
         LogicalBlock slb1 = new ScopeLogicalBlock(scopeObject1);
         LogicalBlock slb2 = new ScopeLogicalBlock(scopeObject2);
@@ -1030,21 +1028,21 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  (ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"CD_classifiers\"::text like '%gnbdu-function-model:Ru%')\n" +
-                "  and (ties_data.\"o-ran-smo-teiv-ran_GNBCUCPFunction\".\"CD_classifiers\" @> '\"gnbcucp-function-model:Weekend\"')\n")
+                "  (ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"CD_classifiers\"::text like '%odu-function-model:Ru%')\n" +
+                "  and (ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"CD_classifiers\" @> '\"ocucp-function-model:Weekend\"')\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_relationshipClassifiers() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.CLASSIFIERS).leaf(ITEM).queryFunction(
-                        QueryFunction.CONTAINS).parameter("gnbdu-function-model:Ru").dataType(DataType.CONTAINER).build();
+                        QueryFunction.CONTAINS).parameter("odu-function-model:Ru").dataType(DataType.CONTAINER).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.CLASSIFIERS).leaf(ITEM).queryFunction(QueryFunction.EQ)
-                .parameter("gnbcucp-function-model:Weekend").dataType(DataType.CONTAINER).build();
+                .parameter("ocucp-function-model:Weekend").dataType(DataType.CONTAINER).build();
 
         LogicalBlock slb1 = new ScopeLogicalBlock(scopeObject1);
         LogicalBlock slb2 = new ScopeLogicalBlock(scopeObject2);
@@ -1056,21 +1054,21 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  (ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_classifiers_GNBDUFUNCTION_PROVIDES_NRCELLDU\"::text like '%gnbdu-function-model:Ru%')\n" +
-                "  and (ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_classifiers_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" @> '\"gnbcucp-function-model:Weekend\"')\n")
+                "  (ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRCELLDU\"::text like '%odu-function-model:Ru%')\n" +
+                "  and (ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" @> '\"ocucp-function-model:Weekend\"')\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_entitySourceIds() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.SOURCE_IDS).leaf(ITEM).queryFunction(QueryFunction.CONTAINS).parameter(
                         "urn:cmHandle:").dataType(DataType.CONTAINER).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+        ScopeObject scopeObject2 = ScopeObject.builder(OCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
                 .container(ContainerType.SOURCE_IDS).leaf(ITEM).queryFunction(QueryFunction.EQ).parameter(
-                        "urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16")
+                        "urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ODUFunction=16")
                 .dataType(DataType.CONTAINER).build();
 
         LogicalBlock slb1 = new ScopeLogicalBlock(scopeObject1);
@@ -1083,22 +1081,22 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  (ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"CD_sourceIds\"::text like '%urn:cmHandle:%')\n" +
-                "  and (ties_data.\"o-ran-smo-teiv-ran_GNBCUCPFunction\".\"CD_sourceIds\" @> '\"urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16\"')\n")
+                "  (ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"CD_sourceIds\"::text like '%urn:cmHandle:%')\n" +
+                "  and (ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"CD_sourceIds\" @> '\"urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ODUFunction=16\"')\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_relationshipSourceIds() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.SOURCE_IDS).leaf(ITEM).queryFunction(
                         QueryFunction.CONTAINS).parameter("urn:cmHandle:").dataType(DataType.CONTAINER).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
                 TopologyObjectType.RELATION).container(ContainerType.SOURCE_IDS).leaf(ITEM).queryFunction(QueryFunction.EQ)
                 .parameter(
-                        "urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16")
+                        "urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ODUFunction=16")
                 .dataType(DataType.CONTAINER).build();
 
         LogicalBlock slb1 = new ScopeLogicalBlock(scopeObject1);
@@ -1111,24 +1109,24 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  (ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_sourceIds_GNBDUFUNCTION_PROVIDES_NRCELLDU\"::text like '%urn:cmHandle:%')\n" +
-                "  and (ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_sourceIds_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" @> '\"urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16\"')\n")
+                "  (ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU\"::text like '%urn:cmHandle:%')\n" +
+                "  and (ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" @> '\"urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ODUFunction=16\"')\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_entityDecorators() {
-        ScopeObject scopeObject1 = ScopeObject.builder(GNBDU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.DECORATORS).leaf("gnbdu-function-model:location").queryFunction(
+        ScopeObject scopeObject1 = ScopeObject.builder(ODU_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+                .container(ContainerType.DECORATORS).leaf("odu-function-model:location").queryFunction(
                         QueryFunction.CONTAINS).parameter("Stock").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder(GNBCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.DECORATORS).leaf("gnbdu-function-model:stringdata").queryFunction(QueryFunction.EQ)
+        ScopeObject scopeObject2 = ScopeObject.builder(OCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+                .container(ContainerType.DECORATORS).leaf("odu-function-model:stringdata").queryFunction(QueryFunction.EQ)
                 .parameter("ASD").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject3 = ScopeObject.builder(GNBCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
-                .container(ContainerType.DECORATORS).leaf("gnbdu-function-model:intdata").queryFunction(QueryFunction.EQ)
+        ScopeObject scopeObject3 = ScopeObject.builder(OCUCP_FUNCTION).topologyObjectType(TopologyObjectType.ENTITY)
+                .container(ContainerType.DECORATORS).leaf("odu-function-model:intdata").queryFunction(QueryFunction.EQ)
                 .parameter("2").dataType(DataType.BIGINT).build();
 
         LogicalBlock slb1 = new ScopeLogicalBlock(scopeObject1);
@@ -1144,25 +1142,25 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"CD_decorators\" ->> 'gnbdu-function-model:location' like '%Stock%'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBCUCPFunction\".\"CD_decorators\" -> 'gnbdu-function-model:stringdata' = '\"ASD\"'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_GNBCUCPFunction\".\"CD_decorators\" -> 'gnbdu-function-model:intdata' = '2'\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"CD_decorators\" ->> 'odu-function-model:location' like '%Stock%'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"CD_decorators\" -> 'odu-function-model:stringdata' = '\"ASD\"'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"CD_decorators\" -> 'odu-function-model:intdata' = '2'\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testConditions_relationshipDecorators() {
-        ScopeObject scopeObject1 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
-                TopologyObjectType.RELATION).container(ContainerType.DECORATORS).leaf("gnbdu-function-model:location")
+        ScopeObject scopeObject1 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRCELLDU").topologyObjectType(
+                TopologyObjectType.RELATION).container(ContainerType.DECORATORS).leaf("odu-function-model:location")
                 .queryFunction(QueryFunction.CONTAINS).parameter("Stock").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject2 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
-                TopologyObjectType.RELATION).container(ContainerType.DECORATORS).leaf("gnbdu-function-model:stringdata")
+        ScopeObject scopeObject2 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+                TopologyObjectType.RELATION).container(ContainerType.DECORATORS).leaf("odu-function-model:stringdata")
                 .queryFunction(QueryFunction.EQ).parameter("ASD").dataType(DataType.PRIMITIVE).build();
 
-        ScopeObject scopeObject3 = ScopeObject.builder("GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
-                TopologyObjectType.RELATION).container(ContainerType.DECORATORS).leaf("gnbdu-function-model:intdata")
+        ScopeObject scopeObject3 = ScopeObject.builder("ODUFUNCTION_PROVIDES_NRSECTORCARRIER").topologyObjectType(
+                TopologyObjectType.RELATION).container(ContainerType.DECORATORS).leaf("odu-function-model:intdata")
                 .queryFunction(QueryFunction.EQ).parameter("2").dataType(DataType.BIGINT).build();
 
         LogicalBlock slb1 = new ScopeLogicalBlock(scopeObject1);
@@ -1178,23 +1176,23 @@ class DtoToJooqTest {
         // spotless:off
         assertEquals(condition(
             "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_decorators_GNBDUFUNCTION_PROVIDES_NRCELLDU\" ->> 'gnbdu-function-model:location' like '%Stock%'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_decorators_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" -> 'gnbdu-function-model:stringdata' = '\"ASD\"'\n" +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_decorators_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER\" -> 'gnbdu-function-model:intdata' = '2'\n")
+                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_decorators_ODUFUNCTION_PROVIDES_NRCELLDU\" ->> 'odu-function-model:location' like '%Stock%'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_decorators_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" -> 'odu-function-model:stringdata' = '\"ASD\"'\n" +
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRSectorCarrier\".\"REL_CD_decorators_ODUFUNCTION_PROVIDES_NRSECTORCARRIER\" -> 'odu-function-model:intdata' = '2'\n")
             .toString(), actualCondition.toString());
         // spotless:on
     }
 
     @Test
     void testGetJoinCondition() {
-        LogicalBlock slb1 = new ScopeLogicalBlock(ScopeObject.builder("GNBDUFunction").topologyObjectType(
+        LogicalBlock slb1 = new ScopeLogicalBlock(ScopeObject.builder("ODUFunction").topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of("provided-nrCellDu"))
                 .build());
 
         InnerFilterCriteria innerFilterCriteria1 = InnerFilterCriteria.builder().scope(slb1).build();
 
         Pair<String, Field> pair1 = new ImmutablePair<>("ties_data.\"o-ran-smo-teiv-ran_NRCellDU\"", field(
-                "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_provided-by-gnbduFunction\"" + "=" + "ties_data.\"o-ran-smo-teiv-ran_GNBDUFunction\".\"id\""));
+                "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_provided-by-oduFunction\"" + "=" + "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\""));
 
         Assertions.assertEquals(new HashSet(Arrays.asList(pair1)), innerFilterCriteria1.builder().scope(slb1).build()
                 .getJoinCondition());
