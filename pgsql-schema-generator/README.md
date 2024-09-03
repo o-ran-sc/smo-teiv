@@ -464,9 +464,10 @@ more info.
 
 ## Local Use
 
-Copy YANG models into the [generate-defaults](src/main/resources/generate-defaults) directory, Once done perform the 
-schema generation process by running springboot application within the pgsql-schema-generator directory using
-*mvn spring-boot:run*. The command will also run the spring boot tests and output the results.
+Copy YANG models into the [generate-defaults](src/main/resources/generate-defaults) directory, or use the copyYangFiles
+script to copy yang files from TEIV resources. Once done perform the schema generation process by running springboot
+application within the pgsql-schema-generator directory using *mvn spring-boot:run*. The command will also run the
+spring boot tests and output the results.
 
 To run testsuite:
 
