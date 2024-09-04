@@ -79,6 +79,21 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
+#
+# comment out kafka-producer if you DON'T want pre-populated example data in TEIV
+#
+  kafka-producer:
+    container_name: kafka-producer
+    image: confluentinc/cp-kafka:7.6.1
+    volumes:
+      - ./cloudEventProducer/cloudEventProducerForDockerCompose.sh:/cloudEventProducer.sh
+      - ./cloudEventProducer/events:/events
+    depends_on:
+      - topology-ingestion-inventory
+      - kafka
+    restart: "no"
+    entrypoint: [ "/bin/bash", "-c", "sleep 30 && bash /cloudEventProducer.sh"]
+
   kafka:
     image: confluentinc/cp-kafka:7.6.1
     container_name: kafka
