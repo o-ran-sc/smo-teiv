@@ -95,11 +95,12 @@ submodules. Management instance data is a graph of objects which have
 attributes (see the **schema** in the data models).
 
 The :doc:`Topology & Inventory Data Models <data-models-guide>` includes:
-- Modules for each supported domain that describe the structure of the
-managed objects within it as well as any relationships between them. -
-Modules that describe cross-domain relationships. - Modules that define
-proprietary extensions and types used to describe the structure of
-objects and attributes within the domains.
+
+ - Modules for each supported domain that describe the structure of the
+   managed objects within it as well as any relationships between them.
+ - Modules that describe cross-domain relationships.
+ - Modules that define proprietary extensions and types used to describe
+   the structure of objects and attributes within the domains.
 
 The following sample diagram shows some managed objects and their
 relationships in the RAN domain.
@@ -141,15 +142,15 @@ Supported domains
 |                                   | | comprises cloud infrastructure and deployment       |
 |                                   | | aspects that can be used in the topology model.     |
 +-----------------------------------+-------------------------------------------------------+
-| EQUIPMENT_TO_RAN                  | | This model contains the topology relations          |
+| REL_EQUIPMENT_RAN                 | | This model contains the topology relations          |
 |                                   | | between Equipment and RAN.                          |
 +-----------------------------------+-------------------------------------------------------+
-| OAM_TO_RAN                        | | This model contains the topology relations          |
+| REL_OAM_RAN                       | | This model contains the topology relations          |
 |                                   | | between O&M and RAN.                                |
 +-----------------------------------+-------------------------------------------------------+
-| CLOUD_TO_RAN                      | | This model contains the RAN Cloud to RAN Logical    |
+| REL_CLOUD_RAN                     | | This model contains the RAN Cloud to RAN Logical    |
 |                                   | | topology relations.                                 |
 +-----------------------------------+-------------------------------------------------------+
-| OAM_TO_CLOUD                      | | This model contains the RAN O&M to Cloud            |
+| REL_OAM_CLOUD                     | | This model contains the RAN O&M to Cloud            |
 |                                   | | topology relations.                                 |
 +-----------------------------------+-------------------------------------------------------+

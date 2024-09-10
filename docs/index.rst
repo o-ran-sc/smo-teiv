@@ -18,9 +18,10 @@ to share and operate on a common view of the topology.
 
    ./developer-guide.rst
    ./query-api-examples.rst
+   ./classifiers-and-decorators.rst
    ./data-models-guide.rst
-   ./geographical-location-enrichment-guide.rst
-   ./geographical-location-enrichment-api.rst
+   ./discover-and-reconciliation-interface-guide.rst
+   ./discover-and-reconciliation-interface.rst
    ./supported-filter-options.rst
    ./api-documentation.rst
    ./pgsql-schema-generator-guide.rst
