@@ -35,6 +35,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.oran.smo.teiv.pgsqlgenerator.TestHelper;
 import org.oran.smo.teiv.pgsqlgenerator.schema.model.HashInfoDataGenerator;
+import org.springframework.util.ResourceUtils;
 
 @SpringBootTest(classes = { DataSchemaGenerator.class, ModelComparator.class, DataSchemaHelper.class, TableBuilder.class,
         HashInfoDataGenerator.class, BackwardCompatibilityChecker.class }, properties = {
@@ -56,8 +57,8 @@ public class DataSchemaGeneratorTest {
         //then
         Assertions.assertFalse(isGreenFieldInstallation);
         //exclude commit statement in the prepare statement as it will be added in the later stage at the end of the schema.
-        Assertions.assertTrue(TestHelper.filesCompareByLine(Paths.get(baselineDataSqlFile), Paths.get(actualResultSqlFile),
-                "COMMIT;", ""));
+        Assertions.assertTrue(TestHelper.filesCompareByLine(ResourceUtils.getFile("classpath:" + baselineDataSqlFile)
+                .toPath(), Paths.get(actualResultSqlFile), "COMMIT;", ""));
     }
 
     @AfterEach

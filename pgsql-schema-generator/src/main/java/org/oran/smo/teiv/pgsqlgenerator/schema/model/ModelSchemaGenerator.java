@@ -22,18 +22,18 @@ package org.oran.smo.teiv.pgsqlgenerator.schema.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import org.oran.smo.teiv.pgsqlgenerator.HashInfoEntity;
 import org.oran.smo.teiv.pgsqlgenerator.schema.BackwardCompatibilityChecker;
+import org.oran.smo.teiv.pgsqlgenerator.FileHelper;
 import org.oran.smo.teiv.pgsqlgenerator.schema.SchemaParser;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
 import org.oran.smo.teiv.pgsqlgenerator.Module;
@@ -65,13 +65,13 @@ public class ModelSchemaGenerator extends SchemaGenerator {
     @Override
     protected void prepareSchema() {
         try {
-            File skeletonFile = ResourceUtils.getFile("classpath:" + skeletonModelSchemaFileClassPath);
+            Resource skeletonResource = new ClassPathResource(skeletonModelSchemaFileClassPath);
             File newGeneratedModelFile = new File(modelOutputFileName);
-            Files.copy(skeletonFile.toPath(), newGeneratedModelFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileHelper.copyResourceToFile(skeletonResource, newGeneratedModelFile);
             if (!isGreenFieldInstallation) {
-                File helmBaseline = ResourceUtils.getFile(baselineModelSchemaFileClassPath);
+                Resource baselineResource = new ClassPathResource(baselineModelSchemaFileClassPath);
                 File modelBaseline = new File(tempBaselineModelSchemaFileClassPath);
-                Files.copy(helmBaseline.toPath(), modelBaseline.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                FileHelper.copyResourceToFile(baselineResource, modelBaseline);
             }
             this.schema = newGeneratedModelFile;
         } catch (IOException exception) {

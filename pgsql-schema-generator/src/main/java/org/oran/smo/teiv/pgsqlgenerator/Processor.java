@@ -36,10 +36,10 @@ import org.oran.smo.teiv.pgsqlgenerator.schema.model.ModelSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.RelationshipGraphGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.ResourceUtils;
 
 @RequiredArgsConstructor
 @Component
@@ -55,10 +55,18 @@ public class Processor {
     private final EntityGraphGeneratorUml entityGraphGeneratorUml;
     @Value("${yang-model.source}")
     private String yangModelDirectory;
+    @Value("${yang-model.external.source}")
+    private String yangModelExternalDirectory;
 
     @PostConstruct
     void process() throws IOException {
-        List<File> pathToImplementing = Collections.singletonList(ResourceUtils.getFile(yangModelDirectory));
+        List<File> pathToImplementing;
+        File externalYangFiles = new File(yangModelExternalDirectory);
+        if (externalYangFiles.exists() && externalYangFiles.isDirectory()) {
+            pathToImplementing = Collections.singletonList(ResourceUtils.getFile(yangModelExternalDirectory));
+        } else {
+            pathToImplementing = FileHelper.getYangFilesFromResource(yangModelDirectory);
+        }
 
         // Yang model validation should be added here
 

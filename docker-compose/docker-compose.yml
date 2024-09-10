@@ -20,6 +20,41 @@
 #
 services:
 
+#
+# uncomment if you have your own YANG files in docker-compose/generate-defaults
+#
+#  pgsql-schema-generator:
+#    container_name: pgsql-schema-generator
+#    image: o-ran-sc/smo-teiv-pgsql-schema-generator:latest
+#    volumes:
+#      - ./generate-defaults:/opt/app/pgsql-schema-generator/resources/generate-defaults
+#      - ./sql_scripts:/opt/app/pgsql-schema-generator/sql_scripts
+#    deploy:
+#      resources:
+#        reservations:
+#          cpus: '2'
+#          memory: 2G
+#        limits:
+#          cpus: '3'
+#          memory: 3G
+
+#
+# comment out kafka-producer if you DON'T want pre-populated example data in TEIV OR
+# you have created your own sql schemas with your own YANG files OR
+# you can create your own events tailored to your YANG files in docker-compose/cloudEventProducer/events
+#
+  kafka-producer:
+    container_name: kafka-producer
+    image: confluentinc/cp-kafka:7.6.1
+    volumes:
+      - ./cloudEventProducer/cloudEventProducerForDockerCompose.sh:/cloudEventProducer.sh
+      - ./cloudEventProducer/events:/events
+    depends_on:
+      - topology-ingestion-inventory
+      - kafka
+    restart: "no"
+    entrypoint: [ "/bin/bash", "-c", "sleep 30 && bash /cloudEventProducer.sh" ]
+
   dbpostgresql:
     container_name: dbpostgresql
     image: postgis/postgis:13-3.4-alpine
@@ -27,11 +62,14 @@ services:
       - ${DB_PORT:-5432}:5432
     volumes:
       - ./sql_scripts:/docker-entrypoint-initdb.d
+    command: ["/bin/sh", "-c", "bash /docker-entrypoint-initdb.d/waitForFiles.sh"]
     environment:
       POSTGRES_DB: topology_exposure_db
       POSTGRES_USER: ${DB_USERNAME:-topology_exposure_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-dbpassword}
     restart: always
+    depends_on:
+      - pgsql-schema-generator
     deploy:
       resources:
         reservations:
@@ -78,21 +116,6 @@ services:
       - '2181:2181'
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-
-#
-# comment out kafka-producer if you DON'T want pre-populated example data in TEIV
-#
-  kafka-producer:
-    container_name: kafka-producer
-    image: confluentinc/cp-kafka:7.6.1
-    volumes:
-      - ./cloudEventProducer/cloudEventProducerForDockerCompose.sh:/cloudEventProducer.sh
-      - ./cloudEventProducer/events:/events
-    depends_on:
-      - topology-ingestion-inventory
-      - kafka
-    restart: "no"
-    entrypoint: [ "/bin/bash", "-c", "sleep 30 && bash /cloudEventProducer.sh"]
 
   kafka:
     image: confluentinc/cp-kafka:7.6.1

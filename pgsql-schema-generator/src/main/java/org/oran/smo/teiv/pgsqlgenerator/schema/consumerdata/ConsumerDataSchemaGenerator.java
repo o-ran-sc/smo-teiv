@@ -20,17 +20,17 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator.schema.consumerdata;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.oran.smo.teiv.pgsqlgenerator.FileHelper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
 import org.oran.smo.teiv.pgsqlgenerator.Module;
@@ -38,7 +38,6 @@ import org.oran.smo.teiv.pgsqlgenerator.PgSchemaGeneratorException;
 import org.oran.smo.teiv.pgsqlgenerator.Relationship;
 import org.oran.smo.teiv.pgsqlgenerator.schema.BackwardCompatibilityChecker;
 import org.oran.smo.teiv.pgsqlgenerator.schema.SchemaGenerator;
-import org.springframework.util.ResourceUtils;
 
 @Component
 @Slf4j
@@ -56,12 +55,11 @@ public class ConsumerDataSchemaGenerator extends SchemaGenerator {
     @Override
     protected void prepareSchema() {
         try {
-            final File skeletonFile = ResourceUtils.getFile("classpath:" + skeletonConsumerDataSchema);
-            backwardCompatibilityChecker.checkForNBCChangesInConsumerDataSchema(baselineConsumerDataSchema, skeletonFile
-                    .getAbsolutePath());
-
+            Resource skeletonResource = new ClassPathResource(skeletonConsumerDataSchema);
             final Path destinationPath = Paths.get(outputConsumerDataSchema);
-            Files.copy(skeletonFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            backwardCompatibilityChecker.checkForNBCChangesInConsumerDataSchema(baselineConsumerDataSchema, destinationPath
+                    .toFile().getAbsolutePath());
+            FileHelper.copyResourceToFile(skeletonResource, destinationPath.toFile());
             this.schema = destinationPath.toFile();
         } catch (IOException exception) {
             throw PgSchemaGeneratorException.prepareBaselineException("ties.consumer-data", exception);

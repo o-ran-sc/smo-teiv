@@ -21,7 +21,9 @@
 
 green-field-installation: true
 yang-model:
-  source: classpath:generate-defaults
+  source: generate-defaults
+  external:
+    source: /opt/app/pgsql-schema-generator/resources/generate-defaults
 schema:
   data:
     skeleton: scripts/00_init-oran-smo-teiv-data.sql

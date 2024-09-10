@@ -33,6 +33,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import org.oran.smo.teiv.pgsqlgenerator.TestHelper;
 import org.oran.smo.teiv.pgsqlgenerator.YangParser;
+import org.springframework.util.ResourceUtils;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -68,7 +69,8 @@ public class ModelSchemaGeneratorTest {
         assertTrue(generatedResultFile.exists());
         assertTrue(tempBaselineFile.exists());
         assertTrue(TestHelper.filesCompareByLine(skeletionFile.toPath(), generatedResultFile.toPath()));
-        assertTrue(TestHelper.filesCompareByLine(new File(baselineModelSqlFile).toPath(), tempBaselineFile.toPath()));
+        assertTrue(TestHelper.filesCompareByLine(ResourceUtils.getFile("classpath:" + baselineModelSqlFile).toPath(),
+                tempBaselineFile.toPath()));
     }
 
     @AfterAll

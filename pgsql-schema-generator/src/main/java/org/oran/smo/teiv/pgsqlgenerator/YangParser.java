@@ -20,6 +20,7 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ public class YangParser {
 
     @Value("${yang-model.source}")
     private String yangModelDirectory;
+    @Value("${yang-model.external.source}")
+    private String yangModelExternalDirectory;
 
     /**
      * Store name, domains and namespace from yang modules
@@ -129,8 +132,15 @@ public class YangParser {
         YangDeviceModel yangDeviceModel = new YangDeviceModel("r1");
         final List<YangModel> yangModelInputs = new ArrayList<>();
         try {
+            Resource[] yangResources;
+            File externalYangFiles = new File(yangModelExternalDirectory);
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
-            Resource[] yangResources = resolver.getResources(yangModelDirectory + "/**/*.yang");
+            if (externalYangFiles.exists() && externalYangFiles.isDirectory()) {
+                yangResources = resolver.getResources("file:" + yangModelExternalDirectory + "/**/*.yang");
+            } else {
+                yangResources = resolver.getResources(yangModelDirectory + "/**/*.yang");
+            }
+
             for (Resource yangResource : yangResources) {
                 yangModelInputs.add(new YangModel(new ByteArrayYangInput(yangResource.getContentAsByteArray(), Objects
                         .requireNonNull(yangResource.getFilename())), ConformanceType.IMPORT));

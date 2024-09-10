@@ -25,16 +25,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.oran.smo.teiv.pgsqlgenerator.schema.BackwardCompatibilityChecker;
+import org.oran.smo.teiv.pgsqlgenerator.FileHelper;
 import org.oran.smo.teiv.pgsqlgenerator.schema.SchemaParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
@@ -67,15 +68,15 @@ public class DataSchemaGenerator extends SchemaGenerator {
     @Override
     protected void prepareSchema() {
         try {
-            File baselineDataSchemaFile = new File(baselineDataSchema);
+            Resource baselineResource = new ClassPathResource(baselineDataSchema);
             File newDataSchema = new File(dataSchemaFileName);
-            if (isGreenFieldInstallation || !baselineDataSchemaFile.exists()) {
+            if (isGreenFieldInstallation || !baselineResource.exists()) {
                 log.info("Baseline DOES NOT EXISTS!!");
-                File skeletonSql = new ClassPathResource(skeletonDataSchema).getFile();
-                Files.copy(skeletonSql.toPath(), newDataSchema.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Resource skeletonResource = new ClassPathResource(skeletonDataSchema);
+                FileHelper.copyResourceToFile(skeletonResource, newDataSchema);
             } else {
                 log.info("Baseline EXISTS!!");
-                Path sourcePath = baselineDataSchemaFile.toPath();
+                Path sourcePath = baselineResource.getFile().toPath();
                 List<String> stmts = Files.readAllLines(sourcePath);
                 List<String> analyzeAndCommitExcludedStmts = new ArrayList<>();
                 for (String line : stmts) {

@@ -61,7 +61,6 @@ class EndToEndTest {
     private String expectedConsumerDataSql;
     @Value("${schema.consumer-data.output}")
     private String actualConsumerDataSql;
-
     @Value("${graphs.output}")
     private String graphOutput;
 
