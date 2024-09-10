@@ -3,19 +3,19 @@
 .. Copyright (C) 2024 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
-Geographical enrichment guide
-#############################
+Discover and Reconciliation Interface Guide
+###########################################
 
-Geographical Enrichment Guide Overview
-======================================
+Discover and Reconciliation interface Guide Overview
+====================================================
 
-In this guide, we explore how to use the Geographical Location
-Enrichment API to enrich Topology & Inventory with geographical data.
+In this guide, we explore how to use the Discover and Reconciliation
+interface API to enrich Topology & Inventory with geographical data.
 
 Geographical enrichment
 =======================
 
-Geographical enrichment is the adding, modifying, and removing of
+Discover and Reconciliation is the adding, modifying, and removing of
 geographical entities that supports geographical information.
 Geographical entities are associated to topology data. The following
 geographical entities support geographical enrichment:
@@ -229,6 +229,130 @@ KafkaProducer <https://cloudevents.github.io/sdk-java/kafka.html>`__.
 The link provides a sample CloudEvents implementation in Java.
 CloudEvents SDKs also supports other languages. See
 `CloudEvents <https://cloudevents.io/>`__.
+
+Understanding Topology & Inventory ``id``
+=========================================
+
+When performing geographical enrichment of entities, the ``id`` value of the data, that is being enriched in
+Topology & Inventory, must match the ``id`` value for the entity or the relationship within the
+CloudEvent ``data`` element.
+
+There are two types of entities:
+
+- Entities that can be derived directly from CM. In the Topology & Inventory, these entities have only one
+  instance with the prefix **urn:3gpp:dn:** within the ``sourceIds`` list. Use this value as the entity ``id``
+  value within the CloudEvents ``data`` element.
+- Composite entities are entities that cannot be derived directly from CM. These entities have multiple instances
+  of **urn:3gpp:dn:** within the ``sourceIds`` list. The entity ``id`` value must be constructed from the list of
+  elements in the ``sourceIds`` list.
+
+The following is a sample CloudEvent for enriching an entity with geographical location information.
+
+.. image:: _static/dataCloudEvent.svg
+   :alt: Sample data for geographical enriching CloudEvent
+
+1. The list values for ``sourceIds`` is used to create the entity ``id``.
+2. The ``id`` is used to identify the correct entity.
+3. Geographical information enriches the entity.
+4. The relationship ``id`` is created from the aSide and bSide values which are the entity ``id``'s.
+
+To get the ``id`` values for composite entities, the advised method is to query the entities for matching
+``sourceIds`` elements, see :doc:`Topology & Inventory API <api-documentation>`. This
+can result in several matches where the same source entity participates in multiple topology entities.
+Otherwise, the entity ``id`` value and relationship ``id`` value are created as follows:
+
+How to create a composite entity ``id``
+---------------------------------------
+
+Composite entities are derived from multiple source domain elements.
+
+1. Get ``sourceIds`` of the composite entity.
+
+Example:
+
+::
+
+   "sourceIds": [
+      "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+      "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+      "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=12"
+   ]
+
+2. In the given order, combine each ``id`` with the prefix **urn:3gpp:dn** only. Separate the ``id``'s with ``;``.
+
+Format:
+
+::
+
+   <urn:3gpp:dn:Entity1>;<urn:3gpp:dn:Entity2>;...;<urn:3gpp:dn:EntityN>
+
+Example:
+
+::
+
+   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1;
+   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1;
+   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=12
+
+3. SHA-512 hash the combined ``id``'s.
+
+Example:
+
+::
+
+   1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765
+
+4. Add the prefix **urn:o-ran:smo:teiv:sha512:** and the composite entity name = SHA-512 hashed ``id``'s.
+
+Format:
+
+::
+
+   urn:o-ran:smo:teiv:sha512:<CompositeEntityName>=<SHA-512 hashed IDs>
+
+
+Example:
+
+::
+
+   urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765
+
+How to create a relationship ``id``
+-----------------------------------
+
+1. Combine the ``id`` of aSide and the ``id`` of bSide, split by the relationshipType, in the format:
+
+::
+
+   <aSideID>:<relationshipType>:<bSideID>
+
+Example:
+
+::
+
+   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,SubNetwork=ERBS01,ManagedElement=me01:
+   MANAGEDELEMENT_MANAGES_ENODEBFUNCTION:
+   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,SubNetwork=ERBS01,ManagedElement=me01,ENodeBFunction=1
+
+2. SHA-512 hash the previous format.
+
+Example:
+
+::
+
+   6D7E2A09E0F10C09548F86519084FDF1F021561FF07E116136D118E93568A0B4EA968A4B1E02B2CA4E057E00E582273DBE5A8CA1BF910FC65A9101117A0E9D7F
+
+3. Add the prefix **urn:o-ran:smo:teiv:sha512:** and the relationship type = the SHA-512 hashed as follows:
+
+::
+
+   urn:o-ran:smo:teiv:sha512:<RelationshipType>=<SHA-512 hash>
+
+Example:
+
+::
+
+   urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ENODEBFUNCTION=6D7E2A09E0F10C09548F86519084FDF1F021561FF07E116136D118E93568A0B4EA968A4B1E02B2CA4E057E00E582273DBE5A8CA1BF910FC65A9101117A0E9D7F
 
 Troubleshooting
 ===============

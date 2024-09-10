@@ -388,60 +388,15 @@ The user must provide a unique module name, to avoid collision of multiple users
 The schema cannot be modified later on but only deleted and recreated, if needed.
 When a schema is successfully created and validated, the user can add the classifiers to the entities or relationships.
 
-Classifiers
-"""""""""""
+Classifiers Details
+"""""""""""""""""""
 
-Classifiers support the following two types of 'operation', which must be identified in the body of the request:
-- merge: defined classifiers can be applied to entities and relationships within a single request.
-- delete: existing tagged classifiers can be removed.
+:ref:`<Details for classifiers here <classifiers>`
 
-**Example:**
-In this example, user is classifying two given entity IDs and a single relationship ID with a single request.
+Decorators Details
+""""""""""""""""""
 
-.. code-block:: json
-
-    {
-      "operation": "merge",
-      "classifiers": [
-        "module-x:Outdoor",
-        "module-y:Rural",
-        "module-z:Weekend"
-      ],
-      "entityIds": [
-        "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
-        "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-      ],
-      "relationshipIds": [
-        "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
-      ]
-    }
-
-Decorators
-""""""""""
-
-Decorators support the following two types of 'operations', which must be identified in the body of the request:
-- merge: existing decorators can be updated or applied to entities and relationships within a single request.
-- delete: existing tagged decorators can be removed.
-
-**Example:**
-In this example, user is tagging decorators with two given entity IDs and a single relationship ID with a single request.
-
-.. code-block:: json
-
-    {
-      "operation": "merge",
-      "decorators": {
-        "module-x:location": "Stockholm",
-        "module-y:vendor": "Ericsson"
-      },
-      "entityIds": [
-        "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
-        "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-      ],
-      "relationshipIds": [
-        "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
-      ]
-    }
+:ref:`Details for decorators here <decorators>`
 
 The SQL entries for consumer data include
 - **module_reference:** For the consumer module reference related module names from provided classifiers or decorators retrieved from the model service are extracted and stored which will be used for execution to module_reference table.
@@ -499,12 +454,10 @@ The SQL entries for consumer data include
 | | ON DELETE CASCADE                              |                  |                                   |
 +--------------------------------------------------+------------------+-----------------------------------+
 
-How to use classifiers and decorators
-"""""""""""""""""""""""""""""""""""""
+Information on how to use classifiers and decorators
+""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-1. Create a schema with the /schemas endpoint using Yang Module. After a successful schema creation, the topology objects are ready to be classified.
-2. Assign classifiers and/or decorators to the entities and/or relationships.
-3. Search classifiers and/or decorators by using queries.
+:ref:`Information on how to use classifiers and decorators here <how to use classifiers and decorators>`
 
 Skeleton Data and Model SQL Files
 =================================
