@@ -3,11 +3,10 @@
 .. Copyright (C) 2024 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
-Geographical Location Enrichment API 1.0.0beta1.0
-#################################################
+Discover and Reconciliation Interface
+#####################################
 
-Geographical Location Enrichment API to enrich topology with
-geographical data.
+Discover and Reconciliation Interface to enrich topology with data.
 
 Operations
 ==========
