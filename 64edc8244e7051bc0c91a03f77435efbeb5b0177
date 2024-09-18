@@ -1,5 +1,52 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32b2f1f8_a25e61ff",
+        "filename": "docker-compose/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-09-18T16:35:58Z",
+      "side": 1,
+      "message": "All the...?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 4
+      },
+      "revId": "64edc8244e7051bc0c91a03f77435efbeb5b0177",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bfbc3fa_b7a166dd",
+        "filename": "docker-compose/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-09-18T16:35:58Z",
+      "side": 1,
+      "message": "To run TEIV with the provided default sql schemas, execute.....?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 69
+      },
+      "revId": "64edc8244e7051bc0c91a03f77435efbeb5b0177",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
