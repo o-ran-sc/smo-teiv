@@ -22,6 +22,9 @@ services:
 
 #
 # uncomment if you have your own YANG files in docker-compose/generate-defaults
+# NB: uncomment lines 74 and 75 as well from dbpostgresql
+#    depends_on:
+#      - pgsql-schema-generator
 #
 #  pgsql-schema-generator:
 #    container_name: pgsql-schema-generator
@@ -68,8 +71,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-topology_exposure_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-dbpassword}
     restart: always
-    depends_on:
-      - pgsql-schema-generator
+#    depends_on:
+#      - pgsql-schema-generator
     deploy:
       resources:
         reservations:

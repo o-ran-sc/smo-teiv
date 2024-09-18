@@ -365,6 +365,7 @@ The SQL entries for consumer data include
 - **module_reference:** For the consumer module reference related module names from provided classifiers or decorators
   retrieved from the model service are extracted and stored which will be used for
   execution to module_reference table.
+
   | Column name | Type                  | Description                                                                                                                   |
   |-------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
   | name        | TEXT PRIMARY KEY      | The module name                                                                                                               |
@@ -376,6 +377,7 @@ The SQL entries for consumer data include
 
 - **decorators:** There will be the ability for Administrators to decorate topology entities and relationships.
   We will be storing the schemas for the decorators in this table.
+
   | Column name                                                                                                   | Type             | Description                                                                      |
   |---------------------------------------------------------------------------------------------------------------|------------------|----------------------------------------------------------------------------------|
   | name                                                                                                          | TEXT PRIMARY KEY | The key of the decorator.                                                        |
@@ -386,6 +388,7 @@ The SQL entries for consumer data include
 - **classifiers:** There will be the ability for client applications to apply user-defined keywords/tags (classifiers) to
   topology entities and relationships.
   We will be storing the schemas for the classifiers in this table.
+
   | Column name                                                                                                   | Type             | Description                                                                       |
   |---------------------------------------------------------------------------------------------------------------|------------------|-----------------------------------------------------------------------------------|
   | name                                                                                                          | TEXT PRIMARY KEY | The actual classifier.                                                            |
@@ -473,3 +476,8 @@ To run testsuite:
 
 - In your terminal navigate into pgsql-schema-generator directory and run 'mvn clean install'
 - In your terminal navigate into pgsql-schema-generator directory and run 'mvn -Dtest=`<Test Name>` test'
+
+## Local Use Using docker-compose
+
+For local use using docker-compose follow the how-to guide at 
+[How to Run TEIV with Your Models](https://lf-o-ran-sc.atlassian.net/wiki/spaces/SMO/pages/62324740/Release+J+-+How+to+Run+TEIV+with+Your+Models)
