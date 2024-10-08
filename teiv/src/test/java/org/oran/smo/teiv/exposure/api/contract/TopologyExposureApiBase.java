@@ -27,6 +27,7 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.oran.smo.teiv.db.TestPgsqlSchemaContainer;
 import org.oran.smo.teiv.db.TestPostgresqlContainerV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -50,6 +51,7 @@ import org.oran.smo.teiv.startup.SchemaHandler;
 @AutoConfigureMockMvc
 @SpringBootTest
 public abstract class TopologyExposureApiBase {
+    public static TestPgsqlSchemaContainer pgsqlSchemaContainer = TestPgsqlSchemaContainer.getInstance();
     public static TestPostgresqlContainerV1 postgresSQLContainer = TestPostgresqlContainerV1.getInstance();
 
     @MockBean
