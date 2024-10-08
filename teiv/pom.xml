@@ -641,6 +641,31 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>run-pgsql-generator-jar</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-jar</argument>
+                                <argument>${project.parent.basedir}/pgsql-schema-generator/target/pgsql-schema-generator-1.1.0.jar</argument>
+                                <argument>--yang-model.external.source=${project.basedir}/src/main/resources/models</argument>
+                                <argument>--schema.data.output=src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data-v1.sql</argument>
+                                <argument>--schema.model.output=src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model-v1.sql</argument>
+                                <argument>--schema.consumer-data.output=src/test/resources/pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

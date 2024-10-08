@@ -27,7 +27,7 @@ ALTER SCHEMA ties_model OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
-SET ROLE :'pguser';
+SET ROLE :pguser;
 
 CREATE TABLE IF NOT EXISTS ties_model.execution_status (
     "schema" VARCHAR(127) PRIMARY KEY,

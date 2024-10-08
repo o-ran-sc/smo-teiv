@@ -26,7 +26,7 @@ ALTER SCHEMA ties_consumer_data OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
-SET ROLE :'pguser';
+SET ROLE :pguser;
 
 CREATE TABLE IF NOT EXISTS ties_consumer_data."module_reference" (
     "name"            TEXT PRIMARY KEY,
