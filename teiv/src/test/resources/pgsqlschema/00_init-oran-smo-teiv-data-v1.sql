@@ -25,7 +25,16 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS postgis_topology;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
+GRANT USAGE ON SCHEMA topology to :pguser;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA topology TO :pguser;
+GRANT SELECT ON ALL TABLES IN SCHEMA topology TO :pguser;
+
 CREATE SCHEMA IF NOT EXISTS ties_data;
+ALTER SCHEMA ties_data OWNER TO :pguser;
+SET default_tablespace = '';
+SET default_table_access_method = heap;
+
+SET ROLE :pguser;
 
 -- Function to create CONSTRAINT only if it does not exists
 CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
