@@ -26,8 +26,8 @@ SOURCE_DIR="./target"
 TARGET_DIR="./sql_scripts"
 PLACEHOLDER1=":pguser"
 PLACEHOLDER2=":'pguser'"
-REPLACEMENT1="topology_exposure_user"
-REPLACEMENT2="'topology_exposure_user'"
+REPLACEMENT_VALUE="${1:-topology_exposure_user}"
+REPLACEMENT2="'$REPLACEMENT_VALUE'"
 
 declare -A FILES
 FILES=( ["00_init-oran-smo-teiv-data.sql"]="01_init-teiv-exposure-data.sql"
@@ -39,7 +39,7 @@ mkdir -p "$TARGET_DIR"
 for OLD_NAME in "${!FILES[@]}"; do
     NEW_NAME="${FILES[$OLD_NAME]}"
     if [ -f "$SOURCE_DIR/$OLD_NAME" ]; then
-        sed "s/$PLACEHOLDER1/$REPLACEMENT1/g; s/$PLACEHOLDER2/$REPLACEMENT2/g" "$SOURCE_DIR/$OLD_NAME" > "${SOURCE_DIR}/${OLD_NAME}.tmp" && \
+        sed "s/$PLACEHOLDER1/$REPLACEMENT_VALUE/g; s/$PLACEHOLDER2/$REPLACEMENT2/g" "$SOURCE_DIR/$OLD_NAME" > "${SOURCE_DIR}/${OLD_NAME}.tmp" && \
         cp "${SOURCE_DIR}/${OLD_NAME}.tmp" "$TARGET_DIR/$NEW_NAME" && \
         echo "Replaced pguser in $OLD_NAME, copied and renamed $OLD_NAME to $NEW_NAME in $TARGET_DIR."
     else
