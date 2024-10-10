@@ -271,7 +271,7 @@ These SQL entries include:
 
 Sample entries:
 
-- **Hashed**: UNIQUE_GNBCUUPFunction_REL_ID_MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION, UNIQUE_BDB349CDF0C4055902881ECCB71F460AE1DD323E, CONSTRAINT
+- **Hashed**: UNIQUE_OCUUPFunction_REL_ID_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION, UNIQUE_BDB349CDF0C4055902881ECCB71F460AE1DD323E, CONSTRAINT
 - **Un-hashed**: NRSectorCarrier, NRSectorCarrier, TABLE
 
 +---------------+--------------------------+-----------------------------------------------------------+

@@ -47,4 +47,5 @@ exclusions:
   model-names: metadata, decorators
 graphs:
   generate: true
+  relationship-entities-bg-colour: true
   output: target/test-classes/graphs

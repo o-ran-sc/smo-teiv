@@ -6,9 +6,9 @@
 Cloud
 -----
 
-.. image:: ../_static/data-model/cloud.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-cloud.svg
 
-.. image:: ../_static/data-model/cloud-relationships.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-cloud-rel.svg
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-cloud.yang
    :language: yang

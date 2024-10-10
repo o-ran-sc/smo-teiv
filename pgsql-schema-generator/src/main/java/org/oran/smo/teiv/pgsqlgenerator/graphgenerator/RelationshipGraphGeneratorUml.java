@@ -39,6 +39,9 @@ public class RelationshipGraphGeneratorUml {
     @Value("${graphs.generate}")
     private boolean generateRelationshipGraph;
 
+    @Value("${graphs.relationship-entities-bg-colour}")
+    private boolean bgColour;
+
     @Value("${graphs.output}")
     private String graphOutput;
 
@@ -72,7 +75,8 @@ public class RelationshipGraphGeneratorUml {
         sb.append("@startuml\n");
         sb.append("skinparam componentStyle rectangle\n");
         for (Entity entity : entities) {
-            sb.append(String.format("class %s {\n", entity.getEntityName()));
+            sb.append(String.format("class %s %s {\n", entity.getEntityName(), getNodeFillColour(entity
+                    .getModuleReferenceName())));
             sb.append("}\n");
         }
         for (Relationship relationship : relationships) {
@@ -87,6 +91,19 @@ public class RelationshipGraphGeneratorUml {
         }
         sb.append("@enduml\n");
         return sb.toString();
+    }
+
+    private String getNodeFillColour(String input) {
+        if (bgColour) {
+            int hash = input.hashCode();
+
+            int r = (hash >> 16) & 0xFF;
+            int g = (hash >> 8) & 0xFF;
+            int b = hash & 0xFF;
+
+            return String.format("#%02X%02X%02X%02X", r, g, b, 65);
+        }
+        return "#FFFFFF";
     }
 
     private String getCardinality(long minCardinality, long maxCardinality) {

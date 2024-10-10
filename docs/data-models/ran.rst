@@ -6,10 +6,10 @@
 RAN
 ---
 
-.. image:: ../_static/data-model/ran.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-ran.svg
   :width: 900
 
-.. image:: ../_static/data-model/ran-relationships.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-ran-rel.svg
   :width: 900
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-ran.yang

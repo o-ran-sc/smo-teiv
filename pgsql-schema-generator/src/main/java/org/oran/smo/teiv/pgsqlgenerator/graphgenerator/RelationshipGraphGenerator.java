@@ -27,6 +27,7 @@ import guru.nidi.graphviz.attribute.EndLabel;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.ForAll;
 import guru.nidi.graphviz.attribute.Shape;
+import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
@@ -49,6 +50,9 @@ public class RelationshipGraphGenerator {
 
     @Value("${graphs.generate}")
     private boolean generateRelationshipGraph;
+
+    @Value("${graphs.relationship-entities-bg-colour}")
+    private boolean bgColour;
 
     @Value("${graphs.output}")
     private String graphOutput;
@@ -82,13 +86,18 @@ public class RelationshipGraphGenerator {
         MutableGraph g = Factory.mutGraph("moduleName").setDirected(true).linkAttrs().add(Color.DARKSLATEGRAY4, arialFont)
                 .nodeAttrs().add(Shape.BOX, arialFont);
         for (Entity moduleEntity : moduleEntities) {
-            MutableNode node = Factory.mutNode(moduleEntity.getEntityName());
+            Color fillColour = getNodeFillColour(moduleEntity.getModuleReferenceName());
+            MutableNode node = Factory.mutNode(moduleEntity.getEntityName()).attrs().add(Style.FILLED, fillColour);
             g.add(node);
         }
         for (Relationship moduleRelationship : moduleRelationships) {
-            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideMOType());
+            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideMOType()).attrs().add(Style.FILLED,
+                    getNodeFillColour(moduleRelationship.getASideModule()));
+            ;
             g.add(nodeA);
-            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideMOType());
+            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideMOType()).attrs().add(Style.FILLED,
+                    getNodeFillColour(moduleRelationship.getBSideModule()));
+            ;
             g.add(nodeB);
 
             String label = moduleRelationship.getName().split("_")[1];
@@ -101,6 +110,19 @@ public class RelationshipGraphGenerator {
                     EndLabel.tail(bSideCardinality, null, null), Arrow.VEE)));
         }
         return g;
+    }
+
+    private Color getNodeFillColour(String input) {
+        if (bgColour) {
+            int hash = input.hashCode();
+
+            int r = (hash >> 16) & 0xFF;
+            int g = (hash >> 8) & 0xFF;
+            int b = hash & 0xFF;
+
+            return Color.rgba(String.format("#%02X%02X%02X%02X", r, g, b, 65)).fill();
+        }
+        return Color.WHITE.fill();
     }
 
     private String getCardinality(long minCardinality, long maxCardinality) {

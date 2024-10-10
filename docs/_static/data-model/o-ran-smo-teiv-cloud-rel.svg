@@ -1,0 +1,73 @@
+<svg width="159px" height="392px"
+ viewBox="0.00 0.00 159.00 392.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 388.0)">
+<title>moduleName</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-388 155,-388 155,4 -4,4"/>
+<!-- CloudifiedNF -->
+<g id="node1" class="node">
+<title>CloudifiedNF</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="115.5,-384 20.5,-384 20.5,-348 115.5,-348 115.5,-384"/>
+<text text-anchor="middle" x="68" y="-362.3" font-family="Arial" font-size="14.00">CloudifiedNF</text>
+</g>
+<!-- NFDeployment -->
+<g id="node2" class="node">
+<title>NFDeployment</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="121.5,-297 14.5,-297 14.5,-261 121.5,-261 121.5,-297"/>
+<text text-anchor="middle" x="68" y="-275.3" font-family="Arial" font-size="14.00">NFDeployment</text>
+</g>
+<!-- CloudifiedNF&#45;&gt;NFDeployment -->
+<g id="edge1" class="edge">
+<title>CloudifiedNF&#45;&gt;NFDeployment</title>
+<path fill="none" stroke="#528b8b" d="M68,-347.8C68,-336.16 68,-320.55 68,-307.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="68,-297.18 72.5,-307.18 68,-302.18 68,-307.18 68,-307.18 68,-307.18 68,-302.18 63.5,-307.18 68,-297.18 68,-297.18"/>
+<text text-anchor="middle" x="109.5" y="-318.8" font-family="Arial" font-size="14.00">COMPRISES</text>
+<text text-anchor="middle" x="56.5" y="-300.98" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="57.5" y="-336.6" font-family="Arial" font-size="14.00">1..*</text>
+</g>
+<!-- OCloudNamespace -->
+<g id="node4" class="node">
+<title>OCloudNamespace</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="136,-210 0,-210 0,-174 136,-174 136,-210"/>
+<text text-anchor="middle" x="68" y="-188.3" font-family="Arial" font-size="14.00">OCloudNamespace</text>
+</g>
+<!-- NFDeployment&#45;&gt;OCloudNamespace -->
+<g id="edge2" class="edge">
+<title>NFDeployment&#45;&gt;OCloudNamespace</title>
+<path fill="none" stroke="#528b8b" d="M68,-260.8C68,-249.16 68,-233.55 68,-220.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="68,-210.18 72.5,-220.18 68,-215.18 68,-220.18 68,-220.18 68,-220.18 68,-215.18 63.5,-220.18 68,-210.18 68,-210.18"/>
+<text text-anchor="middle" x="105.5" y="-231.8" font-family="Arial" font-size="14.00">DEPLOYED</text>
+<text text-anchor="middle" x="57.5" y="-213.98" font-family="Arial" font-size="14.00">1..*</text>
+<text text-anchor="middle" x="57.5" y="-249.6" font-family="Arial" font-size="14.00">1..*</text>
+</g>
+<!-- NodeCluster -->
+<g id="node3" class="node">
+<title>NodeCluster</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="114,-123 22,-123 22,-87 114,-87 114,-123"/>
+<text text-anchor="middle" x="68" y="-101.3" font-family="Arial" font-size="14.00">NodeCluster</text>
+</g>
+<!-- OCloudSite -->
+<g id="node5" class="node">
+<title>OCloudSite</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="111,-36 25,-36 25,0 111,0 111,-36"/>
+<text text-anchor="middle" x="68" y="-14.3" font-family="Arial" font-size="14.00">OCloudSite</text>
+</g>
+<!-- NodeCluster&#45;&gt;OCloudSite -->
+<g id="edge3" class="edge">
+<title>NodeCluster&#45;&gt;OCloudSite</title>
+<path fill="none" stroke="#528b8b" d="M68,-86.8C68,-75.16 68,-59.55 68,-46.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="68,-36.18 72.5,-46.18 68,-41.18 68,-46.18 68,-46.18 68,-46.18 68,-41.18 63.5,-46.18 68,-36.18 68,-36.18"/>
+<text text-anchor="middle" x="100" y="-57.8" font-family="Arial" font-size="14.00">LOCATED</text>
+<text text-anchor="middle" x="57.5" y="-39.98" font-family="Arial" font-size="14.00">1..*</text>
+<text text-anchor="middle" x="57.5" y="-75.6" font-family="Arial" font-size="14.00">1..*</text>
+</g>
+<!-- OCloudNamespace&#45;&gt;NodeCluster -->
+<g id="edge4" class="edge">
+<title>OCloudNamespace&#45;&gt;NodeCluster</title>
+<path fill="none" stroke="#528b8b" d="M68,-173.8C68,-162.16 68,-146.55 68,-133.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="68,-123.18 72.5,-133.18 68,-128.18 68,-133.18 68,-133.18 68,-133.18 68,-128.18 63.5,-133.18 68,-123.18 68,-123.18"/>
+<text text-anchor="middle" x="105.5" y="-144.8" font-family="Arial" font-size="14.00">DEPLOYED</text>
+<text text-anchor="middle" x="57.5" y="-126.98" font-family="Arial" font-size="14.00">1..*</text>
+<text text-anchor="middle" x="56.5" y="-162.6" font-family="Arial" font-size="14.00">1..1</text>
+</g>
+</g>
+</svg>
