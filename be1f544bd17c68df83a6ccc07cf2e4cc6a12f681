@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c07ccb1_fadc6f8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-10-10T15:26:10Z",
+      "side": 1,
+      "message": "Are we missing the diagram for o-ran-smo-teiv-common-yang-types\n\nIt has the decorators and classifiers defined.",
+      "revId": "be1f544bd17c68df83a6ccc07cf2e4cc6a12f681",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
