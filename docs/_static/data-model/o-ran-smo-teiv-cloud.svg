@@ -1,0 +1,177 @@
+<svg width="603px" height="383px"
+ viewBox="0.00 0.00 603.00 382.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 378.5)">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-378.5 599,-378.5 599,4 -4,4"/>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud -->
+<g id="node1" class="node">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud</title>
+<polygon fill="lightblue" stroke="black" points="141,-216.5 0,-216.5 0,-180.5 141,-180.5 141,-216.5"/>
+<text text-anchor="middle" x="70.5" y="-194.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;cloud</text>
+</g>
+<!-- CloudifiedNF -->
+<g id="node7" class="node">
+<title>CloudifiedNF</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="292.5,-349.5 197.5,-349.5 197.5,-313.5 292.5,-313.5 292.5,-349.5"/>
+<text text-anchor="middle" x="245" y="-327.8" font-family="Arial" font-size="14.00">CloudifiedNF</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;CloudifiedNF -->
+<g id="edge1" class="edge">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;CloudifiedNF</title>
+<path fill="none" stroke="black" d="M90.59,-216.53C111.18,-235.6 145.28,-266.09 177,-289.5 185.62,-295.86 195.21,-302.25 204.38,-308.06"/>
+<polygon fill="black" stroke="black" points="202.66,-311.11 213,-313.42 206.36,-305.17 202.66,-311.11"/>
+</g>
+<!-- NFDeployment -->
+<g id="node8" class="node">
+<title>NFDeployment</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="298.5,-280.5 191.5,-280.5 191.5,-244.5 298.5,-244.5 298.5,-280.5"/>
+<text text-anchor="middle" x="245" y="-258.8" font-family="Arial" font-size="14.00">NFDeployment</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NFDeployment -->
+<g id="edge2" class="edge">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NFDeployment</title>
+<path fill="none" stroke="black" d="M120.47,-216.67C140.77,-224.2 164.48,-233 185.67,-240.86"/>
+<polygon fill="black" stroke="black" points="184.61,-244.2 195.21,-244.4 187.05,-237.64 184.61,-244.2"/>
+</g>
+<!-- NodeCluster -->
+<g id="node9" class="node">
+<title>NodeCluster</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="291,-216.5 199,-216.5 199,-180.5 291,-180.5 291,-216.5"/>
+<text text-anchor="middle" x="245" y="-194.8" font-family="Arial" font-size="14.00">NodeCluster</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NodeCluster -->
+<g id="edge3" class="edge">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NodeCluster</title>
+<path fill="none" stroke="black" d="M141.17,-198.5C156.97,-198.5 173.54,-198.5 188.66,-198.5"/>
+<polygon fill="black" stroke="black" points="188.86,-202 198.86,-198.5 188.86,-195 188.86,-202"/>
+</g>
+<!-- OCloudNamespace -->
+<g id="node10" class="node">
+<title>OCloudNamespace</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="313,-152.5 177,-152.5 177,-116.5 313,-116.5 313,-152.5"/>
+<text text-anchor="middle" x="245" y="-130.8" font-family="Arial" font-size="14.00">OCloudNamespace</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudNamespace -->
+<g id="edge4" class="edge">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudNamespace</title>
+<path fill="none" stroke="black" d="M120.47,-180.33C140.77,-172.8 164.48,-164 185.67,-156.14"/>
+<polygon fill="black" stroke="black" points="187.05,-159.36 195.21,-152.6 184.61,-152.8 187.05,-159.36"/>
+</g>
+<!-- OCloudSite -->
+<g id="node11" class="node">
+<title>OCloudSite</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="288,-73.5 202,-73.5 202,-37.5 288,-37.5 288,-73.5"/>
+<text text-anchor="middle" x="245" y="-51.8" font-family="Arial" font-size="14.00">OCloudSite</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudSite -->
+<g id="edge5" class="edge">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudSite</title>
+<path fill="none" stroke="black" d="M91.85,-180.4C112.91,-161.8 146.86,-132.16 177,-107.5 188.17,-98.36 200.61,-88.6 211.7,-80.03"/>
+<polygon fill="black" stroke="black" points="214.09,-82.6 219.89,-73.73 209.83,-77.05 214.09,-82.6"/>
+</g>
+<!-- CloudifiedNF&#45;attributes -->
+<g id="node2" class="node">
+<title>CloudifiedNF&#45;attributes</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="523.5,-374.5 420.5,-374.5 420.5,-318.5 523.5,-318.5 523.5,-374.5"/>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-346.5 430,-369.5 473,-369.5 473,-346.5 430,-346.5"/>
+<text text-anchor="start" x="434" y="-354.3" font-family="Arial" font-size="14.00">id</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-346.5 473,-369.5 515,-369.5 515,-346.5 473,-346.5"/>
+<text text-anchor="start" x="477" y="-354.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-323.5 430,-346.5 473,-346.5 473,-323.5 430,-323.5"/>
+<text text-anchor="start" x="434" y="-331.3" font-family="Arial" font-size="14.00">name</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-323.5 473,-346.5 515,-346.5 515,-323.5 473,-323.5"/>
+<text text-anchor="start" x="477" y="-331.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="none" stroke="black" points="428.5,-322.5 428.5,-370.5 515.5,-370.5 515.5,-322.5 428.5,-322.5"/>
+</g>
+<!-- NFDeployment&#45;attributes -->
+<g id="node3" class="node">
+<title>NFDeployment&#45;attributes</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="523.5,-300.5 420.5,-300.5 420.5,-244.5 523.5,-244.5 523.5,-300.5"/>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-272.5 430,-295.5 473,-295.5 473,-272.5 430,-272.5"/>
+<text text-anchor="start" x="434" y="-280.3" font-family="Arial" font-size="14.00">id</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-272.5 473,-295.5 515,-295.5 515,-272.5 473,-272.5"/>
+<text text-anchor="start" x="477" y="-280.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-249.5 430,-272.5 473,-272.5 473,-249.5 430,-249.5"/>
+<text text-anchor="start" x="434" y="-257.3" font-family="Arial" font-size="14.00">name</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-249.5 473,-272.5 515,-272.5 515,-249.5 473,-249.5"/>
+<text text-anchor="start" x="477" y="-257.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="none" stroke="black" points="428.5,-248.5 428.5,-296.5 515.5,-296.5 515.5,-248.5 428.5,-248.5"/>
+</g>
+<!-- NodeCluster&#45;attributes -->
+<g id="node4" class="node">
+<title>NodeCluster&#45;attributes</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="523.5,-226.5 420.5,-226.5 420.5,-170.5 523.5,-170.5 523.5,-226.5"/>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-198.5 430,-221.5 473,-221.5 473,-198.5 430,-198.5"/>
+<text text-anchor="start" x="434" y="-206.3" font-family="Arial" font-size="14.00">id</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-198.5 473,-221.5 515,-221.5 515,-198.5 473,-198.5"/>
+<text text-anchor="start" x="477" y="-206.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-175.5 430,-198.5 473,-198.5 473,-175.5 430,-175.5"/>
+<text text-anchor="start" x="434" y="-183.3" font-family="Arial" font-size="14.00">name</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-175.5 473,-198.5 515,-198.5 515,-175.5 473,-175.5"/>
+<text text-anchor="start" x="477" y="-183.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="none" stroke="black" points="428.5,-174.5 428.5,-222.5 515.5,-222.5 515.5,-174.5 428.5,-174.5"/>
+</g>
+<!-- OCloudNamespace&#45;attributes -->
+<g id="node5" class="node">
+<title>OCloudNamespace&#45;attributes</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="523.5,-152.5 420.5,-152.5 420.5,-96.5 523.5,-96.5 523.5,-152.5"/>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-124.5 430,-147.5 473,-147.5 473,-124.5 430,-124.5"/>
+<text text-anchor="start" x="434" y="-132.3" font-family="Arial" font-size="14.00">id</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-124.5 473,-147.5 515,-147.5 515,-124.5 473,-124.5"/>
+<text text-anchor="start" x="477" y="-132.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#eeeeee" stroke="transparent" points="430,-101.5 430,-124.5 473,-124.5 473,-101.5 430,-101.5"/>
+<text text-anchor="start" x="434" y="-109.3" font-family="Arial" font-size="14.00">name</text>
+<polygon fill="#eeeeee" stroke="transparent" points="473,-101.5 473,-124.5 515,-124.5 515,-101.5 473,-101.5"/>
+<text text-anchor="start" x="477" y="-109.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="none" stroke="black" points="428.5,-100.5 428.5,-148.5 515.5,-148.5 515.5,-100.5 428.5,-100.5"/>
+</g>
+<!-- OCloudSite&#45;attributes -->
+<g id="node6" class="node">
+<title>OCloudSite&#45;attributes</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="595,-79 349,-79 349,0 595,0 595,-79"/>
+<polygon fill="#eeeeee" stroke="transparent" points="358,-50.5 358,-73.5 440,-73.5 440,-50.5 358,-50.5"/>
+<text text-anchor="start" x="362" y="-58.3" font-family="Arial" font-size="14.00">geo&#45;location</text>
+<polygon fill="#eeeeee" stroke="transparent" points="440,-50.5 440,-73.5 586,-73.5 586,-50.5 440,-50.5"/>
+<text text-anchor="start" x="444" y="-58.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<polygon fill="#eeeeee" stroke="transparent" points="358,-27.5 358,-50.5 440,-50.5 440,-27.5 358,-27.5"/>
+<text text-anchor="start" x="362" y="-35.3" font-family="Arial" font-size="14.00">id</text>
+<polygon fill="#eeeeee" stroke="transparent" points="440,-27.5 440,-50.5 586,-50.5 586,-27.5 440,-27.5"/>
+<text text-anchor="start" x="548" y="-35.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#eeeeee" stroke="transparent" points="358,-4.5 358,-27.5 440,-27.5 440,-4.5 358,-4.5"/>
+<text text-anchor="start" x="362" y="-12.3" font-family="Arial" font-size="14.00">name</text>
+<polygon fill="#eeeeee" stroke="transparent" points="440,-4.5 440,-27.5 586,-27.5 586,-4.5 440,-4.5"/>
+<text text-anchor="start" x="548" y="-12.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="none" stroke="black" points="357,-4 357,-75 587,-75 587,-4 357,-4"/>
+</g>
+<!-- CloudifiedNF&#45;&gt;CloudifiedNF&#45;attributes -->
+<g id="edge6" class="edge">
+<title>CloudifiedNF&#45;&gt;CloudifiedNF&#45;attributes</title>
+<path fill="none" stroke="black" d="M292.62,-334.61C326.62,-336.87 373.02,-339.97 409.98,-342.43"/>
+<polygon fill="black" stroke="black" points="409.92,-345.94 420.13,-343.11 410.39,-338.95 409.92,-345.94"/>
+</g>
+<!-- NFDeployment&#45;&gt;NFDeployment&#45;attributes -->
+<g id="edge7" class="edge">
+<title>NFDeployment&#45;&gt;NFDeployment&#45;attributes</title>
+<path fill="none" stroke="black" d="M298.75,-264.84C332.09,-266.33 375.29,-268.25 410.09,-269.79"/>
+<polygon fill="black" stroke="black" points="409.98,-273.29 420.13,-270.24 410.29,-266.3 409.98,-273.29"/>
+</g>
+<!-- NodeCluster&#45;&gt;NodeCluster&#45;attributes -->
+<g id="edge8" class="edge">
+<title>NodeCluster&#45;&gt;NodeCluster&#45;attributes</title>
+<path fill="none" stroke="black" d="M291.26,-198.5C325.4,-198.5 372.57,-198.5 410.03,-198.5"/>
+<polygon fill="black" stroke="black" points="410.32,-202 420.32,-198.5 410.32,-195 410.32,-202"/>
+</g>
+<!-- OCloudNamespace&#45;&gt;OCloudNamespace&#45;attributes -->
+<g id="edge9" class="edge">
+<title>OCloudNamespace&#45;&gt;OCloudNamespace&#45;attributes</title>
+<path fill="none" stroke="black" d="M313.2,-131.51C343.9,-130.15 380,-128.54 409.91,-127.21"/>
+<polygon fill="black" stroke="black" points="410.38,-130.7 420.22,-126.76 410.07,-123.7 410.38,-130.7"/>
+</g>
+<!-- OCloudSite&#45;&gt;OCloudSite&#45;attributes -->
+<g id="edge10" class="edge">
+<title>OCloudSite&#45;&gt;OCloudSite&#45;attributes</title>
+<path fill="none" stroke="black" d="M288.06,-52.51C302.87,-51.46 320.4,-50.21 338.66,-48.91"/>
+<polygon fill="black" stroke="black" points="339.13,-52.39 348.86,-48.19 338.64,-45.4 339.13,-52.39"/>
+</g>
+</g>
+</svg>

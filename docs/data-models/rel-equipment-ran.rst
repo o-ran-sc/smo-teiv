@@ -6,8 +6,7 @@
 Relationship: Equipment RAN
 ---------------------------
 
-.. image:: ../_static/data-model/equipment-ran.svg
-  :width: 900
+.. image:: ../_static/data-model/o-ran-smo-teiv-rel-equipment-ran-rel.svg
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-rel-equipment-ran.yang
    :language: yang

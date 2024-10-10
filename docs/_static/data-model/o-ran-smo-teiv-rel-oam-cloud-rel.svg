@@ -1,0 +1,43 @@
+<svg width="145px" height="218px"
+ viewBox="0.00 0.00 145.00 218.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 214.0)">
+<title>moduleName</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-214 141,-214 141,4 -4,4"/>
+<!-- ManagedElement -->
+<g id="node1" class="node">
+<title>ManagedElement</title>
+<polygon fill="#3663f0" fill-opacity="0.254902" stroke="black" points="124,-123 0,-123 0,-87 124,-87 124,-123"/>
+<text text-anchor="middle" x="62" y="-101.3" font-family="Arial" font-size="14.00">ManagedElement</text>
+</g>
+<!-- CloudifiedNF -->
+<g id="node2" class="node">
+<title>CloudifiedNF</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="109.5,-36 14.5,-36 14.5,0 109.5,0 109.5,-36"/>
+<text text-anchor="middle" x="62" y="-14.3" font-family="Arial" font-size="14.00">CloudifiedNF</text>
+</g>
+<!-- ManagedElement&#45;&gt;CloudifiedNF -->
+<g id="edge1" class="edge">
+<title>ManagedElement&#45;&gt;CloudifiedNF</title>
+<path fill="none" stroke="#528b8b" d="M62,-86.8C62,-75.16 62,-59.55 62,-46.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="62,-36.18 66.5,-46.18 62,-41.18 62,-46.18 62,-46.18 62,-46.18 62,-41.18 57.5,-46.18 62,-36.18 62,-36.18"/>
+<text text-anchor="middle" x="99.5" y="-57.8" font-family="Arial" font-size="14.00">DEPLOYED</text>
+<text text-anchor="middle" x="50.5" y="-39.98" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="50.5" y="-75.6" font-family="Arial" font-size="14.00">0..1</text>
+</g>
+<!-- NFDeployment -->
+<g id="node3" class="node">
+<title>NFDeployment</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="115.5,-210 8.5,-210 8.5,-174 115.5,-174 115.5,-210"/>
+<text text-anchor="middle" x="62" y="-188.3" font-family="Arial" font-size="14.00">NFDeployment</text>
+</g>
+<!-- NFDeployment&#45;&gt;ManagedElement -->
+<g id="edge2" class="edge">
+<title>NFDeployment&#45;&gt;ManagedElement</title>
+<path fill="none" stroke="#528b8b" d="M62,-173.8C62,-162.16 62,-146.55 62,-133.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="62,-123.18 66.5,-133.18 62,-128.18 62,-133.18 62,-133.18 62,-133.18 62,-128.18 57.5,-133.18 62,-123.18 62,-123.18"/>
+<text text-anchor="middle" x="89.5" y="-144.8" font-family="Arial" font-size="14.00">SERVES</text>
+<text text-anchor="middle" x="51.5" y="-126.98" font-family="Arial" font-size="14.00">1..*</text>
+<text text-anchor="middle" x="50.5" y="-162.6" font-family="Arial" font-size="14.00">1..1</text>
+</g>
+</g>
+</svg>

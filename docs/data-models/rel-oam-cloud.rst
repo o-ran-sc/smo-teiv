@@ -6,7 +6,7 @@
 Relationship: OAM CLOUD
 -----------------------
 
-.. image:: ../_static/data-model/oam-cloud-relationships.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-rel-oam-cloud-rel.svg
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-rel-oam-cloud.yang
    :language: yang

@@ -6,7 +6,7 @@
 Relationship: CLOUD RAN
 -----------------------
 
-.. image:: ../_static/data-model/cloud-ran-relationships.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-rel-cloud-ran-rel.svg
   :width: 900
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-rel-cloud-ran.yang

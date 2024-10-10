@@ -69,8 +69,8 @@ relationship ID with a single request.
        "module-z:Weekend"
      ],
      "entityIds": [
-       "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
-       "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+       "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1",
+       "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
      ],
      "relationshipIds": [
        "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
@@ -101,8 +101,8 @@ a single relationship ID with a single request.
        "module-y:vendor": "Ericsson"
      },
      "entityIds": [
-       "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1",
-       "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+       "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1",
+       "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
      ],
      "relationshipIds": [
        "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"

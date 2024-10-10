@@ -27,9 +27,9 @@ import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.oran.smo.teiv.pgsqlgenerator.Attribute;
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +48,9 @@ public class EntityGraphGenerator {
 
     @Value("${graphs.output}")
     private String graphOutput;
+
+    @Autowired
+    private final HelperFunctions helperFunctions = new HelperFunctions();
 
     public void generate(List<Entity> entities) throws IOException {
         if (generateEntityGraph) {
@@ -71,9 +74,9 @@ public class EntityGraphGenerator {
     }
 
     private MutableGraph prepareGraph(List<Entity> moduleEntities, String moduleName) {
+        Color fillColour = Color.rgba(helperFunctions.getNodeFillColour(moduleName)).fill();
         MutableGraph g = Factory.mutGraph(moduleName).setDirected(true).graphAttrs().add(Rank.dir(RankDir.LEFT_TO_RIGHT))
-                .nodeAttrs().add(Shape.RECT, Style.BOLD, Color.BLACK, Style.FILLED, Color.LIGHTGRAY.fill(), Font.name(
-                        "Arial"));
+                .nodeAttrs().add(Shape.RECT, Style.BOLD, Color.BLACK, Style.FILLED, fillColour, Font.name("Arial"));
         MutableNode moduleNameNode = Factory.mutNode(moduleName).attrs().add(Color.LIGHTBLUE.fill());
         g.add(moduleNameNode);
         for (Entity moduleEntity : moduleEntities) {
@@ -93,7 +96,7 @@ public class EntityGraphGenerator {
         String label = "<TABLE border='1' cellborder='0' cellspacing='0' cellpadding='4'>";
         for (Attribute attribute : attributes) {
             label = label.concat("<TR> <TD bgcolor='#EEEEEE' align='left'>" + attribute
-                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + escapeHtml(attribute
+                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + helperFunctions.escapeHtml(attribute
                             .getYangDataType()) + "</TD> </TR>");
         }
         label = label.concat("</TABLE>");
@@ -101,9 +104,5 @@ public class EntityGraphGenerator {
                 label));
         graph.add(attributeNode);
         graph.add(moduleNode.addLink(attributeNode));
-    }
-
-    private String escapeHtml(String text) {
-        return StringUtils.replaceEach(text, new String[] { "<", ">" }, new String[] { "&lt;", "&gt;" });
     }
 }

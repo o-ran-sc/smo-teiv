@@ -27,6 +27,7 @@ import guru.nidi.graphviz.attribute.EndLabel;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.ForAll;
 import guru.nidi.graphviz.attribute.Shape;
+import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
@@ -36,6 +37,7 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
 import org.oran.smo.teiv.pgsqlgenerator.Relationship;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +54,9 @@ public class RelationshipGraphGenerator {
 
     @Value("${graphs.output}")
     private String graphOutput;
+
+    @Autowired
+    private final HelperFunctions helperFunctions = new HelperFunctions();
 
     public void generate(List<Relationship> relationships, List<Entity> entities) throws IOException {
         if (generateRelationshipGraph) {
@@ -82,36 +87,27 @@ public class RelationshipGraphGenerator {
         MutableGraph g = Factory.mutGraph("moduleName").setDirected(true).linkAttrs().add(Color.DARKSLATEGRAY4, arialFont)
                 .nodeAttrs().add(Shape.BOX, arialFont);
         for (Entity moduleEntity : moduleEntities) {
-            MutableNode node = Factory.mutNode(moduleEntity.getEntityName());
+            Color fillColour = Color.rgba(helperFunctions.getNodeFillColour(moduleEntity.getModuleReferenceName())).fill();
+            MutableNode node = Factory.mutNode(moduleEntity.getEntityName()).attrs().add(Style.FILLED, fillColour);
             g.add(node);
         }
         for (Relationship moduleRelationship : moduleRelationships) {
-            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideMOType());
+            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideMOType()).attrs().add(Style.FILLED, Color.rgba(
+                    helperFunctions.getNodeFillColour(moduleRelationship.getASideModule())).fill());
             g.add(nodeA);
-            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideMOType());
+            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideMOType()).attrs().add(Style.FILLED, Color.rgba(
+                    helperFunctions.getNodeFillColour(moduleRelationship.getBSideModule())).fill());
             g.add(nodeB);
 
             String label = moduleRelationship.getName().split("_")[1];
-            Label aSideCardinality = Label.of(getCardinality(moduleRelationship.getASideMinCardinality(), moduleRelationship
-                    .getASideMaxCardinality()));
-            Label bSideCardinality = Label.of(getCardinality(moduleRelationship.getBSideMinCardinality(), moduleRelationship
-                    .getBSideMaxCardinality()));
+            Label aSideCardinality = Label.of(helperFunctions.getCardinality(moduleRelationship.getASideMinCardinality(),
+                    moduleRelationship.getASideMaxCardinality()));
+            Label bSideCardinality = Label.of(helperFunctions.getCardinality(moduleRelationship.getBSideMinCardinality(),
+                    moduleRelationship.getBSideMaxCardinality()));
 
             g.add(nodeA.addLink(Factory.to(nodeB).with(Label.of(label), EndLabel.head(aSideCardinality, null, null),
                     EndLabel.tail(bSideCardinality, null, null), Arrow.VEE)));
         }
         return g;
-    }
-
-    private String getCardinality(long minCardinality, long maxCardinality) {
-        return formatCardinality(minCardinality) + ".." + formatCardinality(maxCardinality);
-    }
-
-    private String formatCardinality(long cardinality) {
-        if (cardinality == Long.MAX_VALUE) {
-            return "*";
-        } else {
-            return String.valueOf(cardinality);
-        }
     }
 }
