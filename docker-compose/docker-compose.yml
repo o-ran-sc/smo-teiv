@@ -87,6 +87,10 @@ services:
     image: o-ran-sc/smo-teiv-exposure:latest
     ports:
       - 31074:8080
+#  Uncomment for debug
+#      - 5005:5005
+#    environment:
+#      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     depends_on:
       - dbpostgresql
     deploy:
