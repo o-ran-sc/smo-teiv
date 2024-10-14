@@ -26,7 +26,6 @@ pushd /tmp
 wget https://get.helm.sh/chartmuseum-$CM_VERSION-linux-amd64.tar.gz
 tar xvfz chartmuseum-$CM_VERSION-linux-amd64.tar.gz
 sudo mv /tmp/linux-amd64/chartmuseum /usr/local/bin/chartmuseum
-popd
 
 echo "Starting ChartMuseum on port $CM_PORT..."
 nohup chartmuseum --port=$CM_PORT --storage="local" --storage-local-rootdir=$HELM_LOCAL_REPO >/dev/null 2>&1 &
@@ -35,13 +34,14 @@ echo $! > $ROOT_DIR/CM_PID.txt
 wget https://get.helm.sh/helm-v3.12.3-linux-amd64.tar.gz
 tar xvfz /tmp/helm-v3.12.3-linux-amd64.tar.gz
 sudo mv linux-amd64/helm /usr/local/bin/helm
+popd
 
 TAR_VERSION=v0.10.3
 echo "Downloading and installing helm-push ${TAR_VERSION} ..."
 TAR_FILE=helm-push-${TAR_VERSION}.tar.gz
 HELM_PLUGINS=$(helm env HELM_PLUGINS)
 mkdir -p $HELM_PLUGINS/helm-push
-cd $HELM_PLUGINS/helm-push
+pushd $HELM_PLUGINS/helm-push
 wget https://nexus.o-ran-sc.org/content/repositories/thirdparty/chartmuseum/helm-push/$TAR_VERSION/$TAR_FILE
 tar zxvf $TAR_FILE >/dev/null
 rm $TAR_FILE
