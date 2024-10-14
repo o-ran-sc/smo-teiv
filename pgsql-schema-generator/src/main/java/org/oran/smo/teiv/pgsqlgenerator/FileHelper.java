@@ -20,6 +20,7 @@
  */
 package org.oran.smo.teiv.pgsqlgenerator;
 
+import java.util.Objects;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -37,6 +38,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class FileHelper {
+    private FileHelper() {
+    }
 
     public static void copyResourceToFile(Resource resource, File destinationFile) throws IOException {
         try {
@@ -71,10 +74,10 @@ public class FileHelper {
     }
 
     private static Optional<File> createTempFileFromJarResource(Resource resource, Path path) throws IOException {
-        if (resource.getFilename().isEmpty()) {
+        if (Objects.requireNonNull(resource.getFilename()).isEmpty()) {
             return Optional.empty();
         }
-        Path pathToFile = Path.of(path + "/" + resource.getFilename());
+        Path pathToFile = Path.of(path + File.pathSeparator + resource.getFilename());
         File file = Files.createFile(pathToFile).toFile();
         writeResourceToFile(file, resource);
         return Optional.of(file);

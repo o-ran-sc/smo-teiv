@@ -40,7 +40,7 @@ import org.springframework.util.ResourceUtils;
 @SpringBootTest(classes = { DataSchemaGenerator.class, ModelComparator.class, DataSchemaHelper.class, TableBuilder.class,
         HashInfoDataGenerator.class, BackwardCompatibilityChecker.class }, properties = {
                 "green-field-installation=false" })
-public class DataSchemaGeneratorTest {
+class DataSchemaGeneratorTest {
     @Autowired
     private DataSchemaGenerator dataSchemaGenerator;
     @Value("${green-field-installation}")

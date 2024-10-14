@@ -96,26 +96,25 @@ public class ModelComparator {
      * Compare columns of each table from module service with columns of each table from baseline schema
      */
     private void compareAndStoreChangesToColumns(List<Table> tablesFromModelService, List<Table> tablesFromBaselineSql) {
-        tablesFromModelService.forEach(tableFromModelService -> {
-            tablesFromBaselineSql.stream().filter(baselineTable -> tableFromModelService.getName().equals(baselineTable
-                    .getName())).findFirst().ifPresent(baselineTable -> {
+        tablesFromModelService.forEach(tableFromModelService -> tablesFromBaselineSql.stream().filter(
+                baselineTable -> tableFromModelService.getName().equals(baselineTable.getName())).findFirst().ifPresent(
+                        baselineTable -> {
 
-                        List<Column> columnsInBaseline = new ArrayList<>(baselineTable.getColumns());
-                        List<Column> columnsFromModuleSvc = new ArrayList<>(tableFromModelService.getColumns());
+                            List<Column> columnsInBaseline = new ArrayList<>(baselineTable.getColumns());
+                            List<Column> columnsFromModuleSvc = new ArrayList<>(tableFromModelService.getColumns());
 
-                        columnsInBaseline.sort(Comparator.comparing(Column::getName));
-                        columnsFromModuleSvc.sort(Comparator.comparing(Column::getName));
+                            columnsInBaseline.sort(Comparator.comparing(Column::getName));
+                            columnsFromModuleSvc.sort(Comparator.comparing(Column::getName));
 
-                        // Check for new columns in table
-                        if (columnsFromModuleSvc.size() > columnsInBaseline.size()) {
-                            storeNewColumns(tableFromModelService.getName(), columnsInBaseline, columnsFromModuleSvc);
-                        }
-                        detectAndStoreDefaultValueChanges(tableFromModelService.getName(), columnsInBaseline,
-                                columnsFromModuleSvc);
-                        detectAndStoreNewlyAddedIndex(tableFromModelService.getName(), columnsInBaseline,
-                                columnsFromModuleSvc);
-                    });
-        });
+                            // Check for new columns in table
+                            if (columnsFromModuleSvc.size() > columnsInBaseline.size()) {
+                                storeNewColumns(tableFromModelService.getName(), columnsInBaseline, columnsFromModuleSvc);
+                            }
+                            detectAndStoreDefaultValueChanges(tableFromModelService.getName(), columnsInBaseline,
+                                    columnsFromModuleSvc);
+                            detectAndStoreNewlyAddedIndex(tableFromModelService.getName(), columnsInBaseline,
+                                    columnsFromModuleSvc);
+                        }));
     }
 
     private List<String> extractTableNames(List<Table> tables) {
@@ -141,14 +140,12 @@ public class ModelComparator {
     private void detectAndStoreDefaultValueChanges(String tableName, List<Column> columnsInBaseline,
             List<Column> columnsFromModuleSvc) {
         List<Column> list = new ArrayList<>();
-        columnsInBaseline.forEach(columnInBaseline -> {
-            columnsFromModuleSvc.forEach(columnInGenerated -> {
-                if (columnInGenerated.getName().equals(columnInBaseline.getName()) && !Objects.equals(columnInGenerated
-                        .getDefaultValue(), columnInBaseline.getDefaultValue())) {
-                    list.add(columnInGenerated);
-                }
-            });
-        });
+        columnsInBaseline.forEach(columnInBaseline -> columnsFromModuleSvc.forEach(columnInGenerated -> {
+            if (columnInGenerated.getName().equals(columnInBaseline.getName()) && !Objects.equals(columnInGenerated
+                    .getDefaultValue(), columnInBaseline.getDefaultValue())) {
+                list.add(columnInGenerated);
+            }
+        }));
         if (!list.isEmpty()) {
             identifiedChangesToModels.get(DEFAULT).add(Table.builder().name(tableName).columns(list).build());
         }

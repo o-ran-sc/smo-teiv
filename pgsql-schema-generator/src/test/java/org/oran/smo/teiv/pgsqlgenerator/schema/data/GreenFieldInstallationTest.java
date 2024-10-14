@@ -44,7 +44,7 @@ import org.oran.smo.teiv.pgsqlgenerator.schema.model.HashInfoDataGenerator;
 
 @SpringBootTest(classes = { DataSchemaGenerator.class, ModelComparator.class, DataSchemaHelper.class, TableBuilder.class,
         HashInfoDataGenerator.class, BackwardCompatibilityChecker.class }, properties = { "green-field-installation=true" })
-public class GreenFieldInstallationTest {
+class GreenFieldInstallationTest {
 
     static File outputSqlFile;
     @Autowired

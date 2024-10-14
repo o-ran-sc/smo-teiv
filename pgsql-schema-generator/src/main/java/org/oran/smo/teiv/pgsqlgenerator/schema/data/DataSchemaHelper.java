@@ -168,11 +168,8 @@ public class DataSchemaHelper {
 
     private StringBuilder generateIndexStatementForColumns(List<Column> columns) {
         StringBuilder indexStmt = new StringBuilder();
-        columns.forEach(column -> {
-            column.getPostgresIndexList().forEach(postgresIndex -> {
-                indexStmt.append(generateIndexStatement(postgresIndex));
-            });
-        });
+        columns.forEach(column -> column.getPostgresIndexList().forEach(postgresIndex -> indexStmt.append(
+                generateIndexStatement(postgresIndex))));
         return indexStmt;
     }
 
@@ -181,12 +178,11 @@ public class DataSchemaHelper {
             return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "PRIMARY KEY (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint
                             .getColumnToAddConstraintTo());
-        } else if (postgresConstraint instanceof ForeignKeyConstraint) {
+        } else if (postgresConstraint instanceof ForeignKeyConstraint foreignKeyConstraint) {
             return String.format(
                     ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "FOREIGN KEY (\"%s\") REFERENCES ties_data.\"%s\" (id) ON DELETE CASCADE",
                     postgresConstraint.getTableToAddConstraintTo(), postgresConstraint.getConstraintName(),
-                    postgresConstraint.getColumnToAddConstraintTo(), ((ForeignKeyConstraint) postgresConstraint)
-                            .getReferencedTable());
+                    postgresConstraint.getColumnToAddConstraintTo(), foreignKeyConstraint.getReferencedTable());
         } else if (postgresConstraint instanceof UniqueConstraint) {
             return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "UNIQUE (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint
@@ -268,9 +264,7 @@ public class DataSchemaHelper {
             StringBuilder storeSchema = new StringBuilder();
             for (Column column : table.getColumns()) {
                 if (!column.getPostgresIndexList().isEmpty()) {
-                    column.getPostgresIndexList().forEach(index -> {
-                        storeSchema.append(generateIndexStatement(index));
-                    });
+                    column.getPostgresIndexList().forEach(index -> storeSchema.append(generateIndexStatement(index)));
                 }
             }
             storeSchemaForIndexStatements.append(storeSchema);

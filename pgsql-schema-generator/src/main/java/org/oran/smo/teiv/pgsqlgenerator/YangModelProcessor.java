@@ -93,24 +93,21 @@ public class YangModelProcessor {
     }
 
     private HashMap<String, String> createDataTypeMapping() {
-        HashMap<String, String> map = new HashMap<String, String>() {
-            {
-                put("string", TEXT);
-                put("uint32", BIGINT);
-                put("int32", INT);
-                put("or-teiv-types:_3GPP_FDN_Type", TEXT);
-                put("enumeration", TEXT);
-                put("types3gpp:PLMNId", JSONB);
-                put("[]", JSONB);
-                put(JSONB, JSONB);
-                put("[uses types3gpp:PLMNId]", JSONB);
-                put("geo:geo-location", "geography");
-                put("uint64", BIGINT);
-                put("int64", BIGINT);
-                put("decimal64", DECIMAL);
-                put("[uses or-teiv-types:CM_ID]", JSONB);
-            }
-        };
+        HashMap<String, String> map = new HashMap<>();
+        map.put("string", TEXT);
+        map.put("uint32", BIGINT);
+        map.put("int32", INT);
+        map.put("or-teiv-types:_3GPP_FDN_Type", TEXT);
+        map.put("enumeration", TEXT);
+        map.put("types3gpp:PLMNId", JSONB);
+        map.put("[]", JSONB);
+        map.put(JSONB, JSONB);
+        map.put("[uses types3gpp:PLMNId]", JSONB);
+        map.put("geo:geo-location", "geography");
+        map.put("uint64", BIGINT);
+        map.put("int64", BIGINT);
+        map.put("decimal64", DECIMAL);
+        map.put("[uses or-teiv-types:CM_ID]", JSONB);
         return map;
     }
 
@@ -126,67 +123,74 @@ public class YangModelProcessor {
 
         yangModels.stream().forEach(yangModel -> {
             YModule yModule = yangModel.getYangModelRoot().getModule();
-            System.out.println("Module Name: " + yModule.getModuleName());
+            StringBuilder modelParserLog = new StringBuilder();
+            modelParserLog.append("Module Name: ").append(yModule.getModuleName());
 
             yModule.getLists().stream().forEach(yList -> {
                 final String tableName = getTableName(yModule.getModuleName(), yList.getListName());
-                System.out.printf("\tEntity Name: %s \n", yList.getListName());
+                modelParserLog.append(String.format("%n\tEntity Name: %s %n", yList.getListName()));
                 List<Attribute> attributes = new ArrayList<>();
-                List constraint = List.of(PrimaryKeyConstraint.builder().constraintName("PK_" + yList.getListName() + "_id")
-                        .tableName(yList.getListName()).columnToAddConstraintTo("id").build());
+                List<Object> constraint = List.of(PrimaryKeyConstraint.builder().constraintName("PK_" + yList
+                        .getListName() + "_id").tableName(yList.getListName()).columnToAddConstraintTo("id").build());
 
                 attributes.add(Attribute.builder().name("id").yangDataType("string").dataType(TEXT).constraints(constraint)
                         .build());
                 yList.getContainers().forEach(yContainer -> {
-                    System.out.printf("\t\tContainer Name: %s \n", yContainer.getContainerName());
+                    modelParserLog.append(String.format("\t\tContainer Name: %s %n", yContainer.getContainerName()));
                     if (yContainer.getContainerName().equals("attributes")) {
-
+                        String leafNameFormat = "\t\t\tLeaf Name: %s %n";
+                        String leafTypeFormat = "\t\t\t\tLeaf Type: %s %n";
+                        String dataTypeFormat = "\t\t\t\tData Type: %s %n";
                         yContainer.getLeafs().forEach(yLeaf -> {
 
-                            System.out.printf("\t\t\tLeaf Name: %s \n", yLeaf.getLeafName());
-                            System.out.printf("\t\t\t\tLeaf Type: %s \n", yLeaf.getType().getDataType());
-                            System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(yLeaf.getType()
-                                    .getDataType()));
+                            modelParserLog.append(String.format(leafNameFormat, yLeaf.getLeafName()));
+                            modelParserLog.append(String.format(leafTypeFormat, yLeaf.getType().getDataType()));
+                            modelParserLog.append(String.format(dataTypeFormat, dataTypeMapping.get(yLeaf.getType()
+                                    .getDataType())));
 
                             if (yLeaf.getDefault() != null) {
 
                                 attributes.add(Attribute.builder().name(yLeaf.getLeafName()).yangDataType(yLeaf.getType()
                                         .getDataType()).dataType(dataTypeMapping.get(yLeaf.getType().getDataType()))
-                                        .defaultValue(yLeaf.getDefault().getValue()).constraints(new ArrayList()).build());
+                                        .defaultValue(yLeaf.getDefault().getValue()).constraints(new ArrayList<>())
+                                        .build());
                             } else {
                                 attributes.add(Attribute.builder().name(yLeaf.getLeafName()).yangDataType(yLeaf.getType()
                                         .getDataType()).dataType(dataTypeMapping.get(yLeaf.getType().getDataType()))
-                                        .constraints(new ArrayList()).build());
+                                        .constraints(new ArrayList<>()).build());
                             }
                         });
                         yContainer.getLeafLists().forEach(yLeafList -> {
 
-                            System.out.printf("\t\t\tLeaf Name: %s \n", yLeafList.getLeafListName());
-                            System.out.printf("\t\t\t\tLeaf Type: %s \n", yLeafList.getType().getDataType());
-                            System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(yLeafList.getType()
-                                    .getDataType()));
+                            modelParserLog.append(String.format(leafNameFormat, yLeafList.getLeafListName()));
+                            modelParserLog.append(String.format(leafTypeFormat, yLeafList.getType().getDataType()));
+                            modelParserLog.append(String.format(dataTypeFormat, dataTypeMapping.get(yLeafList.getType()
+                                    .getDataType())));
 
                             attributes.add(Attribute.builder().name(yLeafList.getLeafListName()).yangDataType(yLeafList
                                     .getType().getDataType()).dataType(JSONB).indexType(
-                                            IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
+                                            IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList<>())
+                                    .build());
                         });
                         yContainer.getLists().forEach(yListAttr -> {
 
-                            System.out.printf("\t\t\tLeaf Name: %s \n", yListAttr.getListName());
-                            System.out.printf("\t\t\t\tLeaf Type: %s \n", yListAttr.getUses());
-                            System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(yListAttr.getUses()
-                                    .toString()));
+                            modelParserLog.append(String.format(leafNameFormat, yListAttr.getListName()));
+                            modelParserLog.append(String.format(leafTypeFormat, yListAttr.getUses()));
+                            modelParserLog.append(String.format(dataTypeFormat, dataTypeMapping.get(yListAttr.getUses()
+                                    .toString())));
 
                             attributes.add(Attribute.builder().name(yListAttr.getListName()).yangDataType(yListAttr
                                     .getUses().toString()).dataType(JSONB).indexType(
-                                            IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList()).build());
+                                            IndexType.GIN_TRGM_OPS_ON_LIST_AS_JSONB).constraints(new ArrayList<>())
+                                    .build());
                         });
                         yContainer.getContainers().forEach(container -> {
 
-                            System.out.printf("\t\t\tContainer Name: %s \n", container.getContainerName());
-                            System.out.printf("\t\t\t\tContainer Type: %s \n", container.getUses());
-                            System.out.printf("\t\t\t\tData Type: %s \n", dataTypeMapping.get(container.getUses()
-                                    .toString()));
+                            modelParserLog.append(String.format("\t\t\tContainer Name: %s %n", container
+                                    .getContainerName()));
+                            modelParserLog.append(String.format("\t\t\t\tContainer Type: %s %n", container.getUses()));
+                            modelParserLog.append(String.format(dataTypeFormat, dataTypeMapping.get(container.getUses()
+                                    .toString())));
 
                             String dataType = dataTypeMapping.get(container.getUses().toString());
                             if (container.getContainerName().equals("geo-location")) {
@@ -194,7 +198,7 @@ public class YangModelProcessor {
                             }
                             Attribute.AttributeBuilder attributeBuilder = Attribute.builder().name(container
                                     .getContainerName()).yangDataType("<< Refer to Module >>").dataType(dataType)
-                                    .constraints(new ArrayList());
+                                    .constraints(new ArrayList<>());
                             if (dataType.equals(JSONB)) {
                                 attributeBuilder.indexType(IndexType.GIN);
                             }
@@ -202,12 +206,12 @@ public class YangModelProcessor {
                         });
                         yContainer.getUses().forEach(uses -> {
 
-                            System.out.printf("\t\t\tUses Name: %s \n", uses.getDomElement().getValue());
+                            modelParserLog.append(String.format("\t\t\tUses Name: %s %n", uses.getDomElement().getValue()));
 
                             attributes.add(Attribute.builder().name(uses.getDomElement().getValue().substring(uses
                                     .getDomElement().getValue().indexOf(':') + 1, uses.getDomElement().getValue().length()))
                                     .yangDataType(uses.getDomElement().getValue()).dataType(dataTypeMapping.get(uses
-                                            .getDomElement().getValue())).constraints(new ArrayList()).build());
+                                            .getDomElement().getValue())).constraints(new ArrayList<>()).build());
                         });
                     }
                 });
@@ -215,6 +219,7 @@ public class YangModelProcessor {
                 entities.add(Entity.builder().entityName(yList.getListName()).storedAt(tableName).moduleReferenceName(
                         yangModel.getYangModelRoot().getModule().getModuleName()).attributes(attributes).build());
             });
+            log.info(modelParserLog.toString());
         });
         entities.sort(Comparator.comparing(Entity::getStoredAt));
         return entities;
@@ -232,20 +237,23 @@ public class YangModelProcessor {
 
         yangModels.stream().forEach(yangModel -> {
             YModule yModule = yangModel.getYangModelRoot().getModule();
-            System.out.println("Module Name: " + yModule.getModuleName());
+            StringBuilder modelParserLog = new StringBuilder();
+            modelParserLog.append(String.format("Module Name: %s ", yModule.getModuleName()));
 
-            StatementModuleAndName biDirectionalTopologyRelationship = new StatementModuleAndName(
-                    "o-ran-smo-teiv-common-yang-extensions", "biDirectionalTopologyRelationship");
+            String oranSmoTeivCommonYangExt = "o-ran-smo-teiv-common-yang-extensions";
+
+            StatementModuleAndName biDirectionalTopologyRelationship = new StatementModuleAndName(oranSmoTeivCommonYangExt,
+                    "biDirectionalTopologyRelationship");
             StatementModuleAndName biDirectionalTopologyRelationshipAside = new StatementModuleAndName(
-                    "o-ran-smo-teiv-common-yang-extensions", "aSide");
+                    oranSmoTeivCommonYangExt, "aSide");
             StatementModuleAndName biDirectionalTopologyRelationshipBside = new StatementModuleAndName(
-                    "o-ran-smo-teiv-common-yang-extensions", "bSide");
+                    oranSmoTeivCommonYangExt, "bSide");
 
             yModule.getChildren(biDirectionalTopologyRelationship).stream().map(
-                    abstractStatement -> (YOranSmoTeivBiDirectionalTopologyRelationship) abstractStatement).forEach(
+                    YOranSmoTeivBiDirectionalTopologyRelationship.class::cast).forEach(
                             yOranSmoTeivBiDirectionalTopologyRelationship -> {
-                                System.out.printf("\tRelationship Name: %s \n",
-                                        yOranSmoTeivBiDirectionalTopologyRelationship.getRelationshipName());
+                                modelParserLog.append(String.format("\tRelationship Name: %s %n",
+                                        yOranSmoTeivBiDirectionalTopologyRelationship.getRelationshipName()));
                                 YOranSmoTeivASide aSide = yOranSmoTeivBiDirectionalTopologyRelationship.getChildStatements()
                                         .stream().filter(abstractStatement -> abstractStatement.getChild(
                                                 biDirectionalTopologyRelationshipAside) != null).toList().get(0).getChild(
@@ -256,10 +264,10 @@ public class YangModelProcessor {
                                                 biDirectionalTopologyRelationshipBside) != null).toList().get(0).getChild(
                                                         biDirectionalTopologyRelationshipBside);
 
-                                System.out.printf("\t\tA Side:\n\t\t\t Name: %s \n\t\t\t Type: %s \n", aSide
-                                        .getParentStatement().getStatementIdentifier(), aSide.getTeivTypeName());
-                                System.out.printf("\t\tB Side:\n\t\t\t Name %s \n\t\t\t Type %s \n", bSide
-                                        .getParentStatement().getStatementIdentifier(), bSide.getTeivTypeName());
+                                modelParserLog.append(String.format("\t\tA Side:%n\t\t\t Name: %s %n\t\t\t Type: %s %n",
+                                        aSide.getParentStatement().getStatementIdentifier(), aSide.getTeivTypeName()));
+                                modelParserLog.append(String.format("\t\tB Side:%n\t\t\t Name %s %n\t\t\t Type %s %n", bSide
+                                        .getParentStatement().getStatementIdentifier(), bSide.getTeivTypeName()));
 
                                 long aSideMinCardinality = 0;
                                 long aSideMaxCardinality = 0;
@@ -286,7 +294,7 @@ public class YangModelProcessor {
                                         .getDomElement().getChildren().stream().filter(name -> name.getNameValue().contains(
                                                 "min-elements 1")).findAny();
 
-                                if (aSide.getParentStatement().getDomElement().getName() == "leaf") {
+                                if (aSide.getParentStatement().getDomElement().getName().equals("leaf")) {
                                     if (aSideMandatory.isPresent() || aSideMinElement.isPresent()) {
                                         bSideMinCardinality = 1;
                                     } else {
@@ -295,7 +303,7 @@ public class YangModelProcessor {
                                     bSideMaxCardinality = 1;
 
                                 }
-                                if (aSide.getParentStatement().getDomElement().getName() == "leaf-list") {
+                                if (aSide.getParentStatement().getDomElement().getName().equals("leaf-list")) {
                                     if (aSideMandatory.isPresent() || aSideMinElement.isPresent()) {
                                         bSideMinCardinality = 1;
                                     } else {
@@ -304,7 +312,7 @@ public class YangModelProcessor {
                                     bSideMaxCardinality = Long.MAX_VALUE;
 
                                 }
-                                if (bSide.getParentStatement().getDomElement().getName() == "leaf") {
+                                if (bSide.getParentStatement().getDomElement().getName().equals("leaf")) {
                                     if (bSideMandatory.isPresent() || bSideMinElement.isPresent()) {
                                         aSideMinCardinality = 1;
                                     } else {
@@ -312,7 +320,7 @@ public class YangModelProcessor {
                                     }
                                     aSideMaxCardinality = 1;
                                 }
-                                if (bSide.getParentStatement().getDomElement().getName() == "leaf-list") {
+                                if (bSide.getParentStatement().getDomElement().getName().equals("leaf-list")) {
                                     if (bSideMandatory.isPresent() || bSideMinElement.isPresent()) {
                                         aSideMinCardinality = 1;
                                     } else {
@@ -363,6 +371,7 @@ public class YangModelProcessor {
                                                                         bSideModuleName, bSideMoType)).build();     // Hard coded for now
                                 relationships.add(relationship);
                             });
+            log.info(modelParserLog.toString());
         });
         relationships.sort(Comparator.comparing(Relationship::getName));
         return relationships;

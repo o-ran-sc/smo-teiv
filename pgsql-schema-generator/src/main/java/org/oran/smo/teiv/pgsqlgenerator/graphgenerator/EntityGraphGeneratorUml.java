@@ -70,9 +70,9 @@ public class EntityGraphGeneratorUml {
         sb.append("    BackgroundColor<<Entity>> LightGray\n");
         sb.append("    BackgroundColor<<Module>> LightBlue\n");
         sb.append("}\n");
-        sb.append(String.format("class %s <<Module>> {\n}\n", moduleName));
+        sb.append(String.format("class %s <<Module>> {%n}%n", moduleName));
         for (Entity entity : entities) {
-            sb.append(String.format("class %s <<Entity>> {\n", entity.getEntityName()));
+            sb.append(String.format("class %s <<Entity>> {%n", entity.getEntityName()));
             List<Attribute> attributes = entity.getAttributes();
             for (Attribute attribute : attributes) {
                 sb.append(String.format("    %s : %s\n", attribute.getName(), attribute.getYangDataType()));

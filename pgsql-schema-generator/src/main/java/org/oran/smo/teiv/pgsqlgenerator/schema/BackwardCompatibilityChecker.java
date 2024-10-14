@@ -41,6 +41,7 @@ public class BackwardCompatibilityChecker {
 
     @Value("${green-field-installation}")
     private boolean isGreenFieldInstallation;
+    String noNBCCheckMsg = "No NBC checks done as green field installation is enabled";
 
     public void checkForNBCChangesInModel(List<Relationship> relationshipsInBaselineSql,
             List<Relationship> relationshipsFromModelSvc) {
@@ -64,7 +65,7 @@ public class BackwardCompatibilityChecker {
                 });
             });
         } else {
-            log.info("No NBC checks done as green field installation is enabled");
+            log.info(noNBCCheckMsg);
         }
     }
 
@@ -73,16 +74,15 @@ public class BackwardCompatibilityChecker {
             tablesInBaselineSql.forEach(baselineTable -> {
                 Optional<Table> matchingTable = tablesFromModelSvc.stream().filter(modelTable -> modelTable.getName()
                         .equals(baselineTable.getName())).findFirst();
-                matchingTable.ifPresentOrElse(table -> {
-                    verifyTableColumns(baselineTable.getColumns(), table.getColumns(), table.getName());
-                }, () -> {
-                    throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                            "modified/removed table(%s) present in baseline", baselineTable.getName()),
-                            new UnsupportedOperationException());
-                });
+                matchingTable.ifPresentOrElse(table -> verifyTableColumns(baselineTable.getColumns(), table.getColumns(),
+                        table.getName()), () -> {
+                            throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
+                                    "modified/removed table(%s) present in baseline", baselineTable.getName()),
+                                    new UnsupportedOperationException());
+                        });
             });
         } else {
-            log.info("No NBC checks done as green field installation is enabled");
+            log.info(noNBCCheckMsg);
         }
     }
 
@@ -93,7 +93,7 @@ public class BackwardCompatibilityChecker {
             final List<Table> skeletonTables = SchemaParser.extractDataFromBaseline(skeletonConsumerDataSchema);
             checkForNBCChangesInData(baselineTables, skeletonTables);
         } else {
-            log.info("No NBC checks done as green field installation is enabled");
+            log.info(noNBCCheckMsg);
         }
     }
 
@@ -118,24 +118,25 @@ public class BackwardCompatibilityChecker {
             Optional<PostgresConstraint> matchingConstraint = modelColumn.getPostgresConstraints().stream().filter(
                     constraint1 -> constraint1.getConstraintName().equals(constraint.getConstraintName())).findFirst();
 
+            String modifiedOrRemovedConstraintFromBaseline = "modified/removed constraint for column(%s.%s) present in baseline";
             matchingConstraint.ifPresentOrElse(constraint1 -> {
                 if (!constraint.getTableToAddConstraintTo().equals(constraint1.getTableToAddConstraintTo()) && !constraint
                         .getColumnToAddConstraintTo().equals(constraint1.getColumnToAddConstraintTo()) && !constraint
                                 .getConstraintName().equals(constraint1.getConstraintName())) {
                     throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                            "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
-                                    .getName()), new UnsupportedOperationException());
+                            modifiedOrRemovedConstraintFromBaseline, tableName, baselineColumn.getName()),
+                            new UnsupportedOperationException());
                 }
                 if (constraint instanceof ForeignKeyConstraint && !constraint.getTableToAddConstraintTo().equals(constraint1
                         .getTableToAddConstraintTo())) {
                     throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                            "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
-                                    .getName()), new UnsupportedOperationException());
+                            modifiedOrRemovedConstraintFromBaseline, tableName, baselineColumn.getName()),
+                            new UnsupportedOperationException());
                 }
             }, () -> {
                 throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                        "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
-                                .getName()), new UnsupportedOperationException());
+                        modifiedOrRemovedConstraintFromBaseline, tableName, baselineColumn.getName()),
+                        new UnsupportedOperationException());
             });
         }
     }
