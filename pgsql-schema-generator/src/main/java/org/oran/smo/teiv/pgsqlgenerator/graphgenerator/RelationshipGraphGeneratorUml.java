@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
 import org.oran.smo.teiv.pgsqlgenerator.Relationship;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,9 @@ public class RelationshipGraphGeneratorUml {
 
     @Value("${graphs.output}")
     private String graphOutput;
+
+    @Autowired
+    private final HelperFunctions helperFunctions = new HelperFunctions();
 
     public void generate(List<Relationship> relationships, List<Entity> entities) throws IOException {
         if (generateRelationshipGraph) {
@@ -72,14 +76,15 @@ public class RelationshipGraphGeneratorUml {
         sb.append("@startuml\n");
         sb.append("skinparam componentStyle rectangle\n");
         for (Entity entity : entities) {
-            sb.append(String.format("class %s {\n", entity.getEntityName()));
+            sb.append(String.format("class %s %s {\n", entity.getEntityName(), helperFunctions.getNodeFillColour(entity
+                    .getModuleReferenceName())));
             sb.append("}\n");
         }
         for (Relationship relationship : relationships) {
             String label = relationship.getName().split("_")[1];
-            String aSideCardinality = getCardinality(relationship.getASideMinCardinality(), relationship
+            String aSideCardinality = helperFunctions.getCardinality(relationship.getASideMinCardinality(), relationship
                     .getASideMaxCardinality());
-            String bSideCardinality = getCardinality(relationship.getBSideMinCardinality(), relationship
+            String bSideCardinality = helperFunctions.getCardinality(relationship.getBSideMinCardinality(), relationship
                     .getBSideMaxCardinality());
 
             sb.append(String.format("%s \"%s\" --> \"%s\" %s : %s\n", relationship.getASideMOType(), aSideCardinality,
@@ -87,13 +92,5 @@ public class RelationshipGraphGeneratorUml {
         }
         sb.append("@enduml\n");
         return sb.toString();
-    }
-
-    private String getCardinality(long minCardinality, long maxCardinality) {
-        return formatCardinality(minCardinality) + ".." + formatCardinality(maxCardinality);
-    }
-
-    private String formatCardinality(long cardinality) {
-        return cardinality == Long.MAX_VALUE ? "*" : String.valueOf(cardinality);
     }
 }

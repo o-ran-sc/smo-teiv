@@ -6,11 +6,10 @@
 Equipment
 ---------
 
-.. image:: ../_static/data-model/equipment.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-equipment.svg
   :width: 900
 
-.. image:: ../_static/data-model/equipment-relationships.svg
-  :width: 900
+.. image:: ../_static/data-model/o-ran-smo-teiv-equipment-rel.svg
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-equipment.yang
    :language: yang

@@ -40,43 +40,43 @@ be retrieved and filtered using the /attributes.
 |                                          |        |                |              |                        |                        |
 |                                          | Name   |                |              |                        |                        |
 +==========================================+========+================+==============+========================+========================+
-| | To return the ids for all instances of | RAN    | GNBDUFunction  |              |                        | | All ids of every     |
-| | the entityTypeName used in the query.  |        |                |              |                        | | GNBDUFunction        |
+| | To return the ids for all instances of | RAN    | ODUFunction    |              |                        | | All ids of every     |
+| | the entityTypeName used in the query.  |        |                |              |                        | | ODUFunction          |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
-| | To return all attributes of every      | RAN    | GNBDUFunction  | /attributes  |                        | | All GNBDUFunctions   |
+| | To return all attributes of every      | RAN    | ODUFunction    | /attributes  |                        | | All ODUFunctions     |
 | | instance of the entityTypeName used    |        |                |              |                        | | with every attribute |
 | | in the query.                          |        |                |              |                        |                        |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
-| | To return every instance of the        | RAN    | GNBDUFunction  | /attributes  |                        | | All gNBIds of every  |
-| | entityTypeName used in the query, but  |        |                | (gNBId)      |                        | | GNBDUFunction        |
+| | To return every instance of the        | RAN    | ODUFunction    | /attributes  |                        | | All gNBIds of every  |
+| | entityTypeName used in the query, but  |        |                | (gNBId)      |                        | | ODUFunction          |
 | | only the attribute that was            |        |                |              |                        |                        |
 | | defined in the *targetFilter*          |        |                |              |                        |                        |
 | | parameter. Note: The attribute must be |        |                |              |                        |                        |
 | | a valid field of the object.           |        |                |              |                        |                        |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
-| | To return every instance of the        | RAN    | GNBDUFunction  | /attributes  |                        | | All gNBIds and       |
+| | To return every instance of the        | RAN    | ODUFunction    | /attributes  |                        | | All gNBIds and       |
 | | entityTypeName used in the query, but  |        |                |              |                        | | gNBIdLengths of      |
-| | only the attributes that were          |        |                | (gNBId,      |                        | | every GNBDUFunction  |
+| | only the attributes that were          |        |                | (gNBId,      |                        | | every ODUFunction    |
 | | defined in the *targetFilter*          |        |                | gNBIdLength) |                        |                        |
 | | parameter. Note: The attributes must   |        |                |              |                        |                        |
 | | be separated by a comma "," when       |        |                |              |                        |                        |
 | | using parenthesis "()".                |        |                |              |                        |                        |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
-| | To return the ids for all instances of | RAN    | GNBDUFunction  |              | /sourceIds             | | Unique set of ids    |
-| | the entityTypeName used in the query,  |        |                |              | [contains (@item,      | | of GNBDUFunctions,   |
+| | To return the ids for all instances of | RAN    | ODUFunction    |              | /sourceIds             | | Unique set of ids    |
+| | the entityTypeName used in the query,  |        |                |              | [contains (@item,      | | of ODUFunctions,     |
 | | that matches the given                 |        |                |              | 'SubNetwork=Ireland')] | | where sourceIds      |
 | | property in the *scopeFilter*          |        |                |              |                        | | contains             |
 | | parameter.                             |        |                |              |                        | | *SubNetwork=Ireland* |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
-| | To return the ids for all instances of | RAN    | GNBDUFunction  |              | /attributes            | | Unique set of ids of |
-| | the entityTypeName used in the query,  |        |                |              | [@gNBId                | | GNBDUFunctions,where |
+| | To return the ids for all instances of | RAN    | ODUFunction    |              | /attributes            | | Unique set of ids of |
+| | the entityTypeName used in the query,  |        |                |              | [@gNBId                | | ODUFunctions,where   |
 | | that matches the given attributes in   |        |                |              | Length=3 and           | | the gNBIdLength      |
 | | the *scopeFilter* parameter. Note: The |        |                |              | @gNBId=111]            | | equals 3 and the     |
 | | attributes must be separated by a      |        |                |              |                        | | gNBId equals 111     |
 | | *AND* or *OR*".                        |        |                |              |                        |                        |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
-| | To return the ids for all instances of | RAN    | GNBDUFunction  |              | /attributes            | | Unique set of ids of |
-| | the entityTypeName used in the query,  |        |                |              | [@gNBId Length=3] |    | | GNBDUFunctions,      |
+| | To return the ids for all instances of | RAN    | ODUFunction    |              | /attributes            | | Unique set of ids of |
+| | the entityTypeName used in the query,  |        |                |              | [@gNBId Length=3] |    | | ODUFunctions,        |
 | | that satisfies one of                  |        |                |              |                        | | where the            |
 | | the conditions in the *scopeFilter*    |        |                |              | /sourceIds             | | gNBIdLength equals 3 |
 | | parameter. A condition is a complete   |        |                |              | [contains (@item,      | | or the sourceIds     |
@@ -101,16 +101,16 @@ The *entityTypeName* is used as the root of the queries.
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
 | Use case                                 | domainName  | entityTypeName | targetFilter | scopeFilter                | Query result                                     |
 +==========================================+=============+================+==============+============================+==================================================+
-| | To return the ids for all instances of | REL_OAM_RAN | GNBDUFunction  |              | /managed-by-managedElement | | All GNBDUFunction entities that are managed    |
+| | To return the ids for all instances of | REL_OAM_RAN | ODUFunction    |              | /managed-by-managedElement | | All ODUFunction entities that are managed      |
 | | an entityTypeName related by an        |             |                |              |                            | | by any Managed Element.                        |
 | | association.                           |             |                |              |                            |                                                  |
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
-| | To return the ids for all instances of | REL_OAM_RAN | GNBDUFunction  |              | /managed-by-managedElement | | All GNBDUFunction entities that are managed    |
+| | To return the ids for all instances of | REL_OAM_RAN | ODUFunction    |              | /managed-by-managedElement | | All ODUFunction entities that are managed      |
 | | an entityTypeName related by an        |             |                |              | [@id = 'urn\:3gpp:dn:      | | by the Managed Element                         |
 | | association to another entity          |             |                |              | ManagedElement=1']         | | *urn\:3gpp:dn: ManagedElement=1*.              |
 | | specified by its *id*.                 |             |                |              |                            |                                                  |
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
-| | To return the attributes for all       | REL_OAM_RAN | GNBDUFunction  | /attributes  | /attributes [@enbId=1];    | | All GNBDUFunction entities with enbId as *1*   |
+| | To return the attributes for all       | REL_OAM_RAN | ODUFunction    | /attributes  | /attributes [@enbId=1];    | | All ODUFunction entities with enbId as *1*     |
 | | instances of an entityTypeName         |             |                |              |                            | | managed by the Managed Element                 |
 | | related by one or more associations    |             |                |              | /managed-by-managedElement | | *urn\:3gpp:dn: ManagedElement=1* or            |
 | | to other entities specified by their   |             |                |              | [@id='urn\:3gpp:dn:        | | *urn\:3gpp:dn: ManagedElement=2*               |
@@ -135,17 +135,17 @@ The *entityTypeName* is used as the root of the queries.
 |                                          |             |                |                   |                 |                            |                                                     |
 |                                          |             |                |                   |                 |                            |                                                     |
 +==========================================+=============+================+===================+=================+============================+=====================================================+
-| | To return the relationships for a      | RAN         | GNBDUFunction  | urn\:3gpp:dn:     |                 |                            | | All relations for the GNBDUFunction with id       |
-| | given entity specified by its id.      |             |                | ManagedElement=1, |                 |                            | | *urn\:3gpp:dn: ManagedElement=1, GNBDUFunction=1* |
-|                                          |             |                | GNBDUFunction=1   |                 |                            |                                                     |
+| | To return the relationships for a      | RAN         | ODUFunction    | urn\:3gpp:dn:     |                 |                            | | All relations for the ODUFunction with id         |
+| | given entity specified by its id.      |             |                | ManagedElement=1, |                 |                            | | *urn\:3gpp:dn: ManagedElement=1, ODUFunction=1*   |
+|                                          |             |                | ODUFunction=1     |                 |                            |                                                     |
 +------------------------------------------+-------------+----------------+-------------------+-----------------+----------------------------+-----------------------------------------------------+
-| | To return specific relationships for a | REL_OAM_RAN | GNBDUFunction  | urn\:3gpp:dn:     | /MANAGEDELEMENT |                            | | All *MANAGEDELEMENT _MANAGES _GNBDUFUNCTION*      |
-| | given entity specified by its id.      |             |                | ManagedElement=1, | _MANAGES        |                            | | relations for the GNBDUFunction with id           |
-|                                          |             |                | GNBDUFunction=1   | _GNBDUFUNCTION  |                            | | *urn\:3gpp:dn: ManagedElement=1, GNBDUFunction=1* |
+| | To return specific relationships for a | REL_OAM_RAN | ODUFunction    | urn\:3gpp:dn:     | /MANAGEDELEMENT |                            | | All *MANAGEDELEMENT _MANAGES _ODUFUNCTION*        |
+| | given entity specified by its id.      |             |                | ManagedElement=1, | _MANAGES        |                            | | relations for the ODUFunction with id             |
+|                                          |             |                | ODUFunction=1     | _ODUFUNCTION    |                            | | *urn\:3gpp:dn: ManagedElement=1, ODUFunction=1*   |
 +------------------------------------------+-------------+----------------+-------------------+-----------------+----------------------------+-----------------------------------------------------+
-| | To return specific relationships for   | REL_OAM_RAN | GNBDUFunction  | urn\:3gpp:dn:     |                 | /managed-by-managedElement | | All *MANAGEDELEMENT _MANAGES _GNBDUFUNCTION*      |
-| | an entity specified by its id to       |             |                | ManagedElement=1, |                 | [@id = 'urn\:3gpp:dn:      | | relations for the GNBDUFunction with id           |
-| | another entity using its id and        |             |                | GNBDUFunction=1   |                 | ManagedElement=1']         | | *urn\:3gpp:dn: ManagedElement=1, GNBDUFunction=1* |
+| | To return specific relationships for   | REL_OAM_RAN | ODUFunction    | urn\:3gpp:dn:     |                 | /managed-by-managedElement | | All *MANAGEDELEMENT _MANAGES _ODUFUNCTION*        |
+| | an entity specified by its id to       |             |                | ManagedElement=1, |                 | [@id = 'urn\:3gpp:dn:      | | relations for the ODUFunction with id             |
+| | another entity using its id and        |             |                | ODUFunction=1     |                 | ManagedElement=1']         | | *urn\:3gpp:dn: ManagedElement=1, ODUFunction=1*   |
 | | association.                           |             |                |                   |                 |                            | | where the managed element is                      |
 |                                          |             |                |                   |                 |                            | | *urn\:3gpp:dn: ManagedElement=1*.                 |
 +------------------------------------------+-------------+----------------+-------------------+-----------------+----------------------------+-----------------------------------------------------+
@@ -163,13 +163,13 @@ Here, the *relationshipTypeName* is used as the root of the queries.
 |                                          |             | Type Name       |        |                            |                                                 |
 |                                          |             |                 | Filter |                            |                                                 |
 +==========================================+=============+=================+========+============================+=================================================+
-| | To return all relationships for a      | REL_OAM_RAN | MANAGEDELEMENT  |        |                            | | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION     |
+| | To return all relationships for a      | REL_OAM_RAN | MANAGEDELEMENT  |        |                            | | All MANAGEDELEMENT_MANAGES_ORUFUNCTION        |
 | | specified relationship                 |             | _MANAGES        |        |                            | | relationships                                 |
-|                                          |             | _ENODEBFUNCTION |        |                            |                                                 |
+|                                          |             | _ORUFUNCTION    |        |                            |                                                 |
 +------------------------------------------+-------------+-----------------+--------+----------------------------+-------------------------------------------------+
-| | To return all relationships for a      | REL_OAM_RAN | MANAGEDELEMENT  |        | /managed-by-managedElement | | All MANAGEDELEMENT_MANAGES_ENODEBFUNCTION     |
+| | To return all relationships for a      | REL_OAM_RAN | MANAGEDELEMENT  |        | /managed-by-managedElement | | All MANAGEDELEMENT_MANAGES_ORUFUNCTION        |
 | | specified relationship type with a     |             | _MANAGES        |        | [@id='urn\:3gpp:dn:        | | relationships having an association           |
-| | specified association to an entity.    |             | _ENODEBFUNCTION |        | ManagedElement=1']         | | *managed-by-managedElement* to ManagedElement |
+| | specified association to an entity.    |             | _ORUFUNCTION    |        | ManagedElement=1']         | | *managed-by-managedElement* to ManagedElement |
 |                                          |             |                 |        |                            | | *urn\:3gpp:dn: ManagedElement=1*.             |
 +------------------------------------------+-------------+-----------------+--------+----------------------------+-------------------------------------------------+
 
@@ -178,12 +178,12 @@ Here, the *relationshipTypeName* is used as the root of the queries.
    To get a relationship with a specific id, use:
    **/domains/{domainName}/relationship-types/{relationshipTypeName}/relationships/{relationshipId}**
 
-**Example:** Get the *MANAGEDELEMENT_MANAGES_ENODEBFUNCTION*
+**Example:** Get the *MANAGEDELEMENT_MANAGES_ORUFUNCTION*
 relationship with id *rel1* in the *REL_OAM_RAN* domain:
 
 ::
 
-   GET https://<host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ENODEBFUNCTION/relationships/rel1
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ORUFUNCTION/relationships/rel1
 
 Querying on classifiers and decorators
 **************************************
@@ -200,7 +200,7 @@ This functionality is supported by the following endpoints
 |                                           | Name   | Filter |                       |                                          |
 +===========================================+========+========+=======================+==========================================+
 | | Return all related entity IDs that are  | RAN    |        | /classifiers[@item =  | | All the entity IDs that are classified |
-| | exactly matched with the specified      |        |        | 'gnbdu-function-model | | with "gnbdu-function-model:Indoor"     |
+| | exactly matched with the specified      |        |        | 'odu-function-model   | | with "odu-function-model:Indoor"       |
 | | classifier with given domain name.      |        |        | :Indoor']             | | in RAN domain.                         |
 +-------------------------------------------+--------+--------+-----------------------+------------------------------------------+
 | | Return all related entity IDs that are  | RAN    |        | /classifiers[contains | | All the entity IDs that are partially  |
@@ -208,17 +208,17 @@ This functionality is supported by the following endpoints
 | | classifier with given domain name.      |        |        |                       |                                          |
 +-------------------------------------------+--------+--------+-----------------------+------------------------------------------+
 | | Return all related entity IDs that are  | RAN    |        | /decorators[          | | All the entity IDs that are exactly    |
-| | exactly matched with the key-value pair |        |        | @gnbdu-function-model | | matched with                           |
-| | that specified decorators               |        |        | :textdata =           | | "gnbdu-function-model:textdata =       |
+| | exactly matched with the key-value pair |        |        | @odu-function-model   | | matched with                           |
+| | that specified decorators               |        |        | :textdata =           | | "odu-function-model:textdata =         |
 | | with given domain name.                 |        |        | 'Stockholm']          | | 'Stockholm'" in RAN domain.            |
 +-------------------------------------------+--------+--------+-----------------------+------------------------------------------+
 | | Return all related entity IDs that are  | RAN    |        | /decorators[contains( | | All the entity IDs that are exactly    |
-| | exactly matched with key parameter      |        |        | @gnbdu-function-model | | matched with                           |
-| | where the value of the decorator is     |        |        | :textdata, "")]       | | "gnbdu-function-model:textdata as key  |
+| | exactly matched with key parameter      |        |        | @odu-function-model   | | matched with                           |
+| | where the value of the decorator is     |        |        | :textdata, "")]       | | "odu-function-model:textdata as key    |
 | | unknown with given domain name.         |        |        |                       | | of the decorator in RAN domain.        |
 +-------------------------------------------+--------+--------+-----------------------+------------------------------------------+
 
-**Example:** Get the decorators *gnbdu-function-model:textdata = 'Stockholm' in the RAN domain*
+**Example:** Get the decorators *odu-function-model:textdata = 'Stockholm' in the RAN domain*
 
 ::
 
@@ -231,23 +231,23 @@ This functionality is supported by the following endpoints
     {
         "items": [
             {
-                "o-ran-smo-teiv-ran:GNBDUFunction": [
+                "o-ran-smo-teiv-ran:ODUFunction": [
                     {
-                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,GNBDUFunction=13"
+                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,ODUFunction=13"
                     }
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFunction": [
+                "o-ran-smo-teiv-ran:ODUFunction": [
                     {
-                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBDUFunction=14"
+                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
                     }
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:GNBDUFunction": [
+                "o-ran-smo-teiv-ran:ODUFunction": [
                     {
-                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,GNBDUFunction=16"
+                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                     }
                 ]
             }
@@ -285,23 +285,23 @@ This functionality is supported by the following endpoints
 | | Return all related entity IDs and | NRCellDU     |              | /decorators               |                                                        | All NRCellDU IDs and decorators.                  |
 | | decorators.                       |              |              |                           |                                                        |                                                   |
 +-------------------------------------+--------------+--------------+---------------------------+--------------------------------------------------------+---------------------------------------------------+
-| | Return all related entity IDs     | NRCellDU     |              |                           | | /classifiers[@item = 'gnbdu-function-model:Indoor']; | | All NRCellDU IDs where key of the decorator is  |
-| | that are an exact match for the   |              |              |                           | | /decorators[@gnbdu-function-model:textdata =         | | "gnbdu-function-model:textdata" and the value   |
+| | Return all related entity IDs     | NRCellDU     |              |                           | | /classifiers[@item = 'odu-function-model:Indoor'];   | | All NRCellDU IDs where key of the decorator is  |
+| | that are an exact match for the   |              |              |                           | | /decorators[@odu-function-model:textdata =           | | "odu-function-model:textdata" and the value     |
 | | given classifiers and decorators. |              |              |                           | | 'Stockholm']                                         | | of the decorator is 'Stockholm' and classifiers |
-|                                     |              |              |                           |                                                        | | exactly contain "gnbdu-function-model:Indoor".  |
+|                                     |              |              |                           |                                                        | | exactly contain "odu-function-model:Indoor".    |
 +-------------------------------------+--------------+--------------+---------------------------+--------------------------------------------------------+---------------------------------------------------+
 | | Return all related entity IDs and | NRCellDU     |              | /classifiers              | /classifiers[contains(@item, 'Ind')]                   | | All NRCellDU IDs and classifiers partially      |
 | | classifiers that are partially    |              |              |                           |                                                        | | contain the text "Ind".                         |
 | | matched for the given classifier. |              |              |                           |                                                        |                                                   |
 +-------------------------------------+--------------+--------------+---------------------------+--------------------------------------------------------+---------------------------------------------------+
-| | Return all related entity IDs and | NRCellDU     |              | /decorators               | | /decorators[contains(@gnbdu-function-model:textdata, | | All NRCellDU IDs and where key of the decorator |
-| | decorators where the key is an    |              |              |                           | | 'Stoc')]                                             | | is "gnbdu-function-model:textdata" and the      |
+| | Return all related entity IDs and | NRCellDU     |              | /decorators               | | /decorators[contains(@odu-function-model:textdata,   | | All NRCellDU IDs and where key of the decorator |
+| | decorators where the key is an    |              |              |                           | | 'Stoc')]                                             | | is "odu-function-model:textdata" and the        |
 | | exact match and the value is a    |              |              |                           |                                                        | | value of the decorator partially contains       |
 | | partial match.                    |              |              |                           |                                                        | | 'Stoc'                                          |
 +-------------------------------------+--------------+--------------+---------------------------+--------------------------------------------------------+---------------------------------------------------+
 | | Return all related entity IDs and | NRCellDU     |              | /classifiers; /decorators | | /classifiers[contains(@item, 'Ind')];                | | All NRCellDU IDs and decorators where the key   |
-| | decorators where the key is an    |              |              |                           | | /decorators[contains(@gnbdu-function-model:textdata, | | of the decorator is                             |
-| | exact match and the value is a    |              |              |                           | | 'Stoc')]                                             | | "gnbdu-function-model:textdata", the value of   |
+| | decorators where the key is an    |              |              |                           | | /decorators[contains(@odu-function-model:textdata,   | | of the decorator is                             |
+| | exact match and the value is a    |              |              |                           | | 'Stoc')]                                             | | "odu-function-model:textdata", the value of     |
 | | partial match.                    |              |              |                           |                                                        | | the decorator partially contains 'Stoc', and    |
 |                                     |              |              |                           |                                                        | | the classifiers partially contain "Ind".        |
 +-------------------------------------+--------------+--------------+---------------------------+--------------------------------------------------------+---------------------------------------------------+
@@ -324,7 +324,7 @@ This functionality is supported by the following endpoints
                         "classifiers": [
                             "o-ran-smo-teiv-ran:Rural"
                         ],
-                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,GNBDUFunction=19,NRCellDU=93"
+                        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=93"
                     }
                 ]
             }
@@ -357,36 +357,36 @@ This functionality is supported by the following endpoints
 |                               | Name   |                         |                    |                             |
 +===============================+========+=========================+====================+=============================+
 | | Return all related          |        | MANAGEDELEMENT _MANAGES | /classifiers       |                             |
-| | relationship IDs and        |        | _ENODEBFUNCTION         |                    |                             |
+| | relationship IDs and        |        | _ORUFUNCTION            |                    |                             |
 | | classifiers.                |        |                         |                    |                             |
 +-------------------------------+--------+-------------------------+--------------------+-----------------------------+
 | | Return all related          |        | MANAGEDELEMENT _MANAGES | /decorators        |                             |
-| | relationship IDs and        |        | _ENODEBFUNCTION         |                    |                             |
+| | relationship IDs and        |        | _ORUFUNCTION            |                    |                             |
 | | decorators.                 |        |                         |                    |                             |
 +-------------------------------+--------+-------------------------+--------------------+-----------------------------+
 | | Return related relationship |        | MANAGEDELEMENT _MANAGES |                    | /classifiers[@item =        |
-| | IDs that match the          |        | _ENODEBFUNCTION         |                    | 'gnbdu-function-model       |
+| | IDs that match the          |        | _ORUFUNCTION            |                    | 'odu-function-model         |
 | | classifier and decorator.   |        |                         |                    | :Indoor'];                  |
 |                               |        |                         |                    |                             |
-|                               |        |                         |                    | /decorators[@gnbdu-function |
+|                               |        |                         |                    | /decorators[@odu-function   |
 |                               |        |                         |                    | -model:textdata =           |
 |                               |        |                         |                    | 'Stockholm']                |
 +-------------------------------+--------+-------------------------+--------------------+-----------------------------+
 | | Return related relationship |        | MANAGEDELEMENT _MANAGES | /classifiers       | /classifiers[contains       |
-| | IDs and classifiers that    |        | _ENODEBFUNCTION         |                    | (@item, 'Ind')]             |
+| | IDs and classifiers that    |        | _ORUFUNCTION            |                    | (@item, 'Ind')]             |
 | | are partially matched       |        |                         |                    |                             |
 | | for the classifier.         |        |                         |                    |                             |
 +-------------------------------+--------+-------------------------+--------------------+-----------------------------+
 | | Return related relationship |        | MANAGEDELEMENT _MANAGES | /decorators        | /decorators[contains        |
-| | IDs and decorators where    |        | _ENODEBFUNCTION         |                    | (@gnbdu-function-model:     |
+| | IDs and decorators where    |        | _ORUFUNCTION            |                    | (@odu-function-model:       |
 | | the key matches exactly and |        |                         |                    | textdata, 'Stock')]         |
 | | the value matches           |        |                         |                    |                             |
 | | partially.                  |        |                         |                    |                             |
 +-------------------------------+--------+-------------------------+--------------------+-----------------------------+
 | | Return related relationship |        | MANAGEDELEMENT _MANAGES | | /classifiers     | /classifiers[contains       |
-| | IDs, decorators, and        |        | _ENODEBFUNCTION         | | /decorators      | (@item, 'Ind')];            |
+| | IDs, decorators, and        |        | _ORUFUNCTION            | | /decorators      | (@item, 'Ind')];            |
 | | classifiers where decorator |        |                         |                    | /decorators[contains        |
-| | key is exact and value      |        |                         |                    | (@gnbdu-function-model:     |
+| | key is exact and value      |        |                         |                    | (@odu-function-model:       |
 | | partially matches, and      |        |                         |                    | textdata, 'Stock')]         |
 | | classifiers partially match |        |                         |                    |                             |
 | | the parameters.             |        |                         |                    |                             |
@@ -400,33 +400,33 @@ This functionality is supported by the following endpoints
     {
         "items": [
             {
-                "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION": [
+                "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_ODUFUNCTION": [
                     {
-                        "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,GNBDUFunction=10",
+                        "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10",
                         "aSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10",
                         "classifiers": [
                             "o-ran-smo-teiv-ran:Rural",
                             "o-ran-smo-teiv-ran:Weekend"
                         ],
-                        "id": "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION=661A89AD3C2702233CD9E96E97E738C05C35EC5FDF32DC78D149B773726350067315B72448D004C938BCD0263F0C4BCCC8A5F9CDD145B9B740983D1523664328"
+                        "id": "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=661A89AD3C2702233CD9E96E97E738C05C35EC5FDF32DC78D149B773726350067315B72448D004C938BCD0263F0C4BCCC8A5F9CDD145B9B740983D1523664328"
                     }
                 ]
             }
         ],
         "self": {
-            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
+            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
         },
         "first": {
-            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
+            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
         },
         "prev": {
-            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
+            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
         },
         "next": {
-            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
+            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
         },
         "last": {
-            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_GNBDUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
+            "href": "/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&scopeFilter=/classifiers[@item = 'o-ran-smo-teiv-ran:Rural']&targetFilter=/classifiers"
         },
         "totalCount": 1
     }

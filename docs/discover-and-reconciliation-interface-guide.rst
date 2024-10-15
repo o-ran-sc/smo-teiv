@@ -331,8 +331,8 @@ Example:
 ::
 
    urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,SubNetwork=ERBS01,ManagedElement=me01:
-   MANAGEDELEMENT_MANAGES_ENODEBFUNCTION:
-   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,SubNetwork=ERBS01,ManagedElement=me01,ENodeBFunction=1
+   MANAGEDELEMENT_MANAGES_ORUFUNCTION:
+   urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,SubNetwork=ERBS01,ManagedElement=me01,ORUFunction=1
 
 2. SHA-512 hash the previous format.
 
@@ -340,7 +340,7 @@ Example:
 
 ::
 
-   6D7E2A09E0F10C09548F86519084FDF1F021561FF07E116136D118E93568A0B4EA968A4B1E02B2CA4E057E00E582273DBE5A8CA1BF910FC65A9101117A0E9D7F
+   055b47d817332b373cc042fe29c4fcfc8ebe1f5e467d0085defdd017294d723d0c8dd09a6ed593a67fe5dfccad272a71d7e15b7cf74bc1c23cb4b68c5a1d7510
 
 3. Add the prefix **urn:o-ran:smo:teiv:sha512:** and the relationship type = the SHA-512 hashed as follows:
 
@@ -352,7 +352,7 @@ Example:
 
 ::
 
-   urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ENODEBFUNCTION=6D7E2A09E0F10C09548F86519084FDF1F021561FF07E116136D118E93568A0B4EA968A4B1E02B2CA4E057E00E582273DBE5A8CA1BF910FC65A9101117A0E9D7F
+   urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ORUFUNCTION=055b47d817332b373cc042fe29c4fcfc8ebe1f5e467d0085defdd017294d723d0c8dd09a6ed593a67fe5dfccad272a71d7e15b7cf74bc1c23cb4b68c5a1d7510
 
 Troubleshooting
 ===============

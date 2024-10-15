@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.oran.smo.teiv.pgsqlgenerator.Attribute;
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,9 @@ public class EntityGraphGeneratorUml {
 
     @Value("${graphs.output}")
     private String graphOutput;
+
+    @Autowired
+    private final HelperFunctions helperFunctions = new HelperFunctions();
 
     public void generate(List<Entity> entities) throws IOException {
         if (generateEntityGraph) {
@@ -67,7 +71,7 @@ public class EntityGraphGeneratorUml {
         StringBuilder sb = new StringBuilder();
         sb.append("@startuml\n");
         sb.append("skinparam class {\n");
-        sb.append("    BackgroundColor<<Entity>> LightGray\n");
+        sb.append("    BackgroundColor<<Entity>> " + helperFunctions.getNodeFillColour(moduleName) + " \n");
         sb.append("    BackgroundColor<<Module>> LightBlue\n");
         sb.append("}\n");
         sb.append(String.format("class %s <<Module>> {%n}%n", moduleName));

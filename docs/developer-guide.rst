@@ -81,8 +81,8 @@ the originating side (A-side) and the other is the terminating side
 relationship itself which must be unique. A relationship between two
 entities is based on the effect that one has on the other. An entity can
 have one or multiple relationships which can be defined by the user. A
-possible relationship between ManagedElement and GNBDUFunction can be
-*MANAGEDELEMENT_MANAGES_GNBDUFUNCTION*.
+possible relationship between ManagedElement and ODUFunction can be
+*MANAGEDELEMENT_MANAGES_ODUFUNCTION*.
 
 Topology & Inventory models
 ---------------------------
@@ -110,7 +110,7 @@ relationships in the RAN domain.
 
 A direct relationship is a connection between two entities without any
 in-between entity and an indirect relationship contains at least one.
-NRCellDU has direct relationships with GNBDUFunction and
+NRCellDU has direct relationships with ODUFunction and
 NRSectorCarrier, while it also has indirect relationships with
 ManagedElement, AntennaCapability, and AntennaModule.
 

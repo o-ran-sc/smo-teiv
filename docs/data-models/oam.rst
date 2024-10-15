@@ -6,7 +6,7 @@
 OAM
 ---
 
-.. image:: ../_static/data-model/oam.svg
+.. image:: ../_static/data-model/o-ran-smo-teiv-oam.svg
   :width: 900
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-oam.yang
