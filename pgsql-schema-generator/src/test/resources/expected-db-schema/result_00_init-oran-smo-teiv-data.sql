@@ -34,7 +34,7 @@ ALTER SCHEMA ties_data OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
-SET ROLE :'pguser';
+SET ROLE :pguser;
 
 -- Function to create CONSTRAINT only if it does not exists
 CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
