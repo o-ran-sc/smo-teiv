@@ -31,6 +31,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.oran.smo.teiv.config.KafkaAdminConfig;
 import org.oran.smo.teiv.config.KafkaConfig;
+import org.oran.smo.teiv.config.KafkaSecurityConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -50,6 +51,7 @@ public class KafkaFactory {
 
     private final KafkaConfig kafkaConfig;
     private final KafkaAdminConfig kafkaAdminConfig;
+    private final KafkaSecurityConfig kafkaSecurityConfig;
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -60,6 +62,10 @@ public class KafkaFactory {
         adminConfig.put(AdminClientConfig.RECONNECT_BACKOFF_MS_CONFIG, kafkaAdminConfig.getReconnectBackoffMs());
         adminConfig.put(AdminClientConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, kafkaAdminConfig.getReconnectBackoffMaxMs());
         adminConfig.put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, kafkaAdminConfig.getRequestTimeoutMs());
+        if (kafkaSecurityConfig.isEnabled()) {
+            adminConfig.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, kafkaSecurityConfig.getProtocol());
+            adminConfig.putAll(kafkaSecurityConfig.getProperties());
+        }
         return new KafkaAdmin(adminConfig);
     }
 
@@ -104,6 +110,10 @@ public class KafkaFactory {
         config.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, kafkaAdminConfig.getReconnectBackoffMs());
         config.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, kafkaAdminConfig.getReconnectBackoffMaxMs());
         config.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, kafkaAdminConfig.getRequestTimeoutMs());
+        if (kafkaSecurityConfig.isEnabled()) {
+            config.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, kafkaSecurityConfig.getProtocol());
+            config.putAll(kafkaSecurityConfig.getProperties());
+        }
         return config;
     }
 }

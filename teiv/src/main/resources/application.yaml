@@ -115,6 +115,12 @@ kafka:
     reconnect-backoff-ms: 50
     reconnect-backoff-max-ms: 30000
     request-timeout-ms: 30000
+  security:
+    enabled: false
+    protocol: SASL_PLAINTEXT
+    properties:
+      "sasl.mechanism": SCRAM-SHA-512
+      "sasl.jaas.config": "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"\" password=\"\";"
   availability:
     retry-attempts: 2147483647
     retry-interval-ms: 1000
