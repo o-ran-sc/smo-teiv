@@ -16,6 +16,24 @@
       "message": "Not sure if I fully understand what\u0027s happening for this review.\nIs this review turning security for Kafka communication off?",
       "revId": "fbfd1448ace980d76fe5ddd571c3b40e3885648f",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f8e19b_4802924b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-10-21T08:56:08Z",
+      "side": 1,
+      "message": "TEIV kafka clients doesn\u0027t take the any security configurations from application.yaml.\n\nThis review is to enable the security configuration for the kafka communication \nfrom teiv kafka clients.\n\nIn order to retain the existing behaviour, security enabled flag is set to false. If security configurations are needed, It can be set to true with the relevant security configurations.",
+      "parentUuid": "097f64c5_860bf082",
+      "revId": "fbfd1448ace980d76fe5ddd571c3b40e3885648f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
