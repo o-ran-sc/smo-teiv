@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "097f64c5_860bf082",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-10-21T07:52:41Z",
+      "side": 1,
+      "message": "Not sure if I fully understand what\u0027s happening for this review.\nIs this review turning security for Kafka communication off?",
+      "revId": "fbfd1448ace980d76fe5ddd571c3b40e3885648f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
