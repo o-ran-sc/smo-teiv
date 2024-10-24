@@ -136,12 +136,13 @@ application:
       retry-attempts: 2147483647
       retry-interval-ms: 1000
     topology-ingestion:
+      topic:
+        name: topology-inventory-ingestion
+        partitions: 1
+        replicas: 1
+        retention-ms: 86400000
+        retention-bytes: 104857600
       consumer:
-        topic:
-          name: topology-inventory-ingestion
-          partitions: 4
-          replicas: 1
-          retention-ms: 86400000
         group-id: topology-inventory-ingestion-consumer
         auto-offset-reset: earliest
         max-poll-records: 500
