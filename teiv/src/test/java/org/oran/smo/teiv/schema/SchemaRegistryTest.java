@@ -154,7 +154,8 @@ class SchemaRegistryTest {
         //given
         List<String> expectedEntityName = List.of("AntennaCapability", "AntennaModule", "ORUFunction", "OCUCPFunction",
                 "OCUUPFunction", "ODUFunction", "ManagedElement", "NRCellCU", "CloudifiedNF", "NRCellDU", "NRSectorCarrier",
-                "Sector", "Site", "NearRTRICFunction", "NFDeployment", "OCloudNamespace", "NodeCluster", "OCloudSite");
+                "SMO", "Sector", "Site", "NearRTRICFunction", "NFDeployment", "OCloudNamespace", "NodeCluster",
+                "OCloudSite");
         //when
         List<String> actualEntityNames = SchemaRegistry.getEntityNames();
         //then
@@ -209,7 +210,7 @@ class SchemaRegistryTest {
     void testGetEntityTypesByDomain() {
         //given
         List<String> expectedEntities = List.of("AntennaCapability", "AntennaModule", "ORUFunction", "OCUCPFunction",
-                "OCUUPFunction", "ODUFunction", "NRCellCU", "NRCellDU", "NRSectorCarrier", "Sector", "Site",
+                "OCUUPFunction", "ODUFunction", "NRCellCU", "NRCellDU", "NRSectorCarrier", "SMO", "Sector", "Site",
                 "NearRTRICFunction");
         //when
         List<String> equipmentToRanEntityTypes = SchemaRegistry.getEntityNamesByDomain("REL_EQUIPMENT_RAN");
@@ -222,7 +223,11 @@ class SchemaRegistryTest {
     @Test
     void getRelationNames() {
         List<String> expectedRelationNames = List.of("ANTENNAMODULE_SERVES_ANTENNACAPABILITY",
-                "NRSECTORCARRIER_USES_ANTENNACAPABILITY", "ODUFUNCTION_PROVIDES_NRCELLDU",
+                "NRSECTORCARRIER_USES_ANTENNACAPABILITY", "ODUFUNCTION_PROVIDES_NRCELLDU", "NEARRTRICFUNCTION_O1LINK_SMO",
+                "OCUCPFUNCTION_O1LINK_SMO", "ODUFUNCTION_E2LINK_NEARRTRICFUNCTION", "ODUFUNCTION_F1CLINK_OCUCPFUNCTION",
+                "ODUFUNCTION_F1ULINK_OCUUPFUNCTION", "ODUFUNCTION_O1LINK_SMO", "ORUFUNCTION_O1LINK_SMO",
+                "ORUFUNCTION_OFHCLINK_ODUFUNCTION", "ORUFUNCTION_OFHMLINK_ODUFUNCTION", "ORUFUNCTION_OFHMLINK_SMO",
+                "ORUFUNCTION_OFHSLINK_ODUFUNCTION", "ORUFUNCTION_OFHULINK_ODUFUNCTION",
                 "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION",
                 "NRCELLDU_USES_NRSECTORCARRIER", "MANAGEDELEMENT_MANAGES_ORUFUNCTION",
                 "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "MANAGEDELEMENT_MANAGES_ODUFUNCTION", "SECTOR_GROUPS_ANTENNAMODULE",
@@ -466,7 +471,11 @@ class SchemaRegistryTest {
     void testGetRelationTypesByDomain() {
         //given
         List<String> expectedRelations = List.of("SECTOR_GROUPS_NRCELLDU", "NRCELLDU_USES_NRSECTORCARRIER",
-                "ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "ODUFUNCTION_PROVIDES_NRCELLDU",
+                "ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "ODUFUNCTION_PROVIDES_NRCELLDU", "NEARRTRICFUNCTION_O1LINK_SMO",
+                "OCUCPFUNCTION_O1LINK_SMO", "ODUFUNCTION_E2LINK_NEARRTRICFUNCTION", "ODUFUNCTION_F1CLINK_OCUCPFUNCTION",
+                "ODUFUNCTION_F1ULINK_OCUUPFUNCTION", "ODUFUNCTION_O1LINK_SMO", "ORUFUNCTION_O1LINK_SMO",
+                "ORUFUNCTION_OFHCLINK_ODUFUNCTION", "ORUFUNCTION_OFHMLINK_ODUFUNCTION", "ORUFUNCTION_OFHMLINK_SMO",
+                "ORUFUNCTION_OFHSLINK_ODUFUNCTION", "ORUFUNCTION_OFHULINK_ODUFUNCTION",
                 "NRSECTORCARRIER_USES_ANTENNACAPABILITY", "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                 "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION",
                 "MANAGEDELEMENT_MANAGES_ODUFUNCTION", "MANAGEDELEMENT_MANAGES_ORUFUNCTION",
