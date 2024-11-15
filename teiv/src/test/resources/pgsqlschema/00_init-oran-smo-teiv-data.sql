@@ -500,7 +500,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" (
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
 	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
-	"REL_metadata_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb
+	"REL_metadata_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
+	"REL_FK_nearRTRICFunction-o1-linked-smo"			TEXT,
+	"REL_ID_NEARRTRICFUNCTION_O1LINK_SMO"			TEXT,
+	"REL_CD_sourceIds_NEARRTRICFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_classifiers_NEARRTRICFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_decorators_NEARRTRICFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_metadata_NEARRTRICFUNCTION_O1LINK_SMO"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -514,6 +520,12 @@ ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION" SET DEFAULT '[]';
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "REL_CD_decorators_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "REL_CD_sourceIds_NEARRTRICFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "REL_CD_classifiers_NEARRTRICFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "REL_CD_decorators_NEARRTRICFUNCTION_O1LINK_SMO" SET DEFAULT '{}';
 
 CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_OCUCPFunction" (
 	"id"			TEXT,
@@ -530,7 +542,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_OCUCPFunction" (
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
 	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
-	"REL_metadata_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb
+	"REL_metadata_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
+	"REL_FK_ocucpFunction-o1-linked-smo"			TEXT,
+	"REL_ID_OCUCPFUNCTION_O1LINK_SMO"			TEXT,
+	"REL_CD_sourceIds_OCUCPFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_classifiers_OCUCPFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_decorators_OCUCPFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_metadata_OCUCPFUNCTION_O1LINK_SMO"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -544,6 +562,12 @@ ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "REL_
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION" SET DEFAULT '[]';
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "REL_CD_sourceIds_OCUCPFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "REL_CD_classifiers_OCUCPFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "REL_CD_decorators_OCUCPFUNCTION_O1LINK_SMO" SET DEFAULT '{}';
 
 CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_OCUUPFunction" (
 	"id"			TEXT,
@@ -589,7 +613,31 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ODUFunction" (
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
 	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
-	"REL_metadata_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb
+	"REL_metadata_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
+	"REL_FK_oduFunction-e2-linked-nearRTRICFunction"			TEXT,
+	"REL_ID_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"			jsonb,
+	"REL_CD_classifiers_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"			jsonb,
+	"REL_CD_decorators_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"			jsonb,
+	"REL_metadata_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"			jsonb,
+	"REL_FK_oduFunction-f1-c-linked-ocucpFunction"			TEXT,
+	"REL_ID_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"			jsonb,
+	"REL_CD_classifiers_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"			jsonb,
+	"REL_CD_decorators_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"			jsonb,
+	"REL_metadata_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"			jsonb,
+	"REL_FK_oduFunction-f1-u-linked-ocuupFunction"			TEXT,
+	"REL_ID_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"			jsonb,
+	"REL_CD_classifiers_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"			jsonb,
+	"REL_CD_decorators_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"			jsonb,
+	"REL_metadata_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"			jsonb,
+	"REL_FK_oduFunction-o1-linked-smo"			TEXT,
+	"REL_ID_ODUFUNCTION_O1LINK_SMO"			TEXT,
+	"REL_CD_sourceIds_ODUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_classifiers_ODUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_decorators_ODUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_metadata_ODUFUNCTION_O1LINK_SMO"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -604,6 +652,30 @@ ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION" SET DEFAULT '{}';
 
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_sourceIds_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_classifiers_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_decorators_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_sourceIds_ODUFUNCTION_F1CLINK_OCUCPFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_classifiers_ODUFUNCTION_F1CLINK_OCUCPFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_decorators_ODUFUNCTION_F1CLINK_OCUCPFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_sourceIds_ODUFUNCTION_F1ULINK_OCUUPFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_classifiers_ODUFUNCTION_F1ULINK_OCUUPFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_decorators_ODUFUNCTION_F1ULINK_OCUUPFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_sourceIds_ODUFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_classifiers_ODUFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "REL_CD_decorators_ODUFUNCTION_O1LINK_SMO" SET DEFAULT '{}';
+
 CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ORUFunction" (
 	"id"			TEXT,
 	"oruId"			BIGINT,
@@ -616,7 +688,43 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ORUFunction" (
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
 	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
-	"REL_metadata_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb
+	"REL_metadata_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
+	"REL_FK_oruFunction-o1-linked-smo"			TEXT,
+	"REL_ID_ORUFUNCTION_O1LINK_SMO"			TEXT,
+	"REL_CD_sourceIds_ORUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_classifiers_ORUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_CD_decorators_ORUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_metadata_ORUFUNCTION_O1LINK_SMO"			jsonb,
+	"REL_FK_oruFunction-ofhc-linked-oduFunction"			TEXT,
+	"REL_ID_ORUFUNCTION_OFHCLINK_ODUFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ORUFUNCTION_OFHCLINK_ODUFUNCTION"			jsonb,
+	"REL_CD_classifiers_ORUFUNCTION_OFHCLINK_ODUFUNCTION"			jsonb,
+	"REL_CD_decorators_ORUFUNCTION_OFHCLINK_ODUFUNCTION"			jsonb,
+	"REL_metadata_ORUFUNCTION_OFHCLINK_ODUFUNCTION"			jsonb,
+	"REL_FK_oruFunction-ofhm-linked-oduFunction"			TEXT,
+	"REL_ID_ORUFUNCTION_OFHMLINK_ODUFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ORUFUNCTION_OFHMLINK_ODUFUNCTION"			jsonb,
+	"REL_CD_classifiers_ORUFUNCTION_OFHMLINK_ODUFUNCTION"			jsonb,
+	"REL_CD_decorators_ORUFUNCTION_OFHMLINK_ODUFUNCTION"			jsonb,
+	"REL_metadata_ORUFUNCTION_OFHMLINK_ODUFUNCTION"			jsonb,
+	"REL_FK_oruFunction-ofhm-linked-smo"			TEXT,
+	"REL_ID_ORUFUNCTION_OFHMLINK_SMO"			TEXT,
+	"REL_CD_sourceIds_ORUFUNCTION_OFHMLINK_SMO"			jsonb,
+	"REL_CD_classifiers_ORUFUNCTION_OFHMLINK_SMO"			jsonb,
+	"REL_CD_decorators_ORUFUNCTION_OFHMLINK_SMO"			jsonb,
+	"REL_metadata_ORUFUNCTION_OFHMLINK_SMO"			jsonb,
+	"REL_FK_oruFunction-ofhs-linked-oduFunction"			TEXT,
+	"REL_ID_ORUFUNCTION_OFHSLINK_ODUFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ORUFUNCTION_OFHSLINK_ODUFUNCTION"			jsonb,
+	"REL_CD_classifiers_ORUFUNCTION_OFHSLINK_ODUFUNCTION"			jsonb,
+	"REL_CD_decorators_ORUFUNCTION_OFHSLINK_ODUFUNCTION"			jsonb,
+	"REL_metadata_ORUFUNCTION_OFHSLINK_ODUFUNCTION"			jsonb,
+	"REL_FK_oruFunction-ofhu-linked-oduFunction"			TEXT,
+	"REL_ID_ORUFUNCTION_OFHULINK_ODUFUNCTION"			TEXT,
+	"REL_CD_sourceIds_ORUFUNCTION_OFHULINK_ODUFUNCTION"			jsonb,
+	"REL_CD_classifiers_ORUFUNCTION_OFHULINK_ODUFUNCTION"			jsonb,
+	"REL_CD_decorators_ORUFUNCTION_OFHULINK_ODUFUNCTION"			jsonb,
+	"REL_metadata_ORUFUNCTION_OFHULINK_ODUFUNCTION"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -630,6 +738,57 @@ ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ORUFUNCTION" SET DEFAULT '[]';
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_MANAGEDELEMENT_MANAGES_ORUFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_sourceIds_ORUFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_ORUFUNCTION_O1LINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_ORUFUNCTION_O1LINK_SMO" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_sourceIds_ORUFUNCTION_OFHCLINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_ORUFUNCTION_OFHCLINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_ORUFUNCTION_OFHCLINK_ODUFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_sourceIds_ORUFUNCTION_OFHMLINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_ORUFUNCTION_OFHMLINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_ORUFUNCTION_OFHMLINK_ODUFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_sourceIds_ORUFUNCTION_OFHMLINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_ORUFUNCTION_OFHMLINK_SMO" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_ORUFUNCTION_OFHMLINK_SMO" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_sourceIds_ORUFUNCTION_OFHSLINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_ORUFUNCTION_OFHSLINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_ORUFUNCTION_OFHSLINK_ODUFUNCTION" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_sourceIds_ORUFUNCTION_OFHULINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_classifiers_ORUFUNCTION_OFHULINK_ODUFUNCTION" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "REL_CD_decorators_ORUFUNCTION_OFHULINK_ODUFUNCTION" SET DEFAULT '{}';
+
+CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_SMO" (
+	"id"			TEXT,
+	"smoName"			TEXT,
+	"CD_sourceIds"			jsonb,
+	"CD_classifiers"			jsonb,
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
+);
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_SMO" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_SMO" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_SMO" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
 
 CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_Sector" (
 	"id"			TEXT,
@@ -836,6 +995,12 @@ SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_ORUFunction',
  'PK_o-ran-smo-teiv-ran_ORUFunction_id',
  'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_ORUFunction_id" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_SMO',
+ 'PK_o-ran-smo-teiv-ran_SMO_id',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_SMO" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_SMO_id" PRIMARY KEY ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1073,6 +1238,18 @@ SELECT ties_data.create_constraint_if_not_exists(
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_NearRTRICFunction',
+ 'FK_38EF935E0C374C18F1865F231A3EA230FD743A91',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ADD CONSTRAINT "FK_38EF935E0C374C18F1865F231A3EA230FD743A91" FOREIGN KEY ("REL_FK_nearRTRICFunction-o1-linked-smo") REFERENCES ties_data."o-ran-smo-teiv-ran_SMO" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_NearRTRICFunction',
+ 'UNIQUE_7F0B99D35476B0D3DB489400BA4456E1A31D24E0',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ADD CONSTRAINT "UNIQUE_7F0B99D35476B0D3DB489400BA4456E1A31D24E0" UNIQUE ("REL_ID_NEARRTRICFUNCTION_O1LINK_SMO");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_OCUCPFunction',
  'FK_122DD9709032528D161177B3624AD7AAF6589005',
  'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ADD CONSTRAINT "FK_122DD9709032528D161177B3624AD7AAF6589005" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
@@ -1082,6 +1259,18 @@ SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_OCUCPFunction',
  'UNIQUE_2B7D3D49C1072E660047DE56843413CE628BF94A',
  'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ADD CONSTRAINT "UNIQUE_2B7D3D49C1072E660047DE56843413CE628BF94A" UNIQUE ("REL_ID_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_OCUCPFunction',
+ 'FK_E31B73DB925367F14AEC0DA6EBD7C9BAD8C7A275',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ADD CONSTRAINT "FK_E31B73DB925367F14AEC0DA6EBD7C9BAD8C7A275" FOREIGN KEY ("REL_FK_ocucpFunction-o1-linked-smo") REFERENCES ties_data."o-ran-smo-teiv-ran_SMO" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_OCUCPFunction',
+ 'UNIQUE_368AE553B3A5941070CAB09A7864BA7E9E08087B',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ADD CONSTRAINT "UNIQUE_368AE553B3A5941070CAB09A7864BA7E9E08087B" UNIQUE ("REL_ID_OCUCPFUNCTION_O1LINK_SMO");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1109,6 +1298,54 @@ SELECT ties_data.create_constraint_if_not_exists(
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'FK_24F4D92B40E989ED842E75CBCDA1CFC16424FE87',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "FK_24F4D92B40E989ED842E75CBCDA1CFC16424FE87" FOREIGN KEY ("REL_FK_oduFunction-e2-linked-nearRTRICFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'UNIQUE_F504808C587D183EA569C353BDCB7923AB1DDFE9',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "UNIQUE_F504808C587D183EA569C353BDCB7923AB1DDFE9" UNIQUE ("REL_ID_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'FK_8BC456F756C1DA4C4D8571A9A39030157AECD1DE',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "FK_8BC456F756C1DA4C4D8571A9A39030157AECD1DE" FOREIGN KEY ("REL_FK_oduFunction-f1-c-linked-ocucpFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'UNIQUE_B3D6249002011DDAB474A440BEA6BDF00E1391CB',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "UNIQUE_B3D6249002011DDAB474A440BEA6BDF00E1391CB" UNIQUE ("REL_ID_ODUFUNCTION_F1CLINK_OCUCPFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'FK_C3185BEF15112E48700CBF1DB10FF50140F98DE7',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "FK_C3185BEF15112E48700CBF1DB10FF50140F98DE7" FOREIGN KEY ("REL_FK_oduFunction-f1-u-linked-ocuupFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUUPFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'UNIQUE_6CEC3CBD56C1EBB3972859FCF3847DBA01D943A5',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "UNIQUE_6CEC3CBD56C1EBB3972859FCF3847DBA01D943A5" UNIQUE ("REL_ID_ODUFUNCTION_F1ULINK_OCUUPFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'FK_629FF74123AF5F3D71FA78130DB028D84FC5B48F',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "FK_629FF74123AF5F3D71FA78130DB028D84FC5B48F" FOREIGN KEY ("REL_FK_oduFunction-o1-linked-smo") REFERENCES ties_data."o-ran-smo-teiv-ran_SMO" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'UNIQUE_C95D4C8AC64C4CAF8BC4E10E54B5660E3B2EB82E',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "UNIQUE_C95D4C8AC64C4CAF8BC4E10E54B5660E3B2EB82E" UNIQUE ("REL_ID_ODUFUNCTION_O1LINK_SMO");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_ORUFunction',
  'FK_B497A8C3DC2D647938E6DB4C7E691509DD8C90DE',
  'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_B497A8C3DC2D647938E6DB4C7E691509DD8C90DE" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
@@ -1118,6 +1355,78 @@ SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_ORUFunction',
  'UNIQUE_4E6F008B82605A806EED04B2315A1FEE095A9241',
  'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_4E6F008B82605A806EED04B2315A1FEE095A9241" UNIQUE ("REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'FK_DBE4275001B5740ED355F64F62F181489A4E398A',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_DBE4275001B5740ED355F64F62F181489A4E398A" FOREIGN KEY ("REL_FK_oruFunction-o1-linked-smo") REFERENCES ties_data."o-ran-smo-teiv-ran_SMO" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'UNIQUE_0FA79727AA200AB090C512DD295B96D44660D5DA',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_0FA79727AA200AB090C512DD295B96D44660D5DA" UNIQUE ("REL_ID_ORUFUNCTION_O1LINK_SMO");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'FK_09032C749AEA4F56C53BB96DDB5B0FC46F586333',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_09032C749AEA4F56C53BB96DDB5B0FC46F586333" FOREIGN KEY ("REL_FK_oruFunction-ofhc-linked-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'UNIQUE_AEAE9E71A4B9E40CABD1B03DE399873A593C232F',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_AEAE9E71A4B9E40CABD1B03DE399873A593C232F" UNIQUE ("REL_ID_ORUFUNCTION_OFHCLINK_ODUFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'FK_7AF8E8A967D49CB387EE6804300D70FE35111A3B',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_7AF8E8A967D49CB387EE6804300D70FE35111A3B" FOREIGN KEY ("REL_FK_oruFunction-ofhm-linked-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'UNIQUE_D08B266B3B0AF66E6EA629340B0D46C31E88B73F',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_D08B266B3B0AF66E6EA629340B0D46C31E88B73F" UNIQUE ("REL_ID_ORUFUNCTION_OFHMLINK_ODUFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'FK_ACF604FA62A9B913BC1320824BF6D2E9766634DA',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_ACF604FA62A9B913BC1320824BF6D2E9766634DA" FOREIGN KEY ("REL_FK_oruFunction-ofhm-linked-smo") REFERENCES ties_data."o-ran-smo-teiv-ran_SMO" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'UNIQUE_9967840981340189977B88AA138C3773F21122C7',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_9967840981340189977B88AA138C3773F21122C7" UNIQUE ("REL_ID_ORUFUNCTION_OFHMLINK_SMO");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'FK_2C3BB8ACA6BF4139102F14195012F211A1AB96CB',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_2C3BB8ACA6BF4139102F14195012F211A1AB96CB" FOREIGN KEY ("REL_FK_oruFunction-ofhs-linked-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'UNIQUE_5CE3164003E7D1563EDF49E03067A4BEF651739A',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_5CE3164003E7D1563EDF49E03067A4BEF651739A" UNIQUE ("REL_ID_ORUFUNCTION_OFHSLINK_ODUFUNCTION");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'FK_A07203CE9F3A264F2C5A8A293745D8C6F715D266',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_A07203CE9F3A264F2C5A8A293745D8C6F715D266" FOREIGN KEY ("REL_FK_oruFunction-ofhu-linked-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-ran_ORUFunction',
+ 'UNIQUE_AD5917CB1185E13CA09C58CC4E0D1974218C9E4D',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "UNIQUE_AD5917CB1185E13CA09C58CC4E0D1974218C9E4D" UNIQUE ("REL_ID_ORUFUNCTION_OFHULINK_ODUFUNCTION");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1360,6 +1669,12 @@ CREATE INDEX IF NOT EXISTS "IDX_0ECC814A408874C9F8E73EEE3968984A6345A606" ON tie
 
 CREATE INDEX IF NOT EXISTS "IDX_B10FD045A6C3E169953CCC38CC2D801FCE15A75F" ON ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" USING GIN ("REL_CD_decorators_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION");
 
+CREATE INDEX IF NOT EXISTS "IDX_6B3AF742DAE59FE0E798E67C7E2417783464FD8D" ON ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" USING GIN (("REL_CD_sourceIds_NEARRTRICFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_F2F838B3DBDF4E0EFC3FC2096F7549740976B346" ON ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" USING GIN (("REL_CD_classifiers_NEARRTRICFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_218EB3FA277F4E7F72EC345841246A5BB3402E28" ON ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" USING GIN ("REL_CD_decorators_NEARRTRICFUNCTION_O1LINK_SMO");
+
 CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_OCUCPFunction_pLMNId" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN ("pLMNId");
 
 CREATE INDEX IF NOT EXISTS "IDX_84A29F8571860AC5A7BD1A99923485ECB6A3939D" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
@@ -1373,6 +1688,12 @@ CREATE INDEX IF NOT EXISTS "IDX_4C6B5CB5CF018656DC8191CE6FE3B9DA2CD0C819" ON tie
 CREATE INDEX IF NOT EXISTS "IDX_21F2560C8330A795E8AFB54C6D31CDCF6CCD3070" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN (("REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"::TEXT) gin_trgm_ops);
 
 CREATE INDEX IF NOT EXISTS "IDX_D856E84F300B6711E81931AE1CBC8AD905FA384F" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN ("REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_2F4FCB18A717B38224F5BAA484D2EFE26A458CC7" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN (("REL_CD_sourceIds_OCUCPFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_D9ADFBBC5360F5D511E0E67A0D13622A4BBD78E1" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN (("REL_CD_classifiers_OCUCPFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_FC018070572BA39A4683CBDDCAAA16D3A9129DB8" ON ties_data."o-ran-smo-teiv-ran_OCUCPFunction" USING GIN ("REL_CD_decorators_OCUCPFUNCTION_O1LINK_SMO");
 
 CREATE INDEX IF NOT EXISTS "IDX_9122DAA7A60DB585BE5ECA68A2EDB9ABF1E7156A" ON ties_data."o-ran-smo-teiv-ran_OCUUPFunction" USING GIN (("pLMNIdList"::TEXT) gin_trgm_ops);
 
@@ -1402,6 +1723,30 @@ CREATE INDEX IF NOT EXISTS "IDX_5DD192861541E0EB2776C6BFE34B327FF27F93C3" ON tie
 
 CREATE INDEX IF NOT EXISTS "IDX_0B9AC962B1E07740CE43D912B5FBC54E0B39DD24" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION");
 
+CREATE INDEX IF NOT EXISTS "IDX_5F2DC68F0CE9A176F79C9DEF6752556C38C7A8DF" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_sourceIds_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_AFD9E48ECC8E81DCD5F3A10199B7936A894D75F1" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_classifiers_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_714284D19884BC9E2A594B6B5010D429E12F5AE7" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("REL_CD_decorators_ODUFUNCTION_E2LINK_NEARRTRICFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_4C7915C1CD9395FE91ED0474B1235393063920BA" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_sourceIds_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_F784968DE38F941EB1D9E2845576B5F93ED1E18B" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_classifiers_ODUFUNCTION_F1CLINK_OCUCPFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_9A1D505BA4542318211ECF2569A0CEA390AAB52D" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("REL_CD_decorators_ODUFUNCTION_F1CLINK_OCUCPFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_0C48537C4C2C125C6B188375EC62CBA0984B3D8B" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_sourceIds_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_91CC0F89EAA44A400D822FCFDC9AB8AE0285499C" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_classifiers_ODUFUNCTION_F1ULINK_OCUUPFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_090DF573B5D8AFDA2478C3B4BA551FEC2CD48585" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("REL_CD_decorators_ODUFUNCTION_F1ULINK_OCUUPFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_F8F72994228550E6DA79A2E336AFF745CF5B13A8" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_sourceIds_ODUFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_166E643CA7B58B57DC9CA292E233C033DA771649" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("REL_CD_classifiers_ODUFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_0A7B8671FF4C6943209D81A0351DE1CAEFB55629" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("REL_CD_decorators_ODUFUNCTION_O1LINK_SMO");
+
 CREATE INDEX IF NOT EXISTS "IDX_D0D11CFAA917F4FA12748A041A34D2B39A3AD707" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
 
 CREATE INDEX IF NOT EXISTS "IDX_2A5AAAD13FDCFF7F2958005C22937366F6604A0D" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("CD_classifiers"::TEXT) gin_trgm_ops);
@@ -1413,6 +1758,48 @@ CREATE INDEX IF NOT EXISTS "IDX_AF235FB2C9CCA99D94CC4038669EDD1BB6C7B2DF" ON tie
 CREATE INDEX IF NOT EXISTS "IDX_DA79A3F946C1F4E8D05B4D6ADEF5E4C65E47635E" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ORUFUNCTION"::TEXT) gin_trgm_ops);
 
 CREATE INDEX IF NOT EXISTS "IDX_7B916E1753D2860DF434831CF1E9697ED9973C8F" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_MANAGEDELEMENT_MANAGES_ORUFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_C650BB0BAF5EF02FB2A7CBF9D89379DB446443F3" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_sourceIds_ORUFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_583EAFCC8FB5174AB69184076C2EC75E85F44402" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_ORUFUNCTION_O1LINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_DE327F0FC00996B5856EE87C424E2E70C39475CA" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_ORUFUNCTION_O1LINK_SMO");
+
+CREATE INDEX IF NOT EXISTS "IDX_DEC190D478DCFE7B4974DFE067136180DC4F98D2" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_sourceIds_ORUFUNCTION_OFHCLINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_913D348FC7569F1B3054A7F11583A8E826C44C4D" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_ORUFUNCTION_OFHCLINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_2C350ECD1561367CFE3C6ECE240110B0CFBE691E" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_ORUFUNCTION_OFHCLINK_ODUFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_70B09AD99FFFEC82C50E21709F65D759CD306CC2" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_sourceIds_ORUFUNCTION_OFHMLINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_10F981F841A1BEAC998725703500D2AAFF92C615" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_ORUFUNCTION_OFHMLINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_091099E01E22A69CF5FBD13F6BE31A590A12DFEB" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_ORUFUNCTION_OFHMLINK_ODUFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_8D607F7CBEE96E7D2F0D0E2399E1DF2D4A4D2DE1" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_sourceIds_ORUFUNCTION_OFHMLINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_C5EF805B2EF19761349A03D3CD3CF6C12818C98B" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_ORUFUNCTION_OFHMLINK_SMO"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_0F1592A3DE78629D65D3FED257905832BF2C42EA" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_ORUFUNCTION_OFHMLINK_SMO");
+
+CREATE INDEX IF NOT EXISTS "IDX_1EF8E086BAB9488EA6AD191B6082977A76CD2BD9" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_sourceIds_ORUFUNCTION_OFHSLINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_2E9527C8D166D7A31FE2F2B26EEED8202FC33B14" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_ORUFUNCTION_OFHSLINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_21586E874FC18901720393534E189FB50B0825AC" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_ORUFUNCTION_OFHSLINK_ODUFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_544CBFFD146034E3AA9C2EAF6B8770C8CF8740DF" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_sourceIds_ORUFUNCTION_OFHULINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_7B224280C4E1CD6248628CAF23CB06FE50AA838D" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN (("REL_CD_classifiers_ORUFUNCTION_OFHULINK_ODUFUNCTION"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_F3DE945424D3435D889B06D0080CFC8C26F76CF2" ON ties_data."o-ran-smo-teiv-ran_ORUFunction" USING GIN ("REL_CD_decorators_ORUFUNCTION_OFHULINK_ODUFUNCTION");
+
+CREATE INDEX IF NOT EXISTS "IDX_F34E4B2CD5D3DEC7271D5FA89AFC34BCF424D636" ON ties_data."o-ran-smo-teiv-ran_SMO" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_E528335C63DF74D690BADBF0ED2134E2BE5EC147" ON ties_data."o-ran-smo-teiv-ran_SMO" USING GIN (("CD_classifiers"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_SMO_CD_decorators" ON ties_data."o-ran-smo-teiv-ran_SMO" USING GIN ("CD_decorators");
 
 CREATE INDEX IF NOT EXISTS "IDX_E234B43A7CD7843672F08F2197AB46A2A50BECB0" ON ties_data."o-ran-smo-teiv-ran_Sector" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
 
@@ -1465,6 +1852,8 @@ ANALYZE ties_data."o-ran-smo-teiv-oam_ManagedElement";
 ANALYZE ties_data."o-ran-smo-teiv-ran_NRCellDU";
 
 ANALYZE ties_data."o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU";
+
+ANALYZE ties_data."o-ran-smo-teiv-ran_SMO";
 
 ANALYZE ties_data."o-ran-smo-teiv-ran_NearRTRICFunction";
 

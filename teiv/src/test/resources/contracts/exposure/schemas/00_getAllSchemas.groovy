@@ -119,7 +119,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-10-08",
+                        "revision": "2024-11-12",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
                         }
@@ -435,7 +435,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-10-08",
+                        "revision": "2024-11-12",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
                         }

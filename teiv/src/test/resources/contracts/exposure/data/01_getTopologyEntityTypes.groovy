@@ -143,6 +143,12 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "SMO",
+                        "entities": {
+                            "href": "/domains/REL_OAM_RAN/entity-types/SMO/entities"
+                        }
+                    },
+                    {
                         "name": "Sector",
                         "entities": {
                             "href": "/domains/REL_OAM_RAN/entity-types/Sector/entities"
@@ -164,11 +170,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/REL_OAM_RAN/entity-types?offset=0&limit=500"
                 },
-                "totalCount": 11
+                "totalCount": 12
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(11)
+                    occurrence(12)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entities.href', byEquality())
@@ -192,6 +198,8 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[9].entities.href', byEquality())
                 jsonPath('$.items[10].name', byEquality())
                 jsonPath('$.items[10].entities.href', byEquality())
+                jsonPath('$.items[11].name', byEquality())
+                jsonPath('$.items[11].entities.href', byEquality())
             }
         }
     },
@@ -263,6 +271,12 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "SMO",
+                        "entities": {
+                            "href": "/domains/RAN/entity-types/SMO/entities"
+                        }
+                    },
+                    {
                         "name": "Sector",
                         "entities": {
                             "href": "/domains/RAN/entity-types/Sector/entities"
@@ -284,11 +298,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/RAN/entity-types?offset=0&limit=500"
                 },
-                "totalCount": 10
+                "totalCount": 11
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(10)
+                    occurrence(11)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entities.href', byEquality())
@@ -310,6 +324,8 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[8].entities.href', byEquality())
                 jsonPath('$.items[9].name', byEquality())
                 jsonPath('$.items[9].entities.href', byEquality())
+                jsonPath('$.items[10].name', byEquality())
+                jsonPath('$.items[10].entities.href', byEquality())
             }
         }
     },
@@ -435,6 +451,12 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "SMO",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/SMO/entities"
+                        }
+                    },
+                    {
                         "name": "Sector",
                         "entities": {
                             "href": "/domains/TEIV/entity-types/Sector/entities"
@@ -462,11 +484,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/entity-types?offset=0&limit=500"
                 },
-                "totalCount": 20
+                "totalCount": 21
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(20)
+                    occurrence(21)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entities.href', byEquality())
@@ -508,6 +530,8 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[18].entities.href', byEquality())
                 jsonPath('$.items[19].name', byEquality())
                 jsonPath('$.items[19].entities.href', byEquality())
+                jsonPath('$.items[20].name', byEquality())
+                jsonPath('$.items[20].entities.href', byEquality())
             }
         }
     },
@@ -543,7 +567,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid Value",
-                "details": "Offset cannot be larger than 19"
+                "details": "Offset cannot be larger than 20"
             }''')
         }
     }
