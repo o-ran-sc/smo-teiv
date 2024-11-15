@@ -41,8 +41,6 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
             container = new TestPostgresqlContainer(DockerImageName.parse("postgis/postgis:13-3.4-alpine")
                     .asCompatibleSubstituteFor("postgres"));
             container.withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "pgsqlschema/01_init-oran-smo-teiv-model.sql"), "/pgsqlschema/01_init-oran-smo-teiv-model.sql");
-            container.withCopyFileToContainer(MountableFile.forClasspathResource(
                     "pgsqlschema/00_init-oran-smo-teiv-data.sql"), "/pgsqlschema/00_init-oran-smo-teiv-data.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource(
                     "pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql"),
@@ -71,6 +69,8 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
             container.withCopyFileToContainer(MountableFile.forClasspathResource(
                     "pgsqlschema/test-data-for-ingestion-validation.sql"),
                     "/pgsqlschema/test-data-for-ingestion-validation.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource(
+                    "pgsqlschema/01_init-oran-smo-teiv-model.sql"), "/pgsqlschema/01_init-oran-smo-teiv-model.sql");
             container.setCommand("postgres", "-c", "max_connections=2000");
 
             container.start();

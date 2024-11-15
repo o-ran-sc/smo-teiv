@@ -67,6 +67,12 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "NEARRTRICFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/NEARRTRICFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "NRCELLDU_USES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/REL_OAM_RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
@@ -79,9 +85,57 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "OCUCPFUNCTION_E1LINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/OCUCPFUNCTION_E1LINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/OCUCPFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
                             "href": "/domains/REL_OAM_RAN/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1CLINK_OCUCPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_F1CLINK_OCUCPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1ULINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_F1ULINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_O1LINK_SMO/relationships"
                         }
                     },
                     {
@@ -94,6 +148,42 @@ import org.springframework.cloud.contract.spec.Contract
                         "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/REL_OAM_RAN/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ORUFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHCLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ORUFUNCTION_OFHCLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ORUFUNCTION_OFHMLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ORUFUNCTION_OFHMLINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHSLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ORUFUNCTION_OFHSLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHULINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_OAM_RAN/relationship-types/ORUFUNCTION_OFHULINK_ODUFUNCTION/relationships"
                         }
                     },
                     {
@@ -118,11 +208,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/REL_OAM_RAN/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 11
+                "totalCount": 26
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(11)
+                    occurrence(26)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].relationships.href', byEquality())
@@ -146,6 +236,36 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[9].relationships.href', byEquality())
                 jsonPath('$.items[10].name', byEquality())
                 jsonPath('$.items[10].relationships.href', byEquality())
+                jsonPath('$.items[11].name', byEquality())
+                jsonPath('$.items[11].relationships.href', byEquality())
+                jsonPath('$.items[12].name', byEquality())
+                jsonPath('$.items[12].relationships.href', byEquality())
+                jsonPath('$.items[13].name', byEquality())
+                jsonPath('$.items[13].relationships.href', byEquality())
+                jsonPath('$.items[14].name', byEquality())
+                jsonPath('$.items[14].relationships.href', byEquality())
+                jsonPath('$.items[15].name', byEquality())
+                jsonPath('$.items[15].relationships.href', byEquality())
+                jsonPath('$.items[16].name', byEquality())
+                jsonPath('$.items[16].relationships.href', byEquality())
+                jsonPath('$.items[17].name', byEquality())
+                jsonPath('$.items[17].relationships.href', byEquality())
+                jsonPath('$.items[18].name', byEquality())
+                jsonPath('$.items[18].relationships.href', byEquality())
+                jsonPath('$.items[19].name', byEquality())
+                jsonPath('$.items[19].relationships.href', byEquality())
+                jsonPath('$.items[20].name', byEquality())
+                jsonPath('$.items[20].relationships.href', byEquality())
+                jsonPath('$.items[21].name', byEquality())
+                jsonPath('$.items[21].relationships.href', byEquality())
+                jsonPath('$.items[22].name', byEquality())
+                jsonPath('$.items[22].relationships.href', byEquality())
+                jsonPath('$.items[23].name', byEquality())
+                jsonPath('$.items[23].relationships.href', byEquality())
+                jsonPath('$.items[24].name', byEquality())
+                jsonPath('$.items[24].relationships.href', byEquality())
+                jsonPath('$.items[25].name', byEquality())
+                jsonPath('$.items[25].relationships.href', byEquality())
             }
         }
     },
@@ -181,6 +301,12 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "NEARRTRICFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/NEARRTRICFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "NRCELLDU_USES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
@@ -193,9 +319,57 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "OCUCPFUNCTION_E1LINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/OCUCPFUNCTION_E1LINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/OCUCPFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
                             "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1CLINK_OCUCPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_F1CLINK_OCUCPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1ULINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_F1ULINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_O1LINK_SMO/relationships"
                         }
                     },
                     {
@@ -208,6 +382,42 @@ import org.springframework.cloud.contract.spec.Contract
                         "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ORUFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHCLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ORUFUNCTION_OFHCLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ORUFUNCTION_OFHMLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_SMO",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ORUFUNCTION_OFHMLINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHSLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ORUFUNCTION_OFHSLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHULINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/REL_EQUIPMENT_RAN/relationship-types/ORUFUNCTION_OFHULINK_ODUFUNCTION/relationships"
                         }
                     },
                     {
@@ -238,7 +448,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/REL_EQUIPMENT_RAN/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 10
+                "totalCount": 25
             }''')
         }
     },
@@ -256,6 +466,12 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
+                        "name": "NEARRTRICFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/NEARRTRICFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "NRCELLDU_USES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
@@ -268,9 +484,57 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "OCUCPFUNCTION_E1LINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/OCUCPFUNCTION_E1LINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/OCUCPFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
                             "href": "/domains/RAN/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ODUFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1CLINK_OCUCPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ODUFUNCTION_F1CLINK_OCUCPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1ULINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ODUFUNCTION_F1ULINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ODUFUNCTION_O1LINK_SMO/relationships"
                         }
                     },
                     {
@@ -283,6 +547,42 @@ import org.springframework.cloud.contract.spec.Contract
                         "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/RAN/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ORUFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHCLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ORUFUNCTION_OFHCLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ORUFUNCTION_OFHMLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_SMO",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ORUFUNCTION_OFHMLINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHSLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ORUFUNCTION_OFHSLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHULINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/RAN/relationship-types/ORUFUNCTION_OFHULINK_ODUFUNCTION/relationships"
                         }
                     },
                     {
@@ -307,7 +607,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/RAN/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 6
+                "totalCount": 21
             }''')
         }
     },
@@ -415,21 +715,27 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "NEARRTRICFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/NEARRTRICFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE",
                         "relationships": {
                             "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE/relationships"
                         }
                     },
                     {
-                        "name": "NFDEPLOYMENT_SERVES_OCUCPFUNCTION",
+                        "name": "NFDEPLOYMENT_SERVES_MANAGEDELEMENT",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_OCUCPFUNCTION/relationships"
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_MANAGEDELEMENT/relationships"
                         }
                     },
                     {
-                        "name": "MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION",
+                        "name": "NFDEPLOYMENT_SERVES_NEARRTRICFUNCTION",
                         "relationships": {
-                            "href": "/domains/TEIV/relationship-types/MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION/relationships"
+                            "href": "/domains/TEIV/relationship-types/NFDEPLOYMENT_SERVES_NEARRTRICFUNCTION/relationships"
                         }
                     },
                     {
@@ -475,9 +781,57 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "OCUCPFUNCTION_E1LINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/OCUCPFUNCTION_E1LINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUCPFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/OCUCPFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
                         "name": "OCUCPFUNCTION_PROVIDES_NRCELLCU",
                         "relationships": {
                             "href": "/domains/TEIV/relationship-types/OCUCPFUNCTION_PROVIDES_NRCELLCU/relationships"
+                        }
+                    },
+                    {
+                        "name": "OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_E2LINK_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ODUFUNCTION_E2LINK_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1CLINK_OCUCPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ODUFUNCTION_F1CLINK_OCUCPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_F1ULINK_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ODUFUNCTION_F1ULINK_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ODUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ODUFUNCTION_O1LINK_SMO/relationships"
                         }
                     },
                     {
@@ -490,6 +844,42 @@ import org.springframework.cloud.contract.spec.Contract
                         "name": "ODUFUNCTION_PROVIDES_NRSECTORCARRIER",
                         "relationships": {
                             "href": "/domains/TEIV/relationship-types/ODUFUNCTION_PROVIDES_NRSECTORCARRIER/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_O1LINK_SMO",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ORUFUNCTION_O1LINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHCLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ORUFUNCTION_OFHCLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ORUFUNCTION_OFHMLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHMLINK_SMO",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ORUFUNCTION_OFHMLINK_SMO/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHSLINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ORUFUNCTION_OFHSLINK_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "ORUFUNCTION_OFHULINK_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/ORUFUNCTION_OFHULINK_ODUFUNCTION/relationships"
                         }
                     },
                     {
@@ -550,7 +940,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 35
+                "totalCount": 50
             }''')
         }
     },

@@ -39,6 +39,16 @@ module o-ran-smo-teiv-ran {
 
         SPDX-License-Identifier: Apache-2.0";
 
+    revision "2025-04-01" {
+        description "This revision introduces SMO and O1 interface";
+        or-teiv-yext:label 1.1.3;
+    }
+
+    revision "2025-03-28" {
+        description "This revision introduces E2 and Open Fronthaul interfaces";
+        or-teiv-yext:label 1.1.2;
+    }
+    
     revision "2025-03-20" {
         description "Proposed entities, relationships and attributes";
         or-teiv-yext:label 1.1.1;
@@ -57,6 +67,31 @@ module o-ran-smo-teiv-ran {
     }
 
     or-teiv-yext:domain RAN;
+
+    list SMO {
+        description "Service Management and Orchestration (SMO).
+
+        A centralized component responsible for the management, orchestration,
+        and automation of the entire RAN infrastructure. SMO enables flexible,
+        software-driven network control and is critical for enabling the open,
+        interoperable, and disaggregated approach that defines O-RAN.
+
+        In the O-RAN architecture, the SMO is part of the management and
+        orchestration layer, sitting above the RAN elements like the RU, DU,
+        and CU. It communicates with the RAN using open interfaces,
+        particularly O1 and A1 interfaces";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf smoName {
+                description "Name of the SMO";
+                type string;
+            }
+        }
+    }
 
     list ODUFunction {
         uses or-teiv-types:Top_Grp_Type;
@@ -594,6 +629,390 @@ module o-ran-smo-teiv-ran {
         leaf grouped-by-sector {
             description "NR Cell-DU grouped by Sector.";
             or-teiv-yext:bSide NRCellDU;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship OCUCPFUNCTION_E1LINK_OCUUPFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the OCUCPFUNCTION type.
+            The bSide of this relationship is an instance of the OCUUPFUNCTION type.
+            The relationships defines an E1 link between the
+            aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf ocucpFunction-e2-linked-ocuupFunction {
+            description "O-CUCP Function links O-CUUP Function.";
+            or-teiv-yext:aSide or-teiv-ran:OCUCPFunction;
+            type instance-identifier;
+        }
+
+        leaf-list ocuupFunction-e2-linked-by-ocucpFunction {
+            description "O-CUUP Function linked by O-CUCP Function.";
+            or-teiv-yext:bSide or-teiv-ran:OCUUPFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_E2LINK_NEARRTRICFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ODUFunction type.
+            The bSide of this relationship is an instance of the NearRTRICFunction type.
+            The relationships defines an E2 link between the
+            aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oduFunction-e2-linked-nearRTRICFunction {
+            description "O-DU Function links Near RT RIC Function.";
+            or-teiv-yext:aSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list nearRTRICFunction-e2-linked-by-oduFunction {
+            description "Near RT RIC Function linked by O-DU Function.";
+            or-teiv-yext:bSide or-teiv-ran:NearRTRICFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship OCUCPFUNCTION_E2LINK_NEARRTRICFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the OCUCPFUNCTION type.
+            The bSide of this relationship is an instance of the NearRTRICFunction type.
+            The relationships defines an E2 link between the
+            aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf ocucpFunction-e2-linked-nearRTRICFunction {
+            description "O-CUCP Function links Near RT RIC Function.";
+            or-teiv-yext:aSide or-teiv-ran:OCUCPFunction;
+            type instance-identifier;
+        }
+
+        leaf-list nearRTRICFunction-e2-linked-by-ocucpFunction {
+            description "Near RT RIC Function linked by O-CUCP Function.";
+            or-teiv-yext:bSide or-teiv-ran:NearRTRICFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship OCUUPFUNCTION_E2LINK_NEARRTRICFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the OCUUPFUNCTION type.
+            The bSide of this relationship is an instance of the NearRTRICFunction type.
+            The relationships defines an E2 link between the
+            aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf ocuupFunction-e2-linked-nearRTRICFunction {
+            description "O-CUUP Function links Near RT RIC Function.";
+            or-teiv-yext:aSide or-teiv-ran:OCUUPFunction;
+            type instance-identifier;
+        }
+
+        leaf-list nearRTRICFunction-e2-linked-by-ocuupFunction {
+            description "Near RT RIC Function linked by O-CUUP Function.";
+            or-teiv-yext:bSide or-teiv-ran:NearRTRICFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ORUFUNCTION_OFHMLINK_SMO { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ORUFunction type.
+            The bSide of this relationship is an instance of the SMO type.
+            The relationships defines an Open FH (Fronthaul) M-Plane Interface between the
+            aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oruFunction-ofhm-linked-smo {
+            description "O-RU Function links SMO.";
+            or-teiv-yext:aSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list smo-ofhm-linked-by-oruFunction {
+            description "SMO linked by O-RU Function.";
+            or-teiv-yext:bSide or-teiv-ran:SMO;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ORUFUNCTION_OFHMLINK_ODUFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ORUFunction type.
+            The bSide of this relationship is an instance of the ODUFunction type.
+            The relationships defines an Open FH (Fronthaul) M-Plane Interface between
+            the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oruFunction-ofhm-linked-oduFunction {
+            description "O-RU Function links O-DU Function.";
+            or-teiv-yext:aSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list oduFunction-ofhm-linked-by-oruFunction {
+            description "O-DU Function linked by O-RU Function.";
+            or-teiv-yext:bSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ORUFUNCTION_OFHCLINK_ODUFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ORUFunction type.
+            The bSide of this relationship is an instance of the ODUFunction type.
+            The relationships defines an Open FH (Fronthaul) Control Interface between
+            the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oruFunction-ofhc-linked-oduFunction {
+            description "O-RU Function links O-DU Function.";
+            or-teiv-yext:aSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list oduFunction-ofhc-linked-by-oruFunction {
+            description "O-DU Function linked by O-RU Function.";
+            or-teiv-yext:bSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ORUFUNCTION_OFHULINK_ODUFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ORUFunction type.
+            The bSide of this relationship is an instance of the ODUFunction type.
+            The relationships defines an Open FH (Fronthaul) User Interface between
+            the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oruFunction-ofhu-linked-oduFunction {
+            description "O-RU Function links O-DU Function.";
+            or-teiv-yext:aSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list oduFunction-ofhu-linked-by-oruFunction {
+            description "O-DU Function linked by O-RU Function.";
+            or-teiv-yext:bSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ORUFUNCTION_OFHSLINK_ODUFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ORUFunction type.
+            The bSide of this relationship is an instance of the ODUFunction type.
+            The relationships defines an Open FH (Fronthaul) Synchronization Interface
+            between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oruFunction-ofhs-linked-oduFunction {
+            description "O-RU Function links O-DU Function.";
+            or-teiv-yext:aSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list oduFunction-ofhs-linked-by-oruFunction {
+            description "O-DU Function linked by O-RU Function.";
+            or-teiv-yext:bSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_O1LINK_SMO { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ODUFunction type.
+            The bSide of this relationship is an instance of the SMO type.
+            The relationships defines an O1 Interface between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oduFunction-o1-linked-smo {
+            description "O-DU Function links SMO.";
+            or-teiv-yext:aSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list smo-o1-linked-by-oduFunction {
+            description "SMO linked by O-DU Function.";
+            or-teiv-yext:bSide or-teiv-ran:SMO;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship OCUCPFUNCTION_O1LINK_SMO { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the OCUCPFunction type.
+            The bSide of this relationship is an instance of the SMO type.
+            The relationships defines an O1 Interface between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf ocucpFunction-o1-linked-smo {
+            description "O-CU-CP Function links SMO.";
+            or-teiv-yext:aSide or-teiv-ran:OCUCPFunction;
+            type instance-identifier;
+        }
+
+        leaf-list smo-o1-linked-by-ocucpFunction {
+            description "SMO linked by Near O-CU-CP Function.";
+            or-teiv-yext:bSide or-teiv-ran:SMO;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ORUFUNCTION_O1LINK_SMO { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ORUFunction type.
+            The bSide of this relationship is an instance of the SMO type.
+            The relationships defines an O1 Interface between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oruFunction-o1-linked-smo {
+            description "O-RU Function links SMO.";
+            or-teiv-yext:aSide or-teiv-ran:ORUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list smo-o1-linked-by-oruFunction {
+            description "SMO links O-RU Function.";
+            or-teiv-yext:bSide or-teiv-ran:SMO;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship NEARRTRICFUNCTION_O1LINK_SMO { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the NearRTRICFunction type.
+            The bSide of this relationship is an instance of the SMO type.
+            The relationships defines an O1 Interface between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf nearRTRICFunction-o1-linked-smo {
+            description "Near RT RIC Function links SMO.";
+            or-teiv-yext:aSide or-teiv-ran:NearRTRICFunction;
+            type instance-identifier;
+        }
+
+        leaf-list smo-o1-linked-by-nearRTRICFunction {
+            description "SMO linked by Near RT RIC Function.";
+            or-teiv-yext:bSide or-teiv-ran:SMO;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_F1ULINK_OCUUPFUNCTION { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ODUFUNCTION type.
+            The bSide of this relationship is an instance of the OCUUPFUNCTION type.
+            The relationships defines an F1-u Interface between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oduFunction-f1-u-linked-ocuupFunction {
+            description "O-DU Function links O-CU-UP Function.";
+            or-teiv-yext:aSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+
+        leaf-list ocuupFunction-f1-u-linked-by-oduFunction {
+            description "O-CU-UP Function linked by O-DU Function.";
+            or-teiv-yext:bSide or-teiv-ran:OCUUPFunction;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_F1CLINK_OCUCPFUNCTION { // 0..1 to 0..1
+
+        description
+            "The aSide of this relationship is an instance of the ODUFUNCTION type.
+            The bSide of this relationship is an instance of the OCUCPFUNCTION type.
+            The relationships defines an F1-c Interface between the aSide and bSide.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf oduFunction-f1-c-linked-ocucpFunction {
+            description "O-DU Function links O-CU-CP Function.";
+            or-teiv-yext:aSide or-teiv-ran:ODUFunction;
+            type instance-identifier;
+        }
+
+        leaf ocucpFunction-f1-c-linked-by-oduFunction {
+            description "O-CU-UP Function linked by O-DU Function.";
+            or-teiv-yext:bSide or-teiv-ran:OCUCPFunction;
             type instance-identifier;
         }
     }

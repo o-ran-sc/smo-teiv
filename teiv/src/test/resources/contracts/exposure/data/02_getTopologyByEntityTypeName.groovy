@@ -1633,7 +1633,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown entity type",
-                "details": "Entity type NRCellDU1 is not part of the model, known entity types: [AntennaCapability, AntennaModule, CloudifiedNF, EntityTypeA, EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters, ManagedElement, NFDeployment, NRCellCU, NRCellDU, NRSectorCarrier, NearRTRICFunction, NodeCluster, OCUCPFunction, OCUUPFunction, OCloudNamespace, OCloudSite, ODUFunction, ORUFunction, PhysicalAppliance, Sector, Site, Site]"
+                "details": "Entity type NRCellDU1 is not part of the model, known entity types: [AntennaCapability, AntennaModule, CloudifiedNF, EntityTypeA, EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters, ManagedElement, NFDeployment, NRCellCU, NRCellDU, NRSectorCarrier, NearRTRICFunction, NodeCluster, OCUCPFunction, OCUUPFunction, OCloudNamespace, OCloudSite, ODUFunction, ORUFunction, PhysicalAppliance, SMO, Sector, Site, Site]"
             }''')
         }
     },
