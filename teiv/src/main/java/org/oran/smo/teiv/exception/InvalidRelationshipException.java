@@ -20,8 +20,40 @@
  */
 package org.oran.smo.teiv.exception;
 
-public class InvalidRelationshipException extends Exception {
-    public InvalidRelationshipException(final String message) {
+import org.oran.smo.teiv.service.cloudevent.data.Relationship;
+
+public class InvalidRelationshipException extends CloudEventParserException {
+    private InvalidRelationshipException(final String message) {
         super(message);
+    }
+
+    public static InvalidRelationshipException missingId(final Relationship relationship) {
+        return new InvalidRelationshipException(String.format("Missing id in relationship! ASide: %s, BSide: %s",
+                relationship.getASide(), relationship.getBSide()));
+    }
+
+    public static InvalidRelationshipException missingSide(final Relationship relationship) {
+        return new InvalidRelationshipException(String.format("Missing a side in relationship! Relationship id: %s",
+                relationship.getId()));
+    }
+
+    public static InvalidRelationshipException invalidType(final Relationship relationship) {
+        return new InvalidRelationshipException(String.format("Invalid relationship type! Relationship id: %s", relationship
+                .getId()));
+    }
+
+    public static InvalidRelationshipException missingSourceIds(final String relationshipId) {
+        return new InvalidRelationshipException(String.format("Relationship is missing sourceIds! Relationship id: %s",
+                relationshipId));
+    }
+
+    public static InvalidRelationshipException invalidModule(final Relationship relationship) {
+        return new InvalidRelationshipException(String.format("Invalid module in relationship! Relationship id: %s",
+                relationship.getId()));
+    }
+
+    public static InvalidRelationshipException invalidModuleTypePair(final Relationship relationship) {
+        return new InvalidRelationshipException(String.format("Invalid relationship module-type pair! Relationship id: %s",
+                relationship.getId()));
     }
 }

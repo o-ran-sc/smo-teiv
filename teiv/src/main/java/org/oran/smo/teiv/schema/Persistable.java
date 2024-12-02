@@ -73,7 +73,7 @@ public interface Persistable {
      * @return the list of {@link Field}
      */
     default List<Field> getAllFieldsWithId() {
-        List<Field> result = new ArrayList<>(getSpecificAttributeColumns(List.of()).keySet());
+        List<Field> result = new ArrayList<>(getSpecificAttributeColumns(this.getAttributeNames()).keySet());
         String fullyQuelifiedName = getFullyQualifiedName();
         result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getIdColumnName())).as(hashAlias(
                 getFullyQualifiedNameWithColumnName(fullyQuelifiedName, ID_COLUMN_NAME))));
@@ -109,6 +109,8 @@ public interface Persistable {
      */
     String getDecoratorsColumnName();
 
+    String getMetadataColumnName();
+
     String getName();
 
     /**
@@ -124,4 +126,11 @@ public interface Persistable {
      * @return category as a String
      */
     String getCategory();
+
+    /**
+     * Gets updatedTime column Name as String
+     *
+     * @return the String value of updated_time column
+     */
+    String getUpdatedTimeColumnName();
 }

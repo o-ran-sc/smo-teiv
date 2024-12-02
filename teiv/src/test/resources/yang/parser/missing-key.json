@@ -1,0 +1,14 @@
+{
+    "o-ran-smo-teiv-ran:GNBCUCPFunction": [
+        {
+            "sourceIds": [
+                "source1",
+                "source2"
+            ],
+            "attributes": {
+                "gNBCUName": "str",
+                "gNBId": 12
+            }
+        }
+    ]
+}

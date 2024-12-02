@@ -40,9 +40,9 @@ public class CloudEventTestUtil {
     public static CloudEvent getCloudEvent(final String type, final String data) {
         return CloudEventBuilder.v1().withId("1.0").withSource(URI.create("http://localhost:8080/local-source"))
                 .withDataContentType("application/yang-data+json").withDataSchema(URI.create(
-                        "http://localhost:8080/schema/v1/hello-world")).withExtension("correlationid",
-                                "test-correlation-id").withType("ran-logical-topology." + type).withData("application/json",
-                                        URI.create("http://localhost/schema"), data.getBytes()).build();
+                        "topology-inventory-ingestion:events:" + type + ":1.0.0")).withExtension("correlationid",
+                                "test-correlation-id").withType("topology-inventory-ingestion." + type).withData(
+                                        "application/json", URI.create("http://localhost/schema"), data.getBytes()).build();
     }
 
     public static CloudEvent getCloudEventFromJsonFile(final String path) {

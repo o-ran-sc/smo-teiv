@@ -1,134 +1,88 @@
 {
     "specversion": "1.0",
     "id": "a30e63c9-d29e-46ff-b99a-b63ed83f0001",
-    "source": "dmi-plugin:nm-1",
-    "type": "ran-logical-topology.create",
+    "source": "test-ran-topology-adapter",
+    "type": "topology-inventory-ingestion.create",
     "time": "2023-10-25T13:30:01Z",
     "datacontenttype": "application/json",
-    "dataschema": "https://ties:8080/schemas/v1/r1-topology",
+    "dataschema": "topology-inventory-ingestion:events:create:1.0.0",
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-ran-cloud:CloudNativeApplication": [
+                "o-ran-smo-teiv-equipment:AntennaModule": [
                     {
-                        "id": "CloudNativeApplication_1",
+                        "id": "AntennaModule_1",
                         "attributes": {
-                            "name": "Test_CloudNativeApplication_1"
-                        }
+                            "positionWithinSector": "center"
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     },
                     {
-                        "id": "CloudNativeApplication_2",
+                        "id": "AntennaModule_2",
                         "attributes": {
-                            "name": "Test_CloudNativeApplication_2"
-                        }
+                            "positionWithinSector": "center2"
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-ran:AntennaCapability": [
+                    {
+                        "id": "AntennaCapability_1",
+                        "attributes": {
+                            "geranFqBands": {
+                                "attribute_1": "1",
+                                "attribute_2": "2"
+                            }
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     },
                     {
-                        "id": "CloudNativeApplication_3",
+                        "id": "AntennaCapability_2",
                         "attributes": {
-                            "name": "Test_CloudNativeApplication_3"
-                        }
-                    }
-                ]
-            },
-            {
-                "o-ran-smo-teiv-ran-logical:GNBDUFunction": [
-                    {
-                        "id": "GNBDU_1",
-                        "attributes": {
-                            "fdn": "SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00001,ManagedElement=NR01gNodeBRadio00001,GNBDUFunction=1",
-                            "dUpLMNId": {
-                                "mcc": "110",
-                                "mnc": "210"
-                            },
-                            "gNBDUId": 111,
-                            "gNBId": 123,
-                            "gNBIdLength": 3,
-                            "cmId": {
-                                "cmHandle": "395221E080CCF0FD1924103B15873814",
-                                "resourceIdentifier": "/o-ran-smo-ComTop:ManagedElement[@id=NR01gNodeBRadio00001]/o-ran-smo-GNBDU:GNBDUFunction[@id=1]"
+                            "geranFqBands": {
+                                "attribute_1": "1",
+                                "attribute_2": "2"
                             }
-                        }
-                    }
-                ]
-            },
-            {
-                "o-ran-smo-teiv-ran-logical:GNBCUUPFunction": [
-                    {
-                        "id": "GNBCUUP_1",
-                        "attributes": {
-                            "fdn": "SubNetwork=Europe,SubNetwork=Ireland,GNBCUUPFunction=1",
-                            "gNBId": 123,
-                            "gNBIdLength": 3,
-                            "cmId": {
-                                "cmHandle": "395221E080CCF0FD1924103B15873814",
-                                "resourceIdentifier": "/o-ran-smo-ComTop:ManagedElement[@id=GNBCUUPFunction]/o-ran-smo-GNBCUUP:GNBCUUPFunction[@id=1]"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "o-ran-smo-teiv-ran-logical:GNBCUCPFunction": [
-                    {
-                        "id": "GNBCUCP_1",
-                        "attributes": {
-                            "fdn": "SubNetwork=Europe,SubNetwork=Ireland,GNBCUCPFunction=1",
-                            "gNBCUName": "Test_gNBCU",
-                            "gNBId": 123,
-                            "gNBIdLength": 3,
-                            "pLMNId": {
-                                "mcc": "110",
-                                "mnc": "210"
-                            },
-                            "cmId": {
-                                "cmHandle": "395221E080CCF0FD1924103B15873814",
-                                "resourceIdentifier": "/o-ran-smo-ComTop:ManagedElement[@id=GNBCUCPFunction]/o-ran-smo-GNBCUCP:GNBCUCPFunction[@id=1]"
-                            }
-                        }
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     }
                 ]
             }
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-ran-logical-to-cloud:GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
+                "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY": [
                     {
                         "id": "relation_1",
-                        "aSide": "GNBDU_1",
-                        "bSide": "CloudNativeApplication_1"
+                        "aSide": "AntennaModule_1",
+                        "bSide": "AntennaCapability_1",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     },
-                    {
-                        "id": "relation_4",
-                        "aSide": "GNBDU_1",
-                        "bSide": "CloudNativeApplication_2"
-                    }
-                ]
-            },
-            {
-                "o-ran-smo-teiv-ran-logical-to-cloud:GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
                     {
                         "id": "relation_2",
-                        "aSide": "GNBCUUP_1",
-                        "bSide": "CloudNativeApplication_2"
-                    },
-                    {
-                        "id": "relation_5",
-                        "aSide": "GNBCUUP_1",
-                        "bSide": "CloudNativeApplication_3"
-                    }
-                ]
-            },
-            {
-                "o-ran-smo-teiv-ran-logical-to-cloud:GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION": [
-                    {
-                        "id": "relation_3",
-                        "aSide": "GNBCUCP_1",
-                        "bSide": "CloudNativeApplication_3"
-                    },
-                    {
-                        "id": "relation_6",
-                        "aSide": "GNBCUCP_1",
-                        "bSide": "CloudNativeApplication_1"
+                        "aSide": "AntennaModule_2",
+                        "bSide": "AntennaCapability_2",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     }
                 ]
             }

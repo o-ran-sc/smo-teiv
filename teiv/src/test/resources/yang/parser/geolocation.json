@@ -1,0 +1,33 @@
+{
+    "o-ran-smo-teiv-equipment:AntennaModule": [
+        {
+            "id": "id1",
+            "sourceIds": [
+                "source1",
+                "source2"
+            ],
+            "attributes": {
+                "positionWithinSector": "6",
+                "geo-location": {
+                    "latitude": 12.78232,
+                    "longitude": 56.7455
+                }
+            }
+        },
+        {
+            "id": "id2",
+            "sourceIds": [
+                "source2",
+                "source3"
+            ],
+            "attributes": {
+                "positionWithinSector": "7",
+                "geo-location": {
+                    "latitude": 22.78232,
+                    "longitude": 66.7455,
+                    "height": 123.1234
+                }
+            }
+        }
+    ]
+}

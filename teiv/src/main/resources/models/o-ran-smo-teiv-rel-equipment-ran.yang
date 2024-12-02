@@ -37,6 +37,17 @@ module o-ran-smo-teiv-rel-equipment-ran {
 
     SPDX-License-Identifier: Apache-2.0";
 
+    revision "2024-10-08" {
+        description
+            "Added new relationship ANTENNAMODULE_SERVES_NRCELLDU.";
+        or-teiv-yext:label 0.5.0;
+    }
+
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Relationship_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -46,7 +57,16 @@ module o-ran-smo-teiv-rel-equipment-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship ANTENNAMODULE_SERVES_ANTENNACAPABILITY { // 0..n to 0..m
 
+        description
+            "The aSide of this relationship is an instance of the AntennaModule type.
+            The bSide of this relationship is an instance of the AntennaCapability type.
+            The AntennaModule represents the physical antenna that serves the AntennaCapability.
+            An AntennaModule instance can serve many AntennaCapabilities.
+            An AntennaCapability instance can be served by many AntennaModules.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list serviced-antennaCapability {
@@ -62,9 +82,46 @@ module o-ran-smo-teiv-rel-equipment-ran {
         }
     }
 
-    or-teiv-yext:biDirectionalTopologyRelationship SECTOR_GROUPS_ANTENNAMODULE { // 0..1 to 0..n
+    or-teiv-yext:biDirectionalTopologyRelationship ANTENNAMODULE_SERVES_NRCELLDU { // 1..n to 0..m
+
+        description
+            "The aSide of this relationship is an instance of the AntennaModule type.
+            The bSide of this relationship is an instance of the NRCellDU type.
+            The AntennaModule represents the physical antenna that serves the NRCellDU.
+            An AntennaModule instance can serve many NRCellDUs.
+            An NRCellDU instance can be served by many AntennaModules.
+            ";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list serviced-nrCellDu {
+            description "NR Cell-DU serviced by this Antenna Module.";
+            or-teiv-yext:aSide or-teiv-equip:AntennaModule;
+            type instance-identifier;
+        }
+
+        leaf-list serving-antennaModule {
+            description "Antenna Module serves this NR Cell-DU.";
+            or-teiv-yext:bSide or-teiv-ran:NRCellDU;
+            type instance-identifier;
+            min-elements 1;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship SECTOR_GROUPS_ANTENNAMODULE { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the Sector type.
+            The bSide of this relationship is an instance of the AntennaModule type.
+            The Sector represents the geographical area that groups the AntennaModules.
+            A Sector instance can group many AntennaModules.
+            An AntennaModule instance can only be grouped by one Sector.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list grouped-antennaModule {

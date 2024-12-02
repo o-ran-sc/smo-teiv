@@ -32,7 +32,7 @@ import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
 
 @Component
 @Profile("ingestion")
-public class TiesIngestionHealthIndicator extends TiesHealthIndicator {
+public class TiesIngestionHealthIndicator extends TiesKafkaHealthIndicator {
 
     @Override
     protected String getServiceName() {

@@ -38,15 +38,18 @@ import org.oran.smo.teiv.exposure.consumerdata.model.PersistableIdMap;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.service.models.OperationResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import static org.jooq.impl.DSL.exists;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.table;
+import static org.jooq.impl.DSL.val;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 
 @Component
+@Profile("exposure")
 public class DeleteClassifiersOperation extends ClassifiersOperation {
 
     public DeleteClassifiersOperation(DSLContext readDataDslContext, DSLContext writeDataDslContext) {
@@ -83,8 +86,8 @@ public class DeleteClassifiersOperation extends ClassifiersOperation {
     }
 
     private Condition existsCondition(final String classifiersColumnName, final String data) {
-        return exists(select(field("1")).from(table("jsonb_array_elements_text(" + classifiersColumnName + ")").as(
-                "element")).where(field("element").eq(data)));
+        return exists(select(field("1")).from(table("jsonb_array_elements_text(" + field(classifiersColumnName) + ")").as(
+                "element")).where(field("element").eq(val(data))));
     }
 
     /**

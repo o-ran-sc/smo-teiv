@@ -20,28 +20,34 @@
  */
 package org.oran.smo.teiv.service.kafka;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import io.cloudevents.CloudEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.TopicConfig;
 import org.oran.smo.teiv.config.KafkaAdminConfig;
 import org.oran.smo.teiv.config.KafkaConfig;
 import org.oran.smo.teiv.utils.RetryOperationUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 @Component
 @Slf4j
-@Profile("ingestion")
+@Profile({ "exposure", "ingestion" })
 public class KafkaTopicService {
 
     private final KafkaAdminConfig kafkaAdminConfig;
@@ -52,21 +58,27 @@ public class KafkaTopicService {
     @Getter
     private final KafkaConfig kafkaConfig;
 
+    @Qualifier("topologyAuditKafkaTemplate")
+    private final KafkaTemplate<String, CloudEvent> topologyAuditkafkaTemplate;
+
     public boolean checkTopologyIngestionTopic() {
         return checkTopicCreated(kafkaConfig.getTopologyIngestion().getTopicName());
     }
 
     public boolean isTopicCreated(String topicName) {
-        try (AdminClient client = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
+        try (Admin client = Admin.create(kafkaAdmin.getConfigurationProperties())) {
             Set<String> existingTopics = client.listTopics().names().get();
             if (!existingTopics.contains(topicName)) {
                 log.info("Topic does not exist: {}", topicName);
                 throw new KafkaException("Topic does not exist");
             }
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
+            log.error("Error checking if topic exists: {}", topicName, e);
+            throw new KafkaException("Error checking if topic exists: " + topicName);
+        } catch (InterruptedException e) {
             log.error("Error checking if topic exists: {}", topicName, e);
             Thread.currentThread().interrupt();
-            throw new KafkaException("Error checking if topic exists: " + topicName);
+            throw new KafkaException("Topic does not exist");
         }
         return true;
     }
@@ -97,10 +109,12 @@ public class KafkaTopicService {
 
     private boolean createTopologyIngestionTopic() {
         final KafkaConfig.TopologyIngestion topologyIngestionConfig = kafkaConfig.getTopologyIngestion();
+        Map<String, String> configMap = new HashMap<>();
+        configMap.put(TopicConfig.RETENTION_MS_CONFIG, topologyIngestionConfig.getRetention());
+        configMap.put(TopicConfig.RETENTION_BYTES_CONFIG, topologyIngestionConfig.getRetentionBytes());
+        configMap.put(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE);
         NewTopic topic = TopicBuilder.name(topologyIngestionConfig.getTopicName()).partitions(topologyIngestionConfig
-                .getPartitions()).replicas(topologyIngestionConfig.getReplicas()).config(TopicConfig.RETENTION_MS_CONFIG,
-                        topologyIngestionConfig.getRetention()).config(TopicConfig.CLEANUP_POLICY_CONFIG,
-                                TopicConfig.CLEANUP_POLICY_DELETE).build();
+                .getPartitions()).replicas(topologyIngestionConfig.getReplicas()).configs(configMap).build();
         return createTopic(topic, topologyIngestionConfig.getTopicName());
     }
 

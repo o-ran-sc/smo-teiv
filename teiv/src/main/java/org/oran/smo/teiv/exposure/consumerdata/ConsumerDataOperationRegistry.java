@@ -29,10 +29,12 @@ import org.oran.smo.teiv.exposure.consumerdata.operation.DeleteClassifiersOperat
 import org.oran.smo.teiv.exposure.consumerdata.operation.DeleteDecoratorsOperation;
 import org.oran.smo.teiv.exposure.consumerdata.operation.MergeClassifiersOperation;
 import org.oran.smo.teiv.exposure.consumerdata.operation.MergeDecoratorsOperation;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Profile("exposure")
 public class ConsumerDataOperationRegistry {
     private final MergeClassifiersOperation mergeClassifiersOperation;
     private final DeleteClassifiersOperation deleteClassifiersOperation;

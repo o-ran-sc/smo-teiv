@@ -40,14 +40,25 @@ module o-ran-smo-teiv-ran {
 
         SPDX-License-Identifier: Apache-2.0";
 
-    revision "2024-05-24" {
-        description "Initial revision.";
-        or-teiv-yext:label 0.3.0;
+    revision "2024-10-08" {
+        description "Added range for azimuth attribute of Sector.";
+        or-teiv-yext:label 0.6.0;
+    }
+
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology object.";
+        or-teiv-yext:label 0.5.0;
     }
 
     revision "2024-07-15" {
         description "This revision aligns O-RAN Work Group 10 Stage 2 Specification (O-RAN.WG10.TE&IV-CIMI.0-R004.v02.00)";
         or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
     }
 
     or-teiv-yext:domain RAN;
@@ -68,6 +79,7 @@ module o-ran-smo-teiv-ran {
         the O-RU object.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -91,6 +103,7 @@ module o-ran-smo-teiv-ran {
         the Near-RT RIC object.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -126,9 +139,15 @@ module o-ran-smo-teiv-ran {
         the gNB-DU object.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
+            container dUpLMNId {
+                description "PLMN identifier used as part of PM Events data";
+                uses types3gpp:PLMNId;
+            }
+
             leaf gNBDUId {
                 description "Unique identifier for the DU within a gNodeB";
                 type int64;
@@ -169,6 +188,7 @@ module o-ran-smo-teiv-ran {
         delete the O-CU-CP object.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -218,6 +238,7 @@ module o-ran-smo-teiv-ran {
         delete the O-CU-UP object.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -255,6 +276,7 @@ module o-ran-smo-teiv-ran {
         using both PSS and SSS.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -299,6 +321,7 @@ module o-ran-smo-teiv-ran {
         using both PSS and SSS.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -335,6 +358,7 @@ module o-ran-smo-teiv-ran {
         cells.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -373,6 +397,7 @@ module o-ran-smo-teiv-ran {
         The MO also controls the maximum output power of the sector.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -401,6 +426,7 @@ module o-ran-smo-teiv-ran {
         coverage area.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -416,9 +442,10 @@ module o-ran-smo-teiv-ran {
                 description "Average value of the azimuths of the cells
                 comprising the sector, determined during sector discovery.";
                 type decimal64{
-                    fraction-digits 6;
+                    fraction-digits 1;
+                    range "0..360";
                 }
-                units "degrees";
+                units "decimal degrees";
             }
         }
     }
@@ -426,7 +453,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_PROVIDES_NRCELLDU { // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ODUFunction type.
+            The bSide of this relationship is an instance of the NRCellDU type.
+            The ODUFunction represents the DU component of a gNB that provides the NRCellDU.
+            A ODUFunction instance can provide many NRCellDUs.
+            An NRCellDU instance must be provided by an ODUFunction.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list provided-nrCellDu {
@@ -445,7 +481,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_PROVIDES_NRSECTORCARRIER { // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ODUFunction type.
+            The bSide of this relationship is an instance of the NRSectorCarrier type.
+            The ODUFunction represents the DU component of a gNB that provides the NRSectorCarrier.
+            A ODUFunction instance can provide many NRSectorCarriers.
+            An NRSectorCarrier instance must be provided by an ODUFunction.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list provided-nrSectorCarrier {
@@ -464,7 +509,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship OCUCPFUNCTION_PROVIDES_NRCELLCU { // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the OCUCPFunction type.
+            The bSide of this relationship is an instance of the NRCellCU type.
+            The OCUCPFunction represents the CU-CP component of a gNB that provides the NRCellCU.
+            A OCUCPFunction instance can provide many NRCellCU.
+            An NRCellCU instance must be provided by an OCUCPFunction.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list provided-nrCellCu {
@@ -483,7 +537,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship NRCELLDU_USES_NRSECTORCARRIER { // 0..1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the NRCellDU type.
+            The bSide of this relationship is an instance of the NRSectorCarrier type.
+            The NRCellDU represents the cell that uses the NRSectorCarrier.
+            An NRCellDU instance can use many NRSectorCarriers.
+            An NRSectorCarrier instance can only be used by one NRCellDU.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list used-nrSectorCarrier {
@@ -501,7 +564,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship NRSECTORCARRIER_USES_ANTENNACAPABILITY { // 0..n to 0..1
 
+        description
+            "The aSide of this relationship is an instance of the NRSectorCarrier type.
+            The bSide of this relationship is an instance of the AntennaCapability type.
+            The NRSectorCarrier represents the carrier that uses the AntennaCapability.
+            An NRSectorCarrier instance can use only one AntennaCapability.
+            An AntennaCapability instance can be used by many NRSectorCarriers.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf used-antennaCapability {
@@ -519,7 +591,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship SECTOR_GROUPS_NRCELLDU { // 0..1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the Sector type.
+            The bSide of this relationship is an instance of the NRCellDU type.
+            The Sector represents the geographical area that groups the NRCellDUs.
+            A Sector instance can group many NRCellDUs.
+            An NRCellDU instance can only be grouped by one Sector.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list grouped-nrCellDu {

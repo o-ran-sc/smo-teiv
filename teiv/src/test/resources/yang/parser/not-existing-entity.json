@@ -1,0 +1,18 @@
+{
+    "o-ran-smo-teiv-cloud:NotExistingEntity": [
+        {
+            "id": "id1",
+            "sourceIds": [
+                "source1",
+                "source2"
+            ],
+            "attributes": {
+                "name": "entityName1",
+                "cmId": {
+                    "cmHandle": "047683E080CCF0FD2015987A74028473",
+                    "resourceIdentifier": "/nm-ComTop:Entity[@id=id00001]"
+                }
+            }
+        }
+    ]
+}

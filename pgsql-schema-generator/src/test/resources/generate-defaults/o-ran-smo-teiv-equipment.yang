@@ -25,6 +25,12 @@ module o-ran-smo-teiv-equipment {
     such as antennas associated with a cell/carrier and their relevant
     properties e.g. tilt, max power etc.";
 
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology objects.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -34,59 +40,60 @@ module o-ran-smo-teiv-equipment {
 
     list AntennaModule {
         description "An Antenna Module represents the physical aspect of an
-            antenna.";
+        antenna.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
             leaf antennaModelNumber {
                 description "Vendor-specific antenna model identifier. This
-                    attribute is part of AISG v3 ADB Standard and has no
-                    operational impact.";
+                attribute is part of AISG v3 ADB Standard and has no
+                operational impact.";
                 type string;
             }
 
             leaf mechanicalAntennaBearing {
                 description "Antenna bearing on antenna subunit where antenna
-                    unit is installed.";
+                unit is installed.";
                 type int32;
             }
 
             leaf mechanicalAntennaTilt {
                 description "The fixed antenna tilt of the installation, defined
-                    as the inclination of the antenna element respect to the
-                    vertical plane. It is a signed value. Positive indicates
-                    downtilt, and negative indicates uptilt.";
+                as the inclination of the antenna element respect to the
+                vertical plane. It is a signed value. Positive indicates
+                downtilt, and negative indicates uptilt.";
                 type int32;
             }
 
             leaf positionWithinSector {
                 description "Antenna unit position within sector. This attribute
-                    is part of AISG v3 ADB Standard and has no operational
-                    impact.";
+                is part of AISG v3 ADB Standard and has no operational
+                impact.";
                 type string;
             }
 
             leaf totalTilt {
                 description "Total antenna elevation including the installed
-                    tilt and the tilt applied by the Remote Electrical
-                    Tilt (RET).";
+                tilt and the tilt applied by the Remote Electrical
+                Tilt (RET).";
                 type int32;
             }
 
             leaf electricalAntennaTilt {
                 description "Electrically-controlled tilt of main beam maximum
-                    with respect to direction orthogonal to antenna element
-                    axis (see 3GPP TS 25.466). Value is signed; tilt down is
-                    positive, tilt up is negative.";
+                with respect to direction orthogonal to antenna element
+                axis (see 3GPP TS 25.466). Value is signed; tilt down is
+                positive, tilt up is negative.";
                 type int32;
             }
 
             leaf-list antennaBeamWidth {
                 description "The angular span of the main lobe of the antenna
-                    radiation pattern in the horizontal plane. Measured in
-                    degrees.";
+                radiation pattern in the horizontal plane. Measured in
+                degrees.";
                 type uint32;
             }
 

@@ -27,16 +27,45 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-public class GeographyTest {
+class GeographyTest {
 
     @Test
-    public void testCreateFromJson() throws IOException {
+    void test2DGeographyFromJson() throws IOException {
         assertEquals("POINT(47.497913 19.040236)", new Geography("{\"latitude\": 47.497913,\"longitude\": 19.040236}")
                 .toString());
-        assertThrows(IOException.class, () -> new Geography("{\"latitude\": 47.497913}"));
+
+        assertEquals("POINT(47.497913 19.040236)", new Geography(
+                "{\"latitude\": 47.497913,\"longitude\": 19.040236, \"height\": null}").toString());
+
         assertEquals("POINT(47.497913 19.040236)", new Geography(
                 "{\"location\":{\"ellipsoid\":{\"latitude\": 47.497913,\"longitude\":19.040236}}}").toString());
+
         assertEquals("POINT(47.497913 19.040236)", new Geography(
                 "{\"location\":{\"latitude\": 47.497913,\"longitude\":19.040236}}").toString());
+    }
+
+    @Test
+    void test3DGeographyFromJson() throws IOException {
+        assertEquals("POINT Z (47.497913 19.040236 123.9878)", new Geography(
+                "{\"latitude\": 47.497913,\"longitude\": 19.040236, \"height\": 123.9878}").toString());
+
+        assertEquals("POINT Z (47.497913 19.040236 123.9878)", new Geography(
+                "{\"location\":{\"ellipsoid\":{\"latitude\": 47.497913,\"longitude\":19.040236 , \"height\": 123.9878}}}")
+                        .toString());
+
+        assertEquals("POINT Z (47.497913 19.040236 123.9878)", new Geography(
+                "{\"location\":{\"latitude\": 47.497913,\"longitude\":19.040236, \"height\": 123.9878}}}").toString());
+    }
+
+    @Test
+    void testGeographyExpectionFromJson() {
+        assertThrows(IOException.class, () -> new Geography("{\"latitude\": 47.497913}"));
+        assertThrows(IOException.class, () -> new Geography("{\"latitude\": 47.497913, \"longitude\": null}"));
+
+        assertThrows(IOException.class, () -> new Geography("{\"longitude\": 19.040236}"));
+        assertThrows(IOException.class, () -> new Geography("{\"latitude\": null, \"longitude\": 19.040236}"));
+
+        assertThrows(IOException.class, () -> new Geography("{\"latitude\": 47.497913 \"height\": 19.040236}"));
+        assertThrows(IOException.class, () -> new Geography("{\"longitude\": 19.040236 \"height\": 19.040236}"));
     }
 }

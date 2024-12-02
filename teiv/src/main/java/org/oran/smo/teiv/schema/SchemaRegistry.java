@@ -201,6 +201,26 @@ public class SchemaRegistry {
     }
 
     /**
+     * Gets the {@link Persistable} by the given module name and the topology type name.
+     *
+     * @param moduleName
+     *     - name of the module
+     * @param topologyTypeName
+     *     - name of the topologyType
+     * @return the topology type
+     */
+    public static Persistable getTopologyTypeByModuleAndTopologyName(final String moduleName, final String topologyTypeName)
+            throws SchemaRegistryException {
+        try {
+            return getEntityTypeByModuleAndName(moduleName, topologyTypeName);
+        } catch (SchemaRegistryException e) {
+            log.debug("Failed to get entity type by module: {} and topology: {}. Attempting relation type lookup.",
+                    moduleName, topologyTypeName, e);
+            return getRelationTypeByModuleAndName(moduleName, topologyTypeName);
+        }
+    }
+
+    /**
      * Gets the list of {@link EntityType} by the given domain.
      *
      * @param domain

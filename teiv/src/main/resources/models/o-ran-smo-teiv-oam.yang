@@ -33,6 +33,11 @@ module o-ran-smo-teiv-oam {
 
     SPDX-License-Identifier: Apache-2.0";
 
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Entity_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -42,12 +47,13 @@ module o-ran-smo-teiv-oam {
 
     list ManagedElement {
         description "A Managed Element (ME) is a node into a telecommunication
-            network providing support and/or service to subscribers. An ME
-            communicates with a manager application (directly or indirectly)
-            over one or more interfaces for the purpose of being monitored
-            and/or controlled.";
+        network providing support and/or service to subscribers. An ME
+        communicates with a manager application (directly or indirectly)
+        over one or more interfaces for the purpose of being monitored
+        and/or controlled.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
     }
 }

@@ -38,6 +38,7 @@ import org.oran.smo.teiv.exposure.tiespath.innerlanguage.OrLogicalBlock;
 import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
 import org.oran.smo.teiv.exposure.tiespath.resolver.TargetResolver;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import org.oran.smo.teiv.api.model.OranTeivDomains;
@@ -64,6 +65,7 @@ import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
 
 @Service
 @RequiredArgsConstructor
+@Profile({ "exposure", "groups" })
 public class DataServiceImpl implements DataService {
     private final DataRepository dataRepository;
     private final ScopeResolver scopeResolver;

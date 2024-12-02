@@ -48,6 +48,10 @@ info:
     Decorators are user-defined attributes (key-value pairs) which can
     be applied to topology entities and relationships.
 
+    Topology groups provide the capability to create user-defined collections of
+    topology entities and/or relationships of any type. Groups can be either
+    static or dynamic based on how they are created.
+
     Topology Exposure and Inventory API provides the capabilities to fetch topology
     data. Using the filtering options, it is possible to define more specific
     query requests.
@@ -61,24 +65,35 @@ info:
     object(s), the query is not constructed. The RootObject still can be
     retrieved and filtered using the */attributes*.
 
-    | Use case                                                                                                                                                                                                                                                                                                                                                                                             | domainName | entityTypeName | targetFilter                    | scopeFilter                                                                             | Query result                                                                                                                         |
-    |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|:---------------|:--------------------------------|:----------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------|
-    | To return the ids for all instances of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 |                                                                                         | All ids of every GNBDUFunction                                                                                                       |
-    | To return all attributes of every instance of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                  | RAN        | GNBDUFunction  | /attributes                     |                                                                                         | All GNBDUFunctions with every attribute                                                                                              |
-    | To return every instance of the entityTypeName used in the query, but only the attribute that was defined in the *targetFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                            | RAN        | GNBDUFunction  | /attributes(gNBId)              |                                                                                         | All gNBIds of every GNBDUFunction                                                                                                    |
-    | To return every instance of the entityTypeName used in the query, but only the attributes that were defined in the *targetFilter* parameter. <br/> Note: The attributes must be separated by a comma "," when using parenthesis "()".                                                                                                                                                                | RAN        | GNBDUFunction  | /attributes(gNBId, gNBIdLength) |                                                                                         | All gNBIds and gNBIdLengths of every GNBDUFunction                                                                                   |
-    | To return the ids for all instances of the entityTypeName used in the query, that matches the given property in the *scopeFilter* parameter.                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 | /sourceIds[contains (@item, 'SubNetwork=Ireland')]                                      | Unique set of ids of GNBDUFunctions, where sourceIds contains *SubNetwork=Ireland*                                                   |
-    | To return the ids for all instances of the entityTypeName used in the query, that matches the given attributes in the *scopeFilter* parameter. <br/> Note: The attributes must be separated by a *AND* or *OR*".                                                                                                                                                                                     | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=3 and @gNBId=111]                                             | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 and the gNBId equals 111                                         |
-    | To return the ids for all instances of the entityTypeName used in the query, that satisfies one of the conditions in the *scopeFilter* parameter. A condition is a complete unit of *scopeFilter* parameter surrounded by square brackets. <br/> Note: Multiple conditions can be given in the scopeFilter separated by a semicolon ";" to represent AND, or a pipe symbol "&#124;" to represent OR. | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=3]  &#124; /sourceIds[contains (@item, 'SubNetwork=Ireland')] | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 or the sourceIds contains an item with "SubNetwork=Ireland"      |
+    | Use case                                                                                                                                                                                                                                                                                                                                                                                             | domainName | entityTypeName | targetFilter                    | scopeFilter                                                                            | Query result                                                                                                                   |
+    |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|:---------------|:--------------------------------|:---------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
+    | To return the ids for all instances of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 |                                                                                        | All ids of every GNBDUFunction                                                                                                 |
+    | To return all attributes of every instance of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                  | RAN        | GNBDUFunction  | /attributes                     |                                                                                        | All GNBDUFunctions with every attribute                                                                                        |
+    | To return every instance of the entityTypeName used in the query, but only the attribute that was defined in the *targetFilter* parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                            | RAN        | GNBDUFunction  | /attributes(gNBId)              |                                                                                        | All gNBIds of every GNBDUFunction                                                                                              |
+    | To return every instance of the entityTypeName used in the query, but only the attributes that were defined in the *targetFilter* parameter. <br/> Note: The attributes must be separated by a comma "," when using parenthesis "()".                                                                                                                                                                | RAN        | GNBDUFunction  | /attributes(gNBId, gNBIdLength) |                                                                                        | All gNBIds and gNBIdLengths of every GNBDUFunction                                                                             |
+    | To return the ids for all instances of the entityTypeName used in the query, that partially matches the given property in the *scopeFilter* parameter.                                                                                                                                                                                                                                               | RAN        | GNBDUFunction  |                                 | /sourceIds[contains (@item, 'SubNetwork=Europe')]                                      | Unique set of ids of GNBDUFunctions, where sourceIds contains *SubNetwork=Ireland*                                             |
+    | To return the ids for all instances of the entityTypeName used in the query, that matches the given attributes in the *scopeFilter* parameter. <br/> Note: The attributes must be separated by a *AND* or *OR*".                                                                                                                                                                                     | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=1 and @gNBId=9]                                              | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 1 and the gNBId equals 9                                     |
+    | To return the ids for all instances of the entityTypeName used in the query, that satisfies one of the conditions in the *scopeFilter* parameter. A condition is a complete unit of *scopeFilter* parameter surrounded by square brackets. <br/> Note: Multiple conditions can be given in the scopeFilter separated by a semicolon ";" to represent AND, or a pipe symbol "&#124;" to represent OR. | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=2]  &#124; /sourceIds[contains (@item, 'SubNetwork=Europe')] | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 2 or the sourceIds contains an item with "SubNetwork=Europe" |
 
     ## Querying connected entities
     The *entityTypeName* is used as the root of the queries.
 
+    | Use case                                                                                                                                                                  | domainName  | entityTypeName | targetFilter | scopeFilter                                                                                                                                                                                                                                   | Query result                                                                                                                                                                                                             |
+    |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|:---------------|:-------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | To return the ids for all instances of an entityTypeName related by an association.                                                                                       | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement                                                                                                                                                                                                                    | All ENodeBFunction entities that are managed by any Managed Element.                                                                                                                                                     |
+    | To return the ids for all instances of an entityTypeName related by an association to another entity specified by its *id*.                                               | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement [@id = 'urn:3gpp:dn: ManagedElement=1']                                                                                                                                                                            | All ENodeBFunction entities that are managed by the Managed Element *urn:3gpp:dn: ManagedElement=1*.                                                                                                                     |
+    | To return the attributes for all instances of an entityTypeName related by one or more associations to other entities specified by their *id*.                            | REL_OAM_RAN | ENodeBFunction | /attributes  | /attributes [@enbId=1] ; /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=1'] &#124;  /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=2'] ; /provided-euTranCell [@id='urn:3gpp:dn: ManagedElement=1, EUtranCell=2'] | All EnodeBFunction entities with enbId as *1*, managed by the Managed Element *urn:3gpp:dn: ManagedElement=1* or *urn:3gpp:dn: ManagedElement=2*, and provides EuTranCell *urn:3gpp:dn: ManagedElement=1, EUtranCell=2*. |
+    | To return the ids for all instances of an entityTypeName related by one or more associations to other entities whose attribute matches the given *scopeFilter* parameter. | RAN         | ENodeBFunction |              | /provided-euTranCell/attributes[@tac=1]                                                                                                                                                                                                       | All EnodeBFunction entities that provide an EuTranCell whose tac equals 1                                                                                                                                                |
+
+    ## Querying based on geographical location
+    The *entityTypeName* is used as the root of the queries. Use the "Well-known text" (WKT) representation of geometry to specify geometry objects.
+
     | Use case                                                                                                                                       | domainName  | entityTypeName | targetFilter | scopeFilter                                                                                                                                                                                                                                   | Query result                                                                                                                                                                                                             |
     |:-----------------------------------------------------------------------------------------------------------------------------------------------|-------------|:---------------|:-------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-    | To return the ids for all instances of an entityTypeName related by an association.                                                            | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement                                                                                                                                                                                                                    | All ENodeBFunction entities that are managed by any Managed Element.                                                                                                                                                     |
-    | To return the ids for all instances of an entityTypeName related by an association to another entity specified by its *id*.                    | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement [@id = 'urn:3gpp:dn: ManagedElement=1']                                                                                                                                                                            | All ENodeBFunction entities that are managed by by the Managed Element *urn:3gpp:dn: ManagedElement=1*.                                                                                                                  |
-    | To return the attributes for all instances of an entityTypeName related by one or more associations to other entities specified by their *id*. | REL_OAM_RAN | ENodeBFunction | /attributes  | /attributes [@enbId=1] ; /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=1'] &#124;  /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=2'] ; /provided-euTranCell [@id='urn:3gpp:dn: ManagedElement=1, EUtranCell=2'] | All EnodeBFunction entities with enbId as *1*, managed by the Managed Element *urn:3gpp:dn: ManagedElement=1* or *urn:3gpp:dn: ManagedElement=2*, and provides EuTranCell *urn:3gpp:dn: ManagedElement=1, EUtranCell=2*. |
+    | To return the ids for all instances of an entityTypeName where the given attribute is covered by the given polygon.                            | EQUIPMENT   | AntennaModule  |              | /attributes[coveredBy(@geo-location, 'POLYGON ((-73.958444 40.800533, -73.981962 40.768558, -73.973207 40.765048, -73.949861 40.797024, -73.958444 40.800533))')]                                                                             | All AntennaModule entities covered by the given polygon.                                                                                                                                                                 |
+    | To return the attributes for all instances of an entityTypeName where the given attribute is covered by the given collection of polygons.      | EQUIPMENT   | AntennaModule  | /attributes  | /attributes[coveredBy(@geo-location, 'MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)),((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)))')]                                                                              | All AntennaModule entities covered by the given polygons.                                                                                                                                                                |
+    | To return the ids for all instances of an entityTypeName within the given distance in meters from a given attribute.                           | EQUIPMENT   | AntennaModule  |              | /attributes[withinMeters(@geo-location, 'POINT(-73.958444 40.800533)', 500.5)]                                                                                                                                                                | All AntennaModule entities within the given distance from the given point.                                                                                                                                               |
+    | To return the attributes for all instances of an entityTypeName which has a connected entity whose given attribute is within a polygon         | RAN         | NRCellDU       | /attributes  | /serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON ((-73.958444 40.800533, -73.981962 40.768558, -73.973207 40.765048, -73.949861 40.797024, -73.958444 40.800533))')]                                                       | All NRCellDU entities that have at least one connected AntennaModule with a geo-location attribute within the given polygon.                                                                                             |
 
     ## Querying entities for relationships
     The *entityTypeName* is used as the root of the queries.
@@ -105,7 +120,7 @@ info:
     | Return all related entity IDs that are exactly matched with the specified classifier with given domain name.                                      | RAN        |              | /classifiers[@item = 'gnbdu-function-model:Indoor']       | All the entity IDs that are classified with "gnbdu-function-model:Indoor" in RAN domain.                               |
     | Return all related entity IDs that are partially matched for the given classifier with given domain name.                                         | RAN        |              | /classifiers[contains(@item, 'Ind')]                      | All the entity IDs that are partially matched with "Ind" in RAN domain.                                                |
     | Return all related entity IDs that are exactly matched with the key-value pair that specified decorators with given domain name.                  | RAN        |              | /decorators[@gnbdu-function-model:textdata = 'Stockholm'] | All the entity IDs that are exactly matched with "gnbdu-function-model:textdata = 'Stockholm'" in RAN domain.          |
-    | Return all related entity IDs that are exactly matched with key parameter where the value of the decorator is unknown with given domain name.     | RAN        |              | /decorators[contains(@gnbdu-function-model:textdata, "")] | All the entity IDs that are exactly matched with "gnbdu-function-model:textdata as key of the decorator in RAN domain. |
+    | Return all related entity IDs that are exactly matched with key parameter where the value of the decorator is unknown with given domain name.     | RAN        |              | /decorators[contains(@gnbdu-function-model:textdata, '')] | All the entity IDs that are exactly matched with "gnbdu-function-model:textdata as key of the decorator in RAN domain. |
 
     The *entityName* is used as the root of the queries.
     
@@ -145,8 +160,8 @@ tags:
     description: "Provides the capability to update or remove user-defined keywords or tags on entities and relationships."
   - name: Decorators
     description: "Provides the capability to update or remove user-defined values on entities and relationships."
-  - name: Topology Groups
-    description: "Provides the capability to group topology entities of any type, with an appropriate description and other criteria."
+  - name: Groups
+    description: "Provides the capability to group topology entities and/or relationships of any type. Groups can be created in static or dynamic way. *Static groups*: Group members are defined statically upon group creation. It can include a maximum of 25,000 members. *Dynamic groups*: Group members are dynamically selected based on the defined resource query."
 
 servers:
   - url: https://{host}/topology-inventory/v1alpha11
@@ -328,7 +343,7 @@ paths:
 
   /domains/{domainName}/relationship-types:
     get:
-      description: Get all the available topology relationship types.
+      description: Get all the available topology relationship types in a specified domain.
       tags:
         - Entities and relationships
       summary: Get all the available topology relationship types.
@@ -430,8 +445,8 @@ paths:
 
   /domains/{domainName}/entities:
     get:
-      description: Get topology entities by domain, using specified
-        targetFilter as mandatory query parameter.
+      description: Get topology entities by domain, using a specified
+        *targetFilter* as a query parameter.
       tags:
         - Entities and relationships
       summary: "Get entities by domain"
@@ -464,7 +479,7 @@ paths:
 
   /schemas:
     post:
-      description: Create a new schema. The request body shall contain the schema in YANG format.
+      description: Create a new schema. The request body contains the schema in YANG format.
       tags:
         - Schemas
       summary: Create a new schema.
@@ -521,6 +536,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
+
   /schemas/{schemaName}/content:
     get:
       description: Get the model schema by name.
@@ -591,8 +607,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Classifier'
             examples:
-              classifier:
-                $ref: '#/components/examples/ClassifierExample'
+              updateClassifier:
+                $ref: '#/components/examples/ClassifierMergeExample'
+              removeClassifier:
+                $ref: '#/components/examples/ClassifierDeleteExample'
       responses:
         '204':
           $ref: '#/components/responses/NoContent'
@@ -624,8 +642,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Decorator'
             examples:
-              decorator:
-                $ref: '#/components/examples/DecoratorExample'
+              mergeDecorator:
+                $ref: '#/components/examples/DecoratorMergeExample'
+              removeDecorator:
+                $ref: '#/components/examples/DecoratorDeleteExample'
       responses:
         '204':
           $ref: '#/components/responses/NoContent'
@@ -642,11 +662,11 @@ paths:
 
   /groups:
     post:
-      description: Create group.
+      description: Create a group of entities and/or relationships in a static or dynamic way.
       tags:
-        - Topology Groups
-      summary: Create group.
-      operationId: createGroup
+        - Groups
+      summary: Create a new group.
+      operationId: "createGroup"
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
         - $ref: '#/components/parameters/contentTypeJsonInHeader'
@@ -655,41 +675,139 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Group'
+              $ref: '#/components/schemas/CreateGroupPayload'
             examples:
-              dynamicGroup:
-                $ref: '#/components/examples/DynamicGroupExample'
               staticGroup:
-                $ref: '#/components/examples/StaticGroupExample'
+                $ref: '#/components/examples/CreateStaticGroupPayloadExample'
+              dynamicGroup:
+                $ref: '#/components/examples/CreateDynamicGroupGetEntitiesByDomainPayloadExample'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupResponse'
+                $ref: '#/components/schemas/GroupByIdResponse'
               examples:
-                group:
-                  $ref: '#/components/examples/GroupResponseExample'
+                static:
+                  $ref: '#/components/examples/StaticGroupResponseExample'
+                dynamic:
+                  $ref: '#/components/examples/DynamicGroupResponseExample'
         '400':
           $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '409':
-          $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     get:
       description: Get all groups.
       tags:
-        - Topology Groups
+        - Groups
       summary: Get all groups.
       operationId: "getAllGroups"
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/groupNameOptionalInQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupsResponse'
+              examples:
+                groups:
+                  $ref: '#/components/examples/GroupsResponseExample'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /groups/{groupId}:
+    get:
+      description: Get a group with specified id.
+      tags:
+        - Groups
+      summary: Get a group with specified id.
+      operationId: "getGroupById"
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/groupIdInPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupByIdResponse'
+              examples:
+                static:
+                  $ref: '#/components/examples/StaticGroupResponseExample'
+                dynamic:
+                  $ref: '#/components/examples/DynamicGroupResponseExample'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: Delete a group with specified id.
+      tags:
+        - Groups
+      summary: Delete a group with specified id.
+      operationId: "deleteGroup"
+      parameters:
+        - $ref: '#/components/parameters/groupIdInPath'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /groups/{groupId}/name:
+    put:
+      description: Update the name of a group.
+      tags:
+        - Groups
+      summary: Update the name of a group.
+      operationId: "updateGroupName"
+      parameters:
+        - $ref: '#/components/parameters/contentTypeJsonInHeader'
+        - $ref: '#/components/parameters/groupIdInPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupNamePayload'
+            examples:
+              GroupNameUpdatePayload:
+                $ref: '#/components/examples/UpdateGroupNamePayloadExample'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /groups/{groupId}/members:
+    get:
+      description: Get the members of a group with specified id.
+      tags:
+        - Groups
+      summary: Get the members of a group with specified id.
+      operationId: "getMembers"
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/groupIdInPath'
         - $ref: '#/components/parameters/offsetParam'
         - $ref: '#/components/parameters/limitParam'
       responses:
@@ -698,58 +816,54 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Groups'
+                $ref: '#/components/schemas/MembersResponse'
               examples:
-                groups:
-                  $ref: '#/components/examples/GroupsResponseExample'
-        '204':
-          $ref: '#/components/responses/NoContent'
+                members:
+                  $ref: '#/components/examples/MembersResponseExample'
         '400':
           $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /groups/{groupId}:
+  /groups/{groupId}/provided-members:
     get:
-      description: Get a Group with specified id.
+      description: Get the provided members of a static group with specified id.
       tags:
-        - Topology Groups
-      summary: Get a group with specified id.
-      operationId: "getGroup"
+        - Groups
+      summary: Get the provided members of a static group with specified id.
+      operationId: "getProvidedMembers"
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
         - $ref: '#/components/parameters/groupIdInPath'
+        - $ref: '#/components/parameters/groupMembersStatusOptionalInQuery'
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupResponse'
+                $ref: '#/components/schemas/MembersResponse'
               examples:
-                group:
-                  $ref: '#/components/examples/GroupResponseExample'
+                members:
+                  $ref: '#/components/examples/ProvidedMembersResponseExample'
         '400':
           $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-    put:
-      description: Update a Group.
+  /groups/{groupId}/provided-members-operations:
+    post:
+      description: Merge or remove members in an existing topology group. This operation is applicable for static group only.
       tags:
-        - Topology Groups
-      summary: Update a Group.
-      operationId: updateGroup
+        - Groups
+      summary: Merge or remove members of a static group.
+      operationId: "updateProvidedMembers"
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
         - $ref: '#/components/parameters/contentTypeJsonInHeader'
@@ -759,49 +873,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Group'
+              $ref: '#/components/schemas/UpdateProvidedMembersPayload'
             examples:
-              dynamicGroup:
-                $ref: '#/components/examples/DynamicGroupExample'
-              staticGroup:
-                $ref: '#/components/examples/StaticGroupExample'
+              mergeMembersPayload:
+                $ref: '#/components/examples/MergeProvidedMembersPayloadExample'
+              deleteMembersPayload:
+                $ref: '#/components/examples/RemoveProvidedMembersPayloadExample'
       responses:
         '204':
           $ref: '#/components/responses/NoContent'
         '400':
           $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '409':
-          $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
-    delete:
-      description: Delete a group with specified id.
-      tags:
-        - Topology Groups
-      summary: Delete a group with specified id.
-      operationId: "deleteGroup"
-      parameters:
-        - $ref: '#/components/parameters/acceptJsonInHeader'
-        - $ref: '#/components/parameters/groupIdInPath'
-      responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-
 
 components:
   schemas:
@@ -826,74 +910,6 @@ components:
           type: array
           items:
             type: string
-    GroupResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        groupName:
-          type: string
-        criteria:
-          oneOf:
-            - $ref: '#/components/schemas/StaticSelection'
-            - $ref: '#/components/schemas/DynamicSelection'
-    Group:
-      type: object
-      properties:
-        groupName:
-          type: string
-        criteria:
-          $ref: '#/components/schemas/TopologySelection'
-    Groups:
-      type: object
-      title: Groups
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupResponse'
-        self:
-          $ref: '#/components/schemas/Href'
-        first:
-          $ref: '#/components/schemas/Href'
-        prev:
-          $ref: '#/components/schemas/Href'
-        next:
-          $ref: '#/components/schemas/Href'
-        last:
-          $ref: '#/components/schemas/Href'
-        totalCount:
-          type: integer
-    TopologySelection:
-      oneOf:
-        - $ref: '#/components/schemas/StaticSelection'
-        - $ref: '#/components/schemas/DynamicSelection'
-    StaticSelection:
-      type: object
-      properties:
-        resourceInstances:
-          type: array
-          minItems: 1
-          items:
-            type: string
-    DynamicSelection:
-      type: object
-      additionalProperties: false
-      properties:
-        resourceQuery:
-          type: object
-          properties:
-            url:
-              type: string
-            method:
-              type: string
-            queryParams:
-              type: object
-            requestBody:
-              type: object
-          required:
-            - url
-
     Decorator:
       type: object
       title: Decorator
@@ -906,7 +922,7 @@ components:
         decorators:
           type: object
           additionalProperties: true
-          description: Decorators must be defined in schema before use. Data type of a decorator is restricted as defined by it's schema.
+          description: Decorators must be defined in schema before use. Data type of a decorator is restricted as defined by its schema.
         entityIds:
           type: array
           items:
@@ -1091,6 +1107,314 @@ components:
           $ref: '#/components/schemas/Href'
         totalCount:
           type: integer
+    StaticEnum:
+      type: string
+      enum:
+        - static
+    DynamicEnum:
+      type: string
+      enum:
+        - dynamic
+    CreateGroupPayload:
+      title: CreateGroupPayload
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/static'
+        - $ref: '#/components/schemas/dynamic'
+      discriminator:
+        propertyName: type
+    static:
+      title: CreateStaticGroupPayload
+      type: object
+      required:
+        - name
+        - type
+        - providedMembers
+      properties:
+        name:
+          type: string
+          description: A name of the topology group.
+          minLength: 1
+          maxLength: 150
+        type:
+          type: string
+          description: 'Allowed: static'
+        providedMembers:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            description: Refer to yang model for schema definition of topology objects.
+    dynamic:
+      title: CreateDynamicGroupPayload
+      type: object
+      required:
+        - name
+        - type
+        - criteria
+      properties:
+        name:
+          type: string
+          description: A name of the topology group.
+          minLength: 1
+          maxLength: 150
+        type:
+          type: string
+          description: 'Allowed: dynamic'
+        criteria:
+          $ref: '#/components/schemas/Criteria'
+    Criteria:
+      title: Criteria
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/getEntitiesByDomain'
+        - $ref: '#/components/schemas/getEntitiesByType'
+        - $ref: '#/components/schemas/getRelationshipsForEntityId'
+        - $ref: '#/components/schemas/getRelationshipsByType'
+      discriminator:
+        propertyName: queryType
+    getEntitiesByDomain:
+      title: getEntitiesByDomain
+      type: object
+      required:
+        - queryType
+        - domain
+      properties:
+        queryType:
+          type: string
+          description: 'Allowed: getEntitiesByDomain'
+        domain:
+          type: string
+        targetFilter:
+          type: string
+        scopeFilter:
+          type: string
+    getEntitiesByType:
+      title: getEntitiesByType
+      type: object
+      required:
+        - queryType
+        - domain
+        - entityTypeName
+      properties:
+        queryType:
+          type: string
+          description: 'Allowed: getEntitiesByType'
+        domain:
+          type: string
+        entityTypeName:
+          type: string
+        targetFilter:
+          type: string
+        scopeFilter:
+          type: string
+    getRelationshipsForEntityId:
+      title: getRelationshipsForEntityId
+      type: object
+      required:
+        - queryType
+        - domain
+        - entityTypeName
+        - entityId
+      properties:
+        queryType:
+          type: string
+          description: 'Allowed: getRelationshipsForEntityId'
+        domain:
+          type: string
+        entityTypeName:
+          type: string
+        entityId:
+          type: string
+        targetFilter:
+          type: string
+        scopeFilter:
+          type: string
+    getRelationshipsByType:
+      title: getRelationshipsByType
+      type: object
+      required:
+        - queryType
+        - domain
+        - relationshipTypeName
+      properties:
+        queryType:
+          type: string
+          description: 'Allowed: getRelationshipsByType'
+        domain:
+          type: string
+        relationshipTypeName:
+          type: string
+        targetFilter:
+          type: string
+        scopeFilter:
+          type: string
+    GroupsResponse:
+      title: Groups
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupResponse'
+        self:
+          $ref: '#/components/schemas/Href'
+        first:
+          $ref: '#/components/schemas/Href'
+        prev:
+          $ref: '#/components/schemas/Href'
+        next:
+          $ref: '#/components/schemas/Href'
+        last:
+          $ref: '#/components/schemas/Href'
+        totalCount:
+          type: integer
+    GroupResponse:
+      title: Group
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/StaticGroupResponse'
+        - $ref: '#/components/schemas/DynamicGroupResponse'
+    StaticGroupResponse:
+      title: StaticGroup
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - members
+        - providedMembers
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the topology group.
+        name:
+          type: string
+          description: The unique name of the topology group.
+        type:
+          $ref: '#/components/schemas/StaticEnum'
+        members:
+          $ref: '#/components/schemas/Href'
+        providedMembers:
+          $ref: '#/components/schemas/Href'
+    DynamicGroupResponse:
+      title: DynamicGroup
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - members
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the topology group.
+        name:
+          type: string
+          description: The unique name of the topology group.
+        type:
+          $ref: '#/components/schemas/DynamicEnum'
+        members:
+          $ref: '#/components/schemas/Href'
+    GroupByIdResponse:
+      title: Group
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/StaticGroupByIdResponse'
+        - $ref: '#/components/schemas/DynamicGroupByIdResponse'
+    StaticGroupByIdResponse:
+      title: StaticGroup
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - members
+        - providedMembers
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the topology group.
+        name:
+          type: string
+          description: The unique name of the topology group.
+        type:
+          $ref: '#/components/schemas/StaticEnum'
+        members:
+          $ref: '#/components/schemas/Href'
+        providedMembers:
+          $ref: '#/components/schemas/Href'
+    DynamicGroupByIdResponse:
+      title: DynamicGroup
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - members
+        - criteria
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the topology group.
+        name:
+          type: string
+          description: The unique name of the topology group.
+        type:
+          $ref: '#/components/schemas/DynamicEnum'
+        members:
+          $ref: '#/components/schemas/Href'
+        criteria:
+          $ref: '#/components/schemas/Criteria'
+    MembersResponse:
+      title: GroupMembers
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            description: Refer to yang model for schema definition of topology objects.
+        self:
+          $ref: '#/components/schemas/Href'
+        first:
+          $ref: '#/components/schemas/Href'
+        prev:
+          $ref: '#/components/schemas/Href'
+        next:
+          $ref: '#/components/schemas/Href'
+        last:
+          $ref: '#/components/schemas/Href'
+        totalCount:
+          type: integer
+    UpdateProvidedMembersPayload:
+      title: UpdateProvidedMembersPayload
+      type: object
+      required:
+        - operation
+        - providedMembers
+      properties:
+        operation:
+          type: string
+          description: The operation to be performed on the members of topology group.
+          enum: [merge, remove]
+        providedMembers:
+          description: Members to be added or removed from the group.
+          type: array
+          minItems: 1
+          items:
+            type: object
+            description: Refer to yang model for schema definition of topology objects.
+    UpdateGroupNamePayload:
+      title: UpdateGroupNamePayload
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
 
   responses:
     NotFound:
@@ -1218,6 +1542,7 @@ components:
       required: true
       schema:
         type: string
+        example: RAN
     schemaNameInPath:
       name: schemaName
       in: path
@@ -1264,34 +1589,45 @@ components:
         type: string
       examples:
         domain:
-          value: ran
+          value: RAN
     targetFilterOptionalInQuery:
       name: targetFilter
-      description: Use *targetFilter* to specify the entity type and
-        attributes to be returned in the REST response. The value for
-        *targetFilter* can also be a list of entity types and attributes.
+      description: Use *targetFilter* to specify what needs to be returned in the REST response.
       in: query
       required: false
       schema:
         type: string
       examples:
         targetFilter:
-          value: /attributes(nCI,nRPCI)
+          value: /sourceIds;/classifiers
     scopeFilterOptionalInQuery:
       name: scopeFilter
-      description: Use *scopeFilter* to specify the attributes to match on.
-        The value for *scopeFilter* can also be a list of entity types and
-        attributes. scopeFilter returns a boolean.
+      description: ScopeFilter is used to specify the conditions to be applied.
       in: query
       required: false
       schema:
         type: string
       examples:
         scopeFilter:
-          value: /attributes[@nRTAC=310]
+          value: /sourceIds[contains(@item,'ManagedElement=1')]
+    groupMembersStatusOptionalInQuery:
+      name: status
+      description: Status can be present (or) not-present (or) invalid. If not specified, returns all members of the group.
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [present, not-present, invalid]
+    groupNameOptionalInQuery:
+      name: name
+      description: Group name. If not specified, returns all the groups.
+      in: query
+      required: false
+      schema:
+        type: string
 
   examples:
-    ClassifierExample:
+    ClassifierMergeExample:
       value:
         operation: merge
         classifiers:
@@ -1303,7 +1639,19 @@ components:
           - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
         relationshipIds:
           - "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
-    DecoratorExample:
+    ClassifierDeleteExample:
+      value:
+        operation: delete
+        classifiers:
+          - module-x:Outdoor
+          - module-z:Weekend
+        entityIds:
+          - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+          - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+        relationshipIds:
+          - "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+
+    DecoratorMergeExample:
       value:
         operation: merge
         decorators:
@@ -1314,71 +1662,72 @@ components:
           - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
         relationshipIds:
           - "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+    DecoratorDeleteExample:
+      value:
+        operation: delete
+        decorators:
+          module-x:location: Stockholm
+        entityIds:
+          - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+          - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+        relationshipIds:
+          - "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+
     EntityResponseExample:
       value:
-        o-ran-smo-teiv-ran:GNBDUFunction:
-          - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1"
+        o-ran-smo-teiv-ran:NRCellDU:
+          - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
             attributes:
-              gNBDUId: 11
-              dUpLMNId:
-                mcc: 110
-                mnc: 210
-              gNBId: 21
-              gNBIdLength: 2
+              cellLocalId: 91
+              nCI: 91
+              nRPCI: 789
+              nRTAC: 456
             decorators:
               location: Stockholm
             classifiers:
               - Rural
             sourceIds:
-              - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1"
+              - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
               - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
-            metadata:
-              trustLevel: RELIABLE
+
     EntitiesResponseExample:
       value:
         items:
-          - o-ran-smo-teiv-ran:NRCellDU:
-              - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+          - o-ran-smo-teiv-ran:GNBCUUPFunction:
+              - id: "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,GNBCUUPFunction=10"
                 attributes:
-                  cellLocalId: 4589
-                  nCI: 1
-                  nRPCI: 12
-                  nRTAC: 310
-                decorators:
-                  location: Stockholm
-                classifiers:
-                  - Rural
+                  gNBId: 10
+                  gNBIdLength: 2
                 sourceIds:
-                  - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
-                  - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
-                metadata:
-                  trustLevel: RELIABLE
-          - o-ran-smo-teiv-ran:NRCellDU:
-              - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                  - "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,GNBCUUPFunction=10"
+                  - "urn:cmHandle:72FDA73D085F138FECC974CB91F1450E"
+          - o-ran-smo-teiv-ran:GNBCUUPFunction:
+              - id: "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,GNBCUUPFunction=13"
                 attributes:
-                  cellLocalId: 4559
-                  nRPCI: 32
-                  nRTAC: 510
-                decorators:
-                  location: Stockholm
-                classifiers:
-                  - Rural
+                  gNBId: 13
+                  gNBIdLength: 2
                 sourceIds:
-                  - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-                  - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
-                metadata:
-                  trustLevel: RELIABLE
+                  - "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,GNBCUUPFunction=13"
+                  - "urn:cmHandle:E5196035D0B49A65B00EAA392B4EE155"
+          - o-ran-smo-teiv-ran:GNBCUUPFunction:
+              - id: "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBCUUPFunction=14"
+                attributes:
+                  gNBId: 14
+                  gNBIdLength: 2
+                sourceIds:
+                  - "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,GNBCUUPFunction=14"
+                  - "urn:cmHandle:D67C0BD04FA613BBFD176B24B68FD6A4"
         self:
-          href: "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          href: "/domains/RAN/entities?offset=0&limit=3&targetFilter=/sourceIds;/attributes"
         first:
-          href: "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          href: "/domains/RAN/entities?offset=0&limit=3&targetFilter=/sourceIds;/attributes"
         prev:
-          href: "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          href: "/domains/RAN/entities?offset=0&limit=3&targetFilter=/sourceIds;/attributes"
         next:
-          href: "/domains/RAN/entity-types/NRCellDU/entities?offset=500&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
+          href: "/domains/RAN/entities?offset=3&limit=3&targetFilter=/sourceIds;/attributes"
         last:
-          href: "/domains/RAN/entity-types/NRCellDU/entities?offset=678&limit=500&targetFilter=attributes(nCI,nRPCI)&scopeFilter=/attributes[@nRTAC=310]"
-        totalCount: 12
+          href: "/domains/RAN/entities?offset=33&limit=3&targetFilter=/sourceIds;/attributes"
+        totalCount: 3
 
     RelationshipResponseExample:
       value:
@@ -1386,13 +1735,7 @@ components:
           - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
             aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
             bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1"
-            decorators:
-              location: Stockholm
-            classifiers:
-              - Rural
             sourceIds: []
-            metadata:
-              trustLevel: RELIABLE
 
     RelationshipsResponseExample:
       value:
@@ -1401,24 +1744,12 @@ components:
               - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
                 aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
                 bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1"
-                decorators:
-                  location: Stockholm
-                classifiers:
-                  - Rural
                 sourceIds: []
-                metadata:
-                  trustLevel: RELIABLE
           - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
               - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78"
                 aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
                 bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2"
-                decorators:
-                  location: Stockholm
-                classifiers:
-                  - Rural
                 sourceIds: []
-                metadata:
-                  trustLevel: RELIABLE
         self:
           href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
         first:
@@ -1426,34 +1757,34 @@ components:
         prev:
           href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
         next:
-          href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=500&limit=500"
+          href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
         last:
-          href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=678&limit=500"
-        totalCount: 23
+          href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships?offset=0&limit=500"
+        totalCount: 2
 
     EntityTypesResponseExample:
       value:
         items:
-          - name: "GNBCUUPFunction"
+          - name: "AntennaCapability"
             entities:
-              href: "/domains/RAN/entity-types/GNBCUUPFunction/entities"
-          - name: "NRCellDU"
+              href: "/domains/RAN/entity-types/AntennaCapability/entities"
+          - name: "ENodeBFunction"
             entities:
-              href: "/domains/RAN/entity-types/NRCellDU/entities"
-          - name: "GNBDUFunction"
+              href: "/domains/RAN/entity-types/ENodeBFunction/entities"
+          - name: "EUtranCell"
             entities:
-              href: "/domains/RAN/entity-types/GNBDUFunction/entities"
+              href: "/domains/RAN/entity-types/EUtranCell/entities"
         self:
-          href: "/domains/RAN/entity-types?offset=0&limit=500"
+          href: "/domains/RAN/entity-types?offset=0&limit=3"
         first:
-          href: "/domains/RAN/entity-types?offset=0&limit=500"
+          href: "/domains/RAN/entity-types?offset=0&limit=3"
         prev:
-          href: "/domains/RAN/entity-types?offset=0&limit=500"
+          href: "/domains/RAN/entity-types?offset=0&limit=3"
         next:
-          href: "/domains/RAN/entity-types?offset=500&limit=500"
+          href: "/domains/RAN/entity-types?offset=3&limit=3"
         last:
-          href: "/domains/RAN/entity-types?offset=678&limit=500"
-        totalCount: 43
+          href: "/domains/RAN/entity-types?offset=9&limit=3"
+        totalCount: 11
 
     RelationshipTypesResponseExample:
       value:
@@ -1468,16 +1799,16 @@ components:
             relationships:
               href: "/domains/RAN/relationship-types/NRCELLDU_USES_NRSECTORCARRIER/relationships"
         self:
-          href: "/domains/RAN/relationship-types?offset=0&limit=500"
+          href: "/domains/RAN/relationship-types?offset=0&limit=3"
         first:
-          href: "/domains/RAN/relationship-types?offset=0&limit=500"
+          href: "/domains/RAN/relationship-types?offset=0&limit=3"
         prev:
-          href: "/domains/RAN/relationship-types?offset=0&limit=500"
+          href: "/domains/RAN/relationship-types?offset=0&limit=3"
         next:
-          href: "/domains/RAN/relationship-types?offset=500&limit=500"
+          href: "/domains/RAN/relationship-types?offset=0&limit=3"
         last:
-          href: "/domains/RAN/relationship-types?offset=678&limit=500"
-        totalCount: 21
+          href: "/domains/RAN/relationship-types?offset=0&limit=3"
+        totalCount: 3
 
     DomainsResponseExample:
       value:
@@ -1497,6 +1828,21 @@ components:
               href: "/domains/RAN/entity-types"
             relationshipTypes:
               href: "/domains/RAN/relationship-types"
+          - name: "REL_EQUIPMENT_RAN"
+            entityTypes:
+              href: "/domains/REL_EQUIPMENT_RAN/entity-types"
+            relationshipTypes:
+              href: "/domains/REL_EQUIPMENT_RAN/relationship-types"
+          - name: "REL_OAM_RAN"
+            entityTypes:
+              href: "/domains/REL_OAM_RAN/entity-types"
+            relationshipTypes:
+              href: "/domains/REL_OAM_RAN/relationship-types"
+          - name: "TEIV"
+            entityTypes:
+              href: "/domains/TEIV/entity-types"
+            relationshipTypes:
+              href: "/domains/TEIV/relationship-types"
         self:
           href: "/domains?offset=0&limit=500"
         first:
@@ -1504,81 +1850,10 @@ components:
         prev:
           href: "/domains?offset=0&limit=500"
         next:
-          href: "/domains?offset=500&limit=500"
+          href: "/domains?offset=0&limit=500"
         last:
-          href: "/domains?offset=678&limit=500"
-        totalCount: 343
-
-    StaticGroupExample:
-      value:
-        groupName: "son-cell-filter-group-1"
-        criteria:
-          resourceInstances:
-            - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
-            - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-            - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3"
-
-    DynamicGroupExample:
-      value:
-        groupName: "son-cell-filter-group-1"
-        criteria:
-          resourceQuery:
-            url: /domains/RAN/entity-types/NRCellDU/entities
-            method: GET
-            queryParams:
-              target:Filter: /sourceIds
-              scopeFilter: /attributes[@nRTAC=310]
-            requestBody: ""
-
-    GroupResponseExample:
-      value:
-        id: "urn:o-ran:smo:teiv:group:/JHKJ4H5JH45345TB="
-        groupName: "son-cell-filter-group-1"
-        criteria:
-          resourceInstances:
-            - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
-            - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-            - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3"
-
-    GroupsResponseExample:
-      value:
-        items:
-          - id: "urn:o-ran:smo:teiv:group:/JHKJ4H5JH45345TB="
-            groupName: "son-cell-group-1"
-            criteria:
-              resourceInstances:
-                - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
-                - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-                - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=3"
-          - id: "urn:o-ran:smo:teiv:group:/DFJER77R6F7S9VD="
-            groupName: "son-cell-group-2"
-            criteria:
-              resourceInstances:
-                - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=4"
-                - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=5"
-                - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=6"
-          - id: "urn:o-ran:smo:teiv:group:/LMND77R6F7S9VD="
-            groupName: "son-cell-group-3"
-            criteria:
-              resourceQuery:
-                url: /domains/RAN/entity-types/NRCellDU/entities
-                method: GET
-                queryParams:
-                  target:Filter: /sourceIds
-                  scopeFilter: /attributes[@nRTAC=310]
-                requestBody: ""
-
-        self:
-          href: "/groups?offset=0&limit=500"
-        first:
-          href: "/groups?offset=0&limit=500"
-        prev:
-          href: "/groups?offset=0&limit=500"
-        next:
-          href: "/groups?offset=0&limit=500"
-        last:
-          href: "/groups?offset=0&limit=500"
-        totalCount: 3
+          href: "/domains?offset=0&limit=500"
+        totalCount: 6
 
     SchemasResponseExample:
       value:
@@ -1730,3 +2005,149 @@ components:
             }
           }
         }
+
+    CreateStaticGroupPayloadExample:
+      value:
+        name: cell-filter-group-1
+        type: static
+        providedMembers:
+          - o-ran-smo-teiv-ran:NRCellDU:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1
+          - o-ran-smo-teiv-ran:GNBDUFunction:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1
+          - o-ran-smo-teiv-oam:ManagedElement:
+              - id: urn:3gpp:dn:ManagedElement=1
+          - o-ran-smo-teiv-ran:GNBDUFUNCTION_PROVIDES_NRCELLDU:
+              - id: urn:o-ran:smo:teiv:sha512:GNBDUFUNCTION_PROVIDES_NRCELLDU=4E40BE000AFEA418
+          - o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION:
+              - id: urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION=9243B48F7D6A6C56
+
+    CreateDynamicGroupGetEntitiesByDomainPayloadExample:
+      value:
+        name: cell-filter-group-2
+        type: dynamic
+        criteria:
+          queryType: getEntitiesByDomain
+          domain: RAN
+          targetFilter: /NRCellDU/attributes(nCI)
+          scopeFilter: /NRCellDU/attributes[@cellLocalId=1]
+
+
+    GroupsResponseExample:
+      value:
+        items:
+          - id: urn:o-ran:smo:teiv:group=123e4567-e89b-12d3-a456-426614174000
+            name: cell-filter-group-1
+            type: static
+            providedMembers:
+              href: /groups/urn:o-ran:smo:teiv:group=123e4567-e89b-12d3-a456-426614174000/provided-members
+            members:
+              href: /groups/urn:o-ran:smo:teiv:group=123e4567-e89b-12d3-a456-426614174000/members
+          - id: urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000
+            name: cell-filter-group-2
+            type: dynamic
+            members:
+              href: /groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members
+        self:
+          href: "/groups?offset=0&limit=500"
+        first:
+          href: "/groups?offset=0&limit=500"
+        prev:
+          href: "/groups?offset=0&limit=500"
+        next:
+          href: "/groups?offset=0&limit=500"
+        last:
+          href: "/groups?offset=0&limit=500"
+        totalCount: 2
+
+    MembersResponseExample:
+      value:
+        items:
+          - o-ran-smo-teiv-ran:NRCellDU:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1
+          - o-ran-smo-teiv-ran:GNBDUFunction:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1
+          - o-ran-smo-teiv-oam:ManagedElement:
+              - id: urn:3gpp:dn:ManagedElement=1
+          - o-ran-smo-teiv-ran:GNBDUFUNCTION_PROVIDES_NRCELLDU:
+              - id: urn:o-ran:smo:teiv:sha512:GNBDUFUNCTION_PROVIDES_NRCELLDU=4E40BE000AFEA418
+          - o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION:
+              - id: urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION=9243B48F7D6A6C56
+        self:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members?offset=0&limit=500"
+        first:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members?offset=0&limit=500"
+        prev:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members?offset=0&limit=500"
+        next:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members?offset=0&limit=500"
+        last:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members?offset=0&limit=500"
+        totalCount: 5
+
+    ProvidedMembersResponseExample:
+      value:
+        items:
+          - o-ran-smo-teiv-ran:NRCellDU:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1
+          - o-ran-smo-teiv-ran:GNBDUFunction:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1
+          - o-ran-smo-teiv-oam:ManagedElement:
+              - id: urn:3gpp:dn:ManagedElement=1
+          - o-ran-smo-teiv-ran:GNBDUFUNCTION_PROVIDES_NRCELLDU:
+              - id: urn:o-ran:smo:teiv:sha512:GNBDUFUNCTION_PROVIDES_NRCELLDU=4E40BE000AFEA418
+          - o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION:
+              - id: urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_GNBDUFUNCTION=9243B48F7D6A6C56
+        self:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/provided-members?offset=0&limit=500"
+        first:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/provided-members?offset=0&limit=500"
+        prev:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/provided-members?offset=0&limit=500"
+        next:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/provided-members?offset=0&limit=500"
+        last:
+          href: "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/provided-members?offset=0&limit=500"
+        totalCount: 5
+
+    MergeProvidedMembersPayloadExample:
+      value:
+        operation: "merge"
+        providedMembers:
+          - o-ran-smo-teiv-ran:NRCellDU:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1
+
+    RemoveProvidedMembersPayloadExample:
+      value:
+        operation: "remove"
+        providedMembers:
+          - o-ran-smo-teiv-ran:NRCellDU:
+              - id: urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1
+
+    StaticGroupResponseExample:
+      value:
+        id: urn:o-ran:smo:teiv:group=123e4567-e89b-12d3-a456-426614174000
+        name: cell-filter-group-1
+        type: static
+        providedMembers:
+          href: /groups/urn:o-ran:smo:teiv:group=123e4567-e89b-12d3-a456-426614174000/provided-members
+        members:
+          href: /groups/urn:o-ran:smo:teiv:group=123e4567-e89b-12d3-a456-426614174000/members
+
+
+    DynamicGroupResponseExample:
+      value:
+        id: urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000
+        name: cell-filter-group-2
+        type: dynamic
+        criteria:
+          queryType: getEntitiesByDomain
+          domain: RAN
+          targetFilter: /NRCellDU/attributes(nCI)
+          scopeFilter: /NRCellDU/attributes[@cellLocalId=1]
+        members:
+          href: /groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000/members
+
+    UpdateGroupNamePayloadExample:
+      value:
+        name: "cell-filter-group-5"

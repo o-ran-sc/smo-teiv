@@ -32,6 +32,7 @@ import org.oran.smo.teiv.exposure.spi.ModelRepository;
 import org.oran.smo.teiv.schema.ConsumerDataCache;
 import org.oran.smo.teiv.schema.YangDataTypes;
 import org.oran.smo.teiv.service.models.OperationResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -45,6 +46,7 @@ import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Profile("exposure")
 public class DecoratorsServiceImpl implements DecoratorsService {
 
     private final ModelRepository modelRepository;

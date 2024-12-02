@@ -1,98 +1,40 @@
 {
-    "e01fcb87ad2c34ce66c34420255e25aaca270e5e": [
+    "o-ran-smo-teiv-equipment_AntennaModule": [
         {
-            "id": "CloudNativeApplication_1",
-            "name": "Test_CloudNativeApplication_1"
+            "id": "AntennaModule_1",
+            "positionWithinSector": "center"
         },
         {
-            "id": "CloudNativeApplication_2",
-            "name": "Test_CloudNativeApplication_2"
+            "id": "AntennaModule_2",
+            "positionWithinSector": "center2"
+        }
+    ],
+    "o-ran-smo-teiv-ran_AntennaCapability": [
+        {
+            "id": "AntennaCapability_1",
+            "geranFqBands": {
+                "attribute_1": "1",
+                "attribute_2": "2"
+            }
         },
         {
-            "id": "CloudNativeApplication_3",
-            "name": "Test_CloudNativeApplication_3"
-        }
-    ],
-    "o-ran-smo-teiv-ran-logical_GNBDUFunction": [
-        {
-            "id": "GNBDU_1",
-            "fdn": "SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00001,ManagedElement=NR01gNodeBRadio00001,GNBDUFunction=1",
-            "dUpLMNId": {
-                "mcc": "110",
-                "mnc": "210"
-            },
-            "gNBDUId": 111,
-            "gNBId": 123,
-            "gNBIdLength": 3,
-            "cmId": {
-                "cmHandle": "395221E080CCF0FD1924103B15873814",
-                "resourceIdentifier": "/o-ran-smo-ComTop:ManagedElement[@id=NR01gNodeBRadio00001]/o-ran-smo-GNBDU:GNBDUFunction[@id=1]"
+            "id": "AntennaCapability_2",
+            "geranFqBands": {
+                "attribute_1": "1",
+                "attribute_2": "2"
             }
         }
     ],
-    "8fe520ccd54b8f72ef7b2d3061264ddc2481e4eb": [
-        {
-            "id": "GNBCUUP_1",
-            "fdn": "SubNetwork=Europe,SubNetwork=Ireland,GNBCUUPFunction=1",
-            "gNBId": 123,
-            "gNBIdLength": 3,
-            "cmId": {
-                "cmHandle": "395221E080CCF0FD1924103B15873814",
-                "resourceIdentifier": "/o-ran-smo-ComTop:ManagedElement[@id=GNBCUUPFunction]/o-ran-smo-GNBCUUP:GNBCUUPFunction[@id=1]"
-            }
-        }
-    ],
-    "c4a425179d3089b5288fdf059079d0ea26977f0f": [
-        {
-            "id": "GNBCUCP_1",
-            "fdn": "SubNetwork=Europe,SubNetwork=Ireland,GNBCUCPFunction=1",
-            "gNBCUName": "Test_gNBCU",
-            "gNBId": 123,
-            "gNBIdLength": 3,
-            "pLMNId": {
-                "mcc": "110",
-                "mnc": "210"
-            },
-            "cmId": {
-                "cmHandle": "395221E080CCF0FD1924103B15873814",
-                "resourceIdentifier": "/o-ran-smo-ComTop:ManagedElement[@id=GNBCUCPFunction]/o-ran-smo-GNBCUCP:GNBCUCPFunction[@id=1]"
-            }
-        }
-    ],
-    "10484f157f490eb5b27e40dbfaf4d5f2be17c57c": [
+    "CFC235E0404703D1E4454647DF8AAE2C193DB402": [
         {
             "id": "relation_1",
-            "aSide_GNBDUFunction": "GNBDU_1",
-            "bSide_CloudNativeApplication": "CloudNativeApplication_1"
+            "aSide_AntennaModule": "AntennaModule_1",
+            "bSide_AntennaCapability": "AntennaCapability_1"
         },
-        {
-            "id": "relation_4",
-            "aSide_GNBDUFunction": "GNBDU_1",
-            "bSide_CloudNativeApplication": "CloudNativeApplication_2"
-        }
-    ],
-    "70a4a84bca01ea022ab24d8cb82422c572922675": [
         {
             "id": "relation_2",
-            "aSide_GNBCUUPFunction": "GNBCUUP_1",
-            "bSide_CloudNativeApplication": "CloudNativeApplication_2"
-        },
-        {
-            "id": "relation_5",
-            "aSide_GNBCUUPFunction": "GNBCUUP_1",
-            "bSide_CloudNativeApplication": "CloudNativeApplication_3"
-        }
-    ],
-    "7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7": [
-        {
-            "id": "relation_3",
-            "aSide_GNBCUCPFunction": "GNBCUCP_1",
-            "bSide_CloudNativeApplication": "CloudNativeApplication_3"
-        },
-        {
-            "id": "relation_6",
-            "aSide_GNBCUCPFunction": "GNBCUCP_1",
-            "bSide_CloudNativeApplication": "CloudNativeApplication_1"
+            "aSide_AntennaModule": "AntennaModule_2",
+            "bSide_AntennaCapability": "AntennaCapability_2"
         }
     ]
 }

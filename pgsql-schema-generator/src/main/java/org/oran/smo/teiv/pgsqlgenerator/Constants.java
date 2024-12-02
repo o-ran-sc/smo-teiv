@@ -58,4 +58,13 @@ public class Constants {
     public static final String RELATION = "RELATION";
     public static final String GEO_LOCATION = "geo-location";
     public static final String GEOGRAPHY = "geography";
+    public static final String METADATA = "metadata";
+    public static final String UPDATETIME = "updated_time";
+    public static final String TIMESTAMPTZ = "TIMESTAMPTZ";
+    public static final String REL_PREFIX = "REL_";
+    public static final String RESP_PREFIX = "RESP_";
+    public static final String BYTEA = "BYTEA";
+    public static final String REL_METADATA_PREFIX = "REL_" + METADATA + "_";
+    public static final String REL_UPDATETIME_PREFIX = "REL_" + UPDATETIME + "_";
+    public static final String REL_RESP_PREFIX = REL_PREFIX + RESP_PREFIX + ID + "_";
 }

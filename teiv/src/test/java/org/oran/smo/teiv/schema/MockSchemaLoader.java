@@ -30,11 +30,13 @@ import java.util.Map;
 import org.oran.smo.teiv.exposure.spi.Module;
 
 import static org.oran.smo.teiv.schema.DataType.BIGINT;
+import static org.oran.smo.teiv.schema.DataType.BYTEA;
 import static org.oran.smo.teiv.schema.DataType.CONTAINER;
 import static org.oran.smo.teiv.schema.DataType.DECIMAL;
 import static org.oran.smo.teiv.schema.DataType.GEOGRAPHIC;
 import static org.oran.smo.teiv.schema.DataType.INTEGER;
 import static org.oran.smo.teiv.schema.DataType.PRIMITIVE;
+import static org.oran.smo.teiv.schema.DataType.TIMESTAMPTZ;
 import static org.oran.smo.teiv.utils.TiesConstants.TEIV_DOMAIN;
 
 public class MockSchemaLoader extends SchemaLoader {
@@ -92,8 +94,14 @@ public class MockSchemaLoader extends SchemaLoader {
             String storedAt = l.get(0);
             String name = l.get(1);
             String moduleReferenceName = l.get(2);
+            String attributeNames = l.get(3).replaceAll("[\\[\\]\"\\s]", "");
+            List<String> attributeNamesList = new ArrayList<>();
+            if (!attributeNames.isEmpty()) {
+                attributeNamesList = List.of(attributeNames.split(","));
+            }
             entityTypes.add(EntityType.builder().name(name).tableName(storedAt).module(SchemaRegistry.getModuleByName(
-                    moduleReferenceName)).fields(extractDataFieldsFromSqlFile(storedAt)).build());
+                    moduleReferenceName)).fields(extractDataFieldsFromSqlFile(storedAt)).attributeNames(attributeNamesList)
+                    .build());
         });
 
         SchemaRegistry.initializeEntityTypes(entityTypes);
@@ -124,7 +132,7 @@ public class MockSchemaLoader extends SchemaLoader {
                                     bSideAssociationName, bSideMinCardinality, bSideMaxCardinality)).bSide(SchemaRegistry
                                             .getEntityTypeByName(bSideMOType)).connectsSameEntity(connectSameEntity)
                     .relationshipStorageLocation(relationshipDataLocation).tableName(storedAt).module(SchemaRegistry
-                            .getModuleByName(moduleReferenceName)).build());
+                            .getModuleByName(moduleReferenceName)).attributeNames(List.of()).build());
         });
 
         SchemaRegistry.initializeRelationTypes(relationTypes);
@@ -139,7 +147,7 @@ public class MockSchemaLoader extends SchemaLoader {
         List<List<String>> modelInfo = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(
-                    "src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model-v1.sql"));
+                    "src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model.sql"));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("COPY ties_model." + tableName)) {
@@ -160,7 +168,7 @@ public class MockSchemaLoader extends SchemaLoader {
         Map<String, DataType> dataFields = new HashMap<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(
-                    "src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data-v1.sql"));
+                    "src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data.sql"));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("CREATE TABLE IF NOT EXISTS ties_data.\"" + tableName + "\"")) {
@@ -168,15 +176,14 @@ public class MockSchemaLoader extends SchemaLoader {
                         List<String> l = List.of(line.trim().replace("\t\t\t", "\t").replaceAll("[\",]", "").split("\t"));
                         String fieldName = l.get(0);
                         String dataType = l.get(1);
-                        switch (dataType) {
-                            case "TEXT" -> dataFields.put(fieldName, PRIMITIVE);
-                            case "INTEGER" -> dataFields.put(fieldName, INTEGER);
-                            case "BIGINT" -> dataFields.put(fieldName, BIGINT);
-                            case "DECIMAL" -> dataFields.put(fieldName, DECIMAL);
-                            case "jsonb" -> dataFields.put(fieldName, CONTAINER);
-                            case "geography" -> dataFields.put(fieldName, GEOGRAPHIC);
-                        }
+                        extractFieldName(dataFields, fieldName, dataType);
                     }
+                }
+                if (line.startsWith("ALTER TABLE ties_data.\"" + tableName + "\" ADD COLUMN IF NOT EXISTS")) {
+                    String[] str = line.trim().split("\\s+");
+                    String fieldName = str[str.length - 2].replaceAll("\"", "");
+                    String dataType = str[str.length - 1].replace(";", "");
+                    extractFieldName(dataFields, fieldName, dataType);
                 }
             }
             reader.close();
@@ -184,5 +191,18 @@ public class MockSchemaLoader extends SchemaLoader {
             throw new RuntimeException(e);
         }
         return dataFields;
+    }
+
+    private void extractFieldName(Map<String, DataType> dataFields, String fieldName, String dataType) {
+        switch (dataType) {
+            case "TEXT" -> dataFields.put(fieldName, PRIMITIVE);
+            case "INTEGER" -> dataFields.put(fieldName, INTEGER);
+            case "BIGINT" -> dataFields.put(fieldName, BIGINT);
+            case "DECIMAL" -> dataFields.put(fieldName, DECIMAL);
+            case "jsonb" -> dataFields.put(fieldName, CONTAINER);
+            case "geography" -> dataFields.put(fieldName, GEOGRAPHIC);
+            case "TIMESTAMPTZ" -> dataFields.put(fieldName, TIMESTAMPTZ);
+            case "BYTEA" -> dataFields.put(fieldName, BYTEA);
+        }
     }
 }

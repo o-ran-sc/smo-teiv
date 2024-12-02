@@ -98,7 +98,7 @@ public class ScopeLogicalBlock extends LogicalBlock {
                 String col2 = getTableNameWithColumnName(entityType.getTableName(), ID_COLUMN_NAME);
 
                 joinCondition.add(constructJoinConditionPair(relationType, col1, col2));
-            } else if (!relationType.getStoringSideEntityType().equals(scopeObject.getTopologyObject())) {
+            } else if (!relationType.getStoringSideEntityType().getName().equals(scopeObject.getTopologyObject())) {
                 String col1 = constructColumnNameForJoinCondition(relationType, relationType
                         .getNotStoringSideEntityIdColumnNameInStoringSideTable());
                 String col2 = getTableNameWithColumnName(relationType.getNotStoringSideTableName(), ID_COLUMN_NAME);

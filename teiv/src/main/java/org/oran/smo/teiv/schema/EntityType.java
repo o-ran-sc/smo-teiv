@@ -30,8 +30,11 @@ import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
 import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TiesConstants.METADATA;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 import static org.oran.smo.teiv.utils.TiesConstants.REL_PREFIX;
+import static org.oran.smo.teiv.utils.TiesConstants.RESP_PREFIX;
+import static org.oran.smo.teiv.utils.TiesConstants.RI_PREFIX;
 import static org.oran.smo.teiv.utils.TiesConstants.ST_TO_STRING;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
 import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
@@ -52,11 +55,16 @@ import org.oran.smo.teiv.exposure.spi.Module;
 @Value
 @Builder
 public class EntityType implements Persistable {
+    private static final String RELIABILITY_INDICATOR_COL = RI_PREFIX + "%s";
+    private static final String RESPONSIBLE_ADAPTER_ID_COL = RESP_PREFIX + ID_COLUMN_NAME;
+    private static final String RESPONSIBLE_ADAPTER_COL = RESP_PREFIX + "%s";
     @EqualsAndHashCode.Include
     String name;
     Map<String, DataType> fields;
     String tableName;
     Module module;
+    List<String> attributeNames;
+    private static final String UPDATED_TIME = "updated_time";
 
     @Override
     public String getTableName() {
@@ -100,11 +108,6 @@ public class EntityType implements Persistable {
         return fieldList;
     }
 
-    public List<String> getAttributeNames() {
-        return this.fields.keySet().stream().filter(field -> (!field.startsWith(REL_PREFIX) && !field.startsWith(
-                CONSUMER_DATA_PREFIX) && !field.equals(ID_COLUMN_NAME))).toList();
-    }
-
     /**
      * Gets the fully qualified name of the entity. Format - <moduleNameReference>:<entityName>
      *
@@ -130,8 +133,45 @@ public class EntityType implements Persistable {
         return getDbName(CONSUMER_DATA_PREFIX + DECORATORS);
     }
 
+    /**
+     * Gets the reliability indicator column name as String, for the given DB name of an attribute.
+     *
+     * @return the reliability indicator column as String
+     */
+    public String getReliabilityColumnName(String attributeDbName) {
+        return getDbName(String.format(RELIABILITY_INDICATOR_COL, attributeDbName));
+    }
+
+    /**
+     * Gets the responsible adapter ID column name as String, for the given DB name.
+     *
+     * @return the responsible adapter column as String
+     */
+    public String getResponsibleAdapterIdColumnName() {
+        return getDbName(RESPONSIBLE_ADAPTER_ID_COL);
+    }
+
+    /**
+     * Gets the responsible adapter column name as String, for the given DB name of an attribute.
+     *
+     * @return the responsible adapter column as String
+     */
+    public String getResponsibleAdapterAttributeColumnName(String attributeDbName) {
+        return getDbName(String.format(RESPONSIBLE_ADAPTER_COL, attributeDbName));
+    }
+
+    @Override
+    public String getMetadataColumnName() {
+        return getDbName(METADATA);
+    }
+
     @Override
     public String getCategory() {
         return "entity";
+    }
+
+    @Override
+    public String getUpdatedTimeColumnName() {
+        return getDbName(UPDATED_TIME);
     }
 }

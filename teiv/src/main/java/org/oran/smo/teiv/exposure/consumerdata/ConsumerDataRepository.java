@@ -22,7 +22,6 @@ package org.oran.smo.teiv.exposure.consumerdata;
 
 import org.oran.smo.teiv.schema.YangDataTypes;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,13 +41,4 @@ public interface ConsumerDataRepository {
      */
     Map<String, YangDataTypes> loadDecorators();
 
-    /**
-     * Store classifier in the ties_model.classifiers
-     */
-    void storeClassifiers(final List<String> elements, final String moduleName);
-
-    /**
-     * Store decorators in the ties_model.decorators
-     */
-    void storeDecorators(final Map<String, String> elements, final String moduleName);
 }

@@ -20,47 +20,57 @@
  */
 package org.oran.smo.teiv.service.cloudevent;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.oran.smo.teiv.exception.YangModelException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudevents.CloudEvent;
+
+import org.oran.smo.teiv.CustomMetrics;
+import org.oran.smo.teiv.exception.YangException;
 import org.oran.smo.teiv.schema.MockSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
-import org.oran.smo.teiv.startup.SchemaHandler;
-import io.cloudevents.CloudEvent;
-import org.junit.jupiter.api.Assertions;
-
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
+import org.oran.smo.teiv.schema.SchemaRegistry;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 import org.oran.smo.teiv.service.cloudevent.data.Relationship;
 import org.oran.smo.teiv.utils.CloudEventTestUtil;
+import org.oran.smo.teiv.utils.yangparser.IngestionYangParser;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class CloudEventParserTest {
+    private static CloudEventParser cloudEventParser;
 
-    @Autowired
-    private CloudEventParser cloudEventParser;
+    @Mock
+    private static CustomMetrics customMetrics;
 
-    @MockBean
-    private SchemaHandler schemaHandler;
-
-    @BeforeEach
-    public void setup() throws SchemaLoaderException, YangModelException, IOException {
+    @BeforeAll
+    public static void setup() throws SchemaLoaderException, YangException {
         SchemaLoader mockSchemaLoader = new MockSchemaLoader();
         mockSchemaLoader.loadSchemaRegistry();
+        IngestionYangParser.loadModels();
+        cloudEventParser = new CloudEventParser(customMetrics, new ObjectMapper());
+        ReflectionTestUtils.setField(cloudEventParser, "isYangValidationEnabled", true);
     }
 
     @Test
@@ -68,20 +78,22 @@ class CloudEventParserTest {
         final CloudEvent cloudEvent = cloudEventFromJson("src/test/resources/cloudeventdata/common/ce-with-data.json");
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
 
-        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "NRCellDU", "entityId_1", 6, Map.of(
-                "cellLocalId", 4589L, "nRPCI", 12L, "nRTAC", 310L, "primitiveArray", "[1, 2, 3]", "singleList", "12",
-                "jsonObjectArray", "[{\"test2\":\"49\",\"test1\":\"128\"}, {\"test2\":\"50\",\"test1\":\"129\"}]"));
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "NRCellDU",
+                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07",
+                Map.of("cellLocalId", 4589L, "nRPCI", 12L, "nRTAC", 310L), List.of("source1", "source2"));
 
-        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "NRCellDU", "entityId_3", 6, Map.of(
-                "cellLocalId", 45891L, "nRPCI", 121L, "nRTAC", 3101L, "primitiveArray", "[1, 2, 3]", "singleList", "121",
-                "jsonObjectArray", "[{\"test2\":\"491\",\"test1\":\"1281\"}, {\"test2\":\"501\",\"test1\":\"1291\"}]"));
+        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "NRCellDU", "entityId_3", Map.of(
+                "cellLocalId", 45891L, "nRPCI", 121L, "nRTAC", 3101L), List.of("source3"));
 
-        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRSectorCarrier", "entityId_2", 4,
-                Map.of("arfcnDL", 4590L, "testDouble", 32.5, "testBoolean", true, "cmId",
-                        "{\"option1\":\"test_option1\",\"option2\":\"test_option2\"}"));
+        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRSectorCarrier", "entityId_2", Map
+                .of("arfcnDL", 4590L), List.of("source1", "source2"));
+
+        validateEntity(parsedCloudEventData.getEntities().get(3), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_4", Map.of(
+                "nCI", 123L, "nRTAC", 32L, "cellLocalId", 456L, "plmnId", "{\"mcc\":\"209\",\"mnc\":\"751\"}"), List.of(
+                        "source1", "source2"));
 
         final List<Relationship> relationships = parsedCloudEventData.getRelationships();
-        Assertions.assertEquals(4, relationships.size());
+        assertEquals(4, relationships.size());
 
         Relationship relationship = parsedCloudEventData.getRelationships().get(0);
         assertEquals("o-ran-smo-teiv-ran", relationship.getModule());
@@ -91,7 +103,7 @@ class CloudEventParserTest {
                 "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07",
                 relationship.getASide());
         assertEquals("entityId_2", relationship.getBSide());
-        assertEquals(null, relationship.getSourceIds());
+        assertEquals(List.of("source1", "source2"), relationship.getSourceIds());
 
         relationship = parsedCloudEventData.getRelationships().get(1);
         assertEquals("o-ran-smo-teiv-ran", relationship.getModule());
@@ -118,7 +130,54 @@ class CloudEventParserTest {
         assertEquals("relationshipId4", relationship.getId());
         assertEquals("entityId_5", relationship.getASide());
         assertEquals("entityId_3", relationship.getBSide());
-        assertEquals(List.of("source21"), relationship.getSourceIds());
+        assertEquals(List.of("source21", "source22"), relationship.getSourceIds());
+    }
+
+    @Test
+    void testParseCloudEventDataWithComplexAttributes() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-complex-attributes.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        // Can parse complex attributes like "plmnId" into a json string
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
+                "nCI", 123L, "nRTAC", 32L, "cellLocalId", 456L, "plmnId", "{\"mcc\":\"209\",\"mnc\":\"751\"}"), List.of(
+                        "source1", "source2"));
+
+        // If the "plmnId" is not specified, then it's not added as an attribute
+        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_2", Map.of(
+                "nCI", 123L, "nRTAC", 32L), List.of("source1", "source2"));
+
+        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_3", Map.of(
+                "nCI", 123L, "nRTAC", 32L, "cellLocalId", 456L, "plmnId", "{\"mcc\":\"209\",\"mnc\":\"752\"}"), List.of(
+                        "source1", "source2"));
+
+        assertEquals(0, parsedCloudEventData.getRelationships().size());
+    }
+
+    @Test
+    void testParseCloudEventDataWithNullAttribute() {
+        final CloudEvent cloudEvent = cloudEventFromJson("src/test/resources/cloudeventdata/common/ce-null-attribute.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+        final Map<String, Object> expectedAttributes = new HashMap<>();
+        expectedAttributes.put("gNBDUId", null);
+        expectedAttributes.put("dUpLMNId", "{}");
+
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "ODUFunction", "entityId_1",
+                expectedAttributes, List.of("source1", "source2"));
+    }
+
+    @Test
+    void testParseCloudEventDataCannotGetAttributesFromSchemaRegistry() {
+        final CloudEvent cloudEvent = cloudEventFromJson("src/test/resources/cloudeventdata/common/ce-null-attribute.json");
+        try (MockedStatic<SchemaRegistry> utilities = Mockito.mockStatic(SchemaRegistry.class)) {
+            utilities.when(() -> SchemaRegistry.getEntityTypeByModuleAndName(any(), any())).thenThrow(
+                    SchemaRegistryException.class);
+
+            final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+            validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "ODUFunction", "entityId_1", Map
+                    .of(), List.of("source1", "source2"));
+        }
     }
 
     @Test
@@ -128,29 +187,101 @@ class CloudEventParserTest {
 
         // Parse an array of 3 elements
         validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "AntennaCapability", "entityId_0",
-                Map.of("eUtranFqBands", "[a, b, c]"), null);
+                Map.of("eUtranFqBands", "[\"a\",\"b\",\"c\"]"), List.of("source1", "source2"));
 
         // Parse an array of 2 elements
         validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "AntennaCapability", "entityId_1",
-                Map.of("eUtranFqBands", "[a, b]"), null);
+                Map.of("eUtranFqBands", "[\"a\",\"b\"]"), List.of("source1", "source2"));
 
         // Parse an array of 1 element
         validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "AntennaCapability", "entityId_2",
-                Map.of("geranFqBands", "a"), null);
+                Map.of("geranFqBands", "[\"a\"]"), List.of("source1", "source2"));
 
         // Parse an empty array
         validateEntity(parsedCloudEventData.getEntities().get(3), "o-ran-smo-teiv-ran", "AntennaCapability", "entityId_3",
-                Map.of("eUtranFqBands", "q"), null);
+                Map.of("eUtranFqBands", "[\"q\"]"), List.of("source1", "source2"));
 
-        Assertions.assertEquals(0, parsedCloudEventData.getRelationships().size());
+        assertEquals(0, parsedCloudEventData.getRelationships().size());
+    }
+
+    @Test
+    void testParseIngestionDataWith64BitNumbersAsJsonString() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-64bit-numbers-as-string.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        // Validate that the int64 attribute represented as a json string is parsed into
+        // a java Long.
+        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
+                "nCI", 123L, "nRTAC", 32L), List.of("source1", "source2"));
+
+        // Validate that a uint64 is parsed into a java Long. The value is greater than
+        // Long.MAX_VALUE, so it's stored as a negative signed long.
+        // The db column is BIGINT, which is a signed int64, so we have to store the
+        // values greater than Long.MAX_VALUE as a negative value.
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "Sector", "entityId_2", Map.of(
+                "sectorId", -8223372036854775809L), List.of("source1", "source2"));
+
+        // Validate that a decimal64 is parsed into a java BigDecimal. A java double
+        // could store only a subset of the possible yang decimal64 values.
+        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "Sector", "entityId_3", Map.of(
+                "sectorId", 5L, "azimuth", BigDecimal.valueOf(Long.MIN_VALUE, 6)), List.of("source1", "source2"));
+
+        assertEquals(0, parsedCloudEventData.getRelationships().size());
+    }
+
+    @Test
+    void testParseIngestionDataWith64BitNumbersAsJsonNumbers() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-64bit-numbers-as-json-numbers.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
+                "nCI", 123L, "nRTAC", 32L), List.of("source1", "source2"));
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "Sector", "entityId_2", Map.of(
+                "sectorId", -8223372036854775809L), List.of("source1", "source2"));
+
+        // The value in the json is not representable with a double with the same
+        // precision. So we lose the last 3 digits. That's why the RFC7951 recommends to
+        // encode decimal64 as json string.
+        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "Sector", "entityId_3", Map.of(
+                "sectorId", 5L, "azimuth", new BigDecimal("-9223372036854.775")), List.of("source1", "source2"));
+
+        assertEquals(0, parsedCloudEventData.getRelationships().size());
+    }
+
+    @Test
+    void testParseIngestionDataWithGeoLocation() {
+        final CloudEvent cloudEvent = cloudEventFromJson("src/test/resources/cloudeventdata/common/ce-geo-location.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-equipment", "Site", "Site1", Map.of(
+                "name", "geo-location1", "geo-location", "{\"latitude\":12.78232,\"longitude\":56.7455}"), List.of(
+                        "urn:3gpp:dn:fdn1", "urn:cmHandle:1234"));
+
+        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-equipment", "Site", "Site2", Map.of(
+                "name", "geo-location2", "geo-location",
+                "{\"latitude\":12.78232,\"longitude\":56.7455,\"height\":123.1234}"), List.of("urn:3gpp:dn:fdn2",
+                        "urn:cmHandle:2234"));
+    }
+
+    @Test
+    void testDeleteParseCloudEventData() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-delete-entity-id.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "NRCellDU",
+                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004,ManagedElement=me04,ODUFunction=odu04,NRCellDU=NR-Cell-07",
+                Map.of(), null);
     }
 
     @Test
     void testEmptyCloudEventData() {
         final CloudEvent cloudEvent = CloudEventTestUtil.getCloudEvent("create", "{}");
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
-        Assertions.assertTrue(parsedCloudEventData.getEntities().isEmpty());
-        Assertions.assertTrue(parsedCloudEventData.getRelationships().isEmpty());
+        assertTrue(parsedCloudEventData.getEntities().isEmpty());
+        assertTrue(parsedCloudEventData.getRelationships().isEmpty());
     }
 
     @Test
@@ -158,8 +289,8 @@ class CloudEventParserTest {
         final CloudEvent cloudEvent = cloudEventFromJson("src/test/resources/cloudeventdata/common/ce-one-entity.json");
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "NRCellDU", "entityId_1", Map.of(
-                "cellLocalId", 4589L, "nRPCI", 12L, "nRTAC", 310L), null);
-        Assertions.assertTrue(parsedCloudEventData.getRelationships().isEmpty());
+                "cellLocalId", 4589L, "nRPCI", 12L, "nRTAC", 310L), List.of("source1", "source2"));
+        assertTrue(parsedCloudEventData.getRelationships().isEmpty());
     }
 
     @Test
@@ -174,19 +305,6 @@ class CloudEventParserTest {
         final CloudEvent cloudEvent = CloudEventTestUtil.getCloudEvent("create", "{\"entities\":[],\"relationships\":[]}");
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         assertEquals(new ParsedCloudEventData(List.of(), List.of()), parsedCloudEventData);
-    }
-
-    @Test
-    void testInvalidYangDataInEvent() {
-        final CloudEvent arrayEntitiesCloudEvent = CloudEventTestUtil.getCloudEvent("create",
-                "{\"entities\":[{\"some_entity_field\": 54321}]}");
-        ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(arrayEntitiesCloudEvent);
-        assertNull(parsedCloudEventData);
-
-        final CloudEvent arrayRelationshipsCloudEvent = CloudEventTestUtil.getCloudEvent("create",
-                "{\"relationships\":[{\"some_relationship_field\": 54321}]}");
-        parsedCloudEventData = cloudEventParser.getCloudEventData(arrayRelationshipsCloudEvent);
-        assertNull(parsedCloudEventData);
     }
 
     @Test
@@ -248,6 +366,26 @@ class CloudEventParserTest {
     }
 
     @Test
+    void testRelationshipMissingSourceIds() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-relationship-missing-source-ids.json");
+
+        ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        assertNull(parsedCloudEventData);
+    }
+
+    @Test
+    void testRelationshipWithOneSourceId() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-relationship-with-one-source-id.json");
+
+        ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        assertNull(parsedCloudEventData);
+    }
+
+    @Test
     void testRelationshipInvalidType() {
         final CloudEvent cloudEvent = cloudEventFromJson(
                 "src/test/resources/cloudeventdata/common/ce-relationship-invalid-type.json");
@@ -273,6 +411,15 @@ class CloudEventParserTest {
                 "src/test/resources/cloudeventdata/common/ce-relationship-invalid-module-type-pair.json");
 
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        assertNull(parsedCloudEventData);
+    }
+
+    @Test
+    void testParseCloudEventDataWithInvalidEntityId() {
+        final CloudEvent cloudEvent = cloudEventFromJson(
+                "src/test/resources/cloudeventdata/common/ce-with-invalid-entity-id.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
 
         assertNull(parsedCloudEventData);
     }
@@ -304,6 +451,27 @@ class CloudEventParserTest {
         assertNull(parsedCloudEventData);
     }
 
+    @Test
+    void testParseCloudEventDataWithDeprecatedFormat() {
+        final CloudEvent cloudEvent = cloudEventFromJson("src/test/resources/cloudeventdata/common/ce-deprecated.json");
+        final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+
+        assertNull(parsedCloudEventData);
+    }
+
+    @Test
+    void testParseNullCloudEvent() {
+        ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(null);
+        assertNull(parsedCloudEventData);
+    }
+
+    @Test
+    void testParseInvalidCloudEvent() {
+        CloudEvent cloudEvent = CloudEventTestUtil.getCloudEvent("create", "{\"entities\":[{\"a_field\"# 123}]}");
+        ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+        assertNull(parsedCloudEventData);
+    }
+
     private void validateEntity(final Entity entity, String expectedModuleReference, String expectedEntityName,
             String expectedId, Map<String, Object> expectedAttributes, List<String> expectedSourceIds) {
         assertEquals(expectedModuleReference, entity.getModule());
@@ -313,23 +481,14 @@ class CloudEventParserTest {
         assertEquals(expectedAttributes.size(), attributes.size());
         for (Map.Entry<String, Object> entry : expectedAttributes.entrySet()) {
             assertTrue(attributes.containsKey(entry.getKey()));
-            assertEquals(entry.getValue().getClass(), attributes.get(entry.getKey()).getClass());
-            assertEquals(entry.getValue(), attributes.get(entry.getKey()));
+            if (Objects.nonNull(entry.getValue())) {
+                assertEquals(entry.getValue().getClass(), attributes.get(entry.getKey()).getClass());
+                assertEquals(entry.getValue(), attributes.get(entry.getKey()));
+            } else {
+                assertNull(attributes.get(entry.getKey()));
+            }
         }
         assertEquals(expectedSourceIds, entity.getSourceIds());
-    }
-
-    private void validateEntity(final Entity entity, String expectedModuleReference, String expectedEntityName,
-            String expectedId, int expectedAttributeCount, Map<String, Object> expectedAttributes) {
-        assertEquals(expectedModuleReference, entity.getModule());
-        assertEquals(expectedEntityName, entity.getType());
-        assertEquals(expectedId, entity.getId());
-        final Map<String, Object> attributes = entity.getAttributes();
-        assertEquals(expectedAttributeCount, attributes.size());
-        for (Map.Entry<String, Object> entry : expectedAttributes.entrySet()) {
-            assertTrue(attributes.containsKey(entry.getKey()));
-            assertEquals(entry.getValue(), attributes.get(entry.getKey()));
-        }
     }
 
     private CloudEvent cloudEventFromJson(String path) {

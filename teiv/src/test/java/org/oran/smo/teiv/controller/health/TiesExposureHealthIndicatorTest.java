@@ -34,14 +34,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.startup.SchemaHandler;
 
 @AutoConfigureMockMvc
-@SpringBootTest(properties = { "spring.profiles.active=test", "management.endpoint.health.probes.enabled=true",
+@SpringBootTest(properties = { "management.endpoint.health.probes.enabled=true",
         "management.endpoint.health.group.readiness.include=readinessState,tiesExposure" })
+@ActiveProfiles({ "test", "exposure" })
 class TiesExposureHealthIndicatorTest {
     private final String readinessProbePath = "/actuator/health/readiness";
     private final String livenessProbePath = "/actuator/health/liveness";

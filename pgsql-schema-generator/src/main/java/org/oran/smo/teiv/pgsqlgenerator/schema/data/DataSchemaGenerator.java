@@ -29,6 +29,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.oran.smo.teiv.pgsqlgenerator.schema.BackwardCompatibilityChecker;
 import org.oran.smo.teiv.pgsqlgenerator.FileHelper;
@@ -59,6 +60,10 @@ public class DataSchemaGenerator extends SchemaGenerator {
     private String skeletonDataSchema;
     @Value("${green-field-installation}")
     private boolean isGreenFieldInstallation;
+    @Value("${custom-query-execution}")
+    private boolean isCustomQueryExecutionEnabled;
+    @Value("${schema.data.custom-sql-script}")
+    private String customSqlScripts;
 
     private final ModelComparator modelComparator;
     private final DataSchemaHelper dataSchemaHelper;
@@ -99,20 +104,52 @@ public class DataSchemaGenerator extends SchemaGenerator {
     protected void setSqlStatements(List<Module> modules, List<Entity> entities, List<Relationship> relationships) {
         // Create table from entities and relationships
         List<Table> tablesFromModelSvc = tableBuilder.getTables(entities, relationships);
+        List<Table> tablesForNbcCheck = new ArrayList<>();
+        try {
+            Resource skeletonResource = new ClassPathResource(skeletonDataSchema);
+            File tmpSkeletonFile = new File("target/tmpSkeletonData.sql");
+            FileHelper.copyResourceToFile(skeletonResource, tmpSkeletonFile);
+            List<Table> tablesFromSkeleton = SchemaParser.extractDataFromBaseline(tmpSkeletonFile.getAbsolutePath());
+            tablesForNbcCheck.addAll(tablesFromSkeleton);
+        } catch (IOException exception) {
+            throw PgSchemaGeneratorException.prepareBaselineException("ties.data", exception);
+        }
         // Get tables from baseline sql
         List<Table> tablesFromBaselineSql = isGreenFieldInstallation ?
                 List.of() :
                 SchemaParser.extractDataFromBaseline(baselineDataSchema);
         // Check for NBCs
-        backwardCompatibilityChecker.checkForNBCChangesInData(tablesFromBaselineSql, tablesFromModelSvc);
+        tablesForNbcCheck.addAll(tablesFromModelSvc);
+        backwardCompatibilityChecker.checkForNBCChangesInData(tablesFromBaselineSql, tablesForNbcCheck);
         // Compare and store differences in tables from baseline sql with tables from model service
         Map<String, List<Table>> differences = modelComparator.identifyDifferencesInBaselineAndGenerated(tablesFromModelSvc,
                 tablesFromBaselineSql);
         // Generate schema from differences
         StringBuilder generatedSchema = dataSchemaHelper.generateSchemaFromDifferences(differences);
+        //add custome sql query if cutom flag is enabled and greenfield is disabled
+        if (isCustomQueryExecutionEnabled && !isGreenFieldInstallation) {
+            generatedSchema.append(appendCustomQueries());
+            generatedSchema.append("\n");
+        }
         generatedSchema.append(generateAnalyzeTableStatement(tablesFromModelSvc));
         generatedSchema.append("COMMIT;\n");
         this.sqlStatements = generatedSchema.toString();
+    }
+
+    private StringBuilder appendCustomQueries() {
+        StringBuilder customSqlQueries = new StringBuilder();
+        File customSqlFile = new File(customSqlScripts);
+        try {
+            Path customQueryFilePath = customSqlFile.toPath();
+            try (Stream<String> lines = Files.lines(customQueryFilePath)) {
+                lines.forEach(line -> {
+                    customSqlQueries.append(line).append("\n");
+                });
+            }
+        } catch (IOException exception) {
+            throw PgSchemaGeneratorException.readCustomSqlFileException("ties.data", exception);
+        }
+        return customSqlQueries;
     }
 
     private StringBuilder generateAnalyzeTableStatement(List<Table> tablesFromModelSvc) {

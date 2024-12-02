@@ -2,29 +2,32 @@
     "specversion": "1.0",
     "id": "a30e63c9-d29e-46ff-b99a-b63ed83f0003",
     "source": "dmi-plugin:nm-1",
-    "type": "ran-logical-topology.create",
+    "type": "topology-inventory-ingestion.create",
     "time": "2023-10-25T13:30:01Z",
     "datacontenttype": "application/json",
-    "dataschema": "https://ties:8080/schemas/v1/r1-topology",
+    "dataschema": "topology-inventory-ingestion:events:create:1.0.0",
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-ran-logical:AntennaCapability": [
+                "o-ran-smo-teiv-ran:AntennaCapability": [
                     {
                         "id": "AntennaCapability_1",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ],
                         "attributes": {
-                            "cmId": {
-                                "cmHandle": "395221E080CCF0FD1924103B15873820",
-                                "resourceIdentifier": "/o-ran-smo-ComTop:NodeCluster[@id=2]"
-                            }
+
                         }
                     }
-                ]
-            },
-            {
-                "o-ran-smo-teiv-ran-logical:NRSectorCarrier": [
+                ],
+                "o-ran-smo-teiv-ran:NRSectorCarrier": [
                     {
                         "id": "NRSectorCarrier_1",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ],
                         "attributes": {
 
                         }
@@ -34,11 +37,15 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-ran-logical:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
+                "o-ran-smo-teiv-ran:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
                     {
                         "id": "Relation_ManyToOne_1",
                         "aSide": "NRSectorCarrier_1",
-                        "bSide": "AntennaCapability_1"
+                        "bSide": "AntennaCapability_1",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     }
                 ]
             }

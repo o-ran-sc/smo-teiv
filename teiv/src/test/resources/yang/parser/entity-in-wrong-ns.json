@@ -1,0 +1,15 @@
+{
+    "o-ran-smo-teiv-cloud:GNBCUCPFunction": [
+        {
+            "id": "gNBCUCPName_1",
+            "sourceIds": [
+                "source1",
+                "source2"
+            ],
+            "attributes": {
+                "gNBCUName": "str",
+                "gNBId": 12
+            }
+        }
+    ]
+}

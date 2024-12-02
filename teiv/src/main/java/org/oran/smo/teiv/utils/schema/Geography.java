@@ -22,49 +22,77 @@ package org.oran.smo.teiv.utils.schema;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@EqualsAndHashCode
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Geography {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    @NonNull
     private Double latitude;
+    @NonNull
     private Double longitude;
+    private Double height;
 
     /**
      * Creates a Geography object from a standard (RFC 9179) YANG geo-location type.
-     * Only "latitude" and "longitude" fields are supported. All other fields in the json are ignored.
+     * The "latitude" and "longitude" fields, are mandatory.
+     * Optionally, it also supports the "height" field if provided in the JSON.
+     * All other fields in the json are ignored.
      *
      * @param json
-     *     A json that conforms to the "RFC 9179: A YANG Grouping for Geographic Location" standard.
+     *     A json that conforms to the "RFC 9179: A YANG Grouping for
+     *     Geographic Location" standard.
      * @throws IOException
-     *     when the json doesn't contain both "latitude" and "longitude" fields.
+     *     when the json doesn't contain both "latitude" and
+     *     "longitude" fields.
      */
-    public Geography(String json) throws IOException {
-        JsonParser jsonParser = objectMapper.readTree(json).traverse();
+    public Geography(final String json) throws IOException {
+        JsonNode rootNode = objectMapper.readTree(json);
 
-        while (jsonParser.nextToken() != null) {
-            if ("latitude".equals(jsonParser.currentName())) {
-                latitude = jsonParser.getDoubleValue();
-            } else if ("longitude".equals(jsonParser.currentName())) {
-                longitude = jsonParser.getDoubleValue();
+        JsonNode latitudeNode = findNode(rootNode, "latitude");
+        JsonNode longitudeNode = findNode(rootNode, "longitude");
+
+        if (isValidNumber(latitudeNode) && isValidNumber(longitudeNode)) {
+            latitude = latitudeNode.asDouble();
+            longitude = longitudeNode.asDouble();
+            JsonNode heightNode = findNode(rootNode, "height");
+            if (isValidNumber(heightNode)) {
+                height = heightNode.asDouble();
             }
-            if (latitude != null && longitude != null) {
-                return;
+        } else {
+            throw new IOException("Cannot find latitude, longitude fields in json: " + json);
+        }
+    }
+
+    private boolean isValidNumber(JsonNode node) {
+        return node != null && node.isNumber();
+    }
+
+    private JsonNode findNode(final JsonNode node, final String fieldName) {
+        if (node.has(fieldName)) {
+            return node.get(fieldName);
+        }
+        for (JsonNode child : node) {
+            JsonNode found = findNode(child, fieldName);
+            if (found != null) {
+                return found;
             }
         }
-        throw new IOException("Cannot find latitude and longitude fields in json: " + json);
+        return null;
     }
 
     @Override
     public String toString() {
-        return "POINT(" + latitude + " " + longitude + ")";
+        return (height == null) ?
+                String.format("POINT(%s %s)", latitude, longitude) :
+                String.format("POINT Z (%s %s %s)", latitude, longitude, height);
     }
-
 }

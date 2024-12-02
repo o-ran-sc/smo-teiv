@@ -107,6 +107,35 @@ public class ScopeFilterListener extends tiesPathBaseListener {
     }
 
     @Override
+    public void exitWithinMetersFunctionCondition(final tiesPathParser.WithinMetersFunctionConditionContext ctx) {
+        final ScopeObject.ScopeObjectBuilder scopeObjectBuilder = getScopeObjectBuilder(ctx.leafName().getText(),
+                QueryFunction.WITHIN_METERS);
+        String parameter = ctx.StringLiteral().getText() + ", ";
+
+        if (ctx.IntegerLiteral() != null) {
+            parameter += ctx.IntegerLiteral().getText();
+        } else if (ctx.DoubleLiteral() != null) {
+            parameter += ctx.DoubleLiteral().getText();
+        } else if (ctx.DecimalLiteral() != null) {
+            parameter += ctx.DecimalLiteral().getText();
+        } else {
+            throw TiesPathException.grammarError("Integer, decimal or double meters parameter expected!");
+        }
+
+        scopeObjectBuilder.parameter(parameter).resolverDataType(ResolverDataType.STRING);
+
+        addScopeLogicalBlock(scopeObjectBuilder);
+    }
+
+    @Override
+    public void exitCoveredByFunctionCondition(final tiesPathParser.CoveredByFunctionConditionContext ctx) {
+        final ScopeObject.ScopeObjectBuilder scopeObjectBuilder = getScopeObjectBuilder(ctx.leafName().getText(),
+                QueryFunction.COVERED_BY);
+        scopeObjectBuilder.parameter(removeQuotes(ctx.StringLiteral().getText())).resolverDataType(ResolverDataType.STRING);
+        addScopeLogicalBlock(scopeObjectBuilder);
+    }
+
+    @Override
     public void exitLeafCondition(final tiesPathParser.LeafConditionContext ctx) {
         final ScopeObject.ScopeObjectBuilder scopeObjectBuilder = getScopeObjectBuilder(ctx.leafName().getText(),
                 QueryFunction.fromValue(ctx.comparativeOperators().getText()));

@@ -1,0 +1,16 @@
+{
+    "o-ran-smo-teiv-ran:OCUCPFunction": [
+        {
+            "id": "OCUCPName_1",
+            "sourceIds": [
+                "source1",
+                "source2"
+            ],
+            "attributes": {
+                "gNBCUName": "str",
+                "gNBId": 12,
+                "unknownField": 34
+            }
+        }
+    ]
+}

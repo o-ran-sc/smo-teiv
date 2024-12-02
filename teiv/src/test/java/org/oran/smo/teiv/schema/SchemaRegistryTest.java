@@ -196,8 +196,9 @@ class SchemaRegistryTest {
                                 "o-ran-smo-teiv-ran:ODUFunction.id"), field("CD_sourceIds").as(
                                         "o-ran-smo-teiv-ran:ODUFunction.sourceIds"), field("CD_classifiers").as(
                                                 "o-ran-smo-teiv-ran:ODUFunction.classifiers"), field("CD_decorators").as(
-                                                        "o-ran-smo-teiv-ran:ODUFunction.decorators")), new HashSet<>(
-                                                                oduFunction.getAllFieldsWithId()));
+                                                        "o-ran-smo-teiv-ran:ODUFunction.decorators"), field("dUpLMNId").as(
+                                                                "o-ran-smo-teiv-ran:ODUFunction.attr.dUpLMNId")),
+                new HashSet<>(oduFunction.getAllFieldsWithId()));
     }
 
     @Test
@@ -226,7 +227,8 @@ class SchemaRegistryTest {
                 "NFDEPLOYMENT_SERVES_ODUFUNCTION", "OCUCPFUNCTION_PROVIDES_NRCELLCU", "NFDEPLOYMENT_SERVES_OCUCPFUNCTION",
                 "NFDEPLOYMENT_SERVES_OCUUPFUNCTION", "NFDEPLOYMENT_SERVES_NEARRTRICFUNCTION",
                 "NODECLUSTER_LOCATED_AT_OCLOUDSITE", "OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER",
-                "NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE", "CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT");
+                "NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE", "CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT",
+                "ANTENNAMODULE_SERVES_NRCELLDU");
         //when
         List<String> relationNames = SchemaRegistry.getRelationNames();
         //then
@@ -240,12 +242,12 @@ class SchemaRegistryTest {
         Association expectedASideAssociation = new Association("managed-ocucpFunction", 1, 1);
         Association expectedBSideAssociation = new Association("managed-by-managedElement", 0, 9223372036854775807L);
         //when
-        RelationType managedElementManagesGnbcucpfunction = SchemaRegistry.getRelationTypeByName(
+        RelationType managedElementManagesOcucpfunction = SchemaRegistry.getRelationTypeByName(
                 "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
-        assertEquals(expectedASideAssociation.toString(), managedElementManagesGnbcucpfunction.getASideAssociation()
+        assertEquals(expectedASideAssociation.toString(), managedElementManagesOcucpfunction.getASideAssociation()
                 .toString());
-        assertEquals(expectedBSideAssociation.toString(), managedElementManagesGnbcucpfunction.getBSideAssociation()
+        assertEquals(expectedBSideAssociation.toString(), managedElementManagesOcucpfunction.getBSideAssociation()
                 .toString());
     }
 
@@ -255,12 +257,12 @@ class SchemaRegistryTest {
         Association expectedASideAssociation = new Association("managed-ocucpFunction", 1, 1);
         Association expectedBSideAssociation = new Association("managed-by-managedElement", 0, 9223372036854775807L);
         //when
-        RelationType managedElementManagesGnbcucpfunction = SchemaRegistry.getRelationTypeByModuleAndName(
+        RelationType managedElementManagesOcucpfunction = SchemaRegistry.getRelationTypeByModuleAndName(
                 "o-ran-smo-teiv-rel-oam-ran", "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
-        assertEquals(expectedASideAssociation.toString(), managedElementManagesGnbcucpfunction.getASideAssociation()
+        assertEquals(expectedASideAssociation.toString(), managedElementManagesOcucpfunction.getASideAssociation()
                 .toString());
-        assertEquals(expectedBSideAssociation.toString(), managedElementManagesGnbcucpfunction.getBSideAssociation()
+        assertEquals(expectedBSideAssociation.toString(), managedElementManagesOcucpfunction.getBSideAssociation()
                 .toString());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
@@ -278,10 +280,10 @@ class SchemaRegistryTest {
                 "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
         assertEquals(1, relationTypes.size());
-        RelationType managedElementManagesGnbcucpfunction = relationTypes.get(0);
-        assertEquals(expectedASideAssociation.toString(), managedElementManagesGnbcucpfunction.getASideAssociation()
+        RelationType managedElementManagesOcucpfunction = relationTypes.get(0);
+        assertEquals(expectedASideAssociation.toString(), managedElementManagesOcucpfunction.getASideAssociation()
                 .toString());
-        assertEquals(expectedBSideAssociation.toString(), managedElementManagesGnbcucpfunction.getBSideAssociation()
+        assertEquals(expectedBSideAssociation.toString(), managedElementManagesOcucpfunction.getBSideAssociation()
                 .toString());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
@@ -299,10 +301,14 @@ class SchemaRegistryTest {
                 "SECTOR_GROUPS_ANTENNAMODULE"));
         expectedRelationsList.add(SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
                 "ANTENNAMODULE_INSTALLED_AT_SITE"));
+        expectedRelationsList.add(SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_NRCELLDU"));
+        expectedRelationsList.add(SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_NRCELLDU"));
         //when
         List<RelationType> relationTypes = SchemaRegistry.getRelationTypesByEntityName("AntennaModule");
         //then
-        assertEquals(3, relationTypes.size());
+        assertEquals(4, relationTypes.size());
         assertTrue(relationTypes.containsAll(expectedRelationsList));
     }
 
@@ -366,6 +372,15 @@ class SchemaRegistryTest {
                 "ODUFUNCTION_PROVIDES_NRCELLDU");
         //then
         assertEquals("REL_CD_decorators_ODUFUNCTION_PROVIDES_NRCELLDU", relationType.getDecoratorsColumnName());
+    }
+
+    @Test
+    void testGetMetadataColumnNameForRelationType() throws SchemaRegistryException {
+        //when
+        RelationType relationType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-ran",
+                "ODUFUNCTION_PROVIDES_NRCELLDU");
+        //then
+        assertEquals("REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU", relationType.getMetadataColumnName());
     }
 
     @Test

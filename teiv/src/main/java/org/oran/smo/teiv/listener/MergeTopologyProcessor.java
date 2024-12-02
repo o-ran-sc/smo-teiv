@@ -20,11 +20,10 @@
  */
 package org.oran.smo.teiv.listener;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.oran.smo.teiv.CustomMetrics;
 
-import org.oran.smo.teiv.service.models.OperationResult;
+import org.oran.smo.teiv.listener.audit.ExecutionStatus;
+import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
 import org.oran.smo.teiv.utils.CloudEventUtil;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -39,6 +38,8 @@ import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 
 import org.springframework.util.StopWatch;
 
+import static org.oran.smo.teiv.utils.TiesConstants.CLOUD_EVENT_WITH_TYPE_MERGE;
+
 @AllArgsConstructor
 @Component
 @Profile("ingestion")
@@ -49,6 +50,7 @@ public class MergeTopologyProcessor implements TopologyProcessor {
     private final CloudEventParser cloudEventParser;
     private final CustomMetrics customMetrics;
     private final TiesDbOperations tiesDbOperations;
+    private final IngestionAuditLogger auditLogger;
 
     //spotless:off
     @Override
@@ -57,7 +59,9 @@ public class MergeTopologyProcessor implements TopologyProcessor {
         stopWatch.start();
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         if (null == parsedCloudEventData) {
+            log.error("Failed to parse the following CloudEvent: {}", CloudEventUtil.cloudEventToPrettyString(cloudEvent));
             customMetrics.incrementNumUnsuccessfullyParsedMergeCloudEvents();
+            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, "Failed to parse the CloudEvent");
             return;
         }
         parsedCloudEventData.sort();
@@ -66,24 +70,27 @@ public class MergeTopologyProcessor implements TopologyProcessor {
         customMetrics.incrementNumSuccessfullyParsedMergeCloudEvents();
 
         stopWatch.start();
-        List<OperationResult> operationResults = new ArrayList<>();
+        final String sourceAdapter = String.valueOf(cloudEvent.getSource());
         try {
-            operationResults = tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData);
+            tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData, sourceAdapter);
         } catch (InvalidFieldInYangDataException e) {
             log.error("Invalid field in yang data. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
-                    CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
+                CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedMergeCloudEvents();
+            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, e.getMessage());
             return;
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
-                    CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
+                CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedMergeCloudEvents();
+            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, e.getMessage());
             return;
         }
         stopWatch.stop();
 
         customMetrics.incrementNumSuccessfullyPersistedMergeCloudEvents();
         customMetrics.recordCloudEventMergePersistTime(stopWatch.lastTaskInfo().getTimeNanos());
+        auditLogger.auditLog(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, "");
     }
     //spotless:on
 }

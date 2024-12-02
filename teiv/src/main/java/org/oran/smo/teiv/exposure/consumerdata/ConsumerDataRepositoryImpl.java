@@ -21,29 +21,21 @@
 package org.oran.smo.teiv.exposure.consumerdata;
 
 import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
 import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TiesConstants.MODULE_REFERENCE;
-import static org.oran.smo.teiv.utils.TiesConstants.MODULE_REFERENCE_NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.SEMICOLON_SEPARATION;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jooq.DSLContext;
 import org.jooq.Field;
-import org.jooq.InsertValuesStepN;
 import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Record2;
@@ -88,36 +80,6 @@ public class ConsumerDataRepositoryImpl implements ConsumerDataRepository {
             result.put((String) record.get("decoratorName"), YangDataTypes.fromYangDataType("" + record.get("dataType")));
         }
         return result;
-    }
-
-    @Override
-    public void storeClassifiers(final List<String> elements, final String moduleName) {
-        insertValues(CLASSIFIERS, List.of(NAME, String.format(QUOTED_STRING, MODULE_REFERENCE_NAME)), executable -> {
-            for (String element : elements) {
-                executable = executable.values(String.format(SEMICOLON_SEPARATION, moduleName, element), moduleName);
-            }
-        });
-    }
-
-    @Override
-    public void storeDecorators(final Map<String, String> elements, final String moduleName) {
-        insertValues(DECORATORS, List.of(NAME, String.format(QUOTED_STRING, "dataType"), String.format(QUOTED_STRING,
-                MODULE_REFERENCE_NAME)), executable -> {
-                    for (Map.Entry<String, String> element : elements.entrySet()) {
-                        executable = executable.values(String.format(SEMICOLON_SEPARATION, moduleName, element.getKey()),
-                                element.getValue(), moduleName);
-                    }
-                });
-    }
-
-    private void insertValues(final String tableName, final List<String> columns,
-            final Consumer<InsertValuesStepN<?>> consumer) {
-        InsertValuesStepN<?> executable = writeDataDslContext.insertInto(table(String.format(TIES_CONSUMER_DATA,
-                tableName))).columns(columns.stream().map(column -> field(column, String.class)).toList());
-
-        consumer.accept(executable);
-
-        runMethodSafe(executable::execute);
     }
 
     protected <T> T runMethodSafe(Supplier<T> supp) {

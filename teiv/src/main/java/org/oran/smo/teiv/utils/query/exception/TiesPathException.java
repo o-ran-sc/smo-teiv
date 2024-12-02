@@ -24,7 +24,6 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +34,6 @@ public class TiesPathException extends RuntimeException {
     private final String details;
     private final HttpStatus httpStatus;
     private final transient List<Object> response;
-    private static final List<Object> defaultResponse = Collections.emptyList();
 
     public static TiesPathException invalidRelationshipName(final String relationship) {
         return clientException("Invalid relationship name", String.format("%s is not a known relationship", relationship));
@@ -117,6 +115,10 @@ public class TiesPathException extends RuntimeException {
                 "%s did not match any topology objects in the given domain", leaf));
     }
 
+    public static TiesPathException invalidMetadaFilter(String leaf) {
+        return clientException("Invalid metadata content", String.format("%s is not a valid metadata", leaf));
+    }
+
     public static TiesPathException ambiguousTopologyObject(String topologyObject) {
         return clientException("Invalid topology object", String.format(
                 "%s is ambiguous, %s matches multiple topology object types", topologyObject, topologyObject));
@@ -143,6 +145,14 @@ public class TiesPathException extends RuntimeException {
 
     public static TiesPathException invalidQueryCondition(String details) {
         return clientException("Invalid query condition", details);
+    }
+
+    public static TiesPathException invalidQueryFunction() {
+        return clientException("Invalid query condition", "Unknown or unexpected query function");
+    }
+
+    public static TiesPathException invalidTopologyObjectType() {
+        return clientException("Invalid query condition", "Invalid topology object type");
     }
 
     private TiesPathException(final String message, final String details, final HttpStatus httpStatus,

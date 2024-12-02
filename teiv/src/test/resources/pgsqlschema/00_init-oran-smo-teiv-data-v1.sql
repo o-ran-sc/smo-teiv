@@ -43,22 +43,47 @@ CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
 RETURNS void AS
 $$
 BEGIN
-	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = t_name AND constraint_name = c_name) THEN
+	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'ties_data' AND table_name = t_name AND constraint_name = c_name) THEN
 		EXECUTE constraint_sql;
 	END IF;
 END;
 $$ language 'plpgsql';
 
--- Update data schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_data', 'success');
+CREATE OR REPLACE FUNCTION ties_data.create_enum_type(
+    schema_name TEXT, type_name TEXT, enum_values TEXT[]
+) RETURNS VOID AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace WHERE t.typname = type_name AND n.nspname = schema_name) THEN
+        EXECUTE format('CREATE TYPE %I.%I AS ENUM (%s)',schema_name, type_name, array_to_string(ARRAY(SELECT quote_literal(value) FROM unnest(enum_values) AS value), ', '));
+    END IF;
+END;
+$$ language 'plpgsql';
 
-CREATE TABLE IF NOT EXISTS ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" (
+SELECT ties_data.create_enum_type('ties_data', 'Reliability', ARRAY['OK', 'RESTORED', 'ADVISED']);
+
+CREATE TABLE IF NOT EXISTS ties_data."responsible_adapter" (
+	"id"			TEXT,
+	"hashed_id"			BYTEA
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'responsible_adapter',
+ 'PK_responsible_adapter_id',
+ 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "PK_responsible_adapter_id" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'responsible_adapter',
+ 'UNIQUE_responsible_adapter_hashed_id',
+ 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "UNIQUE_responsible_adapter_hashed_id" UNIQUE ("hashed_id");'
+);CREATE TABLE IF NOT EXISTS ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" (
 	"id"			TEXT,
 	"aSide_NFDeployment"			TEXT,
 	"bSide_NearRTRICFunction"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -73,7 +98,8 @@ CREATE TABLE IF NOT EXISTS ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" 
 	"bSide_AntennaCapability"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -87,7 +113,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_CloudifiedNF" (
 	"name"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_CloudifiedNF" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -102,7 +129,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED
 	"bSide_OCloudNamespace"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -117,16 +145,19 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_NFDeployment" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_comprised-by-cloudifiedNF"			TEXT,
 	"REL_ID_CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT"			TEXT,
 	"REL_CD_sourceIds_CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT"			jsonb,
 	"REL_CD_classifiers_CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT"			jsonb,
 	"REL_CD_decorators_CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT"			jsonb,
+	"REL_metadata_CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT"			jsonb,
 	"REL_FK_serviced-managedElement"			TEXT,
 	"REL_ID_NFDEPLOYMENT_SERVES_MANAGEDELEMENT"			TEXT,
 	"REL_CD_sourceIds_NFDEPLOYMENT_SERVES_MANAGEDELEMENT"			jsonb,
 	"REL_CD_classifiers_NFDEPLOYMENT_SERVES_MANAGEDELEMENT"			jsonb,
-	"REL_CD_decorators_NFDEPLOYMENT_SERVES_MANAGEDELEMENT"			jsonb
+	"REL_CD_decorators_NFDEPLOYMENT_SERVES_MANAGEDELEMENT"			jsonb,
+	"REL_metadata_NFDEPLOYMENT_SERVES_MANAGEDELEMENT"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_NFDeployment" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -153,7 +184,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_A
 	"bSide_OCloudSite"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -167,7 +199,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_NodeCluster" (
 	"name"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_NodeCluster" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -182,11 +215,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_OCloudNamespace" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_deployed-on-nodeCluster"			TEXT,
 	"REL_ID_OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER"			TEXT,
 	"REL_CD_sourceIds_OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER"			jsonb,
 	"REL_CD_classifiers_OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER"			jsonb,
-	"REL_CD_decorators_OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER"			jsonb
+	"REL_CD_decorators_OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER"			jsonb,
+	"REL_metadata_OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_OCloudNamespace" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -207,7 +242,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-cloud_OCloudSite" (
 	"name"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-cloud_OCloudSite" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -220,25 +256,37 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-equipment_AntennaModule" (
 	"id"			TEXT,
 	"antennaBeamWidth"			jsonb,
 	"antennaModelNumber"			TEXT,
+	"azimuth"			DECIMAL,
 	"electricalAntennaTilt"			INTEGER,
 	"geo-location"			geography,
+	"horizontalBeamWidth"			DECIMAL,
 	"mechanicalAntennaBearing"			INTEGER,
 	"mechanicalAntennaTilt"			INTEGER,
 	"positionWithinSector"			TEXT,
 	"totalTilt"			INTEGER,
+	"verticalBeamWidth"			DECIMAL,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_installed-at-site"			TEXT,
 	"REL_ID_ANTENNAMODULE_INSTALLED_AT_SITE"			TEXT,
 	"REL_CD_sourceIds_ANTENNAMODULE_INSTALLED_AT_SITE"			jsonb,
 	"REL_CD_classifiers_ANTENNAMODULE_INSTALLED_AT_SITE"			jsonb,
 	"REL_CD_decorators_ANTENNAMODULE_INSTALLED_AT_SITE"			jsonb,
+	"REL_metadata_ANTENNAMODULE_INSTALLED_AT_SITE"			jsonb,
 	"REL_FK_grouped-by-sector"			TEXT,
 	"REL_ID_SECTOR_GROUPS_ANTENNAMODULE"			TEXT,
 	"REL_CD_sourceIds_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
 	"REL_CD_classifiers_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
-	"REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE"			jsonb
+	"REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
+	"REL_metadata_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
+	"REL_FK_grouped-by-sector"			TEXT,
+	"REL_ID_SECTOR_GROUPS_ANTENNAMODULE"			TEXT,
+	"REL_CD_sourceIds_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
+	"REL_CD_classifiers_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
+	"REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE"			jsonb,
+	"REL_metadata_SECTOR_GROUPS_ANTENNAMODULE"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -259,13 +307,20 @@ ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ALTER COLUMN
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ALTER COLUMN "REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE" SET DEFAULT '{}';
 
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ALTER COLUMN "REL_CD_sourceIds_SECTOR_GROUPS_ANTENNAMODULE" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ALTER COLUMN "REL_CD_classifiers_SECTOR_GROUPS_ANTENNAMODULE" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ALTER COLUMN "REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE" SET DEFAULT '{}';
+
 CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-equipment_Site" (
 	"id"			TEXT,
 	"geo-location"			geography,
 	"name"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-equipment_Site" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -279,11 +334,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-oam_ManagedElement" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_deployed-as-cloudifiedNF"			TEXT,
 	"REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF"			TEXT,
 	"REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF"			jsonb,
-	"REL_CD_decorators_MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF"			jsonb
+	"REL_CD_decorators_MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF"			jsonb,
+	"REL_metadata_MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-oam_ManagedElement" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -305,7 +362,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_AntennaCapability" (
 	"nRFqBands"			jsonb,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_AntennaCapability" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -323,11 +381,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_NRCellCU" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_provided-by-ocucpFunction"			TEXT,
 	"REL_ID_OCUCPFUNCTION_PROVIDES_NRCELLCU"			TEXT,
 	"REL_CD_sourceIds_OCUCPFUNCTION_PROVIDES_NRCELLCU"			jsonb,
 	"REL_CD_classifiers_OCUCPFUNCTION_PROVIDES_NRCELLCU"			jsonb,
-	"REL_CD_decorators_OCUCPFUNCTION_PROVIDES_NRCELLCU"			jsonb
+	"REL_CD_decorators_OCUCPFUNCTION_PROVIDES_NRCELLCU"			jsonb,
+	"REL_metadata_OCUCPFUNCTION_PROVIDES_NRCELLCU"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NRCellCU" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -351,16 +411,19 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_NRCellDU" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_provided-by-oduFunction"			TEXT,
 	"REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU"			TEXT,
 	"REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU"			jsonb,
 	"REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRCELLDU"			jsonb,
 	"REL_CD_decorators_ODUFUNCTION_PROVIDES_NRCELLDU"			jsonb,
+	"REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU"			jsonb,
 	"REL_FK_grouped-by-sector"			TEXT,
 	"REL_ID_SECTOR_GROUPS_NRCELLDU"			TEXT,
 	"REL_CD_sourceIds_SECTOR_GROUPS_NRCELLDU"			jsonb,
 	"REL_CD_classifiers_SECTOR_GROUPS_NRCELLDU"			jsonb,
-	"REL_CD_decorators_SECTOR_GROUPS_NRCELLDU"			jsonb
+	"REL_CD_decorators_SECTOR_GROUPS_NRCELLDU"			jsonb,
+	"REL_metadata_SECTOR_GROUPS_NRCELLDU"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NRCellDU" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -391,21 +454,25 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_used-by-nrCellDu"			TEXT,
 	"REL_ID_NRCELLDU_USES_NRSECTORCARRIER"			TEXT,
 	"REL_CD_sourceIds_NRCELLDU_USES_NRSECTORCARRIER"			jsonb,
 	"REL_CD_classifiers_NRCELLDU_USES_NRSECTORCARRIER"			jsonb,
 	"REL_CD_decorators_NRCELLDU_USES_NRSECTORCARRIER"			jsonb,
+	"REL_metadata_NRCELLDU_USES_NRSECTORCARRIER"			jsonb,
 	"REL_FK_used-antennaCapability"			TEXT,
 	"REL_ID_NRSECTORCARRIER_USES_ANTENNACAPABILITY"			TEXT,
 	"REL_CD_sourceIds_NRSECTORCARRIER_USES_ANTENNACAPABILITY"			jsonb,
 	"REL_CD_classifiers_NRSECTORCARRIER_USES_ANTENNACAPABILITY"			jsonb,
 	"REL_CD_decorators_NRSECTORCARRIER_USES_ANTENNACAPABILITY"			jsonb,
+	"REL_metadata_NRSECTORCARRIER_USES_ANTENNACAPABILITY"			jsonb,
 	"REL_FK_provided-by-oduFunction"			TEXT,
 	"REL_ID_ODUFUNCTION_PROVIDES_NRSECTORCARRIER"			TEXT,
 	"REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRSECTORCARRIER"			jsonb,
 	"REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRSECTORCARRIER"			jsonb,
-	"REL_CD_decorators_ODUFUNCTION_PROVIDES_NRSECTORCARRIER"			jsonb
+	"REL_CD_decorators_ODUFUNCTION_PROVIDES_NRSECTORCARRIER"			jsonb,
+	"REL_metadata_ODUFUNCTION_PROVIDES_NRSECTORCARRIER"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -439,11 +506,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_managed-by-managedElement"			TEXT,
 	"REL_ID_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			TEXT,
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
-	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb
+	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb,
+	"REL_metadata_MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -467,11 +536,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_OCUCPFunction" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_managed-by-managedElement"			TEXT,
 	"REL_ID_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			TEXT,
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
-	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb
+	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb,
+	"REL_metadata_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -494,11 +565,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_OCUUPFunction" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_managed-by-managedElement"			TEXT,
 	"REL_ID_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"			TEXT,
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"			jsonb,
-	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"			jsonb
+	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"			jsonb,
+	"REL_metadata_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_OCUUPFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -521,11 +594,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ODUFunction" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_managed-by-managedElement"			TEXT,
 	"REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			TEXT,
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
-	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb
+	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb,
+	"REL_metadata_MANAGEDELEMENT_MANAGES_ODUFUNCTION"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -546,11 +621,13 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ORUFunction" (
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
+	"metadata"			jsonb,
 	"REL_FK_managed-by-managedElement"			TEXT,
 	"REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			TEXT,
 	"REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
 	"REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
-	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb
+	"REL_CD_decorators_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb,
+	"REL_metadata_MANAGEDELEMENT_MANAGES_ORUFUNCTION"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ORUFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -572,7 +649,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_Sector" (
 	"sectorId"			BIGINT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_Sector" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -587,7 +665,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_
 	"bSide_OCUCPFunction"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -602,7 +681,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_
 	"bSide_OCUUPFunction"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -617,7 +697,8 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_
 	"bSide_ODUFunction"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
-	"CD_decorators"			jsonb
+	"CD_decorators"			jsonb,
+	"metadata"			jsonb
 );
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
@@ -870,6 +951,18 @@ SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-equipment_AntennaModule',
  'UNIQUE_9DF414C2F0CD7FA8BFCB3E9BF851784AC4BC49B1',
  'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "UNIQUE_9DF414C2F0CD7FA8BFCB3E9BF851784AC4BC49B1" UNIQUE ("REL_ID_ANTENNAMODULE_INSTALLED_AT_SITE");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-equipment_AntennaModule',
+ 'FK_078764B2F3D613D44CC6E3586F564C83164D2481',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "FK_078764B2F3D613D44CC6E3586F564C83164D2481" FOREIGN KEY ("REL_FK_grouped-by-sector") REFERENCES ties_data."o-ran-smo-teiv-ran_Sector" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'o-ran-smo-teiv-equipment_AntennaModule',
+ 'UNIQUE_78B1D3DCD903AFFB1965D440D87B2D194CA028A0',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "UNIQUE_78B1D3DCD903AFFB1965D440D87B2D194CA028A0" UNIQUE ("REL_ID_SECTOR_GROUPS_ANTENNAMODULE");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1149,6 +1242,12 @@ CREATE INDEX IF NOT EXISTS "IDX_F497DEC01DA066CB09DA2AA7EDE3F4410078491B" ON tie
 CREATE INDEX IF NOT EXISTS "IDX_17E417F7EF56809674BE1D5F5154DCCE01E00A96" ON ties_data."o-ran-smo-teiv-equipment_AntennaModule" USING GIN (("REL_CD_classifiers_ANTENNAMODULE_INSTALLED_AT_SITE"::TEXT) gin_trgm_ops);
 
 CREATE INDEX IF NOT EXISTS "IDX_2321BFA482AD2700F41E2BA359F6EB00F47601B9" ON ties_data."o-ran-smo-teiv-equipment_AntennaModule" USING GIN ("REL_CD_decorators_ANTENNAMODULE_INSTALLED_AT_SITE");
+
+CREATE INDEX IF NOT EXISTS "IDX_5ABDB19E55A6BDEF33855F14CB1B3B8CF457912C" ON ties_data."o-ran-smo-teiv-equipment_AntennaModule" USING GIN (("REL_CD_sourceIds_SECTOR_GROUPS_ANTENNAMODULE"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_83B6347C0C0A005D5E3D856D973D3322DFEDEA35" ON ties_data."o-ran-smo-teiv-equipment_AntennaModule" USING GIN (("REL_CD_classifiers_SECTOR_GROUPS_ANTENNAMODULE"::TEXT) gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS "IDX_6C6FBD69F47F41970595A8775DC99CA0F5E894A1" ON ties_data."o-ran-smo-teiv-equipment_AntennaModule" USING GIN ("REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE");
 
 CREATE INDEX IF NOT EXISTS "IDX_5ABDB19E55A6BDEF33855F14CB1B3B8CF457912C" ON ties_data."o-ran-smo-teiv-equipment_AntennaModule" USING GIN (("REL_CD_sourceIds_SECTOR_GROUPS_ANTENNAMODULE"::TEXT) gin_trgm_ops);
 

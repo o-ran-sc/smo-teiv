@@ -1,0 +1,76 @@
+{
+    "o-ran-smo-teiv-ran_NRCellDU": [
+        {
+            "id": "myReliabilityCell_1",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_2",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_3",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_4",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_5",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_6",
+            "cellLocalId": null,
+            "nCI": null,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_7",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_8",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        },
+        {
+            "id": "myReliabilityCell_9",
+            "cellLocalId": 51,
+            "nCI": 61,
+            "nRPCI": 701,
+            "nRTAC": 401,
+            "RI_nRTAC": "OK"
+        }
+    ]
+}

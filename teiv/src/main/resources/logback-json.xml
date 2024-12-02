@@ -21,34 +21,27 @@
  -->
 <configuration>
     <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
 
-            <fieldNames>
+            <providers>
                 <version>
                     <fieldName>version</fieldName>
                     <version>1.2.0</version>
                 </version>
-                <timestamp>timestamp</timestamp>
-            </fieldNames>
-
-            <!-- Add fields from MDC [user and correlation_id] -->
-            <includeMdcKeyName>user</includeMdcKeyName>
-            <provider class="net.logstash.logback.composite.loggingevent.LoggingEventPatternJsonProvider">
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
+                </timestamp>
+                <!-- Add fields from MDC [user and correlation_id] -->
+                <includeMdcKeyName>user</includeMdcKeyName>
                 <pattern>
                     <omitEmptyFields>true</omitEmptyFields>
                     <pattern>
                         {
-                            "service_id": "${SERVICE_ID:-unknown}",
-                            "message": "%msg"
-                        }
-                    </pattern>
-                </pattern>
-                <pattern>
-                    <omitEmptyFields>true</omitEmptyFields>
-                    <pattern>
-                        {
-                            "facility": "%X{facility}",
-                            "subject": "%X{subject}",
+                        "service_id": "${SERVICE_ID:-unknown}",
+                        "message": "%msg",
+                        "facility": "%X{facility}",
+                        "subject": "%X{subject}",
                             "extra_data": {
                                 "logger": "%logger",
                                 "thread_info": {
@@ -64,7 +57,7 @@
                         }
                     </pattern>
                 </pattern>
-            </provider>
+            </providers>
 
         </encoder>
     </appender>

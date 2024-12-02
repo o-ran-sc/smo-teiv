@@ -35,6 +35,8 @@ RUN echo "$USER_ID:x:$USER_ID:0:An Identity for $USER_NAME:/nonexistent:/bin/fal
 ARG JAR
 WORKDIR /opt/app/teiv
 
+ENV SPRING_PROFILES_ACTIVE=exposure,groups
+
 ADD src/main/resources/application.yaml /opt/app/teiv/config/application.yaml
 ADD target/${JAR} /opt/app/teiv/topology-exposure-inventory-app.jar
 

@@ -27,7 +27,6 @@ import org.oran.smo.teiv.api.model.OranTeivSchema;
 import org.oran.smo.teiv.api.model.OranTeivSchemaList;
 import org.oran.smo.teiv.exception.TiesException;
 import org.oran.smo.teiv.exception.YangModelException;
-import org.oran.smo.teiv.exposure.consumerdata.ConsumerDataRepository;
 import org.oran.smo.teiv.exposure.model.api.ModelService;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
 import org.oran.smo.teiv.exposure.spi.Module;
@@ -36,6 +35,7 @@ import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.schema.ConsumerDataCache;
 import org.oran.smo.teiv.service.SchemaCleanUpService;
 import org.oran.smo.teiv.utils.YangParser;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,24 +55,21 @@ import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
 import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TiesConstants.INVALID_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.SCHEMA_ALREADY_EXISTS;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Profile("exposure")
 public class ModelServiceImpl implements ModelService {
     private static final String CONTENT_HREF = "%s/%s/content";
 
     private final ModelRepository modelRepository;
     private final YangParser yangParser;
-    private final ConsumerDataRepository consumerDataRepository;
     private final ConsumerDataCache consumerDataCaches;
     private final SchemaCleanUpService schemaCleanUpService;
 
     @Override
-    public void createModule(final MultipartFile yangFile) {
+    public String createModule(final MultipartFile yangFile) {
         log.debug("Create module with file: {}", yangFile);
         final Map<String, Object> result;
         final String content;
@@ -80,37 +77,24 @@ public class ModelServiceImpl implements ModelService {
         try {
             result = yangParser.validateSchemasYang(yangFile);
             content = Base64.getEncoder().encodeToString(yangFile.getBytes());
-        } catch (IOException | YangModelException e) {
-            log.warn(INVALID_SCHEMA, e);
-            throw TiesException.invalidFileInput(INVALID_SCHEMA);
+        } catch (YangModelException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         String moduleName = (String) result.get("moduleName");
         String revision = (String) result.get("revision");
         List<String> classifiers = (List<String>) result.get(CLASSIFIERS);
         Map<String, String> decorators = (Map<String, String>) result.get(DECORATORS);
-
-        if (modelRepository.doesModuleExists(TIES_MODEL, moduleName) || modelRepository.doesModuleExists(TIES_CONSUMER_DATA,
-                moduleName)) {
-            throw TiesException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
-        }
-
         if (classifiers.isEmpty() && decorators.isEmpty()) {
+            log.warn("No classifiers and decorators found in module {} ", moduleName);
             throw TiesException.invalidFileInput(INVALID_SCHEMA);
         }
-
-        modelRepository.createModule(Module.builder().name(moduleName).content(content).revision(revision).ownerAppId("APP")
-                .status(ModuleStatus.IN_USAGE).build());
-
-        if (!classifiers.isEmpty()) {
-            consumerDataRepository.storeClassifiers(classifiers, moduleName);
-        }
-
-        if (!decorators.isEmpty()) {
-            consumerDataRepository.storeDecorators(decorators, moduleName);
-        }
-
+        modelRepository.createConsumerDataModule(Module.builder().name(moduleName).content(content).revision(revision)
+                .ownerAppId("APP").status(ModuleStatus.IN_USAGE).build(), classifiers, decorators);
         consumerDataCaches.emptyConsumerDataCaches();
+        return moduleName;
 
     }
 

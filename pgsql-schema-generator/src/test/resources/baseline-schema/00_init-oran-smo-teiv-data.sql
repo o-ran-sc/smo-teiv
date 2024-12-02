@@ -43,14 +43,11 @@ CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
 RETURNS void AS
 $$
 BEGIN
-	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = t_name AND constraint_name = c_name) THEN
+	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'ties_data' AND table_name = t_name AND constraint_name = c_name) THEN
 		EXECUTE constraint_sql;
 	END IF;
 END;
 $$ language 'plpgsql';
-
--- Update data schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_data', 'success');
 
 --missing consumer data columns, their default values and index
 --missing index for antennaBeamWidth

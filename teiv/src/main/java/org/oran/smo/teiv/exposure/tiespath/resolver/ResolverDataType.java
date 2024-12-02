@@ -23,5 +23,7 @@ package org.oran.smo.teiv.exposure.tiespath.resolver;
 public enum ResolverDataType {
     INTEGER,
     STRING,
+    DOUBLE,
+    DECIMAL,
     NOT_NULL
 }

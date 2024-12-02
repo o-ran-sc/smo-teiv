@@ -32,7 +32,8 @@ REPLACEMENT2="'topology_exposure_user'"
 declare -A FILES
 FILES=( ["00_init-oran-smo-teiv-data.sql"]="01_init-teiv-exposure-data.sql"
         ["01_init-oran-smo-teiv-model.sql"]="00_init-teiv-exposure-model.sql"
-        ["02_init-oran-smo-teiv-consumer-data.sql"]="02_init-teiv-exposure-consumer-data.sql")
+        ["02_init-oran-smo-teiv-consumer-data.sql"]="02_init-teiv-exposure-consumer-data.sql"
+        ["03_init-oran-smo-teiv-groups.sql"]="03_init-teiv-exposure-groups.sql")
 
 mkdir -p "$TARGET_DIR"
 

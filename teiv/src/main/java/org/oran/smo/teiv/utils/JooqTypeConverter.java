@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jooq.JSONB;
 import org.jooq.tools.json.JSONArray;
 
@@ -64,7 +65,7 @@ public class JooqTypeConverter {
     }
 
     /**
-     * Creates a jooq.JSONB object from a json formatted String.
+     * Creates a jooq.JSONB object from a json formatted object.
      *
      * The Yang Parser library parses the single element arrays as a JSON primitive.
      * The use of yang models will solve this problem. As a temporary workaround,
@@ -81,9 +82,22 @@ public class JooqTypeConverter {
             return null;
         } else if (value instanceof String str && isJsonObjectOrArray(str)) {
             return JSONB.jsonb(str);
+        } else if (value instanceof Map<?, ?> map) {
+            return toJsonb(objectMapper.convertValue(map, ObjectNode.class).toString());
         } else {
             return JSONB.jsonb(makeSingleElementJsonArray(value));
         }
+    }
+
+    /**
+     * Creates a jooq.JSONB object from a key-value pair.
+     *
+     * @param key
+     * @param value
+     * @return The jooq.JSONB object created from the key-value pair
+     */
+    public static JSONB toJsonb(final String key, String value) {
+        return JooqTypeConverter.toJsonb(objectMapper.createObjectNode().put(key, value).toString());
     }
 
     /**

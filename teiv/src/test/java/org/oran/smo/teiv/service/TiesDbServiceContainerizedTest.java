@@ -53,6 +53,7 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.util.xml.jaxb.Column;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +72,7 @@ import org.oran.smo.teiv.utils.schema.Geography;
 @Configuration
 @SpringBootTest
 class TiesDbServiceContainerizedTest {
-    public static TestPostgresqlContainer postgreSQLContainer = TestPostgresqlContainer.getInstance();
+    private static TestPostgresqlContainer postgreSQLContainer = TestPostgresqlContainer.getInstance();
 
     @Autowired
     private TiesDbService tiesDbService;
@@ -86,6 +87,8 @@ class TiesDbServiceContainerizedTest {
     @Value("${database.retry-policies.deadlock.retry-attempts}")
     private int maxRetryAttemptsForDeadlock;
 
+    private static String updatedTimeColumnName = "updated_time";
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.read.jdbc-url", () -> postgreSQLContainer.getJdbcUrl());
@@ -99,30 +102,33 @@ class TiesDbServiceContainerizedTest {
 
     @BeforeEach
     public void deleteAll() {
-        dslContext.meta().filterSchemas(s -> s.getName().equals(TIES_DATA_SCHEMA)).getTables().forEach(t -> dslContext
-                .truncate(t).cascade().execute());
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA), dslContext);
     }
 
     @Test
     void testMergeManagedElement() {
         Map<String, Object> map1 = new HashMap<>();
         map1.put("id", "id1");
-        map1.put("fdn", "fdn1");
-        map1.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", map1);
+        map1.put("CD_sourceIds", JSONB.jsonb("[\"sourceId1\",\"sourceId2\"]"));
+        map1.put("metadata", Map.of("reliabilityIndicator", "OK"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", map1, updatedTimeColumnName);
 
-        Result<Record> rows = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+        Result<Record> rows = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
+        assertEquals("{\"reliabilityIndicator\":\"OK\"}", rows.get(0).get("metadata").toString());
+        map1.remove("metadata");
         for (Entry<String, Object> e : map1.entrySet()) {
             assertEquals(e.getValue(), rows.get(0).get(e.getKey()));
         }
 
         Map<String, Object> map2 = new HashMap<>();
         map2.put("id", "id1");
-        map2.put("fdn", "fdn2");
-        map2.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann2\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", map2);
+        map2.put("CD_sourceIds", JSONB.jsonb("[\"sourceId3\",\"sourceId4\"]"));
+        map2.put("metadata", new HashMap<>());
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", map2, updatedTimeColumnName);
 
-        Result<Record> rows2 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+        Result<Record> rows2 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
+        assertEquals("{}", rows2.get(0).get("metadata").toString());
+        map2.remove("metadata");
         for (Entry<String, Object> e : map2.entrySet()) {
             assertEquals(e.getValue(), rows2.get(0).get(e.getKey()));
         }
@@ -130,44 +136,57 @@ class TiesDbServiceContainerizedTest {
 
     @Test
     void testMergeSector() throws IOException {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", "id1");
-        map.put("sectorId", 7);
-        map.put("geo-location", new Geography("{\"latitude\": 47.497913,\"longitude\": 19.040236}"));
-        map.put("azimuth", 7.3);
-        tiesDbOperations.merge(dslContext, "ties_data.\"22174a23af5d5a96143c83ddfa78654df0acb697\"", map);
+        Map<String, Object> mapWithGeoLocation = new HashMap<>();
+        mapWithGeoLocation.put("id", "id1");
+        mapWithGeoLocation.put("sectorId", 7);
+        mapWithGeoLocation.put("geo-location", new Geography("{\"latitude\": 47.497913,\"longitude\": 19.040236}"));
+        mapWithGeoLocation.put("azimuth", 7.3);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_Sector\"", mapWithGeoLocation,
+                updatedTimeColumnName);
+
+        Map<String, Object> mapWithGeoLocationAndHeight = new HashMap<>();
+        mapWithGeoLocationAndHeight.put("id", "id2");
+        mapWithGeoLocationAndHeight.put("sectorId", 8);
+        mapWithGeoLocationAndHeight.put("geo-location", new Geography(
+                "{\"latitude\": 47.497913,\"longitude\": 19.040236,\"height\": 111.1}"));
+        mapWithGeoLocationAndHeight.put("azimuth", 8.3);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_Sector\"", mapWithGeoLocationAndHeight,
+                updatedTimeColumnName);
 
         Result<?> rows = dslContext.select(field("id"), field("\"sectorId\"").as("sectorId"), field(
-                "ST_AsText(\"geo-location\")"), field("azimuth")).from(table(
-                        "ties_data.\"22174a23af5d5a96143c83ddfa78654df0acb697\"")).fetch();
+                "ST_AsText(\"geo-location\")"), field("azimuth")).from(table("ties_data.\"o-ran-smo-teiv-ran_Sector\""))
+                .fetch();
 
         assertEquals("id1", rows.get(0).get("id"));
         assertEquals(7L, rows.get(0).get("sectorId"));
-
         assertEquals("POINT(47.497913 19.040236)", rows.get(0).get("ST_AsText(\"geo-location\")"));
         assertEquals(0, new BigDecimal("7.3").compareTo((BigDecimal) rows.get(0).get("azimuth")));
+
+        assertEquals("id2", rows.get(1).get("id"));
+        assertEquals(8L, rows.get(1).get("sectorId"));
+        assertEquals("POINT Z (47.497913 19.040236 111.1)", rows.get(1).get("ST_AsText(\"geo-location\")"));
+        assertEquals(0, new BigDecimal("8.3").compareTo((BigDecimal) rows.get(1).get("azimuth")));
     }
 
     @Test
-    void testDeleteFromManagedElement() {
+    void testDeleteFromManagedElement() throws SchemaRegistryException {
         Map<String, Object> map1 = new HashMap<>();
         map1.put("id", "id1");
-        map1.put("fdn", "fdn1");
-        map1.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", map1);
+        map1.put("CD_sourceIds", JSONB.jsonb("[\"sourceId1\",\"sourceId2\"]"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", map1, updatedTimeColumnName);
 
         Map<String, Object> map2 = new HashMap<>();
         map2.put("id", "id2");
-        map2.put("fdn", "fdn2");
-        map2.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann2\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", map2);
+        map2.put("CD_sourceIds", JSONB.jsonb("[\"sourceId3\",\"sourceId4\"]"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", map2, updatedTimeColumnName);
 
-        Result<Record> row1 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+        Result<Record> row1 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(2, row1.size());
 
-        tiesDbOperations.deleteEntity(dslContext, SchemaRegistry.getEntityTypeByName("ManagedElement"), "id1");
+        tiesDbOperations.deleteEntity(dslContext, SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-oam",
+                "ManagedElement"), "id1");
 
-        Result<Record> row2 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+        Result<Record> row2 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(1, row2.size());
     }
 
@@ -176,42 +195,47 @@ class TiesDbServiceContainerizedTest {
         List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
         Map<String, Object> map1 = new HashMap<>();
         map1.put("id", "id1");
-        map1.put("fdn", "fdn1");
-        map1.put("gNBCUName", "gNBCUName");
-        map1.put("gNBId", 1);
-        map1.put("gNBIdLength", 1);
-        map1.put("pLMNId", JSONB.jsonb("{\"name\":\"pLMNId1\"}"));
-        map1.put("cmId", JSONB.jsonb("{\"name\":\"cmId1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"", map1);
+        map1.put("positionWithinSector", "center");
+        map1.put("antennaBeamWidth", JSONB.jsonb("[2,4,5]"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"", map1,
+                updatedTimeColumnName);
 
         Map<String, Object> map2 = new HashMap<>();
         map2.put("id", "id1");
-        map2.put("name", "CloudNativeApplication");
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", map2);
+        map2.put("eUtranFqBands", JSONB.jsonb("[\"eUtranFqBands1\",\"eUtranFqBands2\"]"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"", map2,
+                updatedTimeColumnName);
 
         Map<String, Object> map3 = new HashMap<>();
         map3.put("id", "id1");
-        map3.put("aSide_GNBCUCPFunction", "id1");
-        map3.put("bSide_CloudNativeApplication", "id1");
-        tiesDbOperations.merge(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"", map3);
+        map3.put("aSide_AntennaModule", "id1");
+        map3.put("bSide_AntennaCapability", "id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"", map3,
+                updatedTimeColumnName);
 
-        Result<Record> row1 = selectAllRowsFromTable(dslContext, "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"");
+        Result<Record> row1 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"");
         assertEquals(1, row1.size());
-        Result<Record> row2 = selectAllRowsFromTable(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"");
+        Result<Record> row2 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"");
         assertEquals(1, row2.size());
-        Result<Record> row3 = selectAllRowsFromTable(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"");
+        Result<Record> row3 = selectAllRowsFromTable(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"");
         assertEquals(1, row3.size());
 
-        dbOperations.add(dslContext -> tiesDbOperations.deleteEntity(dslContext, SchemaRegistry.getEntityTypeByName(
-                "GNBCUCPFunction"), "id1"));
+        dbOperations.add(dslContext -> {
+            try {
+                tiesDbOperations.deleteEntity(dslContext, SchemaRegistry.getEntityTypeByModuleAndName(
+                        "o-ran-smo-teiv-equipment", "AntennaModule"), "id1");
+            } catch (SchemaRegistryException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         assertDoesNotThrow(() -> tiesDbService.execute(dbOperations));
 
-        Result<Record> row4 = selectAllRowsFromTable(dslContext, "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"");
+        Result<Record> row4 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"");
         assertEquals(0, row4.size());
-        Result<Record> row5 = selectAllRowsFromTable(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"");
+        Result<Record> row5 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"");
         assertEquals(1, row5.size());
-        Result<Record> row6 = selectAllRowsFromTable(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"");
+        Result<Record> row6 = selectAllRowsFromTable(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"");
         assertEquals(0, row6.size());
 
     }
@@ -221,330 +245,349 @@ class TiesDbServiceContainerizedTest {
         List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
         Map<String, Object> map1 = new HashMap<>();
         map1.put("id", "id1");
-        map1.put("fdn", "fdn1");
-        map1.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", map1);
+        map1.put("gNBId", 1);
+        map1.put("dUpLMNId", JSONB.jsonb("{\"mcc\":\"dUpLMNId1\"}"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", map1, updatedTimeColumnName);
 
         Map<String, Object> map2 = new HashMap<>();
         map2.put("id", "id1");
-        map2.put("name", "CloudNativeSystem");
-        tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"", map2);
+        map2.put("CD_sourceIds", JSONB.jsonb("[\"sourceId1\",\"sourceId2\"]"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", map2, updatedTimeColumnName);
 
         Map<String, Object> map3 = new HashMap<>();
         map3.put("id", "id1");
-        map3.put("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "relId");
-        map3.put("REL_FK_deployed-as-cloudNativeSystem", "id1");
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", map3);
+        map3.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "relId");
+        map3.put("REL_FK_managed-by-managedElement", "id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", map3, updatedTimeColumnName);
 
-        Result<Record> row2 = selectAllRowsFromTable(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
+        Result<Record> row2 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(1, row2.size());
-        Result<Record> row1 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+        Result<Record> row1 = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
         assertEquals(1, row1.size());
 
-        dbOperations.add(dslContext -> tiesDbOperations.deleteEntity(dslContext, SchemaRegistry.getEntityTypeByName(
-                "CloudNativeSystem"), "id1"));
+        dbOperations.add(dslContext -> {
+            try {
+                tiesDbOperations.deleteEntity(dslContext, SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-oam",
+                        "ManagedElement"), "id1");
+            } catch (SchemaRegistryException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         assertDoesNotThrow(() -> tiesDbService.execute(dbOperations));
 
-        Result<Record> meRecords = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
-        assertEquals("id1", meRecords.get(0).get("id"));
-        assertEquals("fdn1", meRecords.get(0).get("fdn"));
-        assertNull(meRecords.get(0).get("REL_FK_deployed-as-cloudNativeSystem"));
-        assertNull(meRecords.get(0).get("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-        Result<Record> cnsRecords = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(0, cnsRecords.size());
+        Result<Record> oduFuctionRecords = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals("id1", oduFuctionRecords.get(0).get("id"));
+        assertEquals(1L, oduFuctionRecords.get(0).get("gNBId"));
+        assertNull(oduFuctionRecords.get(0).get("REL_FK_managed-by-managedElement"));
+        assertNull(oduFuctionRecords.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+        Result<Record> managedElementRecords = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
+        assertEquals(0, managedElementRecords.size());
     }
 
     @Test
     void testMergeOneToManyRelationship() {
+        Map<String, Object> oduFuctionEntity1 = new HashMap<>();
+        oduFuctionEntity1.put("id", "id1");
+        oduFuctionEntity1.put("gNBId", 1);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity1,
+                updatedTimeColumnName);
+
         Map<String, Object> managedElementEntity1 = new HashMap<>();
-        managedElementEntity1.put("id", "managedelement_id1");
-        managedElementEntity1.put("fdn", "managedelement_fdn1");
-        managedElementEntity1.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity1);
+        managedElementEntity1.put("id", "id1");
+        managedElementEntity1.put("CD_sourceIds", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity1,
+                updatedTimeColumnName);
 
-        Map<String, Object> cloudNativeAppEntity = new HashMap<>();
-        cloudNativeAppEntity.put("id", "cna-1");
-        cloudNativeAppEntity.put("name", "CloudNativeApp1");
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cloudNativeAppEntity);
+        Map<String, Object> rel = new HashMap<>();
+        rel.put("id", "id1");
+        rel.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "rel_id1");
+        rel.put("REL_FK_managed-by-managedElement", "id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", rel, updatedTimeColumnName);
 
-        Map<String, Object> meToCnaRelationship = new HashMap<>();
-        meToCnaRelationship.put("id", "cna-1");
-        meToCnaRelationship.put("REL_FK_realised-managedElement", "managedelement_id1");
-        meToCnaRelationship.put("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "rel_id1");
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", meToCnaRelationship);
+        Result<Record> rowsBeforeMerge = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals("id1", rowsBeforeMerge.get(0).get("id"));
+        assertEquals(1L, rowsBeforeMerge.get(0).get("gNBId"));
+        assertEquals("id1", rowsBeforeMerge.get(0).get("REL_FK_managed-by-managedElement"));
+        assertEquals("rel_id1", rowsBeforeMerge.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
 
-        Result<?> rowsBeforeMerge = dslContext.select(field("id"), field("name"), field(
-                "\"REL_FK_realised-managedElement\"").as("REL_FK_realised-managedElement"), field(
-                        "\"REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION\"").as(
-                                "REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION")).from(table(
-                                        "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"")).fetch();
-        assertEquals("cna-1", rowsBeforeMerge.get(0).get("id"));
-        assertEquals("CloudNativeApp1", rowsBeforeMerge.get(0).get("name"));
-        assertEquals("managedelement_id1", rowsBeforeMerge.get(0).get("REL_FK_realised-managedElement"));
-        assertEquals("rel_id1", rowsBeforeMerge.get(0).get("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION"));
+        Map<String, Object> oduFuctionEntity2 = new HashMap<>();
+        oduFuctionEntity2.put("id", "id2");
+        oduFuctionEntity2.put("gNBId", 2);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity2,
+                updatedTimeColumnName);
 
-        Map<String, Object> cloudNativeAppEntity2 = new HashMap<>();
-        cloudNativeAppEntity2.put("id", "cna-2");
-        cloudNativeAppEntity2.put("name", "CloudNativeApp2");
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cloudNativeAppEntity2);
+        Map<String, Object> modifiedRel = new HashMap<>();
+        modifiedRel.put("id", "id2");
+        modifiedRel.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "rel_id2");
+        modifiedRel.put("REL_FK_managed-by-managedElement", "id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", modifiedRel,
+                updatedTimeColumnName);
 
-        Map<String, Object> modifiedMeToCnaRelationship = new HashMap<>();
-        modifiedMeToCnaRelationship.put("id", "cna-2");
-        modifiedMeToCnaRelationship.put("REL_FK_realised-managedElement", "managedelement_id1");
-        modifiedMeToCnaRelationship.put("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "rel_id2");
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"",
-                modifiedMeToCnaRelationship);
+        Result<?> rowsAfterMerge = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
 
-        Result<?> rowsAfterMerge = dslContext.select(field("id"), field("name"), field("\"REL_FK_realised-managedElement\"")
-                .as("REL_FK_realised-managedElement"), field("\"REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION\"")
-                        .as("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION")).from(table(
-                                "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"")).fetch();
-
-        assertEquals("cna-1", rowsAfterMerge.get(0).get("id"));
-        assertEquals("CloudNativeApp1", rowsAfterMerge.get(0).get("name"));
-        assertEquals("managedelement_id1", rowsAfterMerge.get(1).get("REL_FK_realised-managedElement"));
-        assertEquals("rel_id1", rowsAfterMerge.get(0).get("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION"));
-        assertEquals("cna-2", rowsAfterMerge.get(1).get("id"));
-        assertEquals("CloudNativeApp2", rowsAfterMerge.get(1).get("name"));
-        assertEquals("managedelement_id1", rowsAfterMerge.get(1).get("REL_FK_realised-managedElement"));
-        assertEquals("rel_id2", rowsAfterMerge.get(1).get("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION"));
+        assertEquals("id1", rowsBeforeMerge.get(0).get("id"));
+        assertEquals(1L, rowsBeforeMerge.get(0).get("gNBId"));
+        assertEquals("id1", rowsBeforeMerge.get(0).get("REL_FK_managed-by-managedElement"));
+        assertEquals("rel_id1", rowsBeforeMerge.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+        assertEquals("id2", rowsAfterMerge.get(1).get("id"));
+        assertEquals(2L, rowsAfterMerge.get(1).get("gNBId"));
+        assertEquals("id1", rowsAfterMerge.get(1).get("REL_FK_managed-by-managedElement"));
+        assertEquals("rel_id2", rowsAfterMerge.get(1).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
     }
 
     @Test
-    void testDeleteOneToManyRelationship() {
+    void testDeleteOneToManyRelationship() throws SchemaRegistryException {
         Map<String, Object> managedElementEntity = new HashMap<>();
         managedElementEntity.put("id", "me-id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> enodeBFunctionEntity = new HashMap<>();
-        enodeBFunctionEntity.put("id", "enodeb-id1");
-        enodeBFunctionEntity.put("eNBId", 1L);
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-logical_ENodeBFunction\"", enodeBFunctionEntity);
+        Map<String, Object> oduFuctionEntity = new HashMap<>();
+        oduFuctionEntity.put("id", "odu-id1");
+        oduFuctionEntity.put("gNBId", 1);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> meToEnodeBFuncRelation = new HashMap<>();
-        meToEnodeBFuncRelation.put("id", "enodeb-id1");
-        meToEnodeBFuncRelation.put("REL_FK_managed-by-managedElement", "me-id1");
-        meToEnodeBFuncRelation.put("REL_ID_MANAGEDELEMENT_MANAGES_ENODEBFUNCTION", "eiid1");
-        meToEnodeBFuncRelation.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ENODEBFUNCTION", JooqTypeConverter.toJsonb(List
-                .of("fdn1", "cmHandleId1")));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-logical_ENodeBFunction\"",
-                meToEnodeBFuncRelation);
+        Map<String, Object> meToOduFuncRelation = new HashMap<>();
+        meToOduFuncRelation.put("id", "odu-id1");
+        meToOduFuncRelation.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToOduFuncRelation.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "eiid1");
+        meToOduFuncRelation.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION", JooqTypeConverter.toJsonb(List.of(
+                "fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", meToOduFuncRelation,
+                updatedTimeColumnName);
 
         tiesDbOperations.deleteRelationFromEntityTableByRelationId(dslContext, "eiid1", SchemaRegistry
-                .getRelationTypeByName("MANAGEDELEMENT_MANAGES_ENODEBFUNCTION"));
+                .getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran", "MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
 
-        Result<Record> rows = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran-logical_ENodeBFunction\"");
-        assertEquals("enodeb-id1", rows.get(0).get("id"));
-        assertEquals(1L, rows.get(0).get("eNBId"));
-        //assertNull(rows.get(0).get("REL_FK_managed-by-managedElement"));
-        assertNull(rows.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ENODEBFUNCTION"));
+        Result<Record> rows = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals("odu-id1", rows.get(0).get("id"));
+        assertEquals(1L, rows.get(0).get("gNBId"));
+        assertNull(rows.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
         assertEquals(JooqTypeConverter.toJsonb(List.of()), rows.get(0).get(
-                "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ENODEBFUNCTION"));
+                "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
     }
 
     @Test
     void testTransactionalMergeSucceeds() {
         List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
-        Map<String, Object> cloudNativeSystemEntity = new HashMap<>();
-        cloudNativeSystemEntity.put("id", "cloudnative_id1");
-        cloudNativeSystemEntity.put("name", "CloudNativeSystem");
-        dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"", cloudNativeSystemEntity));
-
         Map<String, Object> managedElementEntity = new HashMap<>();
-        managedElementEntity.put("id", "managed_element_id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
+        managedElementEntity.put("id", "me-id1");
         dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity));
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity, updatedTimeColumnName));
 
-        Map<String, Object> meTocnsRelationship = new HashMap<>();
-        meTocnsRelationship.put("id", "managed_element_id1");
-        meTocnsRelationship.put("REL_FK_deployed-as-cloudNativeSystem", "cloudnative_id1");
-        meTocnsRelationship.put("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "eiid1");
-        meTocnsRelationship.put("REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", JooqTypeConverter.toJsonb(
-                List.of("fdn1", "cmHandleId1")));
+        Map<String, Object> oduFuctionEntity = new HashMap<>();
+        oduFuctionEntity.put("id", "odu-id1");
+        oduFuctionEntity.put("gNBId", 1);
         dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", meTocnsRelationship));
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity, updatedTimeColumnName));
+
+        Map<String, Object> meToOduFuncRelation = new HashMap<>();
+        meToOduFuncRelation.put("id", "odu-id1");
+        meToOduFuncRelation.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToOduFuncRelation.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "eiid1");
+        meToOduFuncRelation.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION", JooqTypeConverter.toJsonb(List.of(
+                "fdn1", "cmHandleId1")));
+        dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", meToOduFuncRelation, updatedTimeColumnName));
 
         assertDoesNotThrow(() -> tiesDbService.execute(dbOperations));
 
-        Result<Record> rowsFromManagedElementTable = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
-        assertEquals(1, rowsFromManagedElementTable.size());
-        assertEquals("cloudnative_id1", rowsFromManagedElementTable.get(0).get("REL_FK_deployed-as-cloudNativeSystem"));
-        assertEquals("eiid1", rowsFromManagedElementTable.get(0).get(
-                "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromManagedElementTable.get(0).get(
-                "REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
+        Result<Record> rowsFromOduFuctionTable = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals(1, rowsFromOduFuctionTable.size());
+        assertEquals("me-id1", rowsFromOduFuctionTable.get(0).get("REL_FK_managed-by-managedElement"));
+        assertEquals("eiid1", rowsFromOduFuctionTable.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromOduFuctionTable.get(0).get(
+                "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
 
-        Result<Record> rowsFromCloudNativeSystem = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(1, rowsFromCloudNativeSystem.size());
+        Result<Record> rowsFromManagedElement = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
+        assertEquals(1, rowsFromManagedElement.size());
     }
 
     @Test
     void testTransactionalMergeRollsBackAfterRelationshipError() {
         List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
         Map<String, Object> managedElementEntity = new HashMap<>();
-        managedElementEntity.put("id", "managed_element_id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
+        managedElementEntity.put("id", "me-id1");
         dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity));
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity, updatedTimeColumnName));
 
-        Map<String, Object> cloudNativeSystemEntity = new HashMap<>();
-        cloudNativeSystemEntity.put("id", "cloudnative_id1");
-        cloudNativeSystemEntity.put("name", "CloudNativeSystem");
-
+        Map<String, Object> oduFuctionEntity = new HashMap<>();
+        oduFuctionEntity.put("id", "odu-id1");
+        oduFuctionEntity.put("gNBId", 1);
         dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"", cloudNativeSystemEntity));
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity, updatedTimeColumnName));
 
         // Create a faulty relationship map to trigger the rollback
         Map<String, Object> faultyCloudNativeSystemRelationship = new HashMap<>();
-        faultyCloudNativeSystemRelationship.put("id", "cloudnative_id1");
-        faultyCloudNativeSystemRelationship.put("REL_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM_BAAAD",
-                "managed_element_id1");
-        faultyCloudNativeSystemRelationship.put("REL_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM_EIID", "eiid1");
+        faultyCloudNativeSystemRelationship.put("id", "odu_id1");
+        faultyCloudNativeSystemRelationship.put("REL_MANAGEDELEMENT_MANAGES_ODUFUNCTION_BAAAD", "managed_element_id1");
+        faultyCloudNativeSystemRelationship.put("REL_MANAGEDELEMENT_MANAGES_ODUFUNCTION_EIID", "eiid1");
         dbOperations.add(wrDSLContext -> tiesDbOperations.merge(wrDSLContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"", faultyCloudNativeSystemRelationship));
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", faultyCloudNativeSystemRelationship,
+                updatedTimeColumnName));
 
         assertThrows(TiesException.class, () -> tiesDbService.execute(dbOperations));
 
         Result<Record> rowsFromManagedElementTable = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(0, rowsFromManagedElementTable.size());
 
         Result<Record> rowsFromCloudNativeSystem = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
         assertEquals(0, rowsFromCloudNativeSystem.size());
     }
 
     @Test
     void testTransactionalDeleteSucceeds() {
         List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
-        Map<String, Object> cloudNativeSystemEntity = new HashMap<>();
-        cloudNativeSystemEntity.put("id", "cloudnative_id1");
-        cloudNativeSystemEntity.put("name", "CloudNativeSystem");
-        tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                cloudNativeSystemEntity);
-
         Map<String, Object> managedElementEntity = new HashMap<>();
-        managedElementEntity.put("id", "managed_element_id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity);
+        managedElementEntity.put("id", "me-id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> meToCnsRelationship = new HashMap<>();
-        meToCnsRelationship.put("id", "managed_element_id1");
-        meToCnsRelationship.put("REL_FK_deployed-as-cloudNativeSystem", "cloudnative_id1");
-        meToCnsRelationship.put("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "eiid1");
-        meToCnsRelationship.put("REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", JooqTypeConverter.toJsonb(
-                List.of("fdn1", "cmHandleId1")));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", meToCnsRelationship);
+        Map<String, Object> oduFuctionEntity = new HashMap<>();
+        oduFuctionEntity.put("id", "odu-id1");
+        oduFuctionEntity.put("gNBId", 1);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity,
+                updatedTimeColumnName);
 
-        Result<Record> rowsFromCloudNativeSystemBeforeDelete = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(1, rowsFromCloudNativeSystemBeforeDelete.size());
+        Map<String, Object> meToOduFuncRelation = new HashMap<>();
+        meToOduFuncRelation.put("id", "odu-id1");
+        meToOduFuncRelation.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToOduFuncRelation.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "eiid1");
+        meToOduFuncRelation.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION", JooqTypeConverter.toJsonb(List.of(
+                "fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", meToOduFuncRelation,
+                updatedTimeColumnName);
+
+        Result<Record> rowsFromOduFuctionBeforeDelete = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals(1, rowsFromOduFuctionBeforeDelete.size());
+        assertEquals("me-id1", rowsFromOduFuctionBeforeDelete.get(0).get("REL_FK_managed-by-managedElement"));
+        assertEquals("eiid1", rowsFromOduFuctionBeforeDelete.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromOduFuctionBeforeDelete.get(0).get(
+                "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
 
         Result<Record> rowsFromManagedElementBeforeDelete = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(1, rowsFromManagedElementBeforeDelete.size());
-        assertEquals("cloudnative_id1", rowsFromManagedElementBeforeDelete.get(0).get(
-                "REL_FK_deployed-as-cloudNativeSystem"));
-        assertEquals("eiid1", rowsFromManagedElementBeforeDelete.get(0).get(
-                "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromManagedElementBeforeDelete.get(0)
-                .get("REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-
-        dbOperations.add(wrDSLContext -> tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByName(
-                "ManagedElement"), "managed_element_id1"));
 
         dbOperations.add(wrDSLContext -> {
-            tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByName("CloudNativeSystem"),
-                    "cloudnative_id1");
+            try {
+                tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByModuleAndName(
+                        "o-ran-smo-teiv-ran", "ODUFunction"), "odu-id1");
+            } catch (SchemaRegistryException e) {
+                e.printStackTrace();
+            }
         });
 
-        dbOperations.add(wrDSLContext -> tiesDbOperations.deleteRelationFromEntityTableByRelationId(wrDSLContext,
-                "managed_element_id1", SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM")));
+        dbOperations.add(wrDSLContext -> {
+            try {
+                tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByModuleAndName(
+                        "o-ran-smo-teiv-oam", "ManagedElement"), "me-id1");
+            } catch (SchemaRegistryException e) {
+                e.printStackTrace();
+            }
+        });
+
+        dbOperations.add(wrDSLContext -> {
+            try {
+                tiesDbOperations.deleteRelationFromEntityTableByRelationId(wrDSLContext, "eiid1", SchemaRegistry
+                        .getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                                "MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+            } catch (SchemaRegistryException e) {
+                e.printStackTrace();
+            }
+        });
 
         assertDoesNotThrow(() -> tiesDbService.execute(dbOperations));
 
         Result<Record> rowsFromManagedElementTable = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(0, rowsFromManagedElementTable.size());
 
-        Result<Record> rowsFromCloudNativeSystem = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(0, rowsFromCloudNativeSystem.size());
+        Result<Record> rowsOduFuction = selectAllRowsFromTable(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals(0, rowsOduFuction.size());
     }
 
     @Test
     void testTransactionalDeleteRollbackAfterRelationshipError() {
         List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
-        Map<String, Object> cloudNativeSystemEntity = new HashMap<>();
-        cloudNativeSystemEntity.put("id", "cloudnative_id1");
-        cloudNativeSystemEntity.put("name", "CloudNativeSystem");
-        tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                cloudNativeSystemEntity);
-
         Map<String, Object> managedElementEntity = new HashMap<>();
-        managedElementEntity.put("id", "managed_element_id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity);
+        managedElementEntity.put("id", "me-id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> cloudNativeSystemRelationship = new HashMap<>();
-        cloudNativeSystemRelationship.put("id", "managed_element_id1");
-        cloudNativeSystemRelationship.put("REL_FK_deployed-as-cloudNativeSystem", "cloudnative_id1");
-        cloudNativeSystemRelationship.put("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "eiid1");
-        cloudNativeSystemRelationship.put("REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", JooqTypeConverter
-                .toJsonb(List.of("fdn1", "cmHandleId1")));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"",
-                cloudNativeSystemRelationship);
+        Map<String, Object> oduFuctionEntity = new HashMap<>();
+        oduFuctionEntity.put("id", "odu-id1");
+        oduFuctionEntity.put("gNBId", 1);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFuctionEntity,
+                updatedTimeColumnName);
 
-        Result<Record> rowsFromCloudNativeSystemBeforeDelete = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(1, rowsFromCloudNativeSystemBeforeDelete.size());
+        Map<String, Object> meToOduFuncRelation = new HashMap<>();
+        meToOduFuncRelation.put("id", "odu-id1");
+        meToOduFuncRelation.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToOduFuncRelation.put("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "eiid1");
+        meToOduFuncRelation.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION", JooqTypeConverter.toJsonb(List.of(
+                "fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", meToOduFuncRelation,
+                updatedTimeColumnName);
 
         Result<Record> rowsFromManagedElementBeforeDelete = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
         assertEquals(1, rowsFromManagedElementBeforeDelete.size());
-        assertEquals("cloudnative_id1", rowsFromManagedElementBeforeDelete.get(0).get(
-                "REL_FK_deployed-as-cloudNativeSystem"));
-        assertEquals("eiid1", rowsFromManagedElementBeforeDelete.get(0).get(
-                "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromManagedElementBeforeDelete.get(0)
-                .get("REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
 
-        dbOperations.add(wrDSLContext -> tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByName(
-                "ManagedElement"), "managed_element_id1"));
-        dbOperations.add(wrDSLContext -> tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByName(
-                "CloudNativeSystem"), "cloudnative_id1"));
+        Result<Record> rowsFromOduFuctionBeforeDelete = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals(1, rowsFromOduFuctionBeforeDelete.size());
+        assertEquals(1, rowsFromOduFuctionBeforeDelete.size());
+        assertEquals("me-id1", rowsFromOduFuctionBeforeDelete.get(0).get("REL_FK_managed-by-managedElement"));
+        assertEquals("eiid1", rowsFromOduFuctionBeforeDelete.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromOduFuctionBeforeDelete.get(0).get(
+                "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+
+        dbOperations.add(wrDSLContext -> {
+            try {
+                tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByModuleAndName(
+                        "o-ran-smo-teiv-oam", "ManagedElement"), "me-id1");
+            } catch (SchemaRegistryException e) {
+                e.printStackTrace();
+            }
+        });
+        dbOperations.add(wrDSLContext -> {
+            try {
+                tiesDbOperations.deleteEntity(wrDSLContext, SchemaRegistry.getEntityTypeByModuleAndName(
+                        "o-ran-smo-teiv-ran", "ODUFunction"), "odu-id1");
+            } catch (SchemaRegistryException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Add a faulty relationship delete to trigger the rollback
-        dbOperations.add(wrDSLContext -> tiesDbOperations.deleteRelationFromEntityTableByRelationId(wrDSLContext, "eiid1",
-                SchemaRegistry.getRelationTypeByName("rel_managedelement_deployed_as_cloudnativesystem_eiid")));
+        dbOperations.add(wrDSLContext -> {
+            tiesDbOperations.deleteRelationFromEntityTableByRelationId(wrDSLContext, "eiid1", null);
+        });
 
         assertThrows(TiesException.class, () -> tiesDbService.execute(dbOperations));
 
-        Result<Record> rowsFromCloudNativeSystem = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(1, rowsFromCloudNativeSystem.size());
-        Result<Record> rowsFromManagedElementTable = selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
-        assertEquals(1, rowsFromManagedElementTable.size());
-        assertEquals("cloudnative_id1", rowsFromManagedElementTable.get(0).get("REL_FK_deployed-as-cloudNativeSystem"));
-        assertEquals("eiid1", rowsFromManagedElementTable.get(0).get(
-                "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromManagedElementTable.get(0).get(
-                "REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
+        Result<Record> rowsFromManagedElement = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
+        assertEquals(1, rowsFromManagedElement.size());
+
+        Result<Record> rowsFromOduFuction = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"");
+        assertEquals(1, rowsFromOduFuction.size());
+        assertEquals(1, rowsFromOduFuction.size());
+        assertEquals("me-id1", rowsFromOduFuction.get(0).get("REL_FK_managed-by-managedElement"));
+        assertEquals("eiid1", rowsFromOduFuction.get(0).get("REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
+        assertEquals(JooqTypeConverter.toJsonb(List.of("fdn1", "cmHandleId1")), rowsFromOduFuction.get(0).get(
+                "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION"));
     }
 
     @Test
@@ -552,49 +595,45 @@ class TiesDbServiceContainerizedTest {
         List<Consumer<DSLContext>> dbOperations1 = new ArrayList<>();
         List<Consumer<DSLContext>> dbOperations2 = new ArrayList<>();
 
-        Map<String, Object> cloudNativeSystemEntity1 = new HashMap<>();
-        cloudNativeSystemEntity1.put("id", "id1");
-        cloudNativeSystemEntity1.put("name", "CloudNativeSystem");
+        Map<String, Object> managedElementEntity1 = new HashMap<>();
+        managedElementEntity1.put("id", "id1");
 
-        Map<String, Object> cloudNativeSystemEntity2 = new HashMap<>();
-        cloudNativeSystemEntity2.put("id", "id2");
-        cloudNativeSystemEntity2.put("name", "CloudNativeSystem");
+        Map<String, Object> managedElementEntity2 = new HashMap<>();
+        managedElementEntity2.put("id", "id2");
 
-        Map<String, Object> cloudNativeSystemEntity3 = new HashMap<>();
-        cloudNativeSystemEntity3.put("id", "id3");
-        cloudNativeSystemEntity3.put("name", "CloudNativeSystem");
+        Map<String, Object> managedElementEntity3 = new HashMap<>();
+        managedElementEntity3.put("id", "id3");
 
-        Map<String, Object> cloudNativeSystemEntity4 = new HashMap<>();
-        cloudNativeSystemEntity4.put("id", "id4");
-        cloudNativeSystemEntity4.put("name", "CloudNativeSystem");
+        Map<String, Object> managedElementEntity4 = new HashMap<>();
+        managedElementEntity4.put("id", "id4");
 
         final CountDownLatch firstTransactionCompletedMergeEntity1 = new CountDownLatch(1);
         final CountDownLatch secondTransactionCompletedMergeEntity2 = new CountDownLatch(1);
         dbOperations1.add(dslContext -> {
-            tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                    cloudNativeSystemEntity1);
+            tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity1,
+                    updatedTimeColumnName);
             firstTransactionCompletedMergeEntity1.countDown();
             try {
                 secondTransactionCompletedMergeEntity2.await();
-                tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                        cloudNativeSystemEntity2);
-                tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                        cloudNativeSystemEntity3);
+                tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity2,
+                        updatedTimeColumnName);
+                tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity3,
+                        updatedTimeColumnName);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
-        //Try to add the same rows in another transaction in another order.
+        // Try to add the same rows in another transaction in another order.
         dbOperations2.add(dslContext -> {
             try {
-                tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                        cloudNativeSystemEntity2);
+                tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity2,
+                        updatedTimeColumnName);
                 secondTransactionCompletedMergeEntity2.countDown();
                 firstTransactionCompletedMergeEntity1.await();
-                tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                        cloudNativeSystemEntity1);
-                tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                        cloudNativeSystemEntity4);
+                tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity1,
+                        updatedTimeColumnName);
+                tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity4,
+                        updatedTimeColumnName);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -606,9 +645,9 @@ class TiesDbServiceContainerizedTest {
         t2.start();
         t1.join();
         t2.join();
-        Result<Record> rowsFromCloudNativeSystem = selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals(4, rowsFromCloudNativeSystem.size());
+        Result<Record> rowsFromManagedElement = selectAllRowsFromTable(dslContext,
+                "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"");
+        assertEquals(4, rowsFromManagedElement.size());
     }
 
     @Test
@@ -625,14 +664,17 @@ class TiesDbServiceContainerizedTest {
     }
 
     /**
-     * The out of the box binding for geography is available in the commercial jOOQ distribution only. Because of this,
-     * a select * from tableName; query fails if the table has a column with geography type. Even if the value in that
+     * The out of the box binding for geography is available in the commercial jOOQ
+     * distribution only. Because of this,
+     * a select * from tableName; query fails if the table has a column with
+     * geography type. Even if the value in that
      * column is null.
      *
      * @param readDataDslContext
      * @param tableName
      *     For example: ties_data."AntennaModule"
-     * @return the fetched rows. Values of geography type are represented as String values.
+     * @return the fetched rows. Values of geography type are represented as String
+     *     values.
      */
     public static Result<Record> selectAllRowsFromTable(DSLContext readDataDslContext, final String tableName) {
         String unqualifiedName = tableName.split("\\.")[1].split("\"")[1];

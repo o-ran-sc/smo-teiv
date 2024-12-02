@@ -32,6 +32,10 @@ public class LoggerHandler {
         log.info("Audit Log: {} - Request Info: {}", message, requestInfo);
     }
 
+    public void logAuditBase(Logger log, String auditInfo, String cloudEventSource) {
+        log.info("Audit Base Log: Audit Info: {}, Cloud Event Source: {}", auditInfo, cloudEventSource);
+    }
+
     private String getRequestInfo(HttpServletRequest context) {
         String method = context.getMethod();
         String requestURI = context.getRequestURI();

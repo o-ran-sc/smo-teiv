@@ -198,6 +198,9 @@ defines the relationship itself which must be unique.</p>
 well defined user specified string with an entity or relationship.</p>
 <p>Decorators are user-defined attributes (key-value pairs) which can
 be applied to topology entities and relationships.</p>
+<p>Topology groups provide the capability to create user-defined collections of
+topology entities and/or relationships of any type. Groups can be either
+static or dynamic based on how they are created.</p>
 <p>Topology Exposure and Inventory API provides the capabilities to fetch topology
 data. Using the filtering options, it is possible to define more specific
 query requests.</p>
@@ -209,22 +212,31 @@ constructed starting from the RootObject and all other objects are joined
 to it. If there is no connection between the RootObject and the other
 object(s), the query is not constructed. The RootObject still can be
 retrieved and filtered using the <em>/attributes</em>.</p>
-<p>| Use case                                                                                                                                                                                                                                                                                                                                                                                             | domainName | entityTypeName | targetFilter                    | scopeFilter                                                                             | Query result                                                                                                                         |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|:---------------|:--------------------------------|:----------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------|
-| To return the ids for all instances of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 |                                                                                         | All ids of every GNBDUFunction                                                                                                       |
-| To return all attributes of every instance of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                  | RAN        | GNBDUFunction  | /attributes                     |                                                                                         | All GNBDUFunctions with every attribute                                                                                              |
-| To return every instance of the entityTypeName used in the query, but only the attribute that was defined in the <em>targetFilter</em> parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                            | RAN        | GNBDUFunction  | /attributes(gNBId)              |                                                                                         | All gNBIds of every GNBDUFunction                                                                                                    |
-| To return every instance of the entityTypeName used in the query, but only the attributes that were defined in the <em>targetFilter</em> parameter. <br/> Note: The attributes must be separated by a comma &quot;,&quot; when using parenthesis &quot;()&quot;.                                                                                                                                                                | RAN        | GNBDUFunction  | /attributes(gNBId, gNBIdLength) |                                                                                         | All gNBIds and gNBIdLengths of every GNBDUFunction                                                                                   |
-| To return the ids for all instances of the entityTypeName used in the query, that matches the given property in the <em>scopeFilter</em> parameter.                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 | /sourceIds[contains (@item, 'SubNetwork=Ireland')]                                      | Unique set of ids of GNBDUFunctions, where sourceIds contains <em>SubNetwork=Ireland</em>                                                   |
-| To return the ids for all instances of the entityTypeName used in the query, that matches the given attributes in the <em>scopeFilter</em> parameter. <br/> Note: The attributes must be separated by a <em>AND</em> or <em>OR</em>&quot;.                                                                                                                                                                                     | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=3 and @gNBId=111]                                             | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 and the gNBId equals 111                                         |
-| To return the ids for all instances of the entityTypeName used in the query, that satisfies one of the conditions in the <em>scopeFilter</em> parameter. A condition is a complete unit of <em>scopeFilter</em> parameter surrounded by square brackets. <br/> Note: Multiple conditions can be given in the scopeFilter separated by a semicolon &quot;;&quot; to represent AND, or a pipe symbol &quot;|&quot; to represent OR. | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=3]  | /sourceIds[contains (@item, 'SubNetwork=Ireland')] | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 3 or the sourceIds contains an item with &quot;SubNetwork=Ireland&quot;      |</p>
+<p>| Use case                                                                                                                                                                                                                                                                                                                                                                                             | domainName | entityTypeName | targetFilter                    | scopeFilter                                                                            | Query result                                                                                                                   |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|:---------------|:--------------------------------|:---------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
+| To return the ids for all instances of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                         | RAN        | GNBDUFunction  |                                 |                                                                                        | All ids of every GNBDUFunction                                                                                                 |
+| To return all attributes of every instance of the entityTypeName used in the query.                                                                                                                                                                                                                                                                                                                  | RAN        | GNBDUFunction  | /attributes                     |                                                                                        | All GNBDUFunctions with every attribute                                                                                        |
+| To return every instance of the entityTypeName used in the query, but only the attribute that was defined in the <em>targetFilter</em> parameter. <br/> Note: The attribute must be a valid field of the object.                                                                                                                                                                                            | RAN        | GNBDUFunction  | /attributes(gNBId)              |                                                                                        | All gNBIds of every GNBDUFunction                                                                                              |
+| To return every instance of the entityTypeName used in the query, but only the attributes that were defined in the <em>targetFilter</em> parameter. <br/> Note: The attributes must be separated by a comma &quot;,&quot; when using parenthesis &quot;()&quot;.                                                                                                                                                                | RAN        | GNBDUFunction  | /attributes(gNBId, gNBIdLength) |                                                                                        | All gNBIds and gNBIdLengths of every GNBDUFunction                                                                             |
+| To return the ids for all instances of the entityTypeName used in the query, that partially matches the given property in the <em>scopeFilter</em> parameter.                                                                                                                                                                                                                                               | RAN        | GNBDUFunction  |                                 | /sourceIds[contains (@item, 'SubNetwork=Europe')]                                      | Unique set of ids of GNBDUFunctions, where sourceIds contains <em>SubNetwork=Ireland</em>                                             |
+| To return the ids for all instances of the entityTypeName used in the query, that matches the given attributes in the <em>scopeFilter</em> parameter. <br/> Note: The attributes must be separated by a <em>AND</em> or <em>OR</em>&quot;.                                                                                                                                                                                     | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=1 and @gNBId=9]                                              | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 1 and the gNBId equals 9                                     |
+| To return the ids for all instances of the entityTypeName used in the query, that satisfies one of the conditions in the <em>scopeFilter</em> parameter. A condition is a complete unit of <em>scopeFilter</em> parameter surrounded by square brackets. <br/> Note: Multiple conditions can be given in the scopeFilter separated by a semicolon &quot;;&quot; to represent AND, or a pipe symbol &quot;|&quot; to represent OR. | RAN        | GNBDUFunction  |                                 | /attributes [@gNBIdLength=2]  | /sourceIds[contains (@item, 'SubNetwork=Europe')] | Unique set of ids of GNBDUFunctions, where the gNBIdLength equals 2 or the sourceIds contains an item with &quot;SubNetwork=Europe&quot; |</p>
 <h2>Querying connected entities</h2>
 <p>The <em>entityTypeName</em> is used as the root of the queries.</p>
+<p>| Use case                                                                                                                                                                  | domainName  | entityTypeName | targetFilter | scopeFilter                                                                                                                                                                                                                                   | Query result                                                                                                                                                                                                             |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|:---------------|:-------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| To return the ids for all instances of an entityTypeName related by an association.                                                                                       | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement                                                                                                                                                                                                                    | All ENodeBFunction entities that are managed by any Managed Element.                                                                                                                                                     |
+| To return the ids for all instances of an entityTypeName related by an association to another entity specified by its <em>id</em>.                                               | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement [@id = 'urn:3gpp:dn: ManagedElement=1']                                                                                                                                                                            | All ENodeBFunction entities that are managed by the Managed Element <em>urn:3gpp:dn: ManagedElement=1</em>.                                                                                                                     |
+| To return the attributes for all instances of an entityTypeName related by one or more associations to other entities specified by their <em>id</em>.                            | REL_OAM_RAN | ENodeBFunction | /attributes  | /attributes [@enbId=1] ; /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=1'] |  /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=2'] ; /provided-euTranCell [@id='urn:3gpp:dn: ManagedElement=1, EUtranCell=2'] | All EnodeBFunction entities with enbId as <em>1</em>, managed by the Managed Element <em>urn:3gpp:dn: ManagedElement=1</em> or <em>urn:3gpp:dn: ManagedElement=2</em>, and provides EuTranCell <em>urn:3gpp:dn: ManagedElement=1, EUtranCell=2</em>. |
+| To return the ids for all instances of an entityTypeName related by one or more associations to other entities whose attribute matches the given <em>scopeFilter</em> parameter. | RAN         | ENodeBFunction |              | /provided-euTranCell/attributes[@tac=1]                                                                                                                                                                                                       | All EnodeBFunction entities that provide an EuTranCell whose tac equals 1                                                                                                                                                |</p>
+<h2>Querying based on geographical location</h2>
+<p>The <em>entityTypeName</em> is used as the root of the queries. Use the &quot;Well-known text&quot; (WKT) representation of geometry to specify geometry objects.</p>
 <p>| Use case                                                                                                                                       | domainName  | entityTypeName | targetFilter | scopeFilter                                                                                                                                                                                                                                   | Query result                                                                                                                                                                                                             |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------|-------------|:---------------|:-------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| To return the ids for all instances of an entityTypeName related by an association.                                                            | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement                                                                                                                                                                                                                    | All ENodeBFunction entities that are managed by any Managed Element.                                                                                                                                                     |
-| To return the ids for all instances of an entityTypeName related by an association to another entity specified by its <em>id</em>.                    | REL_OAM_RAN | ENodeBFunction |              | /managed-by-managedElement [@id = 'urn:3gpp:dn: ManagedElement=1']                                                                                                                                                                            | All ENodeBFunction entities that are managed by by the Managed Element <em>urn:3gpp:dn: ManagedElement=1</em>.                                                                                                                  |
-| To return the attributes for all instances of an entityTypeName related by one or more associations to other entities specified by their <em>id</em>. | REL_OAM_RAN | ENodeBFunction | /attributes  | /attributes [@enbId=1] ; /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=1'] |  /managed-by-managedElement [@id='urn:3gpp:dn: ManagedElement=2'] ; /provided-euTranCell [@id='urn:3gpp:dn: ManagedElement=1, EUtranCell=2'] | All EnodeBFunction entities with enbId as <em>1</em>, managed by the Managed Element <em>urn:3gpp:dn: ManagedElement=1</em> or <em>urn:3gpp:dn: ManagedElement=2</em>, and provides EuTranCell <em>urn:3gpp:dn: ManagedElement=1, EUtranCell=2</em>. |</p>
+| To return the ids for all instances of an entityTypeName where the given attribute is covered by the given polygon.                            | EQUIPMENT   | AntennaModule  |              | /attributes[coveredBy(@geo-location, 'POLYGON ((-73.958444 40.800533, -73.981962 40.768558, -73.973207 40.765048, -73.949861 40.797024, -73.958444 40.800533))')]                                                                             | All AntennaModule entities covered by the given polygon.                                                                                                                                                                 |
+| To return the attributes for all instances of an entityTypeName where the given attribute is covered by the given collection of polygons.      | EQUIPMENT   | AntennaModule  | /attributes  | /attributes[coveredBy(@geo-location, 'MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)),((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)))')]                                                                              | All AntennaModule entities covered by the given polygons.                                                                                                                                                                |
+| To return the ids for all instances of an entityTypeName within the given distance in meters from a given attribute.                           | EQUIPMENT   | AntennaModule  |              | /attributes[withinMeters(@geo-location, 'POINT(-73.958444 40.800533)', 500.5)]                                                                                                                                                                | All AntennaModule entities within the given distance from the given point.                                                                                                                                               |
+| To return the attributes for all instances of an entityTypeName which has a connected entity whose given attribute is within a polygon         | RAN         | NRCellDU       | /attributes  | /serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON ((-73.958444 40.800533, -73.981962 40.768558, -73.973207 40.765048, -73.949861 40.797024, -73.958444 40.800533))')]                                                       | All NRCellDU entities that have at least one connected AntennaModule with a geo-location attribute within the given polygon.                                                                                             |</p>
 <h2>Querying entities for relationships</h2>
 <p>The <em>entityTypeName</em> is used as the root of the queries.</p>
 <p>| Use case                                                                                                           | domainName  | entityTypeName | entityId                                       | targetFilter                            | scopeFilter                                                        | Query result                                                                                                                                                                                        |
@@ -245,7 +257,7 @@ retrieved and filtered using the <em>/attributes</em>.</p>
 | Return all related entity IDs that are exactly matched with the specified classifier with given domain name.                                      | RAN        |              | /classifiers[@item = 'gnbdu-function-model:Indoor']       | All the entity IDs that are classified with &quot;gnbdu-function-model:Indoor&quot; in RAN domain.                               |
 | Return all related entity IDs that are partially matched for the given classifier with given domain name.                                         | RAN        |              | /classifiers[contains(@item, 'Ind')]                      | All the entity IDs that are partially matched with &quot;Ind&quot; in RAN domain.                                                |
 | Return all related entity IDs that are exactly matched with the key-value pair that specified decorators with given domain name.                  | RAN        |              | /decorators[@gnbdu-function-model:textdata = 'Stockholm'] | All the entity IDs that are exactly matched with &quot;gnbdu-function-model:textdata = 'Stockholm'&quot; in RAN domain.          |
-| Return all related entity IDs that are exactly matched with key parameter where the value of the decorator is unknown with given domain name.     | RAN        |              | /decorators[contains(@gnbdu-function-model:textdata, &quot;&quot;)] | All the entity IDs that are exactly matched with &quot;gnbdu-function-model:textdata as key of the decorator in RAN domain. |</p>
+| Return all related entity IDs that are exactly matched with key parameter where the value of the decorator is unknown with given domain name.     | RAN        |              | /decorators[contains(@gnbdu-function-model:textdata, '')] | All the entity IDs that are exactly matched with &quot;gnbdu-function-model:textdata as key of the decorator in RAN domain. |</p>
 <p>The <em>entityName</em> is used as the root of the queries.</p>
 <p>| Use case                                                                                                                                                                                         | entityName   | relationshipTypeName | targetFilter              | scopeFilter                                                                                                     | Query result                                                                                                                                                                                               |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|:---------------------|:--------------------------|:----------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -298,20 +310,23 @@ retrieved and filtered using the <em>/attributes</em>.</p>
   <li><a href="#getTopologyEntityTypes"><code><span class="http-method">get</span> /domains/{domainName}/entity-types</code></a></li>
   <li><a href="#getTopologyRelationshipTypes"><code><span class="http-method">get</span> /domains/{domainName}/relationship-types</code></a></li>
   </ul>
+  <h4><a href="#Groups">Groups</a></h4>
+  <ul>
+  <li><a href="#createGroup"><code><span class="http-method">post</span> /groups</code></a></li>
+  <li><a href="#deleteGroup"><code><span class="http-method">delete</span> /groups/{groupId}</code></a></li>
+  <li><a href="#getAllGroups"><code><span class="http-method">get</span> /groups</code></a></li>
+  <li><a href="#getGroupById"><code><span class="http-method">get</span> /groups/{groupId}</code></a></li>
+  <li><a href="#getMembers"><code><span class="http-method">get</span> /groups/{groupId}/members</code></a></li>
+  <li><a href="#getProvidedMembers"><code><span class="http-method">get</span> /groups/{groupId}/provided-members</code></a></li>
+  <li><a href="#updateGroupName"><code><span class="http-method">put</span> /groups/{groupId}/name</code></a></li>
+  <li><a href="#updateProvidedMembers"><code><span class="http-method">post</span> /groups/{groupId}/provided-members-operations</code></a></li>
+  </ul>
   <h4><a href="#Schemas">Schemas</a></h4>
   <ul>
   <li><a href="#createSchema"><code><span class="http-method">post</span> /schemas</code></a></li>
   <li><a href="#deleteSchema"><code><span class="http-method">delete</span> /schemas/{schemaName}</code></a></li>
   <li><a href="#getSchemaByName"><code><span class="http-method">get</span> /schemas/{schemaName}/content</code></a></li>
   <li><a href="#getSchemas"><code><span class="http-method">get</span> /schemas</code></a></li>
-  </ul>
-  <h4><a href="#TopologyGroups">TopologyGroups</a></h4>
-  <ul>
-  <li><a href="#createGroup"><code><span class="http-method">post</span> /groups</code></a></li>
-  <li><a href="#deleteGroup"><code><span class="http-method">delete</span> /groups/{groupId}</code></a></li>
-  <li><a href="#getAllGroups"><code><span class="http-method">get</span> /groups</code></a></li>
-  <li><a href="#getGroup"><code><span class="http-method">get</span> /groups/{groupId}</code></a></li>
-  <li><a href="#updateGroup"><code><span class="http-method">put</span> /groups/{groupId}</code></a></li>
   </ul>
 
   <h1><a name="Classifiers">Classifiers</a></h1>
@@ -625,9 +640,9 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <div class="field-items">
       <div class="param">targetFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify what needs to be returned in the REST response. default: null </div><div class="param">scopeFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ScopeFilter is used to specify the conditions to be applied. default: null </div><div class="param">offset (optional)</div>
 
       <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
 
@@ -714,7 +729,7 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <a class="up" href="#__Methods">Up</a>
     <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/entities</code></pre></div>
     <div class="method-summary">Get entities by domain (<span class="nickname">getEntitiesByDomain</span>)</div>
-    <div class="method-notes">Get topology entities by domain, using specified targetFilter as mandatory query parameter.</div>
+    <div class="method-notes">Get topology entities by domain, using a specified <em>targetFilter</em> as a query parameter.</div>
 
     <h3 class="field-label">Path parameters</h3>
     <div class="field-items">
@@ -737,9 +752,9 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <div class="field-items">
       <div class="param">targetFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify what needs to be returned in the REST response. default: null </div><div class="param">scopeFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ScopeFilter is used to specify the conditions to be applied. default: null </div><div class="param">offset (optional)</div>
 
       <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
 
@@ -928,9 +943,9 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <div class="field-items">
       <div class="param">targetFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify what needs to be returned in the REST response. default: null </div><div class="param">scopeFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ScopeFilter is used to specify the conditions to be applied. default: null </div><div class="param">offset (optional)</div>
 
       <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
 
@@ -1036,9 +1051,9 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <div class="field-items">
       <div class="param">targetFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify the entity type and attributes to be returned in the REST response. The value for <em>targetFilter</em> can also be a list of entity types and attributes. default: null </div><div class="param">scopeFilter (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>targetFilter</em> to specify what needs to be returned in the REST response. default: null </div><div class="param">scopeFilter (optional)</div>
 
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Use <em>scopeFilter</em> to specify the attributes to match on. The value for <em>scopeFilter</em> can also be a list of entity types and attributes. scopeFilter returns a boolean. default: null </div><div class="param">offset (optional)</div>
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ScopeFilter is used to specify the conditions to be applied. default: null </div><div class="param">offset (optional)</div>
 
       <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
 
@@ -1314,7 +1329,7 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <a class="up" href="#__Methods">Up</a>
     <pre class="get"><code class="huge"><span class="http-method">get</span> /domains/{domainName}/relationship-types</code></pre></div>
     <div class="method-summary">Get all the available topology relationship types. (<span class="nickname">getTopologyRelationshipTypes</span>)</div>
-    <div class="method-notes">Get all the available topology relationship types.</div>
+    <div class="method-notes">Get all the available topology relationship types in a specified domain.</div>
 
     <h3 class="field-label">Path parameters</h3>
     <div class="field-items">
@@ -1421,13 +1436,674 @@ retrieved and filtered using the <em>/attributes</em>.</p>
         <a href="#ErrorMessage">ErrorMessage</a>
   </div> <!-- method -->
   <hr/>
+  <h1><a name="Groups">Groups</a></h1>
+  <div class="method"><a name="createGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /groups</code></pre></div>
+    <div class="method-summary">Create a new group. (<span class="nickname">createGroup</span>)</div>
+    <div class="method-notes">Create a group of entities and/or relationships in a static or dynamic way.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">CreateGroupPayload <a href="#CreateGroupPayload">CreateGroupPayload</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#GroupByIdResponse">GroupByIdResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "members" : {
+    "href" : "href"
+  },
+  "name" : "name",
+  "providedMembers" : {
+    "href" : "href"
+  },
+  "id" : "id",
+  "type" : "static"
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#GroupByIdResponse">GroupByIdResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /groups/{groupId}</code></pre></div>
+    <div class="method-summary">Delete a group with specified id. (<span class="nickname">deleteGroup</span>)</div>
+    <div class="method-notes">Delete a group with specified id.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">groupId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getAllGroups"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /groups</code></pre></div>
+    <div class="method-summary">Get all groups. (<span class="nickname">getAllGroups</span>)</div>
+    <div class="method-notes">Get all groups.</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div><div class="param">name (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Group name. If not specified, returns all the groups. default: null </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#GroupsResponse">GroupsResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "members" : {
+      "href" : "href"
+    },
+    "name" : "name",
+    "providedMembers" : {
+      "href" : "href"
+    },
+    "id" : "id",
+    "type" : "static"
+  }, {
+    "members" : {
+      "href" : "href"
+    },
+    "name" : "name",
+    "providedMembers" : {
+      "href" : "href"
+    },
+    "id" : "id",
+    "type" : "static"
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#GroupsResponse">GroupsResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getGroupById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /groups/{groupId}</code></pre></div>
+    <div class="method-summary">Get a group with specified id. (<span class="nickname">getGroupById</span>)</div>
+    <div class="method-notes">Get a group with specified id.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">groupId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#GroupByIdResponse">GroupByIdResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "members" : {
+    "href" : "href"
+  },
+  "name" : "name",
+  "providedMembers" : {
+    "href" : "href"
+  },
+  "id" : "id",
+  "type" : "static"
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#GroupByIdResponse">GroupByIdResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getMembers"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /groups/{groupId}/members</code></pre></div>
+    <div class="method-summary">Get the members of a group with specified id. (<span class="nickname">getMembers</span>)</div>
+    <div class="method-notes">Get the members of a group with specified id.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">groupId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#MembersResponse">MembersResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ "{}", "{}" ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#MembersResponse">MembersResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getProvidedMembers"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /groups/{groupId}/provided-members</code></pre></div>
+    <div class="method-summary">Get the provided members of a static group with specified id. (<span class="nickname">getProvidedMembers</span>)</div>
+    <div class="method-notes">Get the provided members of a static group with specified id.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">groupId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">status (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Status can be present (or) not-present (or) invalid. If not specified, returns all members of the group. default: null </div><div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#MembersResponse">MembersResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ "{}", "{}" ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#MembersResponse">MembersResponse</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateGroupName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /groups/{groupId}/name</code></pre></div>
+    <div class="method-summary">Update the name of a group. (<span class="nickname">updateGroupName</span>)</div>
+    <div class="method-notes">Update the name of a group.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">groupId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">UpdateGroupNamePayload <a href="#UpdateGroupNamePayload">UpdateGroupNamePayload</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateProvidedMembers"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /groups/{groupId}/provided-members-operations</code></pre></div>
+    <div class="method-summary">Merge or remove members of a static group. (<span class="nickname">updateProvidedMembers</span>)</div>
+    <div class="method-notes">Merge or remove members in an existing topology group. This operation is applicable for static group only.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">groupId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">UpdateProvidedMembersPayload <a href="#UpdateProvidedMembersPayload">UpdateProvidedMembersPayload</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
   <h1><a name="Schemas">Schemas</a></h1>
   <div class="method"><a name="createSchema"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
     <pre class="post"><code class="huge"><span class="http-method">post</span> /schemas</code></pre></div>
     <div class="method-summary">Create a new schema. (<span class="nickname">createSchema</span>)</div>
-    <div class="method-notes">Create a new schema. The request body shall contain the schema in YANG format.</div>
+    <div class="method-notes">Create a new schema. The request body contains the schema in YANG format.</div>
 
 
     <h3 class="field-label">Consumes</h3>
@@ -1761,464 +2437,6 @@ retrieved and filtered using the <em>/attributes</em>.</p>
         <a href="#ErrorMessage">ErrorMessage</a>
   </div> <!-- method -->
   <hr/>
-  <h1><a name="TopologyGroups">TopologyGroups</a></h1>
-  <div class="method"><a name="createGroup"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="post"><code class="huge"><span class="http-method">post</span> /groups</code></pre></div>
-    <div class="method-summary">Create group. (<span class="nickname">createGroup</span>)</div>
-    <div class="method-notes">Create group.</div>
-
-
-    <h3 class="field-label">Consumes</h3>
-    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
-    <ul>
-      <li><code>application/json</code></li>
-    </ul>
-
-    <h3 class="field-label">Request body</h3>
-    <div class="field-items">
-      <div class="param">Group <a href="#Group">Group</a> (required)</div>
-
-      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
-
-    </div>  <!-- field-items -->
-
-    <h3 class="field-label">Request headers</h3>
-    <div class="field-items">
-      <div class="param">Accept (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-<div class="param">Content-Type (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-
-    </div>  <!-- field-items -->
-
-
-
-    <h3 class="field-label">Return type</h3>
-    <div class="return-type">
-      <a href="#GroupResponse">GroupResponse</a>
-      
-    </div>
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/json</div>
-    <pre class="example"><code>{
-  "groupName" : "groupName",
-  "criteria" : {
-    "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
-  },
-  "id" : "id"
-}</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/json</code></li>
-      <li><code>application/problem+json</code></li>
-    </ul>
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">201</h4>
-    Created
-        <a href="#GroupResponse">GroupResponse</a>
-    <h4 class="field-label">400</h4>
-    Bad Request
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">401</h4>
-    Unauthorized
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">403</h4>
-    Forbidden
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">409</h4>
-    Conflict
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">500</h4>
-    Internal Server Error
-        <a href="#ErrorMessage">ErrorMessage</a>
-  </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="deleteGroup"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /groups/{groupId}</code></pre></div>
-    <div class="method-summary">Delete a group with specified id. (<span class="nickname">deleteGroup</span>)</div>
-    <div class="method-notes">Delete a group with specified id.</div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">groupId (required)</div>
-
-      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
-    </div>  <!-- field-items -->
-
-
-
-    <h3 class="field-label">Request headers</h3>
-    <div class="field-items">
-      <div class="param">Accept (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-
-    </div>  <!-- field-items -->
-
-
-
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/problem+json</code></li>
-    </ul>
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">204</h4>
-    No Content
-        <a href="#"></a>
-    <h4 class="field-label">400</h4>
-    Bad Request
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">401</h4>
-    Unauthorized
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">403</h4>
-    Forbidden
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">404</h4>
-    Not Found
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">500</h4>
-    Internal Server Error
-        <a href="#ErrorMessage">ErrorMessage</a>
-  </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="getAllGroups"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="get"><code class="huge"><span class="http-method">get</span> /groups</code></pre></div>
-    <div class="method-summary">Get all groups. (<span class="nickname">getAllGroups</span>)</div>
-    <div class="method-notes">Get all groups.</div>
-
-
-
-
-    <h3 class="field-label">Request headers</h3>
-    <div class="field-items">
-      <div class="param">Accept (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-
-    </div>  <!-- field-items -->
-
-    <h3 class="field-label">Query parameters</h3>
-    <div class="field-items">
-      <div class="param">offset (optional)</div>
-
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
-
-      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
-    </div>  <!-- field-items -->
-
-
-    <h3 class="field-label">Return type</h3>
-    <div class="return-type">
-      <a href="#Groups">Groups</a>
-      
-    </div>
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/json</div>
-    <pre class="example"><code>{
-  "next" : {
-    "href" : "href"
-  },
-  "last" : {
-    "href" : "href"
-  },
-  "prev" : {
-    "href" : "href"
-  },
-  "self" : {
-    "href" : "href"
-  },
-  "totalCount" : 0,
-  "items" : [ {
-    "groupName" : "groupName",
-    "criteria" : {
-      "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
-    },
-    "id" : "id"
-  }, {
-    "groupName" : "groupName",
-    "criteria" : {
-      "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
-    },
-    "id" : "id"
-  } ],
-  "first" : {
-    "href" : "href"
-  }
-}</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/json</code></li>
-      <li><code>application/problem+json</code></li>
-    </ul>
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">200</h4>
-    OK
-        <a href="#Groups">Groups</a>
-    <h4 class="field-label">204</h4>
-    No Content
-        <a href="#"></a>
-    <h4 class="field-label">400</h4>
-    Bad Request
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">401</h4>
-    Unauthorized
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">403</h4>
-    Forbidden
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">500</h4>
-    Internal Server Error
-        <a href="#ErrorMessage">ErrorMessage</a>
-  </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="getGroup"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="get"><code class="huge"><span class="http-method">get</span> /groups/{groupId}</code></pre></div>
-    <div class="method-summary">Get a group with specified id. (<span class="nickname">getGroup</span>)</div>
-    <div class="method-notes">Get a Group with specified id.</div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">groupId (required)</div>
-
-      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
-    </div>  <!-- field-items -->
-
-
-
-    <h3 class="field-label">Request headers</h3>
-    <div class="field-items">
-      <div class="param">Accept (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-
-    </div>  <!-- field-items -->
-
-
-
-    <h3 class="field-label">Return type</h3>
-    <div class="return-type">
-      <a href="#GroupResponse">GroupResponse</a>
-      
-    </div>
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/json</div>
-    <pre class="example"><code>{
-  "groupName" : "groupName",
-  "criteria" : {
-    "resourceInstances" : [ "resourceInstances", "resourceInstances" ]
-  },
-  "id" : "id"
-}</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/json</code></li>
-      <li><code>application/problem+json</code></li>
-    </ul>
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">200</h4>
-    OK
-        <a href="#GroupResponse">GroupResponse</a>
-    <h4 class="field-label">400</h4>
-    Bad Request
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">401</h4>
-    Unauthorized
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">403</h4>
-    Forbidden
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">404</h4>
-    Not Found
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">500</h4>
-    Internal Server Error
-        <a href="#ErrorMessage">ErrorMessage</a>
-  </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="updateGroup"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="put"><code class="huge"><span class="http-method">put</span> /groups/{groupId}</code></pre></div>
-    <div class="method-summary">Update a Group. (<span class="nickname">updateGroup</span>)</div>
-    <div class="method-notes">Update a Group.</div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">groupId (required)</div>
-
-      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null </div>
-    </div>  <!-- field-items -->
-
-    <h3 class="field-label">Consumes</h3>
-    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
-    <ul>
-      <li><code>application/json</code></li>
-    </ul>
-
-    <h3 class="field-label">Request body</h3>
-    <div class="field-items">
-      <div class="param">Group <a href="#Group">Group</a> (required)</div>
-
-      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
-
-    </div>  <!-- field-items -->
-
-    <h3 class="field-label">Request headers</h3>
-    <div class="field-items">
-      <div class="param">Accept (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-<div class="param">Content-Type (required)</div>
-
-      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
-
-    </div>  <!-- field-items -->
-
-
-
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/problem+json</div>
-    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
-
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/problem+json</code></li>
-    </ul>
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">204</h4>
-    No Content
-        <a href="#"></a>
-    <h4 class="field-label">400</h4>
-    Bad Request
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">401</h4>
-    Unauthorized
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">403</h4>
-    Forbidden
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">409</h4>
-    Conflict
-        <a href="#ErrorMessage">ErrorMessage</a>
-    <h4 class="field-label">500</h4>
-    Internal Server Error
-        <a href="#ErrorMessage">ErrorMessage</a>
-  </div> <!-- method -->
-  <hr/>
 
   <h2><a name="__Models">Models</a></h2>
   [ Jump to <a href="#__Methods">Methods</a> ]
@@ -2226,27 +2444,39 @@ retrieved and filtered using the <em>/attributes</em>.</p>
   <h3>Table of Contents</h3>
   <ol>
     <li><a href="#Classifier"><code>Classifier</code> - Classifier</a></li>
+    <li><a href="#CreateGroupPayload"><code>CreateGroupPayload</code> - CreateGroupPayload</a></li>
+    <li><a href="#Criteria"><code>Criteria</code> - Criteria</a></li>
     <li><a href="#Decorator"><code>Decorator</code> - Decorator</a></li>
     <li><a href="#Domains"><code>Domains</code> - Domains</a></li>
     <li><a href="#Domains_items_inner"><code>Domains_items_inner</code> - </a></li>
-    <li><a href="#DynamicSelection"><code>DynamicSelection</code> - </a></li>
-    <li><a href="#DynamicSelection_resourceQuery"><code>DynamicSelection_resourceQuery</code> - </a></li>
+    <li><a href="#DynamicEnum"><code>DynamicEnum</code> - </a></li>
+    <li><a href="#DynamicGroupByIdResponse"><code>DynamicGroupByIdResponse</code> - DynamicGroup</a></li>
+    <li><a href="#DynamicGroupResponse"><code>DynamicGroupResponse</code> - DynamicGroup</a></li>
     <li><a href="#EntitiesResponseMessage"><code>EntitiesResponseMessage</code> - Entities</a></li>
     <li><a href="#EntityTypes"><code>EntityTypes</code> - EntityTypes</a></li>
     <li><a href="#EntityTypes_items_inner"><code>EntityTypes_items_inner</code> - </a></li>
     <li><a href="#ErrorMessage"><code>ErrorMessage</code> - Error</a></li>
-    <li><a href="#Group"><code>Group</code> - </a></li>
-    <li><a href="#GroupResponse"><code>GroupResponse</code> - </a></li>
-    <li><a href="#GroupResponse_criteria"><code>GroupResponse_criteria</code> - </a></li>
-    <li><a href="#Groups"><code>Groups</code> - Groups</a></li>
+    <li><a href="#GroupByIdResponse"><code>GroupByIdResponse</code> - Group</a></li>
+    <li><a href="#GroupResponse"><code>GroupResponse</code> - Group</a></li>
+    <li><a href="#GroupsResponse"><code>GroupsResponse</code> - Groups</a></li>
     <li><a href="#Href"><code>Href</code> - Href</a></li>
+    <li><a href="#MembersResponse"><code>MembersResponse</code> - GroupMembers</a></li>
     <li><a href="#RelationshipTypes"><code>RelationshipTypes</code> - RelationshipTypes</a></li>
     <li><a href="#RelationshipTypes_items_inner"><code>RelationshipTypes_items_inner</code> - </a></li>
     <li><a href="#RelationshipsResponseMessage"><code>RelationshipsResponseMessage</code> - Relationships</a></li>
     <li><a href="#Schema"><code>Schema</code> - Schema</a></li>
     <li><a href="#SchemaList"><code>SchemaList</code> - Schemas</a></li>
-    <li><a href="#StaticSelection"><code>StaticSelection</code> - </a></li>
-    <li><a href="#TopologySelection"><code>TopologySelection</code> - </a></li>
+    <li><a href="#StaticEnum"><code>StaticEnum</code> - </a></li>
+    <li><a href="#StaticGroupByIdResponse"><code>StaticGroupByIdResponse</code> - StaticGroup</a></li>
+    <li><a href="#StaticGroupResponse"><code>StaticGroupResponse</code> - StaticGroup</a></li>
+    <li><a href="#UpdateGroupNamePayload"><code>UpdateGroupNamePayload</code> - UpdateGroupNamePayload</a></li>
+    <li><a href="#UpdateProvidedMembersPayload"><code>UpdateProvidedMembersPayload</code> - UpdateProvidedMembersPayload</a></li>
+    <li><a href="#dynamic"><code>dynamic</code> - CreateDynamicGroupPayload</a></li>
+    <li><a href="#getEntitiesByDomain"><code>getEntitiesByDomain</code> - getEntitiesByDomain</a></li>
+    <li><a href="#getEntitiesByType"><code>getEntitiesByType</code> - getEntitiesByType</a></li>
+    <li><a href="#getRelationshipsByType"><code>getRelationshipsByType</code> - getRelationshipsByType</a></li>
+    <li><a href="#getRelationshipsForEntityId"><code>getRelationshipsForEntityId</code> - getRelationshipsForEntityId</a></li>
+    <li><a href="#static"><code>static</code> - CreateStaticGroupPayload</a></li>
   </ol>
 
   <div class="model">
@@ -2262,13 +2492,36 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
+    <h3><a name="CreateGroupPayload"><code>CreateGroupPayload</code> - CreateGroupPayload</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> A name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: dynamic </div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#object">array[Object]</a></span>  </div>
+<div class="param">criteria </div><div class="param-desc"><span class="param-type"><a href="#Criteria">Criteria</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Criteria"><code>Criteria</code> - Criteria</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">queryType </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: getRelationshipsByType </div>
+<div class="param">domain </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">targetFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">scopeFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entityTypeName </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entityId </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">relationshipTypeName </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
     <h3><a name="Decorator"><code>Decorator</code> - Decorator</a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
       <div class="param">operation (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
         <div class="param-enum-header">Enum:</div>
         <div class="param-enum">merge</div><div class="param-enum">delete</div>
-<div class="param">decorators (optional)</div><div class="param-desc"><span class="param-type"><a href="#AnyType">map[String, oas_any_type_not_mapped]</a></span> Decorators must be defined in schema before use. Data type of a decorator is restricted as defined by it's schema. </div>
+<div class="param">decorators (optional)</div><div class="param-desc"><span class="param-type"><a href="#AnyType">map[String, oas_any_type_not_mapped]</a></span> Decorators must be defined in schema before use. Data type of a decorator is restricted as defined by its schema. </div>
 <div class="param">entityIds (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
 <div class="param">relationshipIds (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
     </div>  <!-- field-items -->
@@ -2296,20 +2549,30 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="DynamicSelection"><code>DynamicSelection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="DynamicEnum"><code>DynamicEnum</code> - </a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">resourceQuery (optional)</div><div class="param-desc"><span class="param-type"><a href="#DynamicSelection_resourceQuery">DynamicSelection_resourceQuery</a></span>  </div>
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DynamicGroupByIdResponse"><code>DynamicGroupByIdResponse</code> - DynamicGroup</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique identifier of the topology group. </div>
+<div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#DynamicEnum">DynamicEnum</a></span>  </div>
+<div class="param">members </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">criteria </div><div class="param-desc"><span class="param-type"><a href="#Criteria">Criteria</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="DynamicSelection_resourceQuery"><code>DynamicSelection_resourceQuery</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="DynamicGroupResponse"><code>DynamicGroupResponse</code> - DynamicGroup</a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">url </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
-<div class="param">method (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
-<div class="param">queryParams (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
-<div class="param">requestBody (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique identifier of the topology group. </div>
+<div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#DynamicEnum">DynamicEnum</a></span>  </div>
+<div class="param">members </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -2356,32 +2619,30 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="Group"><code>Group</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="GroupByIdResponse"><code>GroupByIdResponse</code> - Group</a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">groupName (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
-<div class="param">criteria (optional)</div><div class="param-desc"><span class="param-type"><a href="#TopologySelection">TopologySelection</a></span>  </div>
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique identifier of the topology group. </div>
+<div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#DynamicEnum">DynamicEnum</a></span>  </div>
+<div class="param">members </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">criteria </div><div class="param-desc"><span class="param-type"><a href="#Criteria">Criteria</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="GroupResponse"><code>GroupResponse</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="GroupResponse"><code>GroupResponse</code> - Group</a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
-<div class="param">groupName (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
-<div class="param">criteria (optional)</div><div class="param-desc"><span class="param-type"><a href="#GroupResponse_criteria">GroupResponse_criteria</a></span>  </div>
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique identifier of the topology group. </div>
+<div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#DynamicEnum">DynamicEnum</a></span>  </div>
+<div class="param">members </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="GroupResponse_criteria"><code>GroupResponse_criteria</code> - </a> <a class="up" href="#__Models">Up</a></h3>
-    <div class='model-description'></div>
-    <div class="field-items">
-      <div class="param">resourceInstances (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
-<div class="param">resourceQuery (optional)</div><div class="param-desc"><span class="param-type"><a href="#DynamicSelection_resourceQuery">DynamicSelection_resourceQuery</a></span>  </div>
-    </div>  <!-- field-items -->
-  </div>
-  <div class="model">
-    <h3><a name="Groups"><code>Groups</code> - Groups</a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="GroupsResponse"><code>GroupsResponse</code> - Groups</a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
       <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#GroupResponse">array[GroupResponse]</a></span>  </div>
@@ -2398,6 +2659,19 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <div class='model-description'></div>
     <div class="field-items">
       <div class="param">href (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: uri-template</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MembersResponse"><code>MembersResponse</code> - GroupMembers</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#object">array[Object]</a></span>  </div>
+<div class="param">self (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">first (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">prev (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">next (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">last (optional)</div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">totalCount (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -2458,18 +2732,110 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="StaticSelection"><code>StaticSelection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="StaticEnum"><code>StaticEnum</code> - </a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">resourceInstances (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="StaticGroupByIdResponse"><code>StaticGroupByIdResponse</code> - StaticGroup</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique identifier of the topology group. </div>
+<div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#StaticEnum">StaticEnum</a></span>  </div>
+<div class="param">members </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
-    <h3><a name="TopologySelection"><code>TopologySelection</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <h3><a name="StaticGroupResponse"><code>StaticGroupResponse</code> - StaticGroup</a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">resourceInstances (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
-<div class="param">resourceQuery (optional)</div><div class="param-desc"><span class="param-type"><a href="#DynamicSelection_resourceQuery">DynamicSelection_resourceQuery</a></span>  </div>
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique identifier of the topology group. </div>
+<div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unique name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#StaticEnum">StaticEnum</a></span>  </div>
+<div class="param">members </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#Href">Href</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UpdateGroupNamePayload"><code>UpdateGroupNamePayload</code> - UpdateGroupNamePayload</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UpdateProvidedMembersPayload"><code>UpdateProvidedMembersPayload</code> - UpdateProvidedMembersPayload</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">operation </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The operation to be performed on the members of topology group. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">merge</div><div class="param-enum">remove</div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#object">array[Object]</a></span> Members to be added or removed from the group. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="dynamic"><code>dynamic</code> - CreateDynamicGroupPayload</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> A name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: dynamic </div>
+<div class="param">criteria </div><div class="param-desc"><span class="param-type"><a href="#Criteria">Criteria</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="getEntitiesByDomain"><code>getEntitiesByDomain</code> - getEntitiesByDomain</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">queryType </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: getEntitiesByDomain </div>
+<div class="param">domain </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">targetFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">scopeFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="getEntitiesByType"><code>getEntitiesByType</code> - getEntitiesByType</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">queryType </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: getEntitiesByType </div>
+<div class="param">domain </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entityTypeName </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">targetFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">scopeFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="getRelationshipsByType"><code>getRelationshipsByType</code> - getRelationshipsByType</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">queryType </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: getRelationshipsByType </div>
+<div class="param">domain </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">relationshipTypeName </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">targetFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">scopeFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="getRelationshipsForEntityId"><code>getRelationshipsForEntityId</code> - getRelationshipsForEntityId</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">queryType </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: getRelationshipsForEntityId </div>
+<div class="param">domain </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entityTypeName </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">entityId </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">targetFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">scopeFilter (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="static"><code>static</code> - CreateStaticGroupPayload</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> A name of the topology group. </div>
+<div class="param">type </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Allowed: static </div>
+<div class="param">providedMembers </div><div class="param-desc"><span class="param-type"><a href="#object">array[Object]</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   </body>

@@ -25,6 +25,7 @@ import static org.junit.Assert.assertThrows;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jooq.Table;
@@ -89,6 +90,10 @@ class ScopeLogicalBlockTest {
         scopeObject7.setInnerContainer(Arrays.asList("provided-by-oduFunction"));
         scopeObject7.setTopologyObjectType(TopologyObjectType.RELATION);
 
+        ScopeObject scopeObject8 = ScopeObject.builder("NRCellDU").topologyObjectType(TopologyObjectType.ENTITY).container(
+                ContainerType.ASSOCIATION).innerContainer(List.of("grouped-by-sector")).leaf("geoColumn").queryFunction(
+                        QueryFunction.EQ).parameter("point(39.4019881 67.9419888)").dataType(DataType.GEOGRAPHIC).build();
+
         ScopeLogicalBlock scopeLogicalBlock = new ScopeLogicalBlock(scopeObject);
         ScopeLogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(scopeObject1);
         ScopeLogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(scopeObject2);
@@ -97,6 +102,7 @@ class ScopeLogicalBlockTest {
         ScopeLogicalBlock scopeLogicalBlock5 = new ScopeLogicalBlock(scopeObject5);
         ScopeLogicalBlock scopeLogicalBlock6 = new ScopeLogicalBlock(scopeObject6);
         ScopeLogicalBlock scopeLogicalBlock7 = new ScopeLogicalBlock(scopeObject7);
+        ScopeLogicalBlock scopeLogicalBlock8 = new ScopeLogicalBlock(scopeObject8);
 
         resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_NRCellDU\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock.getTables());
@@ -122,6 +128,10 @@ class ScopeLogicalBlockTest {
 
         resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock6.getTables());
+        resultTables.clear();
+
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_NRCellDU\""));
+        Assertions.assertEquals(resultTables, scopeLogicalBlock8.getTables());
         resultTables.clear();
 
         Assertions.assertThrows(TiesException.class, () -> scopeLogicalBlock7.getTables());

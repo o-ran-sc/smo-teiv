@@ -43,14 +43,11 @@ CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
 RETURNS void AS
 $$
 BEGIN
-	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = t_name AND constraint_name = c_name) THEN
+	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'ties_data' AND table_name = t_name AND constraint_name = c_name) THEN
 		EXECUTE constraint_sql;
 	END IF;
 END;
 $$ language 'plpgsql';
-
--- Update data schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_data', 'success');
 
 CREATE TABLE IF NOT EXISTS ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (
 	"id"			TEXT,
@@ -182,7 +179,7 @@ ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ENodeBFunction" ALTER COLUMN "CD_
 
 ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ENodeBFunction" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
 
-CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_GNBDUFunction" (
+CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_ODUFunction" (
 	"id"			TEXT,
 	"dUpLMNId"			jsonb,
 	"gNBDUId"			BIGINT,
@@ -193,11 +190,11 @@ CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_GNBDUFunction" (
 	"CD_decorators"			jsonb
 );
 
-ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_GNBDUFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
 
-ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_GNBDUFunction" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
 
-ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_GNBDUFunction" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
+ALTER TABLE ONLY ties_data."o-ran-smo-teiv-ran_ODUFunction" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
 
 CREATE TABLE IF NOT EXISTS ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" (
 	"id"			TEXT,
@@ -313,9 +310,9 @@ SELECT ties_data.create_constraint_if_not_exists(
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
-	'o-ran-smo-teiv-ran_GNBDUFunction',
- 'PK_o-ran-smo-teiv-ran_GNBDUFunction_id',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_GNBDUFunction" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_GNBDUFunction_id" PRIMARY KEY ("id");'
+	'o-ran-smo-teiv-ran_ODUFunction',
+ 'PK_o-ran-smo-teiv-ran_ODUFunction_id',
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "PK_o-ran-smo-teiv-ran_ODUFunction_id" PRIMARY KEY ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -488,13 +485,13 @@ CREATE INDEX IF NOT EXISTS "IDX_B598B74193845587BA03553CEDBA058D33956847" ON tie
 
 CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_ENodeBFunction_CD_decorators" ON ties_data."o-ran-smo-teiv-ran_ENodeBFunction" USING GIN ("CD_decorators");
 
-CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_GNBDUFunction_dUpLMNId" ON ties_data."o-ran-smo-teiv-ran_GNBDUFunction" USING GIN ("dUpLMNId");
+CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_ODUFunction_dUpLMNId" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("dUpLMNId");
 
-CREATE INDEX IF NOT EXISTS "IDX_2BEF269CED354C2454AC2B2EABB134AC267A0C62" ON ties_data."o-ran-smo-teiv-ran_GNBDUFunction" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS "IDX_73790DA8FF6365B752DC8B399893AC6DE8CF26C4" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
 
-CREATE INDEX IF NOT EXISTS "IDX_601A4514FFACA8985471531013AFC8F760361F09" ON ties_data."o-ran-smo-teiv-ran_GNBDUFunction" USING GIN (("CD_classifiers"::TEXT) gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS "IDX_5CE9EDE1F25AB2D880A41BC5D297FDBE668182E8" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN (("CD_classifiers"::TEXT) gin_trgm_ops);
 
-CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_GNBDUFunction_CD_decorators" ON ties_data."o-ran-smo-teiv-ran_GNBDUFunction" USING GIN ("CD_decorators");
+CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-ran_ODUFunction_CD_decorators" ON ties_data."o-ran-smo-teiv-ran_ODUFunction" USING GIN ("CD_decorators");
 
 CREATE INDEX IF NOT EXISTS "IDX_6EC539C61EA7078DBA264C9877B87FC263605D42" ON ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
 
@@ -532,7 +529,66 @@ CREATE INDEX IF NOT EXISTS "IDX_5345DBA457356CB29D1905DA4785B7FB2B27D224" ON tie
 
 CREATE INDEX IF NOT EXISTS "IDX_14EDC4DAF64B9A97E4788CFEA16A7F9AED195589" ON ties_data."test-built-in-module_EntityTypeA" USING GIN ("REL_CD_F5B24D9A7273119D4D1519473D9EC88CB407E5CA");
 
-ANALYZE ties_data."o-ran-smo-teiv-ran_GNBDUFunction";
+CREATE OR REPLACE FUNCTION ties_data.create_enum_type(
+    schema_name TEXT, type_name TEXT, enum_values TEXT[]
+) RETURNS VOID AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace WHERE t.typname = type_name AND n.nspname = schema_name) THEN
+        EXECUTE format('CREATE TYPE %I.%I AS ENUM (%s)',schema_name, type_name, array_to_string(ARRAY(SELECT quote_literal(value) FROM unnest(enum_values) AS value), ', '));
+    END IF;
+END;
+$$ language 'plpgsql';
+
+SELECT ties_data.create_enum_type('ties_data', 'Reliability', ARRAY['OK', 'RESTORED', 'ADVISED']);
+
+CREATE TABLE IF NOT EXISTS ties_data."responsible_adapter" (
+	"id"			TEXT,
+	"hashed_id"			BYTEA
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'responsible_adapter',
+ 'PK_responsible_adapter_id',
+ 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "PK_responsible_adapter_id" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'responsible_adapter',
+ 'UNIQUE_responsible_adapter_hashed_id',
+ 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "UNIQUE_responsible_adapter_hashed_id" UNIQUE ("hashed_id");'
+);
+
+ALTER TABLE ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD COLUMN IF NOT EXISTS "REL_metadata_C3C2193291E4C8D591E05390DFBCC3843B6B0DA2" jsonb;
+
+ALTER TABLE ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD COLUMN IF NOT EXISTS "REL_metadata_8D7D68E4BA4C9749577CF7F26DB5E9B22BCA796E" jsonb;
+
+ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD COLUMN IF NOT EXISTS "REL_metadata_5A306C45543040943259237E7C3C9710139245CB" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ADD COLUMN IF NOT EXISTS "REL_metadata_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ADD COLUMN IF NOT EXISTS "REL_metadata_LTESECTORCARRIER_USES_ANTENNACAPABILITY" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-ran_LTESectorCarrier" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-ran_AntennaCapability" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ties_data."o-ran-smo-teiv-ran_ENodeBFunction" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ANALYZE ties_data."o-ran-smo-teiv-ran_ODUFunction";
 
 ANALYZE ties_data."FB1E124031A12CD85D3335194B39B193723A0490";
 

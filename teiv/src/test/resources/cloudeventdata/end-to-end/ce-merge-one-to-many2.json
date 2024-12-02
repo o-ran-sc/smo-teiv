@@ -2,14 +2,14 @@
     "specversion": "1.0",
     "id": "a30e63c9-d29e-46ff-b99a-b63ed83f1113",
     "source": "dmi-plugin:nm-1",
-    "type": "ran-logical-topology.merge",
+    "type": "topology-inventory-ingestion.merge",
     "time": "2023-10-25T13:30:01Z",
     "datacontenttype": "application/json",
-    "dataschema": "https://ties:8080/schemas/v1/r1-topology",
+    "dataschema": "topology-inventory-ingestion:events:merge:1.0.0",
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-ran-oam:ManagedElement": [
+                "o-ran-smo-teiv-oam:ManagedElement": [
                     {
                         "id": "ManagedElement_1",
                         "attributes": {
@@ -33,9 +33,9 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran-cloud:CloudNativeSystem": [
+                "o-ran-smo-teiv-ran:ORUFunction": [
                     {
-                        "id": "CloudNativeSystem_1",
+                        "id": "ORUFunction_1",
                         "attributes": {
 
                         },
@@ -47,9 +47,9 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran-logical:GNBDUFunction": [
+                "o-ran-smo-teiv-ran:ODUFunction": [
                     {
-                        "id": "GNBDU_1",
+                        "id": "ODU_1",
                         "attributes": {
                             "dUpLMNId": {
                                 "mcc": 110,
@@ -60,7 +60,7 @@
                             "gNBIdLength": 3
                         },
                         "sourceIds": [
-                            "urn:3gpp:dn:/SubNetwork=Europe/SubNetwork=Ireland/MeContext=NR01gNodeBRadio00001/ManagedElement=NR01gNodeBRadio00001/GNBDUFunction=1",
+                            "urn:3gpp:dn:/SubNetwork=Europe/SubNetwork=Ireland/MeContext=NR01gNodeBRadio00001/ManagedElement=NR01gNodeBRadio00001/ODUFunction=1",
                             "urn:cmHandle:/395221E080CCF0FD1924103B15873814"
                         ]
                     }
@@ -69,11 +69,11 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-ran-oam-to-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM": [
+                "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_ORUFUNCTION": [
                     {
                         "id": "relation_1",
                         "aSide": "ManagedElement_1",
-                        "bSide": "CloudNativeSystem_1",
+                        "bSide": "ORUFunction_1",
                         "sourceIds": [
                             "fdn_1",
                             "cmHandleId_1"

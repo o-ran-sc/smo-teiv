@@ -24,11 +24,16 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class TiesConstants {
+    public static final String ENTITIES = "entities";
+    public static final String RELATIONSHIPS = "relationships";
     public static final String API_VERSION = "v1alpha11";
     public static final String REQUEST_MAPPING = "/topology-inventory/" + API_VERSION;
+    public static final String REQUEST_MAPPING_AUDIT = "topology-inventory-audit/" + API_VERSION;
 
     public static final String TEIV_DOMAIN = "TEIV";
     public static final String TIES_DATA_SCHEMA = "ties_data";
+    public static final String TIES_MODEL_SCHEMA = "ties_model";
+    public static final String TIES_CONSUMER_DATA_SCHEMA = "ties_consumer_data";
     public static final String TIES_DATA = TIES_DATA_SCHEMA + ".\"%s\"";
     public static final String TIES_MODEL = "ties_model.%s";
     public static final String TIES_CONSUMER_DATA = "ties_consumer_data.%s";
@@ -36,11 +41,16 @@ public class TiesConstants {
     public static final String ST_TO_STRING_COLUMN_WITH_TABLE_NAME = "ST_AsText(%s)";
     public static final String QUOTED_STRING = "\"%s\"";
     public static final String ID_COLUMN_NAME = "id";
+    public static final String HASHED_ID_COLUMN_NAME = "hashed_id";
     public static final String CONSUMER_DATA_PREFIX = "CD_";
     public static final String SOURCE_IDS = "sourceIds";
     public static final String CLASSIFIERS = "classifiers";
     public static final String DECORATORS = "decorators";
+    public static final String METADATA = "metadata";
+    public static final String RESPONSIBLE_ADAPTER = "responsible_adapter";
+    public static final String RI_PREFIX = "RI_";
     public static final String REL_PREFIX = "REL_";
+    public static final String RESP_PREFIX = "RESP_";
     public static final String PROPERTY_A_SIDE = "aSide";
     public static final String PROPERTY_B_SIDE = "bSide";
     public static final String ITEM = "item";
@@ -67,4 +77,9 @@ public class TiesConstants {
     public static final String DOT_SEPARATION = "%s.%s";
     public static final String WILDCARD = "*";
     public static final String INVALID_SCHEMA = "Invalid schema";
+    public static final String RELIABILITY_INDICATOR = "reliabilityIndicator";
+
+    public static final String TOPOLOGY_INVENTORY_AUDIT_SCHEMA = "topology-inventory:audit:1.0.0";
+    public static final String TOPOLOGY_INVENTORY_AUDIT_SOURCE = "topology-inventory:audit";
+    public static final String TOPOLOGY_INVENTORY_AUDIT_TYPE = "topology-inventory-audit.initiate";
 }

@@ -23,9 +23,11 @@ package org.oran.smo.teiv.config;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Data
+@Profile({ "exposure", "ingestion" })
 public class KafkaConfig {
 
     private final TopologyIngestion topologyIngestion;

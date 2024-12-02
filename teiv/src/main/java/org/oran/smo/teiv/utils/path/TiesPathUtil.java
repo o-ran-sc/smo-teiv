@@ -29,7 +29,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiesPathUtil {
-
+    /**
+     * @deprecated (this method is deprecated)
+     */
+    @Deprecated
     public static TiesPathQuery getTiesPathQuery(final String TiesPathSource) {
         final CharStream inputStream = CharStreams.fromString(TiesPathSource);
         final TiesPathLexer tiesPathLexer = new TiesPathLexer(inputStream);

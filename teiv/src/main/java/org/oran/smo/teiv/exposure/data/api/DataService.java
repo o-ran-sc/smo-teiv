@@ -127,7 +127,7 @@ public interface DataService {
      * @return a collection of relationships for entity type
      */
     OranTeivRelationshipsResponseMessage getAllRelationshipsForObjectId(final String domain, final String entityType,
-            final String targetFilter, final String scopeFilter, final String id, final RequestDetails requestDetails);
+            final String id, final String targetFilter, final String scopeFilter, final RequestDetails requestDetails);
 
     /**
      * Get relationship with specified id

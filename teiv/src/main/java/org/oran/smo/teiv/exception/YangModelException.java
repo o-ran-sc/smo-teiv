@@ -20,22 +20,9 @@
  */
 package org.oran.smo.teiv.exception;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.oran.smo.yangtools.parser.findings.Finding;
-import org.oran.smo.yangtools.parser.findings.FindingsManager;
-
-@Slf4j
 public class YangModelException extends Exception {
 
     public YangModelException(final String message) {
         super(message);
-    }
-
-    public YangModelException(final String message, FindingsManager findingsManager) {
-        super(message);
-        for (Finding f : findingsManager.getAllFindings()) {
-            log.error("Finding: {}", f);
-        }
     }
 }

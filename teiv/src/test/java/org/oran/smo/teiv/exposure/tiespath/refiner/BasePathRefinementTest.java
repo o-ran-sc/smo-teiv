@@ -110,6 +110,37 @@ class BasePathRefinementTest {
     }
 
     @Test
+    void testRefinementOrchestrationMetadata() {
+        LogicalBlock logicalBlock = scopeResolver.process(null, "/metadata[@reliabilityIndicator='OK']");
+        List<TargetObject> targets = targetResolver.resolve(null, "/OCUCPFunction/sourceIds");
+        FilterCriteria filterCriteria = FilterCriteria.builder("RAN").filterCriteriaList(List.of(InnerFilterCriteria
+                .builder().targets(targets).scope(logicalBlock).build())).resolvingTopologyObjectType(
+                        FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
+
+        basePathRefinement.refine(filterCriteria);
+
+        LogicalBlock expectedLogicalBlock = scopeResolver.process(null, "/metadata[@reliabilityIndicator='OK']");
+        List<TargetObject> expectedTargets = targetResolver.resolve(null, "/OCUCPFunction/sourceIds");
+        FilterCriteria expectedFilterCriteria = FilterCriteria.builder("RAN").filterCriteriaList(List.of(InnerFilterCriteria
+                .builder().targets(expectedTargets).scope(expectedLogicalBlock).build())).resolvingTopologyObjectType(
+                        FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
+
+        ScopeObject expectedScopeObject = ((ScopeLogicalBlock) expectedLogicalBlock).getScopeObject();
+        expectedScopeObject.setTopologyObject("OCUCPFunction");
+        expectedScopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
+        expectedScopeObject.setContainer(ContainerType.METADATA);
+        expectedScopeObject.setLeaf("reliabilityIndicator");
+        expectedScopeObject.setQueryFunction(QueryFunction.EQ);
+        expectedScopeObject.setParameter("OK");
+        expectedScopeObject.setDataType(DataType.PRIMITIVE);
+
+        expectedTargets.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
+        expectedTargets.get(0).setAllParamQueried(false);
+
+        Assertions.assertEquals(expectedFilterCriteria, filterCriteria);
+    }
+
+    @Test
     void processTopologyObjectsWithContainerTypeNull() {
         FilterCriteria filterCriteria = FilterCriteria.builder("RAN").build();
         LogicalBlock logicalBlock1 = scopeResolver.process(null, "/managed-by-managedElement[@id='me1']");

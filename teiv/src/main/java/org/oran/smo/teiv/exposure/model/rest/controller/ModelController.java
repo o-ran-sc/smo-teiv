@@ -22,7 +22,6 @@ package org.oran.smo.teiv.exposure.model.rest.controller;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.oran.smo.teiv.api.SchemasApi;
 import org.oran.smo.teiv.api.model.OranTeivSchemaList;
 import org.oran.smo.teiv.exception.TiesException;
@@ -33,6 +32,7 @@ import org.oran.smo.teiv.exposure.utils.RequestValidator;
 import org.oran.smo.teiv.utils.TiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(TiesConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
+@Profile("exposure")
 public class ModelController implements SchemasApi {
 
     private final ModelService modelService;
@@ -63,9 +64,17 @@ public class ModelController implements SchemasApi {
 
     @Override
     public ResponseEntity<Void> createSchema(String accept, String contentType, MultipartFile file) {
-        requestValidator.validateYangFile(file);
-        runSafeMethod(() -> modelService.createModule(file), "create");
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        try {
+            requestValidator.validateYangFile(file);
+            final String schemaName = modelService.createModule(file);
+            loggerHandler.logAudit(logger, String.format("Successful - Create schema %s", schemaName), context);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (TiesException ex) {
+            loggerHandler.logAudit(logger, String.format("Failed - Create schema using provided file, %s", ex.getDetails()),
+                    context);
+            log.error("Exception during service call", ex);
+            throw ex;
+        }
     }
 
     @Override
@@ -89,17 +98,13 @@ public class ModelController implements SchemasApi {
 
     @Override
     public ResponseEntity<Void> deleteSchema(String accept, String schemaName) {
-        runSafeMethod(() -> modelService.deleteConsumerModule(schemaName), "delete");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    protected void runSafeMethod(final Runnable runnable, String operation) {
         try {
-            runnable.run();
-            loggerHandler.logAudit(logger, String.format("%s schema (successful)", StringUtils.capitalize(operation)),
-                    context);
+            modelService.deleteConsumerModule(schemaName);
+            loggerHandler.logAudit(logger, String.format("Successful - Delete schema %s", schemaName), context);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (TiesException ex) {
-            loggerHandler.logAudit(logger, String.format("%s schema (failed)", StringUtils.capitalize(operation)), context);
+            loggerHandler.logAudit(logger, String.format("Failed - Delete schema %s, %s", schemaName, ex.getDetails()),
+                    context);
             log.error("Exception during service call", ex);
             throw ex;
         }

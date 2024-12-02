@@ -28,8 +28,12 @@ import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 import static org.oran.smo.teiv.utils.TiesConstants.REL_PREFIX;
+import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TiesTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
+import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_HOST;
+import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_PORT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -41,13 +45,13 @@ import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.oran.smo.teiv.db.TestPostgresqlContainer;
+import org.oran.smo.teiv.startup.SchemaCleanUpHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,8 +63,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
-import lombok.Getter;
-
 import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
@@ -68,37 +70,22 @@ import java.util.Properties;
 
 import org.oran.smo.teiv.api.model.OranTeivClassifier;
 import org.oran.smo.teiv.api.model.OranTeivClassifier.OperationEnum;
-import org.oran.smo.teiv.db.TestPostgresqlContainerV1;
 import org.oran.smo.teiv.exception.TiesException;
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.startup.SchemaHandler;
 import org.oran.smo.teiv.utils.JooqTypeConverter;
 
-import lombok.extern.slf4j.Slf4j;
-
-@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 @EmbeddedKafka
-@Slf4j
-@SpringBootTest(properties = {
-        "kafka.server.bootstrap-server-host:#{environment.getProperty(\"spring.embedded.kafka.brokers\").split(\":\")[0]}",
-        "kafka.server.bootstrap-server-port:#{environment.getProperty(\"spring.embedded.kafka.brokers\").split(\":\")[1]}",
-        "kafka.availability.retryIntervalMs:10", "data-catalog.use-dc-for-kafka-bootstrap:true",
-        "notification.consumer-data.enabled:true" })
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles({ "test", "exposure" })
+@SpringBootTest(properties = { SPRING_BOOT_SERVER_HOST, SPRING_BOOT_SERVER_PORT, KAFKA_RETRY_INTERVAL_10_MS })
 class ClassifiersServiceContainerizedTest {
 
-    public static TestPostgresqlContainerV1 postgreSQLContainer = TestPostgresqlContainerV1.getInstance();
+    public static TestPostgresqlContainer postgreSQLContainer = TestPostgresqlContainer.getInstance();
     private static DSLContext writeDataDslContext;
     private static DSLContext readDataDslContext;
-    @Autowired
-    private ClassifiersService classifiersService;
-
-    @Getter
-    @Value("${spring.embedded.kafka.brokers}")
-    private String embeddedKafkaServer;
-
-    private KafkaConsumer<String, String> testConsumer;
 
     private static final String ENTITY_TYPE = "ODUFunction";
     private static final String TABLE_NAME = String.format(TIES_DATA, "o-ran-smo-teiv-ran_ODUFunction");
@@ -109,8 +96,17 @@ class ClassifiersServiceContainerizedTest {
     private static final String RELATIONSHIP_CLASSIFIERS = String.format(QUOTED_STRING,
             REL_PREFIX + CONSUMER_DATA_PREFIX + CLASSIFIERS + "_" + RELATIONSHIP_TYPE);
 
+    @Autowired
+    private ClassifiersService classifiersService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private SchemaHandler schemaHandler;
+
+    @MockBean
+    private SchemaCleanUpHandler schemaCleanUpHandler;
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -124,41 +120,21 @@ class ClassifiersServiceContainerizedTest {
     }
 
     @BeforeAll
-    static void setUpAll() throws SchemaLoaderException {
+    static void setupAll() throws SchemaLoaderException {
         String url = postgreSQLContainer.getJdbcUrl();
         DataSource ds = DataSourceBuilder.create().url(url).username("test").password("test").build();
         DSLContext dslContext = DSL.using(ds, SQLDialect.POSTGRES);
-        PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, new ObjectMapper());
         writeDataDslContext = DSL.using(ds, SQLDialect.POSTGRES);
         readDataDslContext = DSL.using(ds, SQLDialect.POSTGRES);
+        PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
-        TestPostgresqlContainerV1.loadSampleData();
+        TestPostgresqlContainer.loadSampleData();
     }
 
     @BeforeEach
-    public void setUp() {
-        testConsumer = createConsumerForTest(getEmbeddedKafkaServer());
-    }
-
-    @BeforeEach
-    public void reloadBeforeEach() {
-        reloadData();
-    }
-
-    @AfterAll
-    public static void reloadAfterAll() {
-        reloadData();
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        testConsumer.close();
-    }
-
-    private static void reloadData() {
-        writeDataDslContext.meta().filterSchemas(s -> s.getName().equals(TIES_DATA_SCHEMA)).getTables().forEach(
-                t -> writeDataDslContext.truncate(t).cascade().execute());
-        TestPostgresqlContainerV1.loadSampleData();
+    public void setupEach() {
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA), writeDataDslContext);
+        TestPostgresqlContainer.loadSampleData();
     }
 
     @Test

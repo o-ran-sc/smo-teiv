@@ -57,8 +57,8 @@ public class ConsumerDataSchemaGenerator extends SchemaGenerator {
         try {
             Resource skeletonResource = new ClassPathResource(skeletonConsumerDataSchema);
             final Path destinationPath = Paths.get(outputConsumerDataSchema);
-            backwardCompatibilityChecker.checkForNBCChangesInConsumerDataSchema(baselineConsumerDataSchema, destinationPath
-                    .toFile().getAbsolutePath());
+            backwardCompatibilityChecker.checkForNBCChangesInConsumerAndGroupsSchema(baselineConsumerDataSchema,
+                    destinationPath.toFile().getAbsolutePath());
             FileHelper.copyResourceToFile(skeletonResource, destinationPath.toFile());
             this.schema = destinationPath.toFile();
         } catch (IOException exception) {

@@ -20,6 +20,7 @@
 #
 
 green-field-installation: true
+custom-query-execution: false
 yang-model:
   source: generate-defaults
   external:
@@ -29,6 +30,7 @@ schema:
     skeleton: scripts/00_init-oran-smo-teiv-data.sql
     baseline:
     output: target/00_init-oran-smo-teiv-data.sql
+    custom-sql-script: scripts/custom-sql-script.sql
   model:
     skeleton: scripts/01_init-oran-smo-teiv-model.sql
     baseline:
@@ -38,6 +40,10 @@ schema:
     skeleton: scripts/02_init-oran-smo-teiv-consumer-data.sql
     baseline:
     output: target/02_init-oran-smo-teiv-consumer-data.sql
+  groups:
+    skeleton: scripts/03_init-oran-smo-teiv-groups.sql
+    baseline:
+    output: target/03_init-oran-smo-teiv-groups.sql
 exclusions:
   model-names: metadata, decorators
 graphs:

@@ -20,6 +20,7 @@
 #
 
 green-field-installation: true
+custom-query-execution: true
 yang-model:
   source: generate-defaults
   external:
@@ -30,6 +31,7 @@ schema:
     skeleton: scripts/00_init-oran-smo-teiv-data.sql
     baseline: baseline-schema/00_init-oran-smo-teiv-data.sql
     output: target/test-classes/TEST_00_init-oran-smo-teiv-data.sql
+    custom-sql-script: src/test/resources/baseline-schema/custom-sql-script.sql
   model:
     skeleton: scripts/01_init-oran-smo-teiv-model.sql
     baseline: baseline-schema/01_init-oran-smo-teiv-model.sql
@@ -39,10 +41,15 @@ schema:
     skeleton: scripts/02_init-oran-smo-teiv-consumer-data.sql
     baseline: baseline-schema/02_init-oran-smo-teiv-consumer-data.sql
     output: target/test-classes/TEST_02_init-oran-smo-teiv-consumer-data.sql
+  groups:
+    skeleton: scripts/03_init-oran-smo-teiv-groups.sql
+    baseline: src/test/resources/baseline-schema/03_init-oran-smo-teiv-groups.sql
+    output: target/test-classes/TEST_03_init-oran-smo-teiv-groups.sql
 test-result:
     data: src/test/resources/expected-db-schema/result_00_init-oran-smo-teiv-data.sql
     model: src/test/resources/expected-db-schema/result_01_init-oran-smo-teiv-model.sql
     consumer-data: src/test/resources/expected-db-schema/result_02_init-oran-smo-teiv-consumer-data.sql
+    groups: src/test/resources/expected-db-schema/result_03_init-oran-smo-teiv-groups.sql
 exclusions:
   model-names: metadata, decorators
 graphs:

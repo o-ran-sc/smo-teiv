@@ -1,0 +1,60 @@
+{
+    "specversion": "1.0",
+    "id": "a30e63c9-d29e-46ff-b99a-b63ed83f0001",
+    "source": "dmi-plugin:nm-1",
+    "type": "topology-inventory-ingestion.create",
+    "time": "2023-10-25T13:30:01Z",
+    "datacontenttype": "application/json",
+    "dataschema": "topology-inventory-ingestion:events:create:1.0.0",
+    "data": {
+        "entities": [
+            {
+                "o-ran-smo-teiv-ran:NRCellCU": [
+                    {
+                        "id": "entityId_1",
+                        "attributes": {
+                            "nCI": 123,
+                            "nRTAC": 32,
+                            "cellLocalId": 456,
+                            "plmnId": {
+                                "mcc": "209",
+                                "mnc": "751"
+                            }
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "entityId_2",
+                        "attributes": {
+                            "nCI": 123,
+                            "nRTAC": 32
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "entityId_3",
+                        "attributes": {
+                            "nCI": 123,
+                            "nRTAC": 32,
+                            "cellLocalId": 456,
+                            "plmnId": {
+                                "mcc": "209",
+                                "mnc": "752"
+                            }
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

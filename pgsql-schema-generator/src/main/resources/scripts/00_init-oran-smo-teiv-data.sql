@@ -43,12 +43,37 @@ CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
 RETURNS void AS
 $$
 BEGIN
-	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = t_name AND constraint_name = c_name) THEN
+	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'ties_data' AND table_name = t_name AND constraint_name = c_name) THEN
 		EXECUTE constraint_sql;
 	END IF;
 END;
 $$ language 'plpgsql';
 
--- Update data schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_data', 'success');
+CREATE OR REPLACE FUNCTION ties_data.create_enum_type(
+    schema_name TEXT, type_name TEXT, enum_values TEXT[]
+) RETURNS VOID AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace WHERE t.typname = type_name AND n.nspname = schema_name) THEN
+        EXECUTE format('CREATE TYPE %I.%I AS ENUM (%s)',schema_name, type_name, array_to_string(ARRAY(SELECT quote_literal(value) FROM unnest(enum_values) AS value), ', '));
+    END IF;
+END;
+$$ language 'plpgsql';
 
+SELECT ties_data.create_enum_type('ties_data', 'Reliability', ARRAY['OK', 'RESTORED', 'ADVISED']);
+
+CREATE TABLE IF NOT EXISTS ties_data."responsible_adapter" (
+	"id"			TEXT,
+	"hashed_id"			BYTEA
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'responsible_adapter',
+ 'PK_responsible_adapter_id',
+ 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "PK_responsible_adapter_id" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'responsible_adapter',
+ 'UNIQUE_responsible_adapter_hashed_id',
+ 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "UNIQUE_responsible_adapter_hashed_id" UNIQUE ("hashed_id");'
+);

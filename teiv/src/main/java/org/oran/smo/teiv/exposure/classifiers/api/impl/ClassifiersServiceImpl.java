@@ -30,6 +30,7 @@ import org.oran.smo.teiv.exposure.consumerdata.operation.ClassifiersOperation;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
 import org.oran.smo.teiv.schema.ConsumerDataCache;
 import org.oran.smo.teiv.service.models.OperationResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Profile("exposure")
 public class ClassifiersServiceImpl implements ClassifiersService {
 
     private final ModelRepository modelRepository;

@@ -36,6 +36,7 @@ import org.oran.smo.teiv.exception.TiesException;
 @Slf4j
 @UtilityClass
 public class AliasMapper {
+
     private static final String SHA_1 = "SHA-1";
     private static final int POSTGRES_MAX_IDENTIFIER_LENGTH = 63;
     private static final Map<String, String> originalToHashed = new ConcurrentHashMap<>();

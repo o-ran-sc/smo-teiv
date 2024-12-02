@@ -1,0 +1,15 @@
+{
+    "o-ran-smo-teiv-ran:GGNBDUFunction": [
+        {
+            "id": "gNBDUId_1",
+            "sourceIds": [
+                "source1",
+                "source2"
+            ],
+            "attributes": {
+                "gNBDUId": 1,
+                "gNBId": 21
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "o-ran-smo-teiv-ran:ODUFunction": [
+        {
+            "id": "odu_21",
+            "sourceIds": "fdn_odu_21",
+            "attributes": {
+                "gNBDUId": 1,
+                "gNBId": 21,
+                "dUpLMNId": {
+                    "mcc": "210",
+                    "mnc": "021"
+                }
+            }
+        }
+    ]
+}

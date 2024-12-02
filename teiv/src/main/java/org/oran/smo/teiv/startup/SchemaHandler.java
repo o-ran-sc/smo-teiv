@@ -20,8 +20,9 @@
  */
 package org.oran.smo.teiv.startup;
 
-import org.oran.smo.teiv.exposure.spi.ModelRepository;
-import org.oran.smo.teiv.service.SchemaCleanUpService;
+import org.oran.smo.teiv.exception.YangException;
+import org.oran.smo.teiv.utils.yangparser.ExposureYangParser;
+import org.oran.smo.teiv.utils.yangparser.IngestionYangParser;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -33,36 +34,31 @@ import org.oran.smo.teiv.schema.SchemaLoaderException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class SchemaHandler {
     private final SchemaLoader postgresSchemaLoader;
     private final HealthStatus healthStatus;
-    private final ModelRepository modelRepository;
-    private final SchemaCleanUpService schemaCleanUpService;
 
     /**
      * Loads the schema registry at application startup.
+     *
+     * @throws YangException
+     *
+     * @throws IOException
      */
     @Order(value = 10)
     @EventListener(value = ApplicationReadyEvent.class)
-    public void initializeSchema() throws SchemaLoaderException {
+    public void initializeSchema() throws SchemaLoaderException, YangException {
         log.debug("Start schema initialization");
         healthStatus.setSchemaInitialized(false);
         postgresSchemaLoader.loadSchemaRegistry();
         log.info("Schema initialized successfully...");
+        IngestionYangParser.loadModels();
+        ExposureYangParser.loadAndValidateModels();
         healthStatus.setSchemaInitialized(true);
-    }
-
-    /**
-     * Continue schema clean up at application startup.
-     */
-    @Order(value = 15)
-    @EventListener(value = ApplicationReadyEvent.class)
-    public void cleanUpSchema() {
-        log.debug("Start schema clean up");
-        modelRepository.getDeletingModulesOnStartup().forEach(module -> schemaCleanUpService.cleanUpModule(module
-                .getName()));
     }
 }
