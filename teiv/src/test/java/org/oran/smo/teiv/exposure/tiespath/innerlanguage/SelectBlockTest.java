@@ -66,8 +66,9 @@ public class SelectBlockTest {
 
         Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
                 Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
-                        "ties_data.\"ODUFunction\".\"gNBDUId\"").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"),
-                        BIGINT)), filterCriteria.getSelects());
+                        "ties_data.\"ODUFunction\".\"gNBDUId\"").as("o-ran-smo-teiv-ran:ODUFunction.attr.dUpLMNId"),
+                        CONTAINER, field("ties_data.\"ODUFunction\".\"gNBDUId\"").as(
+                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"), BIGINT)), filterCriteria.getSelects());
     }
 
     @Test
@@ -79,13 +80,15 @@ public class SelectBlockTest {
                 .topologyObjectType(TopologyObjectType.ENTITY).isAllParamQueried(true).build());
 
         Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
-                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
-                        "ties_data.\"ODUFunction\".\"gNBId\"").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), BIGINT,
-                        field("ties_data.\"ODUFunction\".\"gNBIdLength\"").as(
-                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), INTEGER, field(
-                                        "ties_data.\"ODUFunction\".\"gNBDUId\"").as(
-                                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"), BIGINT)), filterCriteria
-                                                        .getSelects());
+                Map.of(field("ties_data.\"ODUFunction\".\"gNBDUId\"").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"),
+                        BIGINT, field("ties_data.\"ODUFunction\".\"gNBDUId\"").as(
+                                "o-ran-smo-teiv-ran:ODUFunction.attr.dUpLMNId"), CONTAINER, field(
+                                        "ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                        PRIMITIVE, field("ties_data.\"ODUFunction\".\"gNBId\"").as(
+                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), BIGINT, field(
+                                        "ties_data.\"ODUFunction\".\"gNBIdLength\"").as(
+                                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), INTEGER)),
+                filterCriteria.getSelects());
     }
 
     @Test
@@ -99,6 +102,20 @@ public class SelectBlockTest {
         Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
                 Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
                         "ties_data.\"ODUFunction\".\"CD_decorators\"").as("o-ran-smo-teiv-ran:ODUFunction.decorators"),
+                        CONTAINER)), filterCriteria.getSelects());
+    }
+
+    @Test
+    void metadataInEntity() {
+        List<TargetObject> targets = new ArrayList<>();
+        InnerFilterCriteria filterCriteria = new InnerFilterCriteria(targets, null);
+
+        targets.add(TargetObject.builder("ODUFunction").params(List.of()).container(ContainerType.METADATA)
+                .topologyObjectType(TopologyObjectType.ENTITY).build());
+
+        Assertions.assertEquals(Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"),
+                Map.of(field("ties_data.\"ODUFunction\".\"id\"").as("o-ran-smo-teiv-ran:ODUFunction.id"), PRIMITIVE, field(
+                        "ties_data.\"ODUFunction\".\"CD_decorators\"").as("o-ran-smo-teiv-ran:ODUFunction.metadata"),
                         CONTAINER)), filterCriteria.getSelects());
     }
 

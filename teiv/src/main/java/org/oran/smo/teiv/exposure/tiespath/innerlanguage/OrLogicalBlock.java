@@ -21,12 +21,26 @@
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
+
 import org.jooq.Condition;
 
 @EqualsAndHashCode(callSuper = true)
 public class OrLogicalBlock extends AndOrLogicalBlock {
+
+    public static OrLogicalBlock fromLogicalBlockList(List<LogicalBlock> children) {
+        OrLogicalBlock orLogicalBlock = new OrLogicalBlock();
+        orLogicalBlock.addAllChild(children);
+        return orLogicalBlock;
+    }
+
     @Override
     public Condition getCondition() {
-        return children.get(0).getCondition().or(children.get(1).getCondition());
+        Condition combinedCondition = children.get(0).getCondition();
+        for (int i = 1; i < children.size(); i++) {
+            combinedCondition = combinedCondition.or(children.get(i).getCondition());
+        }
+        return combinedCondition;
     }
 }

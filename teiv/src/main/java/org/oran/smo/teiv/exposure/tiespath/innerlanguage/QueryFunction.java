@@ -27,7 +27,9 @@ import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 public enum QueryFunction {
     EQ("="),
     CONTAINS("contains"),
-    NOT_NULL("notNull");
+    NOT_NULL("notNull"),
+    WITHIN_METERS("withinMeters"),
+    COVERED_BY("coveredBy");
 
     private final String value;
 

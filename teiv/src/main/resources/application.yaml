@@ -54,6 +54,8 @@ management:
             enabled: "true"
 
 spring:
+  profiles:
+    active: exposure
   datasource:
     read:
       jdbc-url: ${SERVICE_DB_REPLICA_URL:jdbc:postgresql://dbpostgresql:5432/topology_exposure_db}
@@ -147,3 +149,12 @@ database:
     deadlock:
       retry-attempts: 10
       retry-backoff-ms: 200
+
+groups:
+  static:
+    provided-members-ids:
+      max-limit: 25000
+      insert-max-limit: 2000
+
+yang-data-validation:
+  ingestion-events: true

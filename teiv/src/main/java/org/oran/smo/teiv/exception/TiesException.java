@@ -86,6 +86,16 @@ public class TiesException extends RuntimeException {
         return clientException("Invalid file input", String.format("Invalid file input: %s", error));
     }
 
+    public static TiesException duplicateEntryForClassifiers(final String name) {
+        return clientException("Duplicate entry in schema", String.format("Duplicate classifier present in schema: %s",
+                name));
+    }
+
+    public static TiesException duplicateEntryForDecorators(final String name) {
+        return clientException("Duplicate entry in schema", String.format("Duplicate decorator present in schema: %s",
+                name));
+    }
+
     public static TiesException schemaNotOwned(final String name) {
         return new TiesException("Forbidden", String.format("Schema %s is not owned by user", name), HttpStatus.FORBIDDEN,
                 null);
@@ -144,12 +154,14 @@ public class TiesException extends RuntimeException {
         return new TiesException(message, details, HttpStatus.INTERNAL_SERVER_ERROR, exception);
     }
 
-    public static TiesException notImplementedException(String details, Exception exception) {
-        return new TiesException("Not Implemented", details, HttpStatus.NOT_IMPLEMENTED, exception);
-    }
-
     public static TiesException clientException(String message, String details) {
         return new TiesException(message, details, HttpStatus.BAD_REQUEST, null);
+    }
+
+    public static TiesException schemaInDeletingState(String moduleName) {
+        return new TiesException("Schema in deleting state", String.format(
+                "Schema %s already exists and is in the process of being deleted. This may take some time, please try again later.",
+                moduleName), HttpStatus.CONFLICT, null);
     }
 
     private TiesException(String message, String details, HttpStatus status, Exception exception) {

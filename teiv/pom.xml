@@ -336,9 +336,7 @@
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
                             <artifactVersion>${project.version}</artifactVersion>
-                            <environmentVariables>
-                                <enablePostProcessFile>true</enablePostProcessFile>
-                            </environmentVariables>
+                            <enablePostProcessFile>true</enablePostProcessFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -454,6 +452,16 @@
                 <extensions>true</extensions>
                 <configuration>
                     <baseClassForTests>org.oran.smo.teiv.exposure.api.contract.TopologyExposureApiBase</baseClassForTests>
+                    <baseClassMappings>
+                        <baseClassMapping>
+                            <contractPackageRegex>.*exposure.*</contractPackageRegex>
+                            <baseClassFQN>org.oran.smo.teiv.exposure.api.contract.TopologyExposureApiBase</baseClassFQN>
+                        </baseClassMapping>
+                        <baseClassMapping>
+                            <contractPackageRegex>.*groups.*</contractPackageRegex>
+                            <baseClassFQN>org.oran.smo.teiv.groups.TopologyGroupsApiBase</baseClassFQN>
+                        </baseClassMapping>
+                    </baseClassMappings>
                 </configuration>
             </plugin>
             <plugin>
@@ -658,9 +666,10 @@
                                 <argument>-jar</argument>
                                 <argument>${project.parent.basedir}/pgsql-schema-generator/target/pgsql-schema-generator-1.1.0.jar</argument>
                                 <argument>--yang-model.external.source=${project.basedir}/src/main/resources/models</argument>
-                                <argument>--schema.data.output=src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data-v1.sql</argument>
-                                <argument>--schema.model.output=src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model-v1.sql</argument>
-                                <argument>--schema.consumer-data.output=src/test/resources/pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql</argument>
+                                <argument>--schema.data.output=src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data.sql</argument>
+                                <argument>--schema.model.output=src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model.sql</argument>
+                                <argument>--schema.consumer-data.output=src/test/resources/pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql</argument>
+                                <argument>--schema.groups.output=src/test/resources/pgsqlschema/03_init-oran-smo-teiv-groups.sql</argument>
                             </arguments>
                         </configuration>
                     </execution>

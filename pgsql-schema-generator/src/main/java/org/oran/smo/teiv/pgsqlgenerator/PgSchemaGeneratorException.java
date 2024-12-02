@@ -68,4 +68,8 @@ public class PgSchemaGeneratorException extends RuntimeException {
                 errorMsg), ex);
     }
 
+    public static PgSchemaGeneratorException readCustomSqlFileException(final String schemaName, Exception ex) {
+        return new PgSchemaGeneratorException(String.format("%s : Failed to read custom sql file!", schemaName), ex);
+    }
+
 }

@@ -28,7 +28,10 @@ import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
 import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TiesConstants.METADATA;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TiesConstants.REL_PREFIX;
+import static org.oran.smo.teiv.utils.TiesConstants.RESP_PREFIX;
 import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
 import org.oran.smo.teiv.exposure.spi.Module;
@@ -37,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Builder;
-import lombok.Singular;
 import lombok.Value;
 import org.jooq.Field;
 
@@ -51,18 +53,22 @@ public class RelationType implements Persistable {
     private static final String REL_SOURCE_IDS_COL_PREFIX = "REL_CD_sourceIds_%s";
     private static final String REL_CLASSIFIERS_COL_PREFIX = "REL_CD_classifiers_%s";
     private static final String REL_DECORATORS_COL_PREFIX = "REL_CD_decorators_%s";
+    private static final String REL_METADATA_COL_PREFIX = "REL_metadata_%s";
+    private static final String REL_UPDATETIME_COL_PREFIX = "REL_updated_time_%s";
+    private static final String RESPONSIBLE_ADAPTER_ID_COL = RESP_PREFIX + ID_COLUMN_NAME;
+    private static final String REL_RESPONSIBLE_ADAPTER_ID_COL_PREFIX = REL_PREFIX + RESP_PREFIX + ID_COLUMN_NAME + "_%s";
+    public static final String UPDATED_TIME = "updated_time";
 
     String name;
     Association aSideAssociation;
     EntityType aSide;
     Association bSideAssociation;
     EntityType bSide;
-    @Singular
-    Map<String, DataType> attributes;
     boolean connectsSameEntity;
     RelationshipDataLocation relationshipStorageLocation;
     String tableName;
     Module module;
+    List<String> attributeNames;
 
     @Override
     public String getTableName() {
@@ -72,7 +78,7 @@ public class RelationType implements Persistable {
     @Override
     public String getIdColumnName() {
         if (relationshipStorageLocation.equals(RELATION)) {
-            return ID_COLUMN_NAME;
+            return getDbName(ID_COLUMN_NAME);
         } else {
             return getDbName(String.format(REL_ID_COL_PREFIX, name));
         }
@@ -101,6 +107,19 @@ public class RelationType implements Persistable {
         result.add(field(getTableName() + "." + String.format(QUOTED_STRING, bSideColumnName())).as(hashAlias(
                 getFullyQualifiedName() + ".bSide")));
         return result;
+    }
+
+    /**
+     * Gets the responsible adapter ID column name as String, for the given DB name.
+     *
+     * @return the responsible adapter column as String
+     */
+    public String getResponsibleAdapterIdColumnName() {
+        if (relationshipStorageLocation.equals(RELATION)) {
+            return getDbName(RESPONSIBLE_ADAPTER_ID_COL);
+        } else {
+            return getDbName(String.format(REL_RESPONSIBLE_ADAPTER_ID_COL_PREFIX, name));
+        }
     }
 
     /**
@@ -138,6 +157,15 @@ public class RelationType implements Persistable {
             return getDbName(CONSUMER_DATA_PREFIX + DECORATORS);
         } else {
             return getDbName(String.format(REL_DECORATORS_COL_PREFIX, name));
+        }
+    }
+
+    @Override
+    public String getMetadataColumnName() {
+        if (relationshipStorageLocation.equals(RELATION)) {
+            return getDbName(METADATA);
+        } else {
+            return getDbName(String.format(REL_METADATA_COL_PREFIX, name));
         }
     }
 
@@ -188,29 +216,33 @@ public class RelationType implements Persistable {
         };
     }
 
-    public String getStoringSideEntityType() {
+    public EntityType getStoringSideEntityType() {
         return switch (relationshipStorageLocation) {
             case RELATION -> null;
-            case A_SIDE -> aSide.getName();
-            case B_SIDE -> bSide.getName();
+            case A_SIDE -> aSide;
+            case B_SIDE -> bSide;
         };
     }
 
-    public String getNotStoringSideEntityType() {
+    public EntityType getNotStoringSideEntityType() {
         return switch (relationshipStorageLocation) {
             case RELATION -> null;
-            case A_SIDE -> bSide.getName();
-            case B_SIDE -> aSide.getName();
+            case A_SIDE -> bSide;
+            case B_SIDE -> aSide;
         };
-    }
-
-    public List<String> getAttributeNames() {
-        // attributes are yet to be supported for relations
-        return List.of();
     }
 
     @Override
     public String getCategory() {
         return "relationship";
+    }
+
+    @Override
+    public String getUpdatedTimeColumnName() {
+        if (relationshipStorageLocation.equals(RELATION)) {
+            return getDbName(UPDATED_TIME);
+        } else {
+            return getDbName(String.format(REL_UPDATETIME_COL_PREFIX, name));
+        }
     }
 }

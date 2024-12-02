@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -35,16 +34,18 @@ import org.jooq.Result;
 import org.jooq.UpdateResultStep;
 import org.oran.smo.teiv.exposure.consumerdata.model.PersistableIdMap;
 import org.oran.smo.teiv.service.models.OperationResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.notExists;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.table;
+import static org.jooq.impl.DSL.val;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 
 @Component
-@Slf4j
+@Profile("exposure")
 public class MergeClassifiersOperation extends ClassifiersOperation {
 
     public MergeClassifiersOperation(DSLContext readDataDslContext, DSLContext writeDataDslContext) {
@@ -87,7 +88,7 @@ public class MergeClassifiersOperation extends ClassifiersOperation {
     }
 
     private Condition notExistsCondition(final String classifiersColumnName, final String data) {
-        return notExists(select(field("1")).from(table("jsonb_array_elements_text(" + classifiersColumnName + ")").as(
-                "element")).where(field("element").eq(data)));
+        return notExists(select(field("1")).from(table("jsonb_array_elements_text(" + field(classifiersColumnName) + ")")
+                .as("element")).where(field("element").eq(val(data))));
     }
 }

@@ -29,11 +29,6 @@ SET default_table_access_method = heap;
 
 SET ROLE :pguser;
 
-CREATE TABLE IF NOT EXISTS ties_model.execution_status (
-    "schema" VARCHAR(127) PRIMARY KEY,
-    "status" VARCHAR(127)
-);
-
 CREATE TABLE IF NOT EXISTS ties_model.hash_info (
     "name"        TEXT PRIMARY KEY,
     "hashedValue" VARCHAR(63) NOT NULL,
@@ -53,6 +48,7 @@ CREATE TABLE IF NOT EXISTS ties_model.entity_info (
     "storedAt"            TEXT PRIMARY KEY,
     "name"                TEXT NOT NULL,
     "moduleReferenceName" TEXT NOT NULL,
+    "attributeNames"      jsonb DEFAULT '[]'::jsonb,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 
@@ -78,7 +74,4 @@ CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
     FOREIGN KEY ("bSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
-
--- Update model schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_model', 'success');
 

@@ -20,188 +20,318 @@
 --
 
 
-COPY ties_data."163276fa439cdfccabb80f7acacb6fa638e8d314" ("id", "name", "REL_FK_deployed-managedElement" )  FROM stdin;
+BEGIN;
+COPY ties_data."responsible_adapter" ("id", "hashed_id") FROM stdin;
+namespace-ran-topology-adapter	
+namespace:ran-topology-adapter	\\xe7ed2726d18e3eb3c36fd1b932ab7b9a1def21ec
+test-namespace:test-adapter-id	\\x866db960e7d78018cbdf401ff8c0db523f0e27bb
+ran-topology-adapter	\\x5b35d8c6c5f8e8acb48912b8f328ebc9b6924e03
 \.
 
-COPY ties_data."ef701af8e1445ed5d377664ba1d3d1c645e31639" ("id", "name", "REL_FK_C2F5EC33C0760F653CE7263A49C0B697FCA2D542" )  FROM stdin;
-C4E311A55666726FD9FE25CA572AFAF9	Example Cloud Native System/1	\N
+COPY ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id", "CD_sourceIds", "CD_classifiers", "CD_decorators", "metadata") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	{"reliabilityIndicator":"RESTORED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10", "urn:cmHandle:72FDA73D085F138FECC974CB91F1450E"]	[]	{}	{"reliabilityIndicator":"OK"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13", "urn:cmHandle:E5196035D0B49A65B00EAA392B4EE155"]	[]	{}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14", "urn:cmHandle:D67C0BD04FA613BBFD176B24B68FD6A4"]	[]	{}	{"reliabilityIndicator":"RESTORED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16", "urn:cmHandle:453431CC154F900606657D584700827A"]	[]	{}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28", "urn:cmHandle:30C68865AF2F353F202056CB1921D418"]	[]	{}	{"reliabilityIndicator":"ADVISED"}
 \.
 
-COPY ties_data."o-ran-smo-teiv-ran-oam_ManagedElement" ("id", "cmId", "fdn", "REL_FK_deployed-as-cloudNativeSystem", "REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM" )  FROM stdin;
-DA1039E77700A9EEFFA280049ECE9227	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=9	\N	\N
-6F02817AFE4D53237DB235EBE5378613	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=10	\N	\N
-27500EB447000209EE6E3CA1B31FBA92	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=13	\N	\N
-06222D277EE209CD8DCA1FE61CE752E6	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=14	\N	\N
-DC86CA7724113F4C0DF42BFEAA17FD53	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=16	\N	\N
-8D51EFC759166044DACBCA63C4EDFC51	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=19	\N	\N
-E64371CD4D12ED0CED200DD3A7591784	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=28	\N	\N
+COPY ties_data."o-ran-smo-teiv-ran_Sector" ("id", "geo-location", "sectorId", "azimuth", "CD_sourceIds", "CD_classifiers", "CD_decorators", "metadata") FROM stdin;
+Sector=1	POINT(59.4019881 17.9419888)	1	1.1	["source1", "source2"]	[]	{}	{"reliabilityIndicator":"RESTORED"}
+Sector=2	POINT(60.4019881 18.9419888)	2	2.2	["source1", "source2"]	[]	{}	{"reliabilityIndicator":"RESTORED"}
+Sector=3	POINT(61.4019881 19.9419888)	3	3.3	["source1", "source2"]	[]	{}	{"reliabilityIndicator":"ADVISED"}
 \.
 
-COPY ties_data."fa2dceaf53e045c136ce9db9bc5faae65a29fa4d" ("id", "cmId", "fdn", "REL_FK_26958E3A529C4C8B68A29FDA906F8CD290F66078", "REL_ID_B7945BFD83380F3E12CF99F2B0F838F364027F92" )  FROM stdin;
-45EF31D8A1FD624D7276390A1215BFC3	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=1	C4E311A55666726FD9FE25CA572AFAF9	urn:base64:TWFuYWdlZEVsZW1lbnQ6NDVFRjMxRDhBMUZENjI0RDcyNzYzOTBBMTIxNUJGQzM6REVQTE9ZRURfQVM6Q2xvdWROYXRpdmVTeXN0ZW06QzRFMzExQTU1NjY2NzI2RkQ5RkUyNUNBNTcyQUZBRjk=
-DA1039E77700A9EEFFA280049ECE9227	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=9	\N	\N
-6F02817AFE4D53237DB235EBE5378613	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=10	\N	\N
-27500EB447000209EE6E3CA1B31FBA92	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=13	\N	\N
-06222D277EE209CD8DCA1FE61CE752E6	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=14	\N	\N
-DC86CA7724113F4C0DF42BFEAA17FD53	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=16	\N	\N
-8D51EFC759166044DACBCA63C4EDFC51	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=19	\N	\N
-E64371CD4D12ED0CED200DD3A7591784	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/ManagedElement=28	\N	\N
+COPY ties_data."o-ran-smo-teiv-ran_AntennaCapability" ("id", "eUtranFqBands", "geranFqBands", "nRFqBands", "CD_sourceIds", "CD_classifiers", "CD_decorators", "metadata") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1	["123","456","789"]	["123","4564","789"]	["123","456","789"]	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	{"reliabilityIndicator":"INVALID"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1	["123","456","789"]	["123","4564","789"]	["123","456","789"]	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	{"reliabilityIndicator":"RESTORED"}
 \.
 
-COPY ties_data."o-ran-smo-teiv-ran-cloud_CloudSite" ("id", "geo-location", "name" )  FROM stdin;
-16EE17AE89DF11B69E94B3F6827C2C0E	POINT(59.4019881 17.9419888)	ORAN
+COPY ties_data."o-ran-smo-teiv-equipment_AntennaModule" ("id", "antennaBeamWidth", "antennaModelNumber", "electricalAntennaTilt", "geo-location", "mechanicalAntennaBearing", "mechanicalAntennaTilt", "positionWithinSector", "totalTilt", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_installed-at-site", "REL_ID_ANTENNAMODULE_INSTALLED_AT_SITE", "REL_CD_sourceIds_ANTENNAMODULE_INSTALLED_AT_SITE", "REL_CD_classifiers_ANTENNAMODULE_INSTALLED_AT_SITE", "REL_CD_decorators_ANTENNAMODULE_INSTALLED_AT_SITE", "REL_FK_grouped-by-sector", "REL_ID_SECTOR_GROUPS_ANTENNAMODULE", "REL_CD_sourceIds_SECTOR_GROUPS_ANTENNAMODULE", "REL_CD_classifiers_SECTOR_GROUPS_ANTENNAMODULE", "REL_CD_decorators_SECTOR_GROUPS_ANTENNAMODULE", "REL_metadata_ANTENNAMODULE_INSTALLED_AT_SITE", "REL_metadata_SECTOR_GROUPS_ANTENNAMODULE", "metadata" ) FROM stdin;
+urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A	\N	5	11	POINT(39.4019881 67.9419888)	6	0	7	-900	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	\N	\N	[]	[]	{}	Sector=2	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=44F4F4FC906E9A7525065E4565246F7469CBD11FC7752C61EA6D74776845900AFF472DCAACA1F66443490B6CE0DD9AC9A5E1467022118599F6B4C6EC63400512	[]	[]	{}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"OK"}
+urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7	\N	5	11	POINT(49.4019881 68.9419888)	6	0	7	-900	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	\N	\N	[]	[]	{}	Sector=2	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=CEEC51BE136D671D2101C09FEDD8A1D95E1E177A4818E9FC0D6E63E610BC8FE26FC9C729A1E58AD43D70472F4CD54403E25CB1E5D2BBA66966625C21435C4A78	[]	[]	{}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"ADVISED"}	{"reliabilityIndicator":"RESTORED"}
+urn:o-ran:smo:teiv:sha512:AntennaModule=72AC3D5E2A5F1C47BD09258A9F7B48E0123E9AD752AC54F7E8D8F9D3A6BC487A89A762A5D12CB9D148BB9E5D53A4F3F981345ACDF7B4CB55D67BC12A13FD5B7A	\N	5	11	POINT Z (47.497913 19.040236 111.1)	4	2	5	-850	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	\N	\N	[]	[]	{}	Sector=3	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=67C8D3C4E7B9A2F4C0A7D1B4E3F8D7C9E6F8C3A9D4F2E5B1C7D2F5C8B1D2F6C7A5E7B3C4A1D2E3F7B5A9C7D2F5B8C1D2F7C8A9D4E3F8D7A1E3B5C7	[]	[]	{}	{"reliabilityIndicator":"OK"}	{}	{"reliabilityIndicator":"ADVISED"}
+urn:o-ran:smo:teiv:sha512:AntennaModule=84A3E5D7C916F4B2390DC45F178BE6A9235FD80CB41972E3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123	\N	5	11	POINT(-49.4019881 -68.9419888)	6	0	5	-900	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	\N	\N	[]	[]	{}	Sector=2	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=DAFC42AF147B582C3212D1AEFEEB92EA6F2F288B5929FAED1E7F74F721CD9FF37FDAD83AB2F69BE54E81583F5DE65514F36DC2F6E3CCB77A77736D32546D5B89	[]	[]	{}	{"reliabilityIndicator":"OK"}	{}	{"reliabilityIndicator":"ADVISED"}
+urn:o-ran:smo:teiv:sha512:AntennaModule=B7F52C914E8D36A0185BC9D47EF230A95C681D7B4F923E0A5D8C741F6B9203E85A4D967B312C8F405E9B7831A6D2C5904F8B3E167A9D204C5B8371F9E6A02D45	\N	5	11	POINT Z (-47.497913 -19.040236 -111.1)	4	2	5	-850	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	\N	\N	[]	[]	{}	Sector=3	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=BFFB53CF258C693D4323E2BFFFFC93FB7F3F399C6939FBFE2F8F85F832DE9FF48FEAE94BC3F79CF65F92694F6EF76625F47ED3F7F4DDC88B88847E43657E6C9A	[]	[]	{}	{"reliabilityIndicator":"OK"}	{}	{"reliabilityIndicator":"ADVISED"}
 \.
 
-COPY ties_data."o-ran-smo-teiv-ran-cloud_NodeCluster" ("id", "name", "REL_FK_located-at-cloudSite", "REL_ID_NODECLUSTER_LOCATED_AT_CLOUDSITE" )  FROM stdin;
-015C2DDBD7AC722B34ED6A20EDEEB9C3	Example NodeCluster/45	16EE17AE89DF11B69E94B3F6827C2C0E	urn:base64:Tm9kZUNsdXN0ZXI6MDE1QzJEREJEN0FDNzIyQjM0RUQ2QTIwRURFRUI5QzM6TE9DQVRFRF9BVDpDbG91ZFNpdGU6MTZFRTE3QUU4OURGMTFCNjlFOTRCM0Y2ODI3QzJDMEU=
+COPY ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ("id", "gNBCUName", "gNBId", "gNBIdLength", "pLMNId", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION", "REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUCPFUNCTION") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,OCUCPFunction=9	ocucp-9	9	1	{"mcc":"123","mnc":"82"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,OCUCPFunction=9", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=0F7F3F3CEC7B3CDA05A7B7D2874D1EF39EBDAA18AD7D6F43CF219C087510114C59C6B78EC21F8E9C6F19B5F1999FBBA2DF8C3DDF76F416C874508303F0DA4AB4	[]	[]	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,OCUCPFunction=10	ocucp-10	10	2	{"mcc":"456","mnc":"83"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,OCUCPFunction=10", "urn:cmHandle:72FDA73D085F138FECC974CB91F1450E"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=7053BF6EEB9769084BB91850C356BF20E3C9D6AD8F0D7212911DC827AD1B4D42AEDA0C43FD5715C94E14334EF49FA09405A976451B777B442BBF397DE89528A4	[]	[]	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,OCUCPFunction=13	ocucp-13	13	2	{"mcc":"789","mnc":"84"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,OCUCPFunction=13", "urn:cmHandle:E5196035D0B49A65B00EAA392B4EE155"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=C88ACE9CD7BA7E56FD059C027DA8E4D0ED0A3E13F9E358D5F4A66EE004FC3767A9D20B0512661B6D2F5F82F106725C04C5DC8826D990DECB4D5AD571BE402BE0	[]	[]	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,OCUCPFunction=14	ocucp-14	14	2	{"mcc":"123","mnc":"85"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,OCUCPFunction=14", "urn:cmHandle:D67C0BD04FA613BBFD176B24B68FD6A4"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=F23FADEDC45AE38DBC567C57FC4DD5D61D239B0BEF3C93DD54DF85545E6D0C8B9B26A1D3911B56A3F8C2EB148A4F276D1EBAF7EE2D2E35C8B37F008F572DF7B6	[]	[]	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,OCUCPFunction=16	ocucp-16	16	2	{"mcc":"456","mnc":"86"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,OCUCPFunction=16", "urn:cmHandle:453431CC154F900606657D584700827A"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=5ECE0941DDBC9B4DEE8492333129A0AB80720CB6005A80B54C4D9247029A41FA42DB6D2C709F71D7ED5D82F5EA90CE2C0B553AC1BD860D8A6DFA218E2E790F1C	[]	[]	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,OCUCPFunction=19	ocucp-19	19	2	{"mcc":"789","mnc":"87"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,OCUCPFunction=19", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=63EA5A9F77FE5DED61CF6DC30233AB17A57D6E04283365D7C1976FF646961FAAF1889BBA618029EA10DA8761F8DAA643B707B602D4E61898A2B5259AA0118887	[]	[]	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28,OCUCPFunction=28	ocucp-28	28	2	{"mcc":"123","mnc":"88"}	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28,OCUCPFunction=28", "urn:cmHandle:30C68865AF2F353F202056CB1921D418"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION=CD564BF182FD6DE77816BA69F25B664374AD02D642DF05FF8991E1009E7E09C50E92F6858A1E1B025CFDA933AB769B8C68FBAE0DBBAA140AE321DC55AED6C2A3	[]	[]	{}
 \.
 
-COPY ties_data."o-ran-smo-teiv-ran-cloud_Namespace" ("id", "name", "REL_FK_deployed-on-nodeCluster", "REL_ID_NAMESPACE_DEPLOYED_ON_NODECLUSTER" )  FROM stdin;
-1C02E96B2AAE036C7AE404BC38C308E0	Example Namespace/1	\N	\N
+COPY ties_data."o-ran-smo-teiv-ran_OCUUPFunction" ("id", "gNBId", "gNBIdLength", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "REL_CD_decorators_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "REL_metadata_MANAGEDELEMENT_MANAGES_OCUUPFUNCTION", "metadata") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,OCUUPFunction=9	9	1	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,OCUUPFunction=9", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A	[]	["ocucp-ocuup-model:Weekend"]	{"ocucp-ocuup-model:metadata" : "value1"}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"RESTORED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,OCUUPFunction=10	10	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,OCUUPFunction=10", "urn:cmHandle:72FDA73D085F138FECC974CB91F1450E"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=80D3B4C44B4F0BEFC7660AF0A4E91F89C8108DA814B09728F848C0C5C10E2D956A73FBC85EB2AE0A7EA4D95308A606856603B53C8C2669A50BCB58B9FC87D7F2	[]	[]	{}	{}	{"reliabilityIndicator":"ADVISED","foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,OCUUPFunction=13	13	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,OCUUPFunction=13", "urn:cmHandle:E5196035D0B49A65B00EAA392B4EE155"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=29DE1D3B8DA9C9FA1201C36F74FEBE14493F7C674E47E1FFCB6AADEED8EABB0460770EC21E7AC8EEBBB057ABC0E31269AB5C92D941E9BA53877164918C6EFB30	[]	[]	{}	{"reliabilityIndicator":"RESTORED"}	{"reliabilityIndicator":"RESTORED","foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,OCUUPFunction=14	14	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,OCUUPFunction=14", "urn:cmHandle:D67C0BD04FA613BBFD176B24B68FD6A4"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=4C571BDD5DF9B297C1B249D0242EB9DDC77052BB0A33E62DB851809A075259EE3A0C354FA3978276BD5EE0BBB8CFDBF19F7C3C7017F828B9A2EBAD020E7FDF98	[]	[]	{}	{"reliabilityIndicator":"RESTORED","foo":"bar"}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,OCUUPFunction=16	16	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,OCUUPFunction=16", "urn:cmHandle:453431CC154F900606657D584700827A"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=DD5E12CB8D14C89E1C199BDABBCC71908F76AB04FE8FD7F7334A9A403B5BE0D8BB5DA69B4258C7AF4834BF2D3E00B6D5C263AD38A83A22E7EC673ACE1CAF0CF2	[]	[]	{}	{"reliabilityIndicator":"RESTORED","foo":"bar"}	{"reliabilityIndicator":"RESTORED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,OCUUPFunction=19	19	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,OCUUPFunction=19", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=2AF48E294918A4EE0E3E7C783A70841E1DEEF72CDD43FE3CD1DF6531CCA06203B574BE02553254220A637632AECB719951DAE2A3D0487D24EA1A090843563603	[]	[]	{}	{"reliabilityIndicator":"ADVISED","foo":"bar"}	{"foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28,OCUUPFunction=28	28	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28,OCUUPFunction=28", "urn:cmHandle:30C68865AF2F353F202056CB1921D418"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=140E8C8C56B1E717CD992D3FF0C61C04C1633E1FEF17ABB92A9A17C53E18CFAF5D72C4C71415E0026C99671657FB3EC1BD394174DD306261ADA8A6CDF4D42748	[]	[]	{}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"ADVISED"}
 \.
 
-COPY ties_data."bc563e4310b0538e6bdd35f52684160af5b23671" ("id", "name" )  FROM stdin;
-1C02E96B2AAE036C7AE404BC38C308E0	Example Namespace/1
+COPY ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id", "dUpLMNId", "gNBDUId", "gNBId", "gNBIdLength", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "metadata", "REL_metadata_MANAGEDELEMENT_MANAGES_ODUFUNCTION") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	{"mcc":"123","mnc":"82"}	\N	9	1	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	["test-app-module:Indoor","test-app-module:Weekend"]	{"test-app-module:textdata":"ORAN"}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=9243B48F7D6A6CF471226915C74CF5FE4BDA6FA3CF7D897473007B46DF7FC50230BD6B8B4256116A6AFBF4D822CF9379EB56DE9490C1C0B54238263F2574B426	[]	["test-app-module:Indoor","test-app-module:Weekend"]	{"test-app-module:textdata":"ORAN"}	{"reliabilityIndicator":"OK","newKeyType":"newValue"}	{"reliabilityIndicator":"ADVISED","newKeyType":"newValue"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10	{"mcc":"456","mnc":"83"}	\N	10	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10", "urn:cmHandle:72FDA73D085F138FECC974CB91F1450E"]	[]	{"test-app-module:textdata":"Budapest","test-app-module:intdata":123}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=661A89AD3C2702233CD9E96E97E738C05C35EC5FDF32DC78D149B773726350067315B72448D004C938BCD0263F0C4BCCC8A5F9CDD145B9B740983D1523664328	[]	["test-app-module:Rural","test-app-module:Weekend"]	{"test-app-module:textdata":"Budapest","test-app-module:intdata":123}	{"reliabilityIndicator":"RESTORED"}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,ODUFunction=13	{"mcc":"789","mnc":"84"}	\N	13	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,ODUFunction=13", "urn:cmHandle:E5196035D0B49A65B00EAA392B4EE155"]	["test-app-module:Indoor"]	{"test-app-module:textdata":"Stockholm","test-app-module:intdata":456}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=DD9259A1B57FF2BB9DEC77C29DBFA4A5C49960D80622F603809ACA47E786DDD5C7ABD267D554A7C796477A9B2E02E072A8E682E4ED38F331BFB6DC3827CE4DB7	[]	[]	{"test-app-module:textdata":"Stockholm","test-app-module:intdata":456}	{"reliabilityIndicator":"RESTORED"}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14	{"mcc":"123","mnc":"85"}	\N	14	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14", "urn:cmHandle:D67C0BD04FA613BBFD176B24B68FD6A4"]	["test-app-module:Rural","test-app-module:Weekend"]	{"test-app-module:textdata":"Stockholm","test-app-module:intdata":123}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=6F7BFBD3DA2A9A592084C75242210A33C9DCF10CFCD53B761A6ACCD385132921679EC3C16394A4DEEE5883712C9719511388230151BA84FBF209DFCFB639E2EA	[]	[]	{"test-app-module:textdata":"Stockholm","test-app-module:intdata":123}	{"reliabilityIndicator":"ADVISED"}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16	{"mcc":"456","mnc":"86"}	16	16	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16", "urn:cmHandle:453431CC154F900606657D584700827A"]	["test-app-module:Indoor","test-app-module:Rural","test-app-module:Weekend"]	{"test-app-module:textdata":"Stockholm","test-app-module:intdata":123}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=D67357F682531C7B068486313B0FDAC3E719A166229520196FB9CE917E0236754226A5BCBF7BB7240E516D7ED3FEA852855EC3F121DD4BAFEC5646F2A37F57EE	[]	["test-app-module:Indoor","test-app-module:Rural","test-app-module:Weekend"]	{"test-app-module:textdata":"Stockholm","test-app-module:intdata":123}	{"reliabilityIndicator":"RESTORED"}	{}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19	{"mcc":"789","mnc":"87"}	\N	19	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=6BD25E5C8FB7842F69010736253CC47F43535D7238E9E9A03E8092E8C019C83270DE47C96EF1049C40B83A130F9F129AE93B9C8538B6B004AE89BD0A098E48DD	[]	[]	{}	{}	{"reliabilityIndicator":"OK","foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28,ODUFunction=28	{"mcc":"123","mnc":"88"}	\N	28	2	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28,ODUFunction=28", "urn:cmHandle:30C68865AF2F353F202056CB1921D418"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=28	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=ADD4A82DFBAF0409FA9D3C929A09314088627B447C733429D4EE7AAE2FFAEE4894F90826B6814B63431EC07140783C7861E463C5AF8330E29469D704675EAB43	[]	[]	{}	{}	{"reliabilityIndicator":"RESTORED"}
 \.
 
-COPY ties_data."e01fcb87ad2c34ce66c34420255e25aaca270e5e" ("id", "name", "REL_FK_realised-managedElement", "REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "REL_FK_comprised-by-cloudNativeSystem", "REL_ID_CLOUDNATIVESYSTEM_COMPRISES_CLOUDNATIVEAPPLICATION", "REL_FK_deployed-on-namespace", "REL_ID_CLOUDNATIVEAPPLICATION_DEPLOYED_ON_NAMESPACE" )  FROM stdin;
-AD42D90497E93D276215DF6D3B899E17	Cloud Native CUUPApp/8	\N	\N	\N	\N	\N	\N
-719BD5C7CD8A939D76A83DA95DA45C01	Example Cloud App/9	\N	\N	\N	\N	1C02E96B2AAE036C7AE404BC38C308E0	urn:base64:Q2xvdWROYXRpdmVBcHBsaWNhdGlvbjo3MTlCRDVDN0NEOEE5MzlENzZBODNEQTk1REE0NUMwMTpERVBMT1lFRF9PTjpOYW1lc3BhY2U6MUMwMkU5NkIyQUFFMDM2QzdBRTQwNEJDMzhDMzA4RTA=
-416F31E6EB09055326621F4919D35BFF	Example Cloud App/10	\N	\N	\N	\N	\N	\N
-C549905CF3CC890CE5746C5E10ACF00D	Example Cloud App/19	\N	\N	\N	\N	\N	\N
+COPY ties_data."o-ran-smo-teiv-ran_NRCellDU" ("id", "cellLocalId", "nCI", "nRPCI", "nRTAC", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_provided-by-oduFunction", "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU", "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU", "REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRCELLDU", "REL_CD_decorators_ODUFUNCTION_PROVIDES_NRCELLDU", "REL_FK_grouped-by-sector", "REL_ID_SECTOR_GROUPS_NRCELLDU", "REL_CD_sourceIds_SECTOR_GROUPS_NRCELLDU", "REL_CD_classifiers_SECTOR_GROUPS_NRCELLDU", "REL_CD_decorators_SECTOR_GROUPS_NRCELLDU", "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU", "REL_metadata_SECTOR_GROUPS_NRCELLDU") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1	1	1	789	456	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=4E40BE000AFEA418CE1B9ED9E21D38DA51772175BD498BE825D9EA362F9B7393C36AB72F6FDEE702439143D578268A2E84719A9352C8EA70F847B7B7664E047C	[]	[]	{}	Sector=2	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=4BBE73F685A98EF799968ACFE76F376D795F4CC3B56A6B867642048CDF4C1B8E323430EA7C6C38E4031FB891158763CC5459A8704E1A9FBFBD53CE8AD23BF463	[]	[]	{}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"OK"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2	2	2	789	456	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=78ECC09D4832328976EF0F9C19699EE05D98E3837368D386AE39AD027543494AC620086BD2A7403DACFAA7B474B3DEBD313E0906F1EDE7FA2B584E16542A706A	[]	[]	{}	Sector=2	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=46AAB2CC5388BECD7B2180C89EEFA64B9A3BC197B614B57FD4BD9ADACE2475A89E16BA04291DE1674FAF2925483E23B8EDCAD4EE98759A9C08E2677CD88F4C43	[]	[]	{}	{"reliabilityIndicator":"RESTORED"}	{"reliabilityIndicator":"RESTORED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3	3	3	789	456	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=714C1B73945C298CAA03FE0D800053CDD1C571BBF375DC647B9F23FDA861CEB369832A3593BB1AA4B8A7245AD187ED24ADDF6FB147130827CDC17BA8370C4838	[]	[]	{}	Sector=2	urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=F892571703F0E20A37F3950818DEFA9991ACF35828EEEBD3E43404218F947E1F522258A1F31F4C82A53E7E60D9E1A7AC7AC4219A0D9DD0D8FD192BC73BBB5101	[]	[]	{}	{"reliabilityIndicator":"OK","foo":"bar"}	{"reliabilityIndicator":"OK","foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91	91	91	789	456	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	\N	\N	[]	[]	{}	\N	\N	[]	[]	{}	{"reliabilityIndicator":"RESTORED","foo":"bar"}	{"reliabilityIndicator":"RESTORED","foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=92	92	92	789	456	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=92", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=DDECCEFB8831FA4EB21B121BA35EAB07ED8D841B5A38580C5F3AD11E66FE73D2FC42E823C6C73288860C7562B610C3D07B6C39FD386171A3BE622096F4B3D006	[]	[]	{}	\N	\N	[]	[]	{}	{"reliabilityIndicator":"ADVISED","foo":"bar"}	{"reliabilityIndicator":"ABC","foo":"bar"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=93	93	93	789	456	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=93", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	["test-app-module:Rural"]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=7723E5D5B3332E0890EAA620C77A6A47065E15A2EA28AD83F3B3CFEA5A7E3BB5965AE78890F1BF000EAA89BF8DE209E506192BF5EA6871426603ED76CBFAF088	[]	[]	{}	\N	\N	[]	[]	{}	{"reliabilityIndicator":"RESTORED","foo":"bar"}	{"reliabilityIndicator":"RESTORED","foo":"bar"}
 \.
 
-COPY ties_data."5f8facd51b2bbddc90d9dee9be697907441892d0" ("id", "name", "REL_FK_AB87B417CCD05C332DDD0C60F0C6AB41D38B05E5", "REL_ID_FC2F6A5A12917357B548C83F4B0C1AD58FA61413", "REL_FK_8C98B70070BBD11F90F192DDA3ECF6302390E956", "REL_ID_AFBF10D23507AD3B6408947D2A9AF8465BA7B08C" )  FROM stdin;
-AD42D90497E93D276215DF6D3B899E17	Cloud Native CUUPApp/8	\N	\N	\N	\N
-719BD5C7CD8A939D76A83DA95DA45C01	Example Cloud App/9	\N	\N	1C02E96B2AAE036C7AE404BC38C308E0	urn:base64:Q2xvdWROYXRpdmVBcHBsaWNhdGlvbjo3MTlCRDVDN0NEOEE5MzlENzZBODNEQTk1REE0NUMwMTpERVBMT1lFRF9PTjpOYW1lc3BhY2U6MUMwMkU5NkIyQUFFMDM2QzdBRTQwNEJDMzhDMzA4RTA=
-416F31E6EB09055326621F4919D35BFF	Example Cloud App/10	6F02817AFE4D53237DB235EBE5378613	urn:base64:TWFuYWdlZEVsZW1lbnQ6NkYwMjgxN0FGRTRENTMyMzdEQjIzNUVCRTUzNzg2MTM6UkVBTElTRURfQlk6Q2xvdWROYXRpdmVBcHBsaWNhdGlvbjo0MTZGMzFFNkVCMDkwNTUzMjY2MjFGNDkxOUQzNUJGRg==	\N	\N
-C549905CF3CC890CE5746C5E10ACF00D	Example Cloud App/19	\N	\N	\N	\N
+COPY ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ("id", "arfcnDL", "arfcnUL", "bSChannelBwDL", "frequencyDL", "frequencyUL", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_provided-by-oduFunction", "REL_ID_ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "REL_CD_classifiers_ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "REL_CD_decorators_ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "REL_FK_used-by-nrCellDu", "REL_ID_NRCELLDU_USES_NRSECTORCARRIER", "REL_CD_sourceIds_NRCELLDU_USES_NRSECTORCARRIER", "REL_CD_classifiers_NRCELLDU_USES_NRSECTORCARRIER", "REL_CD_decorators_NRCELLDU_USES_NRSECTORCARRIER", "REL_FK_used-antennaCapability", "REL_ID_NRSECTORCARRIER_USES_ANTENNACAPABILITY", "REL_CD_sourceIds_NRSECTORCARRIER_USES_ANTENNACAPABILITY", "REL_CD_classifiers_NRSECTORCARRIER_USES_ANTENNACAPABILITY", "REL_CD_decorators_NRSECTORCARRIER_USES_ANTENNACAPABILITY", "REL_metadata_ODUFUNCTION_PROVIDES_NRSECTORCARRIER", "REL_metadata_NRCELLDU_USES_NRSECTORCARRIER", "REL_metadata_NRSECTORCARRIER_USES_ANTENNACAPABILITY", "metadata") FROM stdin;
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=1	507000	507000	10000	2535000	2535000	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	["ocucp-ocuup-model:Weekend"]	{"ocucp-ocuup-model:metadata":"value1"}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRSECTORCARRIER=BE61426CAEA457C85D8B551A1A75BFA157BBCE6F143110661C4C9D406A7AAF22D8522515CE924CFB3A9E54E68588A45D3A51065BD24ADBA62CC0FDA761AEE2FC	[]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1	urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=7B9425BBD6977FEA6C180F6078CFBAEBE65400223B29E0EFA4F38424FAD66C690806778909177ECF1457CAC18E5BCF6FA4F24E3ECE524C89DE68108708D6D876	[]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1	urn:o-ran:smo:teiv:sha512:NRSECTORCARRIER_USES_ANTENNACAPABILITY=11EDFC31E2BE240D3CB15DB1A3FA3B78C828524BC8FCA3365A615129A61A627C21DA8EBF6DD788CDBDEC668344D1F79A371749083D6AE04DDDD57CB4FA8C3ECB	[]	[]	{}	{"reliabilityIndicator":"RESTORED"}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"RESTORED"}	{"reliabilityIndicator":"ADVISED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=2	507000	507000	10000	2535000	2535000	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=2", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRSECTORCARRIER=C0E73797DB4599AB9ECACFC1FFE3543C92926070ECFBE77E7C15BA99DAFBB1D69352533D3DE5EB2D3D3CC84DAD51B242CB0FC594FF9E8B73C3B42106B0F9AF46	[]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2	urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=2F87CE31F38D38B993786E3D75D253984DA2842F71504958AAF052D0728B309C73BB3132D6BEA011748BB0B94F489725DB5765AB5366702B812D5C76A772BD9C	[]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1	urn:o-ran:smo:teiv:sha512:NRSECTORCARRIER_USES_ANTENNACAPABILITY=27DF07D016FE349EC565DE2FB09303EE7D8700346624046F79D8DAC176E7FA221E918E3030758B51931C430919E14FD7D16720460F6E1585000C72874A1641DA	[]	[]	{}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"ADVISED"}	{"reliabilityIndicator":"OK"}	{"reliabilityIndicator":"RESTORED"}
+urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=3	507000	507000	10000	2535000	2535000	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=3", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9	urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRSECTORCARRIER=BD87BC547A6731B2905A989EBA493810C74258337C49BBB288F4F55734D28B4E40D9C719EC3564348253905BD93EC78EB7C88F2297FF20778911635E94800F74	[]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3	urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=950ED4540349F9859CEA9E47884A28CD567BDD2505A3C5335C8851A7AADF2AF65542157BB42D607EE3847E4223D76DE88B90762D0590E48693822FD6DCAE60CD	[]	[]	{}	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1	urn:o-ran:smo:teiv:sha512:NRSECTORCARRIER_USES_ANTENNACAPABILITY=1B891FCC4F5479BC71127ED2EB43EA26AC3452F8C47792786373442C10BBC408FE5B779BF1CF732C81220803342F4FB969E348F9C5CEEDEC78F9764E186C633F	[]	[]	{}	{"reliabilityIndicator":"ADVISED","foo":"bar"}	{"reliabilityIndicator":"ADVISED"}	{"reliabilityIndicator":"OK","foo":"bar"}	{"reliabilityIndicator":"RESTORED"}
 \.
 
-COPY ties_data."22174a23af5d5a96143c83ddfa78654df0acb697" ("id", "geo-location", "sectorId", "azimuth" )  FROM stdin;
-2F445AA5744FA3D230FD6838531F1407	POINT(59.4019881 17.9419888)	1	1
-F5128C172A70C4FCD4739650B06DE9E2	POINT(59.4019881 17.9419888)	2	2
-ADB1BAAC878C0BEEFE3175C60F44BB1D	POINT(59.4019881 17.9419888)	4	3
+COPY ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ("id", "aSide_AntennaModule", "bSide_AntennaCapability", "CD_sourceIds", "CD_classifiers", "CD_decorators", "metadata") FROM stdin;
+urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65	urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	["ocucp-ocuup-model:Weekend"]	{"ocucp-ocuup-model:metadata":"value1"}	{"reliabilityIndicator":"RESTORED"}
+urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=8940999E2069725B463052BC35572FDB888C7B734459EE78A01B9F91E2607D87356425BC8EFF0B1C9057D852A4D3F9E1B09479D32FEE68C65EF2821B65F7BD80	urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7	urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1	["urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1", "urn:cmHandle:03661FA2E41EF3D12CAAD5954CD985AC"]	[]	{}	{"reliabilityIndicator":"OK"}
 \.
 
-COPY ties_data."c4a425179d3089b5288fdf059079d0ea26977f0f" ("id", "pLMNId", "cmId", "fdn", "gNBCUName", "gNBIdLength", "gNBId", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION" )  FROM stdin;
+COPY ties_data."o-ran-smo-teiv-ran_NRCellCU" ("id", "cellLocalId", "nCI", "nRTAC", "plmnId", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_provided-by-ocucpFunction", "REL_ID_OCUCPFUNCTION_PROVIDES_NRCELLCU", "REL_CD_sourceIds_OCUCPFUNCTION_PROVIDES_NRCELLCU", "REL_CD_classifiers_OCUCPFUNCTION_PROVIDES_NRCELLCU", "REL_CD_decorators_OCUCPFUNCTION_PROVIDES_NRCELLCU") FROM stdin;
 \.
 
-COPY ties_data."8fe520ccd54b8f72ef7b2d3061264ddc2481e4eb" ("id", "cmId", "fdn", "gNBIdLength", "gNBId", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION", "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION", "REL_CD_decorators_MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION" )  FROM stdin;
-BFEEAC2CE60273CB0A78319CC201A7FE	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBCUUPFunction=8	1	8	E64371CD4D12ED0CED200DD3A7591784	urn:base64:TWFuYWdlZEVsZW1lbnQ6RTY0MzcxQ0Q0RDEyRUQwQ0VEMjAwREQzQTc1OTE3ODQ6TUFOQUdFUzpHTkJDVVVQRnVuY3Rpb246QkZFRUFDMkNFNjAyNzNDQjBBNzgzMTlDQzIwMUE3RkU=	["gnbcucp-gnbcuup-model:Weekend", "gnbcucp-gnbcuup-model:Weekday"]	{"gnbcucp-gnbcuup-model:metadata": "value1", "gnbcucp-gnbcuup-model:meta": "value2"}
+COPY ties_data."o-ran-smo-teiv-equipment_Site" ("id", "geo-location", "name", "CD_sourceIds", "CD_classifiers", "CD_decorators") FROM stdin;
 \.
 
-COPY ties_data."o-ran-smo-teiv-ran-logical_GNBDUFunction" ("id", "gNBDUId", "cmId", "fdn", "dUpLMNId", "gNBIdLength", "gNBId", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_GNBDUFUNCTION", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_GNBDUFUNCTION", "REL_CD_decorators_MANAGEDELEMENT_MANAGES_GNBDUFUNCTION" )  FROM stdin;
-D3215E08570BE58339C7463626B50E37	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=9	{"mcc":{"mcca":"123","mccb":{"mccba":123}},"mcb":["a123","b123","c012"],"mnc":"82"}	1	9	DA1039E77700A9EEFFA280049ECE9227	urn:base64:TWFuYWdlZEVsZW1lbnQ6REExMDM5RTc3NzAwQTlFRUZGQTI4MDA0OUVDRTkyMjc6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOkQzMjE1RTA4NTcwQkU1ODMzOUM3NDYzNjI2QjUwRTM3	[]	[]	{}	[]	{}
-1050570EBB1315E1AE7A9FD5E1400A00	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=10	{"mcc":{"mcca":"234","mccb":{"mccba":234}},"mcb":["a123","b123","c012"],"mnc":"82"}	2	10	6F02817AFE4D53237DB235EBE5378613	urn:base64:TWFuYWdlZEVsZW1lbnQ6NkYwMjgxN0FGRTRENTMyMzdEQjIzNUVCRTUzNzg2MTM6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjEwNTA1NzBFQkIxMzE1RTFBRTdBOUZENUUxNDAwQTAw	[]	[]	{}	[]	{}
-25E690E22BDA90B9C4FEE1F083CBA597	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=13	{"mcc":{"mcca":"345","mccb":{"mccba":345}},"mcb":["a123","b123","c012"],"mnc":"82"}	2	13	27500EB447000209EE6E3CA1B31FBA92	urn:base64:TWFuYWdlZEVsZW1lbnQ6Mjc1MDBFQjQ0NzAwMDIwOUVFNkUzQ0ExQjMxRkJBOTI6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjI1RTY5MEUyMkJEQTkwQjlDNEZFRTFGMDgzQ0JBNTk3	[]	[]	{}	[]	{}
-5A3085C3400C3096E2ED2321452766B1	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=14	{"mcc":{"mcca":"456","mccb":{"mccba":456}},"mcb":["a123","b123","c012"],"mnc":"82"}	2	14	06222D277EE209CD8DCA1FE61CE752E6	urn:base64:TWFuYWdlZEVsZW1lbnQ6MDYyMjJEMjc3RUUyMDlDRDhEQ0ExRkU2MUNFNzUyRTY6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjVBMzA4NUMzNDAwQzMwOTZFMkVEMjMyMTQ1Mjc2NkIx	[]	[]	{}	[]	{}
-5A548EA9D166341776CA0695837E55D8	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16	{"mcc":{"mcca":"567","mccb":{"mccba":567}},"mcb":["a123","b123","c012"],"mnc":"82"}	2	16	DC86CA7724113F4C0DF42BFEAA17FD53	urn:base64:TWFuYWdlZEVsZW1lbnQ6REM4NkNBNzcyNDExM0Y0QzBERjQyQkZFQUExN0ZENTM6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjVBNTQ4RUE5RDE2NjM0MTc3NkNBMDY5NTgzN0U1NUQ4	["urn:3gpp:dn:/SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16","urn:cmHandle:/395221E080CCF0FD1924103B15873814"]	["test-app-module:Indoor","test-app-module:Rural","test-app-module:Weekend"]	{"test-app-module:textdata":"Stockholm", "test-app-module:data":"test"}	["test-app-module:Indoor","test-app-module:Rural","test-app-module:Weekend"]	{"test-app-module:textdata":"Stockholm", "test-app-module:data":"test"}
-4CFF136200A2DE36205A13559C55DB2A	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=19	{"mcc":{"mcca":"678","mccb":{"mccba":678}},"mcb":["a123","b123","c012"],"mnc":"82"}	2	19	8D51EFC759166044DACBCA63C4EDFC51	urn:base64:TWFuYWdlZEVsZW1lbnQ6OEQ1MUVGQzc1OTE2NjA0NERBQ0JDQTYzQzRFREZDNTE6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjRDRkYxMzYyMDBBMkRFMzYyMDVBMTM1NTlDNTVEQjJB	[]	[]	{}	[]	{}
+-- Test specific entries --
+
+CREATE TABLE IF NOT EXISTS ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (
+	"id"			TEXT,
+	"6446B2D4BE5E367FB0396383C4BDEF42D51CF74F"			TEXT,
+	"F03B534AFF0872651FED60C54AB56BEDADAB94B5"			BIGINT,
+	"333177AA699C0DE6399503171DCF48FB396322B0"			INTEGER,
+	"027B1A8019C6DEF04558B90D9D8B52253B82FEC6"			BIGINT,
+	"478D043D81678134EF1C8BFB073A70F882C4AF12"			DECIMAL,
+	"8252D18D44F633831557076D827993C45278024D"			jsonb,
+	"68C48305AB6C3A30DD927F5D38562379374A4B31"			jsonb,
+	"CD_sourceIds"			jsonb,
+	"CD_classifiers"			jsonb,
+	"CD_decorators"			jsonb,
+	"REL_FK_provided-by-entityTypeA"			TEXT,
+	"REL_ID_F64052A4F8BB3CC533EC15BBFB5E224F600735B0"			TEXT,
+	"REL_CD_F26C39EC1F710F3096BE0588F6783A03A378516A"			jsonb,
+	"REL_CD_E2C3D598A06EA38133E23C1756ED58A66FE21386"			jsonb,
+	"REL_CD_92559ED73C761B860682582A040E745ECEC194D5"			jsonb
+);
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ALTER COLUMN "REL_CD_F26C39EC1F710F3096BE0588F6783A03A378516A" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ALTER COLUMN "REL_CD_E2C3D598A06EA38133E23C1756ED58A66FE21386" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ALTER COLUMN "REL_CD_92559ED73C761B860682582A040E745ECEC194D5" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ONLY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD COLUMN IF NOT EXISTS "REL_metadata_F53C39EC1F710F3096BE0588F6783A03A378516A" jsonb;
+
+CREATE TABLE IF NOT EXISTS ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" (
+	"id"			TEXT,
+	"aSide_EntityTypeA"			TEXT,
+	"bSide_A85CE100A012A71EF2ABA306BABE484AC2AAE515"			TEXT,
+	"CD_sourceIds"			jsonb,
+	"CD_classifiers"			jsonb,
+	"CD_decorators"			jsonb
+);
+
+ALTER TABLE ONLY ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ONLY ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
+
+CREATE TABLE IF NOT EXISTS ties_data."FB1E124031A12CD85D3335194B39B193723A0490" (
+	"id"			TEXT,
+	"aSide_C812C285BEFA4EC42026AB075D9C65200A00F815"			TEXT,
+	"bSide_A85CE100A012A71EF2ABA306BABE484AC2AAE515"			TEXT,
+	"CD_sourceIds"			jsonb,
+	"CD_classifiers"			jsonb,
+	"CD_decorators"			jsonb
+);
+
+ALTER TABLE ONLY ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+CREATE TABLE IF NOT EXISTS ties_data."test-built-in-module_EntityTypeA" (
+	"id"			TEXT,
+	"CD_sourceIds"			jsonb,
+	"CD_classifiers"			jsonb,
+	"CD_decorators"			jsonb,
+	"REL_FK_B7E43411C5C5079D49856E74A9FA63BD20C522C5"			TEXT,
+	"REL_ID_31A5B55158140557F09AE15589A8B8038416689B"			TEXT,
+	"REL_CD_AB6BDADE3F6C750C9FDB6CAD6059C4CBCE67236C"			jsonb,
+	"REL_CD_75B161E740A96ADBAE6F08D4F85684ECC29049B9"			jsonb,
+	"REL_CD_6F7211CAF505AECF9A565BC7A4AF56E7032CCC54"			jsonb,
+	"REL_FK_A86937FEBD025CFDF6EE5BC386B4C569EB2652DA"			TEXT,
+	"REL_ID_A974AD6DD8C4CA281D45693D3A61AE98FEE82845"			TEXT,
+	"REL_CD_3B43F80D423BF8F96A2906643B7B4712604FC28B"			jsonb,
+	"REL_CD_74A44B167FDF37D6C8E79B5033FEF8BC384C881A"			jsonb,
+	"REL_CD_F5B24D9A7273119D4D1519473D9EC88CB407E5CA"			jsonb
+);
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "CD_sourceIds" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "CD_classifiers" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "CD_decorators" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "REL_CD_AB6BDADE3F6C750C9FDB6CAD6059C4CBCE67236C" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "REL_CD_75B161E740A96ADBAE6F08D4F85684ECC29049B9" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "REL_CD_6F7211CAF505AECF9A565BC7A4AF56E7032CCC54" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "REL_CD_3B43F80D423BF8F96A2906643B7B4712604FC28B" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "REL_CD_74A44B167FDF37D6C8E79B5033FEF8BC384C881A" SET DEFAULT '[]';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ALTER COLUMN "REL_CD_F5B24D9A7273119D4D1519473D9EC88CB407E5CA" SET DEFAULT '{}';
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ADD COLUMN IF NOT EXISTS "REL_metadata_3B43F80D423BF8F96A2906643B7B4712604FC28B" jsonb;
+
+ALTER TABLE ONLY ties_data."test-built-in-module_EntityTypeA" ADD COLUMN IF NOT EXISTS "REL_metadata_3H23F80D423BF8F96A2906643B7B4712604FC45F" jsonb;
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'10B9F515756871D3EF6558FAF1F112BAE207945D',
+ 'PK_7A421D526B36AA9EEF17964BC27011A12FF80DBB',
+ 'ALTER TABLE ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD CONSTRAINT "PK_7A421D526B36AA9EEF17964BC27011A12FF80DBB" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'54110F8D085BBBA7BB6DE5CE71B511562090F7EE',
+ 'PK_4C48AAFA2160D74F9D13364AA2BE4FDB8A60689D',
+ 'ALTER TABLE ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ADD CONSTRAINT "PK_4C48AAFA2160D74F9D13364AA2BE4FDB8A60689D" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'FB1E124031A12CD85D3335194B39B193723A0490',
+ 'PK_020B03AED5787D1B43ABBD9F2C26B494ADDBC7CD',
+ 'ALTER TABLE ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ADD CONSTRAINT "PK_020B03AED5787D1B43ABBD9F2C26B494ADDBC7CD" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'test-built-in-module_EntityTypeA',
+ 'PK_test-built-in-module_EntityTypeA_id',
+ 'ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD CONSTRAINT "PK_test-built-in-module_EntityTypeA_id" PRIMARY KEY ("id");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'10B9F515756871D3EF6558FAF1F112BAE207945D',
+ 'FK_B0923C0CCED6CF47CFF759FFE1B810D6CA10D228',
+ 'ALTER TABLE ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD CONSTRAINT "FK_B0923C0CCED6CF47CFF759FFE1B810D6CA10D228" FOREIGN KEY ("REL_FK_provided-by-entityTypeA") REFERENCES ties_data."test-built-in-module_EntityTypeA" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'10B9F515756871D3EF6558FAF1F112BAE207945D',
+ 'UNIQUE_B1C2FC9A96300B2BE45785DE60E152D8E85FBE14',
+ 'ALTER TABLE ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ADD CONSTRAINT "UNIQUE_B1C2FC9A96300B2BE45785DE60E152D8E85FBE14" UNIQUE ("REL_ID_F64052A4F8BB3CC533EC15BBFB5E224F600735B0");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'54110F8D085BBBA7BB6DE5CE71B511562090F7EE',
+ 'FK_2839E6FFDF7F3DF2687DAC3E57082AD6B22E9B30',
+ 'ALTER TABLE ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ADD CONSTRAINT "FK_2839E6FFDF7F3DF2687DAC3E57082AD6B22E9B30" FOREIGN KEY ("aSide_EntityTypeA") REFERENCES ties_data."test-built-in-module_EntityTypeA" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'54110F8D085BBBA7BB6DE5CE71B511562090F7EE',
+ 'FK_33B5669A341584011D9A73FB491FF2242A158057',
+ 'ALTER TABLE ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ADD CONSTRAINT "FK_33B5669A341584011D9A73FB491FF2242A158057" FOREIGN KEY ("bSide_A85CE100A012A71EF2ABA306BABE484AC2AAE515") REFERENCES ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (id) ON DELETE CASCADE;'
+);
+
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'FB1E124031A12CD85D3335194B39B193723A0490',
+ 'FK_2A5C84A2226EE0FCAAA513CC5AF4CD78DDDAF49F',
+ 'ALTER TABLE ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ADD CONSTRAINT "FK_2A5C84A2226EE0FCAAA513CC5AF4CD78DDDAF49F" FOREIGN KEY ("aSide_C812C285BEFA4EC42026AB075D9C65200A00F815") REFERENCES ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'FB1E124031A12CD85D3335194B39B193723A0490',
+ 'FK_FBFE10B6F165A8EC2086B8DEAFA238E0DD6643F5',
+ 'ALTER TABLE ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ADD CONSTRAINT "FK_FBFE10B6F165A8EC2086B8DEAFA238E0DD6643F5" FOREIGN KEY ("bSide_A85CE100A012A71EF2ABA306BABE484AC2AAE515") REFERENCES ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'test-built-in-module_EntityTypeA',
+ 'FK_02592FFA6AFD7EAC7AFAD936E3CD50708E4533E0',
+ 'ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD CONSTRAINT "FK_02592FFA6AFD7EAC7AFAD936E3CD50708E4533E0" FOREIGN KEY ("REL_FK_B7E43411C5C5079D49856E74A9FA63BD20C522C5") REFERENCES ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'test-built-in-module_EntityTypeA',
+ 'UNIQUE_7715FF94E14F99CE4994ABBD8C2583CBA9EAE5BD',
+ 'ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD CONSTRAINT "UNIQUE_7715FF94E14F99CE4994ABBD8C2583CBA9EAE5BD" UNIQUE ("REL_ID_31A5B55158140557F09AE15589A8B8038416689B");'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'test-built-in-module_EntityTypeA',
+ 'FK_5CD9BCFA08278DA0BF902BAFBCFCDFCE4FF25FEF',
+ 'ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD CONSTRAINT "FK_5CD9BCFA08278DA0BF902BAFBCFCDFCE4FF25FEF" FOREIGN KEY ("REL_FK_A86937FEBD025CFDF6EE5BC386B4C569EB2652DA") REFERENCES ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" (id) ON DELETE CASCADE;'
+);
+
+SELECT ties_data.create_constraint_if_not_exists(
+	'test-built-in-module_EntityTypeA',
+ 'UNIQUE_67DB5E4BC34AB83BDC069A5CAF73B57967D5C2D9',
+ 'ALTER TABLE ties_data."test-built-in-module_EntityTypeA" ADD CONSTRAINT "UNIQUE_67DB5E4BC34AB83BDC069A5CAF73B57967D5C2D9" UNIQUE ("REL_ID_A974AD6DD8C4CA281D45693D3A61AE98FEE82845");'
+);
+
+COPY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ("id", "6446B2D4BE5E367FB0396383C4BDEF42D51CF74F", "F03B534AFF0872651FED60C54AB56BEDADAB94B5", "333177AA699C0DE6399503171DCF48FB396322B0", "027B1A8019C6DEF04558B90D9D8B52253B82FEC6", "478D043D81678134EF1C8BFB073A70F882C4AF12", "8252D18D44F633831557076D827993C45278024D", "68C48305AB6C3A30DD927F5D38562379374A4B31", "CD_sourceIds", "CD_classifiers", "CD_decorators") FROM stdin;
+LongEntityType1	someStringValue	9223372036854775807	2147483647	-9223372036854775807	1.1	["1000", "2000"]	{"mcc":"01","mnc":"234"}	["LongEntityType1"]	[]	{}
 \.
 
-COPY ties_data."3fdb9cd7557edf559a0e4de88df220e7545884b5" ("id", "gNBDUId", "cmId", "3786A6CA64C9422F9E7FC35B7B039F345BBDDA65", "dUpLMNId", "gNBIdLength", "gNBId", "REL_FK_48B14FA5B787C6398AD1DE5EE670AD0D2A2CB36F", "REL_ID_BDE0B6C74D14AC109D29A08D80E92D4D0DCAEB0B" )  FROM stdin;
-D3215E08570BE58339C7463626B50E37	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=9	{"mcc":"456","mnc":"82"}	1	9	DA1039E77700A9EEFFA280049ECE9227	urn:base64:TWFuYWdlZEVsZW1lbnQ6REExMDM5RTc3NzAwQTlFRUZGQTI4MDA0OUVDRTkyMjc6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOkQzMjE1RTA4NTcwQkU1ODMzOUM3NDYzNjI2QjUwRTM3
-1050570EBB1315E1AE7A9FD5E1400A00	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=10	{"mcc":"456","mnc":"82"}	2	10	6F02817AFE4D53237DB235EBE5378613	urn:base64:TWFuYWdlZEVsZW1lbnQ6NkYwMjgxN0FGRTRENTMyMzdEQjIzNUVCRTUzNzg2MTM6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjEwNTA1NzBFQkIxMzE1RTFBRTdBOUZENUUxNDAwQTAw
-25E690E22BDA90B9C4FEE1F083CBA597	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=13	{"mcc":"456","mnc":"82"}	2	13	27500EB447000209EE6E3CA1B31FBA92	urn:base64:TWFuYWdlZEVsZW1lbnQ6Mjc1MDBFQjQ0NzAwMDIwOUVFNkUzQ0ExQjMxRkJBOTI6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjI1RTY5MEUyMkJEQTkwQjlDNEZFRTFGMDgzQ0JBNTk3
-5A3085C3400C3096E2ED2321452766B1	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=14	{"mcc":"456","mnc":"82"}	2	14	06222D277EE209CD8DCA1FE61CE752E6	urn:base64:TWFuYWdlZEVsZW1lbnQ6MDYyMjJEMjc3RUUyMDlDRDhEQ0ExRkU2MUNFNzUyRTY6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjVBMzA4NUMzNDAwQzMwOTZFMkVEMjMyMTQ1Mjc2NkIx
-5A548EA9D166341776CA0695837E55D8	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=16	{"mcc":"456","mnc":"82"}	2	16	DC86CA7724113F4C0DF42BFEAA17FD53	urn:base64:TWFuYWdlZEVsZW1lbnQ6REM4NkNBNzcyNDExM0Y0QzBERjQyQkZFQUExN0ZENTM6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjVBNTQ4RUE5RDE2NjM0MTc3NkNBMDY5NTgzN0U1NUD4
-4CFF136200A2DE36205A13559C55DB2A	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/GNBDUFunction=19	{"mcc":"456","mnc":"82"}	2	19	8D51EFC759166044DACBCA63C4EDFC51	urn:base64:TWFuYWdlZEVsZW1lbnQ6OEQ1MUVGQzc1OTE2NjA0NERBQ0JDQTYzQzRFREZDNTE6TUFOQUdFUzpHTkJEVUZ1bmN0aW9uOjRDRkYxMzYyMDBBMkRFMzYyMDVBMTM1NTlDNTVEQjJB
+COPY ties_data."test-built-in-module_EntityTypeA" ("id", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_B7E43411C5C5079D49856E74A9FA63BD20C522C5", "REL_ID_31A5B55158140557F09AE15589A8B8038416689B", "REL_CD_AB6BDADE3F6C750C9FDB6CAD6059C4CBCE67236C", "REL_CD_75B161E740A96ADBAE6F08D4F85684ECC29049B9", "REL_CD_6F7211CAF505AECF9A565BC7A4AF56E7032CCC54", "REL_FK_A86937FEBD025CFDF6EE5BC386B4C569EB2652DA", "REL_ID_A974AD6DD8C4CA281D45693D3A61AE98FEE82845", "REL_CD_3B43F80D423BF8F96A2906643B7B4712604FC28B", "REL_CD_74A44B167FDF37D6C8E79B5033FEF8BC384C881A", "REL_CD_F5B24D9A7273119D4D1519473D9EC88CB407E5CA") FROM stdin;
+EntityType1	[]	[]	{}	\N	\N	[]	[]	{}	LongEntityType1	RelId_OneToOne_EntityType1_LongEntityType1	["EntityType1"]	[]	{}
+EntityType2	[]	[]	{}	LongEntityType1	Rel_ManyToOne_EntityType2_LongEntityType1	[]	[]	{}	\N	\N	["EntityType2"]	[]	{}
 \.
 
-COPY ties_data."88f1bd76c7a935fb505cf235e6819f46c55ec98a" ("id", "nRFqBands", "eUtranFqBands", "cmId", "fdn", "geranFqBands", "REL_FK_used-by-lteSectorCarrier" )  FROM stdin;
-5835F77BE9D4E102316BD59195F6370B	["123","456","789"]	["123","4564","789"]	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaCapability=1	["123","456","789"]	\N
-A77B237A541B2D3225B4B61D3098E4AA	["123","456","789"]	["123","4564","789"]	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaCapability=3	["123","456","789"]	\N
+COPY ties_data."10B9F515756871D3EF6558FAF1F112BAE207945D" ("id", "6446B2D4BE5E367FB0396383C4BDEF42D51CF74F", "F03B534AFF0872651FED60C54AB56BEDADAB94B5", "333177AA699C0DE6399503171DCF48FB396322B0", "027B1A8019C6DEF04558B90D9D8B52253B82FEC6", "478D043D81678134EF1C8BFB073A70F882C4AF12", "8252D18D44F633831557076D827993C45278024D", "68C48305AB6C3A30DD927F5D38562379374A4B31", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_provided-by-entityTypeA", "REL_ID_F64052A4F8BB3CC533EC15BBFB5E224F600735B0", "REL_CD_F26C39EC1F710F3096BE0588F6783A03A378516A", "REL_CD_E2C3D598A06EA38133E23C1756ED58A66FE21386", "REL_CD_92559ED73C761B860682582A040E745ECEC194D5") FROM stdin;
+LongEntityType2	\N	\N	\N	\N	\N	\N	\N	[]	[]	{}	EntityType2	Rel_OneToMany_EntityType2_LongEntityType2	["LongEntityType2"]	[]	{}
+LongEntityType3	\N	\N	\N	\N	\N	\N	\N	[]	[]	{}	\N	\N	["LongEntityType3"]	[]	{}
 \.
 
-COPY ties_data."o-ran-smo-teiv-ran-logical_NRCellDU" ("id", "nRPCI", "cmId", "cellLocalId", "fdn", "nCI", "nRTAC", "REL_FK_grouped-by-sector", "REL_ID_SECTOR_GROUPS_NRCELLDU", "REL_FK_provided-by-gnbduFunction", "REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU" )  FROM stdin;
-98C3A4591A37718E1330F0294E23B62A	789	\N	1	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=1	1	456	F5128C172A70C4FCD4739650B06DE9E2	urn:base64:U2VjdG9yOkY1MTI4QzE3MkE3MEM0RkNENDczOTY1MEIwNkRFOUUyOkdST1VQUzpOUkNlbGxEVTo5OEMzQTQ1OTFBMzc3MThFMTMzMEYwMjk0RTIzQjYyQQ==	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUkNlbGxEVTo5OEMzQTQ1OTFBMzc3MThFMTMzMEYwMjk0RTIzQjYyQQ==
-F9546E82313AC1D5E690DCD7BE55606F	789	\N	2	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=2	2	456	F5128C172A70C4FCD4739650B06DE9E2	urn:base64:U2VjdG9yOkY1MTI4QzE3MkE3MEM0RkNENDczOTY1MEIwNkRFOUUyOkdST1VQUzpOUkNlbGxEVTpGOTU0NkU4MjMxM0FDMUQ1RTY5MERDRDdCRTU1NjA2Rg==	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUkNlbGxEVTpGOTU0NkU4MjMxM0FDMUQ1RTY5MERDRDdCRTU1NjA2Rg==
-B480427E8A0C0B8D994E437784BB382F	789	\N	3	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=3	3	456	F5128C172A70C4FCD4739650B06DE9E2	urn:base64:U2VjdG9yOkY1MTI4QzE3MkE3MEM0RkNENDczOTY1MEIwNkRFOUUyOkdST1VQUzpOUkNlbGxEVTpCNDgwNDI3RThBMEMwQjhEOTk0RTQzNzc4NEJCMzgyRg==	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUkNlbGxEVTpCNDgwNDI3RThBMEMwQjhEOTk0RTQzNzc4NEJCMzgyRg==
-76E9F605D4F37330BF0B505E94F64F11	789	\N	91	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=91	91	456	\N	\N	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTo3NkU5RjYwNUQ0RjM3MzMwQkYwQjUwNUU5NEY2NEYxMQ==
-67A1BDA10B5AF43028D07C7BE5CB1AE2	789	\N	92	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=92	92	456	\N	\N	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTo2N0ExQkRBMTBCNUFGNDMwMjhEMDdDN0JFNUNCMUFFMg==
-B3B0A1939EFCA654A37005B6A7F24BD7	789	\N	93	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=93	93	456	\N	\N	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTpCM0IwQTE5MzlFRkNBNjU0QTM3MDA1QjZBN0YyNEJENw==
+COPY ties_data."54110F8D085BBBA7BB6DE5CE71B511562090F7EE" ("id", "aSide_EntityTypeA", "bSide_A85CE100A012A71EF2ABA306BABE484AC2AAE515", "CD_sourceIds", "CD_classifiers", "CD_decorators") FROM stdin;
+Rel_ManyToMany_EntityType1_LongEntityType1	EntityType1	LongEntityType1	["EntityType1", "LongEntityType1"]	[]	{}
 \.
 
-COPY ties_data."300672c8a708d6af0b9af2f9accdff5e6e005721" ("id", "nRPCI", "cmId", "020335B0F627C169E24167748C38FE756FB34AE2", "fdn", "nCI", "nRTAC", "REL_FK_609963BFEE15FF824280FBE201313C3CDACDDDCE", "REL_ID_040FC8B06B420BA5708AF4798102D1E65FB4DC61" )  FROM stdin;
-98C3A4591A37718E1330F0294E23B62A	789	\N	1	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=1	1	456	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUkNlbGxEVTo5OEMzQTQ1OTFBMzc3MThFMTMzMEYwMjk0RTIzQjYyQQ==
-F9546E82313AC1D5E690DCD7BE55606F	789	\N	2	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=2	2	456	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUkNlbGxEVTpGOTU0NkU4MjMxM0FDMUQ1RTY5MERDRDdCRTU1NjA2Rg==
-B480427E8A0C0B8D994E437784BB382F	789	\N	3	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=3	3	456	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUkNlbGxEVTpCNDgwNDI3RThBMEMwQjhEOTk0RTQzNzc4NEJCMzgyRg==
-76E9F605D4F37330BF0B505E94F64F11	789	\N	91	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=91	91	456	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTo3NkU5RjYwNUQ0RjM3MzMwQkYwQjUwNUU5NEY2NEYxMQ==
-67A1BDA10B5AF43028D07C7BE5CB1AE2	789	\N	92	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=92	92	456	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTo2N0ExQkRBMTBCNUFGNDMwMjhEMDdDN0JFNUNCMUFFMg==
-B3B0A1939EFCA654A37005B6A7F24BD7	789	\N	93	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=93	93	456	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTpCM0IwQTE5MzlFRkNBNjU0QTM3MDA1QjZBN0YyNEJENw==
-F26F279E91D0941DB4F646E707EA403A	789	\N	94	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRCellDU=94	94	456	4CFF136200A2DE36205A13559C55DB2A	urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpQUk9WSURFUzpOUkNlbGxEVTpGMjZGMjc5RTkxRDA5NDFEQjRGNjQ2RTcwN0VBNDAzQQ==
+COPY ties_data."FB1E124031A12CD85D3335194B39B193723A0490" ("id", "aSide_C812C285BEFA4EC42026AB075D9C65200A00F815", "bSide_A85CE100A012A71EF2ABA306BABE484AC2AAE515", "CD_sourceIds", "CD_classifiers", "CD_decorators") FROM stdin;
+Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2	LongEntityType1	LongEntityType2	["LongEntityType1", "LongEntityType2", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"]	["test-app-module:Weekday"]	{"test-app-module:textdata":"ORAN","test-app-module:intdata":123}
+Rel_OneToOne_SameEntity_LongEntityType2_LongEntityType3	LongEntityType2	LongEntityType3	["LongEntityType2", "LongEntityType3", "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8617"]	["test-app-module:Weekend"]	{"test-app-module:textdata":"ORAN","test-app-module:intdata":234}
 \.
 
-COPY ties_data."39a335dca201ef99ae06f4ffd1908b534f8c6c39" ("id", "fdn", "frequencyUL", "cmId", "essScLocalId", "arfcnUL", "frequencyDL", "arfcnDL", "REL_FK_used-by-nrCellDu", "REL_ID_NRCELLDU_USES_NRSECTORCARRIER", "REL_FK_provided-by-gnbduFunction", "REL_ID_GNBDUFUNCTION_PROVIDES_NRSECTORCARRIER", "REL_FK_used-antennaCapability", "REL_ID_NRSECTORCARRIER_USES_ANTENNACAPABILITY", "CD_classifiers", "CD_decorators" )  FROM stdin;
-E49D942C16E0364E1E0788138916D70C	SubNetwork=SolarSyst3em/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/NRSectorCarrier=3	20	\N	20	3	20	20	B480427E8A0C0B8D994E437784BB382F	urn:base64:TlJDZWxsRFU6QjQ4MDQyN0U4QTBDMEI4RDk5NEU0Mzc3ODRCQjM4MkY6VVNFUzpOUlNlY3RvckNhcnJpZXI6RTQ5RDk0MkMxNkUwMzY0RTFFMDc4ODEzODkxNkQ3MEM=	D3215E08570BE58339C7463626B50E37	urn:base64:R05CRFVGdW5jdGlvbjpEMzIxNUUwODU3MEJFNTgzMzlDNzQ2MzYyNkI1MEUzNzpQUk9WSURFUzpOUlNlY3RvckNhcnJpZXI6RTQ5RDk0MkMxNkUwMzY0RTFFMDc4ODEzODkxNkQ3MEM=	A77B237A541B2D3225B4B61D3098E4AA	urn:base64:TlJTZWN0b3JDYXJyaWVyOkU0OUQ5NDJDMTZFMDM2NEUxRTA3ODgxMzg5MTZENzBDOlVTRVM6QW50ZW5uYUNhcGFiaWxpdHk6QTc3QjIzN0E1NDFCMkQzMjI1QjRCNjFEMzA5OEU0QUE=	["gnbcucp-gnbcuup-model:Weekend", "gnbcucp-gnbcuup-model:Weekday"]	{"gnbcucp-gnbcuup-model:metadata": "value1", "gnbcucp-gnbcuup-model:meta": "value2"}
-\.
+COMMIT;
 
-COPY ties_data."f8caf5ebe876c3001d67efe06e4d83abf0babe31" ("id", "mechanicalAntennaTilt", "antennaBeamWidth", "geo-location", "fdn", "cmId", "antennaModelNumber", "totalTilt", "mechanicalAntennaBearing", "positionWithinSector", "electricalAntennaTilt", "REL_FK_grouped-by-sector", "REL_ID_SECTOR_GROUPS_ANTENNAMODULE", "REL_FK_installed-at-site", "REL_ID_ANTENNAMODULE_INSTALLED_AT_SITE" )  FROM stdin;
-278A05C67D47D117C2DC5BDF5E00AE70	123	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaModule=1	\N	['123-abc']	45	123	['123', '456', '789']	1	ADB1BAAC878C0BEEFE3175C60F44BB1D	urn:base64:U2VjdG9yOkFEQjFCQUFDODc4QzBCRUVGRTMxNzVDNjBGNDRCQjFEOkdST1VQUzpBbnRlbm5hTW9kdWxlOjI3OEEwNUM2N0Q0N0QxMTdDMkRDNUJERjVFMDBBRTcw	\N	\N
-279A05C67D47D117C2DC5BDF5E00AE70	456	\N	\N	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaModule=2	\N	['123-xyz']	45	123	['123', '456', '789']	1	\N	\N	\N	\N
-\.
-
-COPY ties_data."341622dca4e0350289717b52df5883edc3fa0280" ("id", "fdn" )  FROM stdin;
-378A05C67D47D117C2DC5BDF5E00AE70	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee=11
-379A05C67D47D117C2DC5BDF5E00AE70	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee=12
-478A05C67D47D117C2DC5BDF5E00AE70	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee=21
-479A05C67D47D117C2DC5BDF5E00AE70	SubNetwork=SolarSystem/SubNetwork=Earth/SubNetwork=Europe/SubNetwork=Hungary/AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee=22
-\.
-
-COPY ties_data."o-ran-smo-teiv-ran-logical_ENodeBFunction" ("id", "eNBId", "cmId", "eNodeBPlmnId", "fdn", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_ENODEBFUNCTION", "REL_FK_realised-by-physicalNetworkAppliance", "REL_ID_ENODEBFUNCTION_REALISED_BY_PHYSICALNETWORKAPPLIANCE" )  FROM stdin;
-\.
-
-COPY ties_data."o-ran-smo-teiv-ran-logical_EUtranCell" ("id", "cellId", "cmId", "earfcn", "duplexType", "tac", "fdn", "earfcndl", "earfcnul", "REL_FK_grouped-by-sector", "REL_ID_SECTOR_GROUPS_EUTRANCELL", "REL_FK_provided-by-enodebFunction", "REL_ID_ENODEBFUNCTION_PROVIDES_EUTRANCELL" )  FROM stdin;
-\.
-
-COPY ties_data."c88307168935f02fdecc084ea5040bb9db16c701" ("id", "fdn", "cmId", "sectorCarrierType", "essScLocalId", "REL_FK_provided-by-enodebFunction", "REL_ID_ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER", "REL_FK_used-antennaCapability", "REL_ID_LTESECTORCARRIER_USES_ANTENNACAPABILITY", "REL_FK_used-by-euTranCell", "REL_ID_EUTRANCELL_USES_LTESECTORCARRIER" )  FROM stdin;
-\.
-
-COPY ties_data."o-ran-smo-teiv-ran-logical_NRCellCU" ("id", "fdn", "cmId", "plmnId", "nCI", "cellLocalId", "nRTAC", "REL_FK_provided-by-gnbcucpFunction", "REL_ID_GNBCUCPFUNCTION_PROVIDES_NRCELLCU" )  FROM stdin;
-\.
-
-COPY ties_data."57a20807ab3f39c86b0b5bf9a819e0881353fa1e" ("id", "geo-location", "cmId", "name", "type", "REL_FK_installed-at-site", "REL_ID_PHYSICALNETWORKAPPLIANCE_INSTALLED_AT_SITE" )  FROM stdin;
-\.
-
-COPY ties_data."o-ran-smo-teiv-ran-equipment_Site" ("id", "geo-location", "cmId", "name" )  FROM stdin;
-\.
-
-COPY ties_data."7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7" ("id", "aSide_GNBCUCPFunction", "bSide_CloudNativeApplication" )  FROM stdin;
-\.
-
-COPY ties_data."70a4a84bca01ea022ab24d8cb82422c572922675" ("id", "aSide_GNBCUUPFunction", "bSide_CloudNativeApplication", "CD_classifiers", "CD_decorators" )  FROM stdin;
-urn:base64:R05CQ1VVUEZ1bmN0aW9uOkJGRUVBQzJDRTYwMjczQ0IwQTc4MzE5Q0MyMDFBN0ZFOlJFQUxJU0VEX0JZOkNsb3VkTmF0aXZlQXBwbGljYXRpb246QUQ0MkQ5MDQ5N0U5M0QyNzYyMTVERjZEM0I4OTlFMTc=	BFEEAC2CE60273CB0A78319CC201A7FE	AD42D90497E93D276215DF6D3B899E17	["gnbcucp-gnbcuup-model:Weekend", "gnbcucp-gnbcuup-model:Weekday"]	{"gnbcucp-gnbcuup-model:metadata": "value1", "gnbcucp-gnbcuup-model:meta": "value2"}
-\.
-
-COPY ties_data."10484f157f490eb5b27e40dbfaf4d5f2be17c57c" ("id", "aSide_GNBDUFunction", "bSide_CloudNativeApplication" )  FROM stdin;
-urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpSRUFMSVNFRF9CWTpDbG91ZE5hdGl2ZUFwcGxpY2F0aW9uOkM1NDk5MDVDRjNDQzg5MENFNTc0NkM1RTEwQUNGMDBE	4CFF136200A2DE36205A13559C55DB2A	C549905CF3CC890CE5746C5E10ACF00D
-\.
-
-COPY ties_data."f86057a8762a50b1c7fb07af9d5c001bffaefd15" ("id", "aSide_B0FD0521695A211BFF76F413A31F28CBA32E57ED", "bSide_84EF1134719BB6FCF33A94FF770311FC722BCF41" )  FROM stdin;
-urn:base64:R05CRFVGdW5jdGlvbjo0Q0ZGMTM2MjAwQTJERTM2MjA1QTEzNTU5QzU1REIyQTpSRUFMSVNFRF9CWTpDbG91ZE5hdGl2ZUFwcGxpY2F0aW9uOkM1NDk5MDVDRjNDQzg5MENFNTc0NkM1RTEwQUNGMDBE	4CFF136200A2DE36205A13559C55DB2A	C549905CF3CC890CE5746C5E10ACF00D
-\.
-
-COPY ties_data."5b8a47d4a8297a0a1d31e091af06e26d25ef6caf" ("id", "aSide_AntennaCapability", "bSide_AntennaModule" )  FROM stdin;
-\.
-
-COPY ties_data."5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6" ("id", "aSide_AntennaModule", "bSide_AntennaModule" )  FROM stdin;
-urn:base64:QW50ZW5uYU1vZHVsZToyNzhBMDVDNjdENDdEMTE3QzJEQzVCREY1RTAwQUU3MDpSRUFMSVNFRF9CWTpBbnRlbm5hTW9kdWxlOjI3OEEwNUM2N0Q0N0QxMTdDMkRDNUJERjVFMDBBRTcwCg==	278A05C67D47D117C2DC5BDF5E00AE70	279A05C67D47D117C2DC5BDF5E00AE70
-\.
-
-COPY ties_data."cd39d44beed963d50df42cd301e63d288f911c97" ("id", "aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C", "bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E" )  FROM stdin;
-urn:base64:QW50ZW5uYU1vZHVsZTozNzhBMDVDNjdENDdEMTE3QzJEQzVCREY1RTAwQUU3MDpSRUFMSVNFRF9CWTpBbnRlbm5hTW9kdWxlOjM3OUEwNUM2N0Q0N0QxMTdDMkRDNUJERjVFMDBBRTcwCg==	378A05C67D47D117C2DC5BDF5E00AE70	379A05C67D47D117C2DC5BDF5E00AE70
-\.
-
-COPY ties_data."c6f3a3396e9165e886da928c5fe1382fb20dc850" ("id", "aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C", "bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E" )  FROM stdin;
-urn:base64:QW50ZW5uYU1vZHVsZTo0NzhBMDVDNjdENDdEMTE3QzJEQzVCREY1RTAwQUU3MDpERVBMT1lFRF9CWTpBbnRlbm5hTW9kdWxlOjQ3OUEwNUM2N0Q0N0QxMTdDMkRDNUJERjVFMDBBRTcwCg==	478A05C67D47D117C2DC5BDF5E00AE70	479A05C67D47D117C2DC5BDF5E00AE70
-\.
-
-COPY ties_model.module_reference("name", "namespace", "domain", "includedModules", "revision", "content") FROM stdin;
-gnbdu-function-model	\N	\N	[]	2024-05-02	Z25kYnUtZnVuY3Rpb24tbW9kZWwgeWFuZyBtb2RlbCBmaWxlCg==
-gnbcucp-gnbcuup-model	\N	\N	[]	2024-05-02	Z25iY3VjcC1nbmJjdXVwLW1vZGVsIHlhbmcgbW9kZWwgZmlsZQo=
-gnbcucp-gnbcuup-old-model	\N	\N	[]	2024-05-02	Z25iY3VjcC1nbmJjdXVwLW1vZGVsIHlhbmcgbW9kZWwgZmlsZQo=
-module-rapp-module	\N	\N	[]	2024-05-01	dGVzdE1vZHVsZQo=
-\.
-
-;

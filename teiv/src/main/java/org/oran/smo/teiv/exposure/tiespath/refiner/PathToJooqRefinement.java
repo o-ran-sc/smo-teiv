@@ -20,7 +20,6 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.refiner;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Field;
 import org.jooq.JSONB;
@@ -47,7 +46,6 @@ import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.selectCount;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 
-@Slf4j
 @UtilityClass
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PathToJooqRefinement {
@@ -111,6 +109,10 @@ public class PathToJooqRefinement {
                 resolvedFields.add(field("null::bigint").as(field.getKey().getName()));
             } else if (field.getValue() == DataType.DECIMAL) {
                 resolvedFields.add(field("null::numeric").as(field.getKey().getName()));
+            } else if (field.getValue() == DataType.TIMESTAMPTZ) {
+                resolvedFields.add(field("null::timestamptz").as(field.getKey().getName()));
+            } else if (field.getValue() == DataType.BYTEA) {
+                resolvedFields.add(field("null::bytea").as(field.getKey().getName()));
             } else {
                 resolvedFields.add(field("null").as(field.getKey().getName()));
             }
@@ -176,6 +178,10 @@ public class PathToJooqRefinement {
                 nulledFields.add(field("null::bigint").as(field.getName()));
             } else if (selectList.get(i).getValue().get(field) == DataType.DECIMAL) {
                 nulledFields.add(field("null::numeric").as(field.getName()));
+            } else if (selectList.get(i).getValue().get(field) == DataType.TIMESTAMPTZ) {
+                nulledFields.add(field("null::timestamptz").as(field.getName()));
+            } else if (selectList.get(i).getValue().get(field) == DataType.BYTEA) {
+                nulledFields.add(field("null::bytea").as(field.getName()));
             } else {
                 nulledFields.add(field("null").as(field.getName()));
             }

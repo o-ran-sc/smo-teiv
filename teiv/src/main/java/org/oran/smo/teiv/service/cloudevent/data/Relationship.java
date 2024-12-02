@@ -24,9 +24,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
+import org.oran.smo.teiv.exception.IllegalCharacterException;
+import org.oran.smo.teiv.exception.InvalidRelationshipException;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.oran.smo.yangtools.parser.data.dom.YangDataDomNode;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
+
+import static org.oran.smo.teiv.utils.CloudEventUtil.hasInvalidCharacter;
 
 @NoArgsConstructor
 public class Relationship extends ModuleObject {
@@ -41,6 +46,16 @@ public class Relationship extends ModuleObject {
         super(module, type, id, sourceIds);
         this.aSide = aSide;
         this.bSide = bSide;
+    }
+
+    public static Relationship fromYangDataDom(final YangDataDomNode node, final boolean areSidesMandatory)
+            throws SchemaRegistryException, InvalidRelationshipException, IllegalCharacterException {
+        Relationship relationship = new Relationship();
+        relationship.parseObject(node);
+        validateRelationshipTypeAndModule(relationship);
+        validateRelationshipIdentifierCharacters(relationship);
+        validateRelationshipRequiredFields(relationship, areSidesMandatory);
+        return relationship;
     }
 
     @Override
@@ -81,5 +96,48 @@ public class Relationship extends ModuleObject {
             case A_SIDE -> getASide();
             case B_SIDE -> getBSide();
         };
+    }
+
+    private static void validateRelationshipRequiredFields(final Relationship relationship, final boolean areSidesMandatory)
+            throws InvalidRelationshipException {
+        if (relationship.getId() == null) {
+            throw InvalidRelationshipException.missingId(relationship);
+        }
+        if (areSidesMandatory && (relationship.getASide() == null || relationship.getBSide() == null)) {
+            throw InvalidRelationshipException.missingSide(relationship);
+        }
+        if (areSidesMandatory && (relationship.getSourceIds() == null || relationship.getSourceIds().size() < 2)) {
+            throw InvalidRelationshipException.missingSourceIds(relationship.getId());
+        }
+    }
+
+    private static void validateRelationshipTypeAndModule(final Relationship relationship)
+            throws InvalidRelationshipException, SchemaRegistryException {
+        String module = relationship.getModule();
+        if (!SchemaRegistry.getModuleRegistry().containsKey(module)) {
+            throw InvalidRelationshipException.invalidModule(relationship);
+        }
+        if (SchemaRegistry.getRelationTypeByModuleAndName(module, relationship.getType()) == null) {
+            throw InvalidRelationshipException.invalidType(relationship);
+        }
+        String moduleName = SchemaRegistry.getRelationTypeByModuleAndName(module, relationship.getType()).getModule()
+                .getName();
+        if (!moduleName.equals(relationship.getModule())) {
+            throw InvalidRelationshipException.invalidModule(relationship);
+        }
+
+    }
+
+    private static void validateRelationshipIdentifierCharacters(final Relationship relationship)
+            throws IllegalCharacterException {
+        if (hasInvalidCharacter(relationship.getId())) {
+            throw IllegalCharacterException.inRelationship("id", relationship.getId());
+        }
+        if (hasInvalidCharacter(relationship.getASide())) {
+            throw IllegalCharacterException.inRelationship("aSide", relationship.getASide());
+        }
+        if (hasInvalidCharacter(relationship.getBSide())) {
+            throw IllegalCharacterException.inRelationship("bSide", relationship.getBSide());
+        }
     }
 }

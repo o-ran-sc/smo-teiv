@@ -44,7 +44,7 @@ public class ResolverUtil {
         } else if (noOfContainers > 2) {
             throw TiesPathException.grammarError("More than two level deep path is not allowed");
         } else if (noOfContainers == 2) {
-            return getTopologyObjectWhenTwoContainers(rootObject, firstContainer);
+            return getTopologyObjectWhenTwoContainers(rootObject, firstContainer, containerNames.get(1));
         }
 
         return Optional.ofNullable(rootObject).orElse(WILDCARD);
@@ -60,8 +60,9 @@ public class ResolverUtil {
         return ContainerType.fromValue(containerNames.get(containerNames.size() - 1));
     }
 
-    private static String getTopologyObjectWhenTwoContainers(final String rootObject, final String firstContainer) {
-        if (null == rootObject || firstContainer.equals(rootObject)) {
+    private static String getTopologyObjectWhenTwoContainers(final String rootObject, final String firstContainer,
+            final String secondContainer) {
+        if (null == rootObject || firstContainer.equals(rootObject) || secondContainer.equals(rootObject)) {
             return firstContainer;
         } else {
             throw TiesPathException.grammarError(

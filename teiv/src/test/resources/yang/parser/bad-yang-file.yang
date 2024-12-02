@@ -1,0 +1,63 @@
+module o-ran-smo-teiv-common-yang-types {
+
+  yang-version 1.1;
+  namespace "urn:o-ran:smo-teiv-common-yang-types";
+  prefix typeseritopinv;
+
+  import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+
+  import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }
+
+  organization "ORAN";
+  contact "The Authors";
+  description
+  "Topology and Inventory common types model
+
+  Copyright (C) 2024 Ericsson
+  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+
+  This model contains re-usable data types that topology and inventory models
+  will frequently use as part of types and relationships.";
+
+  revision "2023-07-04" {
+    description "First draft.";
+    yexte:version "0";
+    yexte:release "1";
+    yexte:correction "0";
+  }
+
+  grouping Top_Grp_Type {
+
+    description
+      "Grouping containing the key attribute common to all types. All types
+       MUST use this grouping.";
+
+    leaf id {
+      type string;
+      description "Key leaf for the data type. Using types MAY restrict the
+      allowed values for keys. Represents the Entity Instance Identifier 
+      (EIID) used to uniquely identify network entities in Topology.";
+    }
+  }
+
+  grouping CM_ID {
+
+    description
+      "Grouping containing the key attributes to make
+      use of Configuration Management (CM).";
+
+    leaf cmHandle {
+      type string;
+      description "Unique identifier for network entities in CM.";
+    }
+
+    leaf resourceIdentifier {
+      type string;
+      description "The xpath expression identifying the resource in the Node model yang tree.";
+    }
+  }
+
+  typedef _3GPP_FDN_Type {
+    type types3gpp:DistinguishedName;
+  }
+}

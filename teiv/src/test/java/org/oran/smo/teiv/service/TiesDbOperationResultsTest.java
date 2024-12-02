@@ -20,6 +20,8 @@
  */
 package org.oran.smo.teiv.service;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +39,7 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.Record;
@@ -46,6 +49,8 @@ import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.oran.smo.teiv.service.models.OperationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -81,13 +86,14 @@ import org.oran.smo.teiv.utils.JooqTypeConverter;
 @SpringBootTest
 @ActiveProfiles({ "test", "ingestion" })
 class TiesDbOperationResultsTest {
-    public static TestPostgresqlContainer postgresqlContainer = TestPostgresqlContainer.getInstance();
+    private static TestPostgresqlContainer postgresqlContainer = TestPostgresqlContainer.getInstance();
     private static TiesDbService tiesDbService;
     private static TiesDbOperations tiesDbOperations;
     private static DSLContext dslContext;
     private static String VALIDATE_MANY_TO_ONE_DIR = "src/test/resources/cloudeventdata/validation/many-to-one/";
     private static String VALIDATE_ONE_TO_MANY_DIR = "src/test/resources/cloudeventdata/validation/one-to-many/";
     private static String VALIDATE_ONE_TO_ONE_DIR = "src/test/resources/cloudeventdata/validation/one-to-one/";
+    private static String updatedTimeColumnName = "updated_time";
 
     @Autowired
     CloudEventParser cloudEventParser;
@@ -103,52 +109,50 @@ class TiesDbOperationResultsTest {
         tiesDbService = new TiesDbService(dslContext, dslContext, deadlockRetryPolicy);
         tiesDbOperations = new TiesDbOperations(tiesDbService, new IngestionOperationValidatorFactory(),
                 new RelationshipMergeValidator());
+        TestPostgresqlContainer.loadIngestionTestData();
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
     }
 
     @BeforeEach
     public void deleteAll() {
-        dslContext.meta().filterSchemas(s -> s.getName().equals(TIES_DATA_SCHEMA)).getTables().forEach(t -> dslContext
-                .truncate(t).cascade().execute());
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA), dslContext);
     }
 
     @Test
     void testMergeEntityRelationship() {
         CloudEvent cloudEvent = CloudEventTestUtil.getCloudEventFromJsonFile(
                 "src/test/resources/cloudeventdata/end-to-end/ce-create-one-to-many.json");
-
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = assertDoesNotThrow(() -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "dmi-plugin:nm-1"));
 
         assertEquals(3, mergeResult.size());
         assertEquals("ManagedElement_1", mergeResult.get(0).getId());
         assertEquals("ManagedElement", mergeResult.get(0).getType());
         assertEquals(Map.of(), mergeResult.get(0).getAttributes());
 
-        assertEquals("ENodeBFunction_1", mergeResult.get(1).getId());
-        assertEquals("ENodeBFunction", mergeResult.get(1).getType());
+        assertEquals("ORUFunction_1", mergeResult.get(1).getId());
+        assertEquals("ORUFunction", mergeResult.get(1).getType());
         assertEquals(Map.of(), mergeResult.get(1).getAttributes());
 
         assertEquals("relation_1", mergeResult.get(2).getId());
-        assertEquals("MANAGEDELEMENT_MANAGES_ENODEBFUNCTION", mergeResult.get(2).getType());
+        assertEquals("MANAGEDELEMENT_MANAGES_ORUFUNCTION", mergeResult.get(2).getType());
         assertEquals("ManagedElement_1", mergeResult.get(2).getASide());
-        assertEquals("ENodeBFunction_1", mergeResult.get(2).getBSide());
+        assertEquals("ORUFunction_1", mergeResult.get(2).getBSide());
 
     }
 
     @Test
-    void testDeleteEntityById() {
+    void testDeleteEntityById() throws SchemaRegistryException {
         Map<String, Object> managedElementEntity = new HashMap<>();
         managedElementEntity.put("id", "managed_element_entity_id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity,
+                updatedTimeColumnName);
 
         // Delete operation - expected to succeed
         List<OperationResult> deleteResultMatch = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("ManagedElement"), "managed_element_entity_id1");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElement"), "managed_element_entity_id1");
 
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
         assertTrue(deleteResultMatch.contains(OperationResult.createEntityOperationResult("managed_element_entity_id1",
@@ -157,215 +161,221 @@ class TiesDbOperationResultsTest {
 
         // Delete operation with the same EIID - expected to fail
         List<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("ManagedElement"), "managed_element_entity_id1");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElement"), "managed_element_entity_id1");
         assertTrue(deleteResultNoMatch.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
     }
 
     @Test
-    void testDeleteOneToOneByRelationId() {
+    void testDeleteOneToOneByRelationId() throws SchemaRegistryException {
         Map<String, Object> managedElementEntity = new HashMap<>();
-        managedElementEntity.put("id", "managed_element_entity_id1");
-        managedElementEntity.put("fdn", "fdn1");
-        managedElementEntity.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
-        managedElementEntity.put("REL_FK_deployed-as-cloudNativeSystem", "cloud_native_system_entity_id1");
-        managedElementEntity.put("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "relation_eiid1");
+        managedElementEntity.put("id", "me-id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"", managedElementEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> cloudNativeSystemEntity = new HashMap<>();
-        cloudNativeSystemEntity.put("id", "cloud_native_system_entity_id1");
+        Map<String, Object> nrCellDuEntity = new HashMap<>();
+        nrCellDuEntity.put("id", "nrcelldu-id1");
+        nrCellDuEntity.put("020335B0F627C169E24167748C38FE756FB34AE2", 1);
+        tiesDbOperations.merge(dslContext, "ties_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"", nrCellDuEntity,
+                updatedTimeColumnName);
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                cloudNativeSystemEntity);
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElementEntity);
-
-        cloudNativeSystemEntity.put("name", "CloudNativeSystem");
-        tiesDbOperations.merge(dslContext, "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"",
-                cloudNativeSystemEntity);
+        Map<String, Object> meToNrcellduRelation = new HashMap<>();
+        meToNrcellduRelation.put("id", "me-id1");
+        meToNrcellduRelation.put("REL_FK_used-nrCellDu", "nrcelldu-id1");
+        meToNrcellduRelation.put("REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU", "eiid1");
+        meToNrcellduRelation.put("REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4", JooqTypeConverter.toJsonb(List.of(
+                "fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"", meToNrcellduRelation,
+                updatedTimeColumnName);
 
         // Delete operation for aSide - expected to succeed
         Optional<OperationResult> deleteASideResultMatch = tiesDbOperations.deleteRelationFromEntityTableByRelationId(
-                dslContext, "relation_eiid1", SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
+                dslContext, "eiid1", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                        "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"));
 
         assertTrue(deleteASideResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.createRelationshipOperationResult("relation_eiid1",
-                "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"), deleteASideResultMatch.get(),
-                "The delete operation result should be present for: 'relation_eiid1'");
+        assertEquals(OperationResult.createRelationshipOperationResult("eiid1",
+                "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"), deleteASideResultMatch.get(),
+                "The delete operation result should be present for: 'eiid1'");
 
         // Delete operation with the same EIID - expected to fail
         Optional<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteRelationFromEntityTableByRelationId(
-                dslContext, "relation_eiid1", SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
+                dslContext, "eiid1", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                        "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"));
         assertTrue(deleteResultNoMatch.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
 
-        Result<Record> rows = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
-        Result<Record> rowsOnBSide = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
-        assertEquals("managed_element_entity_id1", rows.get(0).get("id"));
-        assertEquals("fdn1", rows.get(0).get("fdn"));
-        assertEquals("cloud_native_system_entity_id1", rowsOnBSide.get(0).get("id"));
-        assertEquals("CloudNativeSystem", rowsOnBSide.get(0).get("name"));
-        assertNull(rows.get(0).get("REL_FK_deployed-as-cloudNativeSystem"));
-        assertNull(rows.get(0).get("REL_ID_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
-        assertNull(rowsOnBSide.get(0).get("REL_FK_deployed-managedElement"));
-        assertEquals(JooqTypeConverter.toJsonb(List.of()), rows.get(0).get(
-                "REL_CD_sourceIds_MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM"));
+        Result<Record> nrcellduRows = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
+                "ties_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
+        Result<Record> managedElementRows = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
+                "ties_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
+        assertEquals("me-id1", managedElementRows.get(0).get("id"));
+        assertEquals("nrcelldu-id1", nrcellduRows.get(0).get("id"));
+        assertNull(managedElementRows.get(0).get("REL_FK_used-nrCellDu"));
+        assertNull(managedElementRows.get(0).get("REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"));
+        assertEquals(JooqTypeConverter.toJsonb(List.of()), managedElementRows.get(0).get(
+                "REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4"));
     }
 
     @Test
-    void testDeleteOneToManyByManySideEntityId() {
-        Map<String, Object> managedElement1 = new HashMap<>();
-        managedElement1.put("id", "managed_element_entity_id1");
-        managedElement1.put("fdn", "fdn1");
-        managedElement1.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
+    void testDeleteOneToManyByManySideEntityId() throws SchemaRegistryException {
+        Map<String, Object> managedElementEntity = new HashMap<>();
+        managedElementEntity.put("id", "me-id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> cna1 = new HashMap<>();
-        cna1.put("id", "cna_entity_id1");
-        cna1.put("name", "CloudNativeApplication");
-        cna1.put("REL_FK_realised-managedElement", "managed_element_entity_id1");
-        cna1.put("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_eiid1");
+        Map<String, Object> oruFunctionEntity = new HashMap<>();
+        oruFunctionEntity.put("id", "oru-id1");
+        oruFunctionEntity.put("oruId", 1);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ORUFunction\"", oruFunctionEntity,
+                updatedTimeColumnName);
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElement1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna1);
+        Map<String, Object> meToEnodeBFuncRelation = new HashMap<>();
+        meToEnodeBFuncRelation.put("id", "oru-id1");
+        meToEnodeBFuncRelation.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToEnodeBFuncRelation.put("REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION", "eiid1");
+        meToEnodeBFuncRelation.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ORUFUNCTION", JooqTypeConverter.toJsonb(List.of(
+                "fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ORUFunction\"", meToEnodeBFuncRelation,
+                updatedTimeColumnName);
 
         // Delete operation with existing relationship
         List<OperationResult> deleteResultMatch = tiesDbOperations.deleteRelationshipByManySideEntityId(dslContext,
-                "cna_entity_id1", "id", SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION"));
+                "oru-id1", "id", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                        "MANAGEDELEMENT_MANAGES_ORUFUNCTION"));
 
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("relation_eiid1",
-                "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION")),
-                "The list should contain the delete operation result with id: 'relation_eiid1'");
+        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid1",
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+                "The list should contain the delete operation result with id: 'eiid1'");
 
         // Delete operation with the same entity ID - expected to return an empty list
         List<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteRelationshipByManySideEntityId(dslContext,
-                "cna_entity_id1", "id", SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION"));
+                "oru-id1", "id", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                        "MANAGEDELEMENT_MANAGES_ORUFUNCTION"));
 
         assertTrue(deleteResultNoMatch.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
     }
 
     @Test
-    void testDeleteOneToManyByOneSideEntityId() {
-        Map<String, Object> managedElement1 = new HashMap<>();
-        managedElement1.put("id", "managed_element_entity_id1");
-        managedElement1.put("fdn", "fdn1");
-        managedElement1.put("cmId", JSONB.jsonb("{\"name\":\"Hellmann1\"}"));
+    void testDeleteOneToManyByOneSideEntityId() throws SchemaRegistryException {
+        Map<String, Object> managedElementEntity = new HashMap<>();
+        managedElementEntity.put("id", "me-id1");
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-oam_ManagedElement\"", managedElementEntity,
+                updatedTimeColumnName);
 
-        Map<String, Object> cna1 = new HashMap<>();
-        cna1.put("id", "cna_entity_id1");
-        cna1.put("name", "CloudNativeApplication");
-        cna1.put("REL_FK_realised-managedElement", "managed_element_entity_id1");
-        cna1.put("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_eiid1");
+        Map<String, Object> meToEnodeBFuncRelation1 = new HashMap<>();
+        meToEnodeBFuncRelation1.put("id", "oru-id1");
+        meToEnodeBFuncRelation1.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToEnodeBFuncRelation1.put("REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION", "eiid1");
+        meToEnodeBFuncRelation1.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ORUFUNCTION", JooqTypeConverter.toJsonb(List
+                .of("fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ORUFunction\"", meToEnodeBFuncRelation1,
+                updatedTimeColumnName);
+        Map<String, Object> meToEnodeBFuncRelation2 = new HashMap<>();
+        meToEnodeBFuncRelation2.put("id", "oru-id2");
+        meToEnodeBFuncRelation2.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToEnodeBFuncRelation2.put("REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION", "eiid2");
+        meToEnodeBFuncRelation2.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ORUFUNCTION", JooqTypeConverter.toJsonb(List
+                .of("fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ORUFunction\"", meToEnodeBFuncRelation2,
+                updatedTimeColumnName);
+        Map<String, Object> meToEnodeBFuncRelation3 = new HashMap<>();
+        meToEnodeBFuncRelation3.put("id", "oru-id3");
+        meToEnodeBFuncRelation3.put("REL_FK_managed-by-managedElement", "me-id1");
+        meToEnodeBFuncRelation3.put("REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION", "eiid3");
+        meToEnodeBFuncRelation3.put("REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ORUFUNCTION", JooqTypeConverter.toJsonb(List
+                .of("fdn1", "cmHandleId1")));
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_ORUFunction\"", meToEnodeBFuncRelation3,
+                updatedTimeColumnName);
 
-        Map<String, Object> cna2 = new HashMap<>();
-        cna2.put("id", "cna_entity_id2");
-        cna2.put("name", "CloudNativeApplication");
-        cna2.put("REL_FK_realised-managedElement", "managed_element_entity_id1");
-        cna2.put("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_eiid2");
-
-        Map<String, Object> cna3 = new HashMap<>();
-        cna3.put("id", "cna_entity_id3");
-        cna3.put("name", "CloudNativeApplication");
-        cna3.put("REL_FK_realised-managedElement", "managed_element_entity_id1");
-        cna3.put("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_eiid3");
-
-        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"", managedElement1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna2);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna3);
-
-        // Delete operation for managed_element_entity_id1
+        // Delete operation for me-id1
         List<OperationResult> deleteResultMatch = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("ManagedElement"), "managed_element_entity_id1");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElement"), "me-id1");
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
 
         // Check if all expected IDs are present in the deletion result
         assertEquals(4, deleteResultMatch.size(), "Delete operation should match expected size");
-        assertTrue(deleteResultMatch.contains(OperationResult.createEntityOperationResult("managed_element_entity_id1",
-                "ManagedElement")),
-                "The list should contain the delete operation result with id: 'managed_element_entity_id1'");
+        assertTrue(deleteResultMatch.contains(OperationResult.createEntityOperationResult("me-id1", "ManagedElement")),
+                "The list should contain the delete operation result with id: 'me-id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("relation_eiid1",
-                "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION")),
-                "The list should contain the delete operation result with id: 'relation_eiid1'");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("relation_eiid2",
-                "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION")),
-                "The list should contain the delete operation result with id: 'relation_eiid2'");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("relation_eiid3",
-                "MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION")),
-                "The list should contain the delete operation result with id: 'relation_eiid3'");
+        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid1",
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+                "The list should contain the delete operation result with id: 'eiid1'");
+        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid2",
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+                "The list should contain the delete operation result with id: 'eiid2'");
+        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid3",
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+                "The list should contain the delete operation result with id: 'eiid3'");
 
         // Verify all related entities have their relationships deleted
         Result<Record> rows = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"");
+                "ties_data.\"o-ran-smo-teiv-ran_ORUFunction\"");
         assertEquals(3, rows.size());
         for (Record row : rows) {
-            assertNull(row.get("REL_FK_realised-managedElement"),
-                    "REL_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION should be null");
-            assertNull(row.get("REL_ID_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION"),
-                    "REL_MANAGEDELEMENT_REALISED_BY_CLOUDNATIVEAPPLICATION_EIID should be null");
+            assertNull(row.get("REL_FK_managed-by-managedElement"),
+                    "REL_MANAGEDELEMENT_MANAGES_ORUFUNCTION should be null");
+            assertNull(row.get("REL_ID_MANAGEDELEMENT_MANAGES_ORUFUNCTION"),
+                    "REL_MANAGEDELEMENT_MANAGES_ORUFUNCTION_EIID should be null");
         }
     }
 
     @Test
-    void testDeleteManyToManyByRelationshipId() {
-        Map<String, Object> gnbcucp1 = new HashMap<>();
-        gnbcucp1.put("id", "gnbcucp_id1");
-        gnbcucp1.put("fdn", "fdn1");
-        gnbcucp1.put("gNBCUName", "gNBCUName");
-        gnbcucp1.put("gNBId", 1);
-        gnbcucp1.put("gNBIdLength", 1);
-        gnbcucp1.put("pLMNId", JSONB.jsonb("{\"name\":\"pLMNId1\"}"));
-        gnbcucp1.put("cmId", JSONB.jsonb("{\"name\":\"cmId1\"}"));
+    void testDeleteManyToManyByRelationshipId() throws SchemaRegistryException {
+        Map<String, Object> antennaModule1 = new HashMap<>();
+        antennaModule1.put("id", "antennamodule_id1");
+        antennaModule1.put("positionWithinSector", "center");
 
-        Map<String, Object> cna1 = new HashMap<>();
-        cna1.put("id", "cloud_native_id1");
-        cna1.put("name", "CloudNativeApplication");
+        Map<String, Object> antennaCapability1 = new HashMap<>();
+        antennaCapability1.put("id", "antennacapability_id1");
+        antennaCapability1.put("geranFqBands", JSONB.jsonb("{\"name\":\"geranFqBands1\"}"));
 
-        Map<String, Object> cna2 = new HashMap<>();
-        cna2.put("id", "cloud_native_id2");
-        cna2.put("name", "CloudNativeApplication");
+        Map<String, Object> antennaCapability2 = new HashMap<>();
+        antennaCapability2.put("id", "antennacapability_id2");
+        antennaCapability2.put("geranFqBands", JSONB.jsonb("{\"name\":\"geranFqBands2\"}"));
 
         Map<String, Object> rel1 = new HashMap<>();
         rel1.put("id", "rel_id1");
-        rel1.put("aSide_GNBCUCPFunction", "gnbcucp_id1");
-        rel1.put("bSide_CloudNativeApplication", "cloud_native_id1");
+        rel1.put("aSide_AntennaModule", "antennamodule_id1");
+        rel1.put("bSide_AntennaCapability", "antennacapability_id1");
 
         Map<String, Object> rel2 = new HashMap<>();
         rel2.put("id", "rel_id2");
-        rel2.put("aSide_GNBCUCPFunction", "gnbcucp_id1");
-        rel2.put("bSide_CloudNativeApplication", "cloud_native_id2");
+        rel2.put("aSide_AntennaModule", "antennamodule_id1");
+        rel2.put("bSide_AntennaCapability", "antennacapability_id2");
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"", gnbcucp1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna2);
-        tiesDbOperations.merge(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"", rel1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"", rel2);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"", antennaModule1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"", antennaCapability1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"", antennaCapability2,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"", rel1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"", rel2,
+                updatedTimeColumnName);
 
         Result<Record> row1 = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"");
+                "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"");
         assertEquals(1, row1.size());
         Result<Record> row2 = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"");
+                "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"");
         assertEquals(2, row2.size());
         Result<Record> row3 = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"");
+                "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"");
         assertEquals(2, row3.size());
 
-        RelationType relType = SchemaRegistry.getRelationTypeByName("GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION");
+        RelationType relType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
 
         // Test deletion of a relationship by ID (expected success)
         Optional<OperationResult> deleteResultMatch = tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
                 relType, "rel_id1");
         assertTrue(deleteResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.createRelationshipOperationResult("rel_id1",
-                "GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION"), deleteResultMatch.get(),
-                "Deleted relationship ID should match 'rel_id1'");
+        assertEquals(OperationResult.createRelationshipOperationResult("rel_id1", "ANTENNAMODULE_SERVES_ANTENNACAPABILITY"),
+                deleteResultMatch.get(), "Deleted relationship ID should match 'rel_id1'");
 
         // Test deletion of the same relationship ID again (expected failure)
         Optional<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
@@ -374,79 +384,76 @@ class TiesDbOperationResultsTest {
     }
 
     @Test
-    void testDeleteManyToManyByEntityId() {
-        Map<String, Object> gnbcucp1 = new HashMap<>();
-        gnbcucp1.put("id", "gnbcucp_id1");
-        gnbcucp1.put("fdn", "fdn1");
-        gnbcucp1.put("gNBCUName", "gNBCUName");
-        gnbcucp1.put("gNBId", 1);
-        gnbcucp1.put("gNBIdLength", 1);
-        gnbcucp1.put("pLMNId", JSONB.jsonb("{\"name\":\"pLMNId1\"}"));
-        gnbcucp1.put("cmId", JSONB.jsonb("{\"name\":\"cmId1\"}"));
+    void testDeleteManyToManyByEntityId() throws SchemaRegistryException {
+        Map<String, Object> antennaModule1 = new HashMap<>();
+        antennaModule1.put("id", "antennamodule_id1");
+        antennaModule1.put("positionWithinSector", "center");
 
-        Map<String, Object> cna1 = new HashMap<>();
-        cna1.put("id", "cloud_native_id1");
-        cna1.put("name", "CloudNativeApplication");
+        Map<String, Object> antennaCapability1 = new HashMap<>();
+        antennaCapability1.put("id", "antennacapability_id1");
+        antennaCapability1.put("geranFqBands", JSONB.jsonb("{\"name\":\"geranFqBands1\"}"));
 
-        Map<String, Object> cna2 = new HashMap<>();
-        cna2.put("id", "cloud_native_id2");
-        cna2.put("name", "CloudNativeApplication");
+        Map<String, Object> antennaCapability2 = new HashMap<>();
+        antennaCapability2.put("id", "antennacapability_id2");
+        antennaCapability2.put("geranFqBands", JSONB.jsonb("{\"name\":\"geranFqBands2\"}"));
 
         Map<String, Object> rel1 = new HashMap<>();
         rel1.put("id", "rel_id1");
-        rel1.put("aSide_GNBCUCPFunction", "gnbcucp_id1");
-        rel1.put("bSide_CloudNativeApplication", "cloud_native_id1");
+        rel1.put("aSide_AntennaModule", "antennamodule_id1");
+        rel1.put("bSide_AntennaCapability", "antennacapability_id1");
 
         Map<String, Object> rel2 = new HashMap<>();
         rel2.put("id", "rel_id2");
-        rel2.put("aSide_GNBCUCPFunction", "gnbcucp_id1");
-        rel2.put("bSide_CloudNativeApplication", "cloud_native_id2");
+        rel2.put("aSide_AntennaModule", "antennamodule_id1");
+        rel2.put("bSide_AntennaCapability", "antennacapability_id2");
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"", gnbcucp1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"", cna2);
-        tiesDbOperations.merge(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"", rel1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"", rel2);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"", antennaModule1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"", antennaCapability1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"", antennaCapability2,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"", rel1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"", rel2,
+                updatedTimeColumnName);
 
         assertEquals(1, TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"c4a425179d3089b5288fdf059079d0ea26977f0f\"").size(), "Expected one GNBCUCPFunction record");
+                "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"").size(), "Expected one AntennaModule record");
         assertEquals(2, TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"e01fcb87ad2c34ce66c34420255e25aaca270e5e\"").size(),
-                "Expected two CloudNativeApplication records");
+                "ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\"").size(), "Expected two AntennaCapability records");
         assertEquals(2, TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7\"").size(),
-                "Expected two GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION relations");
+                "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"").size(),
+                "Expected two ANTENNAMODULE_SERVES_ANTENNACAPABILITY relations");
 
-        RelationType relType = SchemaRegistry.getRelationTypeByName("GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION");
+        RelationType relType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
 
         // Test deletion of relations by entity ID (expected to delete two relations)
         List<OperationResult> deleteResultMatch = tiesDbOperations.deleteManyToManyRelationByEntityId(dslContext, relType,
-                "gnbcucp_id1", "aSide_GNBCUCPFunction", "bSide_CloudNativeApplication");
-
+                "antennamodule_id1", "aSide_AntennaModule", "bSide_AntennaCapability");
         assertEquals(2, deleteResultMatch.size(), "Expected two relations to be deleted");
         assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id1",
-                "GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION")),
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY")),
                 "The list should contain the delete operation result with id: 'rel_id1'");
 
         assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id2",
-                "GNBCUCPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION")),
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY")),
                 "The list should contain the delete operation result with id: 'rel_id2'");
 
         // Test deletion of relations by the same entity ID again (expected to find no
         // relations to delete)
         List<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteManyToManyRelationByEntityId(dslContext, relType,
-                "gnbcucp_id1", "aSide_GNBCUCPFunction", "bSide_CloudNativeApplication");
+                "antennamodule_id1", "aSide_AntennaModule", "bSide_AntennaCapability");
         assertTrue(deleteResultNoMatch.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
     }
 
     @Test
-    void testDeleteRelConnectingSameEntityByRelationshipId() {
+    void testDeleteRelConnectingSameEntityByRelationshipId() throws SchemaRegistryException {
         Map<String, Object> antennaModule1 = new HashMap<>();
         antennaModule1.put("id", "module_id1");
         antennaModule1.put("mechanicalAntennaTilt", 400);
-        antennaModule1.put("fdn", "fdn_1");
-        antennaModule1.put("cmId", JSONB.jsonb("{\"name\":\"cmId1\"}"));
         antennaModule1.put("antennaModelNumber", "['123-abc']");
         antennaModule1.put("totalTilt", 10);
         antennaModule1.put("mechanicalAntennaBearing", 123);
@@ -456,8 +463,6 @@ class TiesDbOperationResultsTest {
         Map<String, Object> antennaModule2 = new HashMap<>();
         antennaModule2.put("id", "module_id2");
         antennaModule2.put("mechanicalAntennaTilt", 401);
-        antennaModule2.put("fdn", "fdn_2");
-        antennaModule2.put("cmId", JSONB.jsonb("{\"name\":\"cmId2\"}"));
         antennaModule2.put("antennaModelNumber", "['456-abc']");
         antennaModule2.put("totalTilt", 11);
         antennaModule2.put("mechanicalAntennaBearing", 456);
@@ -466,27 +471,32 @@ class TiesDbOperationResultsTest {
 
         Map<String, Object> rel1 = new HashMap<>();
         rel1.put("id", "rel_id1");
-        rel1.put("aSide_AntennaModule", "module_id1");
-        rel1.put("bSide_AntennaModule", "module_id2");
+        rel1.put("aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C", "module_id1");
+        rel1.put("bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E", "module_id2");
 
         Map<String, Object> rel2 = new HashMap<>();
         rel2.put("id", "rel_id2");
-        rel2.put("bSide_AntennaModule", "module_id2");
-        rel2.put("aSide_AntennaModule", "module_id1");
+        rel2.put("aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C", "module_id2");
+        rel2.put("bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E", "module_id1");
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", antennaModule1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", antennaModule2);
-        tiesDbOperations.merge(dslContext, "ties_data.\"5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6\"", rel1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6\"", rel2);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"", antennaModule1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"", antennaModule2,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53089669D370B15C78B7E8376D434921D1C94240\"", rel1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53089669D370B15C78B7E8376D434921D1C94240\"", rel2,
+                updatedTimeColumnName);
 
         Result<Record> row1 = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"");
+                "ties_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"");
         assertEquals(2, row1.size());
         Result<Record> row2 = TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6\"");
+                "ties_data.\"53089669D370B15C78B7E8376D434921D1C94240\"");
         assertEquals(2, row2.size());
 
-        RelationType antennaRelType1 = SchemaRegistry.getRelationTypeByName("ANTENNAMODULE_REALISED_BY_ANTENNAMODULE");
+        RelationType antennaRelType1 = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE");
 
         // Test deletion of a relationship by ID (expected success)
         Optional<OperationResult> deleteResultMatch = tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
@@ -494,7 +504,7 @@ class TiesDbOperationResultsTest {
 
         assertTrue(deleteResultMatch.isPresent(), "Delete operation should return a present Optional");
         assertEquals(OperationResult.createRelationshipOperationResult("rel_id1",
-                "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE"), deleteResultMatch.get(),
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE"), deleteResultMatch.get(),
                 "Deleted relationship ID should match 'rel_id1'");
 
         // Test deletion of the same relationship ID again (expected failure)
@@ -505,12 +515,10 @@ class TiesDbOperationResultsTest {
     }
 
     @Test
-    void testDeleteRelConnectingSameEntityByEntityId() {
+    void testDeleteRelConnectingSameEntityByEntityId() throws SchemaRegistryException {
         Map<String, Object> antennaModule1 = new HashMap<>();
         antennaModule1.put("id", "module_id1");
         antennaModule1.put("mechanicalAntennaTilt", 400);
-        antennaModule1.put("fdn", "fdn_1");
-        antennaModule1.put("cmId", JSONB.jsonb("{\"name\":\"cmId1\"}"));
         antennaModule1.put("antennaModelNumber", "['123-abc']");
         antennaModule1.put("totalTilt", 10);
         antennaModule1.put("mechanicalAntennaBearing", 123);
@@ -520,8 +528,6 @@ class TiesDbOperationResultsTest {
         Map<String, Object> antennaModule2 = new HashMap<>();
         antennaModule2.put("id", "module_id2");
         antennaModule2.put("mechanicalAntennaTilt", 401);
-        antennaModule2.put("fdn", "fdn_2");
-        antennaModule2.put("cmId", JSONB.jsonb("{\"name\":\"cmId2\"}"));
         antennaModule2.put("antennaModelNumber", "['456-abc']");
         antennaModule2.put("totalTilt", 11);
         antennaModule2.put("mechanicalAntennaBearing", 456);
@@ -530,43 +536,50 @@ class TiesDbOperationResultsTest {
 
         Map<String, Object> rel1 = new HashMap<>();
         rel1.put("id", "rel_id1");
-        rel1.put("aSide_AntennaModule", "module_id1");
-        rel1.put("bSide_AntennaModule", "module_id2");
+        rel1.put("aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C", "module_id1");
+        rel1.put("bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E", "module_id2");
 
         Map<String, Object> rel2 = new HashMap<>();
         rel2.put("id", "rel_id2");
-        rel2.put("bSide_AntennaModule", "module_id2");
-        rel2.put("aSide_AntennaModule", "module_id1");
+        rel2.put("aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C", "module_id2");
+        rel2.put("bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E", "module_id1");
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", antennaModule1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", antennaModule2);
-        tiesDbOperations.merge(dslContext, "ties_data.\"5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6\"", rel1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6\"", rel2);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"", antennaModule1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"", antennaModule2,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53089669D370B15C78B7E8376D434921D1C94240\"", rel1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"53089669D370B15C78B7E8376D434921D1C94240\"", rel2,
+                updatedTimeColumnName);
 
         assertEquals(2, TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"").size(), "Expected two AntennaModule records");
+                "ties_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"").size(), "Expected two AntennaModule records");
         assertEquals(2, TiesDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "ties_data.\"5123d0adfb7b4a04e7f2e5e1783f476ed5cf76f6\"").size(),
+                "ties_data.\"53089669D370B15C78B7E8376D434921D1C94240\"").size(),
                 "Expected two ANTENNAMODULE_REALISED_BY_ANTENNAMODULE relations");
 
-        RelationType relType = SchemaRegistry.getRelationTypeByName("ANTENNAMODULE_REALISED_BY_ANTENNAMODULE");
+        RelationType relType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE");
 
         // Test deletion of relations by entity ID (expected to delete two relations)
         List<OperationResult> deleteResultMatch = tiesDbOperations.deleteManyToManyRelationByEntityId(dslContext, relType,
-                "module_id1", "aSide_AntennaModule", "bSide_AntennaModule");
+                "module_id1", "aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C",
+                "bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E");
         assertEquals(2, deleteResultMatch.size(), "Expected two relations to be deleted");
         assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id1",
-                "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE")),
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE")),
                 "The list should contain the delete operation result with id: 'rel_id1'");
 
         assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id2",
-                "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE")),
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE")),
                 "The list should contain the delete operation result with id: 'rel_id2'");
 
         // Test deletion of relations by the same entity ID again (expected to find no
         // relations to delete)
         List<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteManyToManyRelationByEntityId(dslContext, relType,
-                "module_id1", "aSide_AntennaModule", "bSide_AntennaModule");
+                "module_id1", "aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C",
+                "bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E");
         assertTrue(deleteResultNoMatch.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
 
@@ -580,170 +593,174 @@ class TiesDbOperationResultsTest {
         // Merge entities and relationship
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(40, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(25, mergeResult.size());
     }
 
     @Test
-    void testDeleteASideEntityWithLongNames() throws InvalidFieldInYangDataException {
+    void testDeleteASideEntityWithLongNames() throws InvalidFieldInYangDataException, SchemaRegistryException {
         CloudEvent cloudEvent = CloudEventTestUtil.getCloudEventFromJsonFile(
                 "src/test/resources/cloudeventdata/end-to-end/ce-merge-long-names.json");
 
         // Merge topology data
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(40, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(25, mergeResult.size());
 
         // Entity with One_To_One relationship
         List<OperationResult> deleteEntityResult1 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt"),
-                "ManagedElement_2");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam",
+                        "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt"), "ManagedElement_3");
         assertEquals(2, deleteEntityResult1.size());
 
         // Entity with One_To_Many relationship
         List<OperationResult> deleteEntityResult2 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("GNBDUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"),
-                "GNBDUFunction_2");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "ODUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"), "ODUFunction_1");
         assertEquals(2, deleteEntityResult2.size());
 
         // Entity and Many_To_One relationship
         List<OperationResult> deleteEntityResult3 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("CloudNativeApplicationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"),
-                "CloudNativeApplication_3");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "LTESectorCarrierrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"), "LTESectorCarrier_id1");
         assertEquals(2, deleteEntityResult3.size());
 
         // Entity with Many_To_Many relationship
         List<OperationResult> deleteEntityResult4 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("GNBDUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"),
-                "GNBDUFunction_1");
-        assertEquals(7, deleteEntityResult4.size());
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                        "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_7");
+        assertEquals(2, deleteEntityResult4.size());
 
         // Entity with One_To_Many relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult5 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
-                "AntennaModule_1");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                        "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_5");
         assertEquals(2, deleteEntityResult5.size());
 
         // Entity with One_To_One relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult6 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
-                "AntennaModule_5");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                        "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_1");
         assertEquals(2, deleteEntityResult6.size());
     }
 
     @Test
-    void testDeleteBSideEntityWithLongNames() throws InvalidFieldInYangDataException {
+    void testDeleteBSideEntityWithLongNames() throws InvalidFieldInYangDataException, SchemaRegistryException {
         CloudEvent cloudEvent = CloudEventTestUtil.getCloudEventFromJsonFile(
                 "src/test/resources/cloudeventdata/end-to-end/ce-merge-long-names.json");
 
         // Merge topology data
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(40, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(25, mergeResult.size());
 
         // Entity with One_To_One relationship
         List<OperationResult> deleteEntityResult1 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("CloudNativeSystemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"),
-                "CloudNativeSystem_1");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU"), "NRCellDU_2");
         assertEquals(2, deleteEntityResult1.size());
 
         // Entity with One_To_Many relationship
         List<OperationResult> deleteEntityResult2 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU"), "NRCellDU_3");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU"), "NRCellDU_1");
         assertEquals(2, deleteEntityResult2.size());
 
         // Entity with Many_To_One relationship
         List<OperationResult> deleteEntityResult3 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("Namespaceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "Namespace_1");
-        assertEquals(3, deleteEntityResult3.size());
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"), "AntennaCapability_id2");
+        assertEquals(2, deleteEntityResult3.size());
 
         // Entity with Many_To_Many relationship
         List<OperationResult> deleteEntityResult4 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("CloudNativeApplicationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"),
-                "CloudNativeApplication_2");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"), "AntennaCapability_id1");
         assertEquals(2, deleteEntityResult4.size());
 
         // Entity with One_To_Many relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult5 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
-                "AntennaModule_2");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                        "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_6");
         assertEquals(2, deleteEntityResult5.size());
 
         // Entity with One_To_One relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult6 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
-                "AntennaModule_6");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                        "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_2");
         assertEquals(2, deleteEntityResult6.size());
 
-        // Again delete CloudNativeApplication(id=CloudNativeApplication_2) should
+        // Again delete AntennaCapability(id=AntennaCapability_id1) should
         // return empty result list
         List<OperationResult> deleteEntityResult7 = tiesDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByName("CloudNativeApplicationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"),
-                "CloudNativeApplication_2");
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"), "AntennaCapability_id1");
         assertTrue(deleteEntityResult7.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
     }
 
     @Test
-    void testDeleteRelationshipWithLongNames() throws InvalidFieldInYangDataException {
+    void testDeleteRelationshipWithLongNames() throws InvalidFieldInYangDataException, SchemaRegistryException {
         CloudEvent cloudEvent = CloudEventTestUtil.getCloudEventFromJsonFile(
                 "src/test/resources/cloudeventdata/end-to-end/ce-merge-long-names.json");
 
         // Merge topology data
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(40, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(25, mergeResult.size());
 
         // One_To_One Relationship
-        Relationship oneToOneRelationship = new Relationship("o-ran-smo-teiv-ran-oam-to-cloud",
-                "MANAGEDELEMENTTTTTTTTTTT_DEPLOYED_AS_CLOUDNATIVESYSTEMMMMMMMMMMM",
-                "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM_relation_3", "ManagedElement_3", "CloudNativeSystem_3", List
-                        .of());
-        RelationType oneToOneRelationType = SchemaRegistry.getRelationTypeByName(oneToOneRelationship.getType());
+        Relationship oneToOneRelationship = new Relationship("o-ran-smo-teiv-rel-oam-ran",
+                "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU", "ManagedElement_USES_NRCELLDU_relation_1",
+                "ManagedElement_3", "NRCellDU_2", List.of());
+        RelationType oneToOneRelationType = SchemaRegistry.getRelationTypeByModuleAndName(oneToOneRelationship.getModule(),
+                oneToOneRelationship.getType());
         Optional<OperationResult> deleteOneToOneRelationshipResult = tiesDbOperations
                 .deleteRelationFromEntityTableByRelationId(dslContext, oneToOneRelationship.getId(), oneToOneRelationType);
         assertTrue(deleteOneToOneRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // One_To_Many Relationship
-        Relationship oneToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical",
-                "GNBDUFUNCTIONNNNNNNNNNNNNNUUU_PROVIDES_NRCELLDUUUUUUUUUUUUUUUUUU",
-                "GNBDUFUNCTION_PROVIDES_NRCELLDU_relation_2", "GNBDUFunction_1", "NRCellDU_2", List.of());
-        RelationType oneToManyRelationType = SchemaRegistry.getRelationTypeByName(oneToManyRelationship.getType());
+        Relationship oneToManyRelationship = new Relationship("o-ran-smo-teiv-rel-oam-ran",
+                "MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_ODUFUNCTIONNNNNNNNNNNNNNN",
+                "MANAGEDELEMENT_MANAGES_ODUFUNCTION_relation_1", "ManagedElement_1", "ODUFunction_1", List.of());
+        RelationType oneToManyRelationType = SchemaRegistry.getRelationTypeByModuleAndName(oneToManyRelationship
+                .getModule(), oneToManyRelationship.getType());
         Optional<OperationResult> deleteOneToManyRelationshipResult = tiesDbOperations
                 .deleteRelationFromEntityTableByRelationId(dslContext, oneToManyRelationship.getId(),
                         oneToManyRelationType);
         assertTrue(deleteOneToManyRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // Many_To_One Relationship
-        Relationship manyToOneRelationship = new Relationship("o-ran-smo-teiv-ran-cloud",
-                "CLOUDNATIVEAPPLICATIONNNNNNNNNNN_DEPLOYED_ON_NAMESPACEEEEEEEEEEE",
-                "CLOUDNATIVEAPPLICATION_DEPLOYED_ON_NAMESPACE_relation_3", "CloudNativeApplication_3", "Namespace_3", List
+        Relationship manyToOneRelationship = new Relationship("o-ran-smo-teiv-ran",
+                "LTESECTORCARRIERRRRRRRRRRRRRRRRRRRRR_USES_ANTENNACAPABILITYYYYYYYYYYYYYYY",
+                "LTESECTORCARRIER_USES_ANTENNACAPABILITY_relation_1", "LTESectorCarrier_id1", "AntennaCapability_id2", List
                         .of());
-        RelationType manyToOneRelationType = SchemaRegistry.getRelationTypeByName(manyToOneRelationship.getType());
+        RelationType manyToOneRelationType = SchemaRegistry.getRelationTypeByModuleAndName(manyToOneRelationship
+                .getModule(), manyToOneRelationship.getType());
         Optional<OperationResult> deleteManyToOneRelationshipResult = tiesDbOperations
                 .deleteRelationFromEntityTableByRelationId(dslContext, manyToOneRelationship.getId(),
                         manyToOneRelationType);
         assertTrue(deleteManyToOneRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // Many_To_Many Relationship
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical-to-cloud",
-                "GNBDUFUNCTIONNNNNNNNN_REALISED_BY_CLOUDNATIVEAPPLICATIONNNNNNNNN",
-                "GNBDUFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION_relation_1", "GNBDUFunction_1",
-                "CloudNativeApplication_1", List.of());
-        RelationType manyToManyRelationType = SchemaRegistry.getRelationTypeByName(manyToManyRelationship.getType());
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULEEEEEEEEEEEEEEEEEEEE_SERVES_ANTENNACAPABILITYYYYYYYYYYYYYYYYYY",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY_relation_1", "AntennaModule_7", "AntennaCapability_id1", List.of());
+        RelationType manyToManyRelationType = SchemaRegistry.getRelationTypeByModuleAndName(manyToManyRelationship
+                .getModule(), manyToManyRelationship.getType());
         Optional<OperationResult> deleteManyToManyRelationshipResult = tiesDbOperations
                 .deleteManyToManyRelationByRelationId(dslContext, manyToManyRelationType, manyToManyRelationship.getId());
         assertTrue(deleteManyToManyRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // One_To_One Relationship ConnectingSameEntity
-        Relationship connectingSameEntityOneToOneRelationship = new Relationship("o-ran-smo-teiv-ran-equipment",
-                "ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE",
-                "ANTENNAMODULE_DEPLOYED_ON_ANTENNAMODULE_relation_1", "AntennaModule_5", "AntennaModule_6", List.of());
-        RelationType connectingSameEntityType = SchemaRegistry.getRelationTypeByName(
-                connectingSameEntityOneToOneRelationship.getType());
+        Relationship connectingSameEntityOneToOneRelationship = new Relationship("o-ran-smo-teiv-equipment",
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE",
+                "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE_relation_1", "AntennaModule_1", "AntennaModule_2", List.of());
+        RelationType connectingSameEntityType = SchemaRegistry.getRelationTypeByModuleAndName(
+                connectingSameEntityOneToOneRelationship.getModule(), connectingSameEntityOneToOneRelationship.getType());
         Optional<OperationResult> deleteConnectingSameEntityOneToOneRelationshipResult = tiesDbOperations
                 .deleteManyToManyRelationByRelationId(dslContext, connectingSameEntityType,
                         connectingSameEntityOneToOneRelationship.getId());
@@ -751,11 +768,11 @@ class TiesDbOperationResultsTest {
                 "Delete operation should return a present Optional");
 
         // One_To_Many Relationship ConnectingSameEntity
-        Relationship connectingSameEntityOneToManyRelationship = new Relationship("o-ran-smo-teiv-ran-equipment",
-                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE",
-                "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE_relation_1", "AntennaModule_1", "AntennaModule_2", List.of());
-        connectingSameEntityType = SchemaRegistry.getRelationTypeByName(connectingSameEntityOneToManyRelationship
-                .getType());
+        Relationship connectingSameEntityOneToManyRelationship = new Relationship("o-ran-smo-teiv-equipment",
+                "ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE",
+                "ANTENNAMODULE_DEPLOYED_ON_ANTENNAMODULE_relation_1", "AntennaModule_5", "AntennaModule_6", List.of());
+        connectingSameEntityType = SchemaRegistry.getRelationTypeByModuleAndName(connectingSameEntityOneToManyRelationship
+                .getModule(), connectingSameEntityOneToManyRelationship.getType());
         Optional<OperationResult> deleteConnectingSameEntityOneToManyRelationshipResult = tiesDbOperations
                 .deleteManyToManyRelationByRelationId(dslContext, connectingSameEntityType,
                         connectingSameEntityOneToManyRelationship.getId());
@@ -775,11 +792,13 @@ class TiesDbOperationResultsTest {
         antennaModule2.put("CD_sourceIds", JSONB.jsonb(
                 "[\"urn:3gpp:dn:fdn\"," + "\"urn:cmHandle:395221E080CCF0FD1924103B15873815\"]"));
 
-        tiesDbOperations.merge(dslContext, "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", antennaModule1);
-        tiesDbOperations.merge(dslContext, "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", antennaModule2);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"", antennaModule1,
+                updatedTimeColumnName);
+        tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"", antennaModule2,
+                updatedTimeColumnName);
 
         List<String> ids = tiesDbOperations.selectByCmHandleFormSourceIds(dslContext,
-                "ties_data.\"f8caf5ebe876c3001d67efe06e4d83abf0babe31\"", "395221E080CCF0FD1924103B15873814");
+                "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"", "395221E080CCF0FD1924103B15873814");
         assertEquals(List.of("module_id1"), ids);
     }
 
@@ -789,16 +808,16 @@ class TiesDbOperationResultsTest {
                 "src/test/resources/cloudeventdata/end-to-end/ce-create-many-to-many.json");
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(12, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(6, mergeResult.size());
 
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical",
-                "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_2", "GNBCUUP_1", "CloudNativeApplication_3",
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY", "relation_2", "AntennaModule_1", "AntennaCapability_1",
                 new ArrayList<>());
         final ParsedCloudEventData finalParsedCloudEventData = new ParsedCloudEventData(new ArrayList<>(), List.of(
                 manyToManyRelationship));
         assertThrows(TiesException.class, () -> tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                finalParsedCloudEventData));
+                finalParsedCloudEventData, "dmi-plugin:nm-1"));
     }
 
     @Test
@@ -807,16 +826,16 @@ class TiesDbOperationResultsTest {
                 "src/test/resources/cloudeventdata/end-to-end/ce-create-many-to-many.json");
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(12, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(6, mergeResult.size());
 
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical",
-                "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_2", "GNBCUUP_1", "CloudNativeApplication_2",
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY", "relation_2", "AntennaModule_2", "AntennaCapability_2",
                 new ArrayList<>());
         final ParsedCloudEventData finalParsedCloudEventData = new ParsedCloudEventData(new ArrayList<>(), List.of(
                 manyToManyRelationship));
         List<OperationResult> result = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                finalParsedCloudEventData);
+                finalParsedCloudEventData, "dmi-plugin:nm-1");
 
         assertEquals(1, result.size());
     }
@@ -827,14 +846,15 @@ class TiesDbOperationResultsTest {
                 "src/test/resources/cloudeventdata/end-to-end/ce-create-many-to-many.json");
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(12, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(6, mergeResult.size());
 
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical",
-                "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_4", "GNBCUUP_3", "CloudNativeApplication_4",
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY", "relation_5", "AntennaModule_5", "AntennaCapability_5",
                 new ArrayList<>());
         parsedCloudEventData = new ParsedCloudEventData(new ArrayList<>(), List.of(manyToManyRelationship));
-        List<OperationResult> result = tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData);
+        List<OperationResult> result = tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData,
+                "dmi-plugin:nm-1");
 
         assertEquals(3, result.size());
     }
@@ -845,14 +865,15 @@ class TiesDbOperationResultsTest {
                 "src/test/resources/cloudeventdata/end-to-end/ce-create-many-to-many.json");
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         List<OperationResult> mergeResult = tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData);
-        assertEquals(12, mergeResult.size());
+                parsedCloudEventData, "dmi-plugin:nm-1");
+        assertEquals(6, mergeResult.size());
 
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical",
-                "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_4", "GNBCUUP_1", "CloudNativeApplication_4",
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY", "relation_5", "AntennaModule_2", "AntennaCapability_5",
                 new ArrayList<>());
         parsedCloudEventData = new ParsedCloudEventData(new ArrayList<>(), List.of(manyToManyRelationship));
-        List<OperationResult> result = tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData);
+        List<OperationResult> result = tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData,
+                "dmi-plugin:nm-1");
 
         assertEquals(2, result.size());
 
@@ -876,33 +897,48 @@ class TiesDbOperationResultsTest {
 
     }
 
-    @Test // Same relationship data is received twice.
-    void testMergeWithSameData() throws MaximumCardinalityViolationException, InvalidFieldInYangDataException {
+    @Test
+    void testMergeWithAttributeNull() throws MaximumCardinalityViolationException, InvalidFieldInYangDataException {
+        List<OperationResult> manyToOneCreateResult = mergeSingleTestEvent(
+                VALIDATE_MANY_TO_ONE_DIR + "ce-create-many-to-one9.json");
 
-        List<OperationResult> manyToOneResult = mergeSingleTestEvent(
-                VALIDATE_MANY_TO_ONE_DIR + "ce-create-many-to-one.json");
-        List<OperationResult> oneToManyResult = mergeSingleTestEvent(
-                VALIDATE_ONE_TO_MANY_DIR + "ce-create-one-to-many.json");
-        List<OperationResult> oneToOneResult = mergeSingleTestEvent(VALIDATE_ONE_TO_ONE_DIR + "ce-create-one-to-one.json");
+        assertEquals("ODU_1", manyToOneCreateResult.get(0).getId());
+        assertEquals("ODU_1", manyToOneCreateResult.get(0).getId());
+        assertEquals("ODUFunction", manyToOneCreateResult.get(0).getType());
+        Map<String, Object> eNodeBAttributes = manyToOneCreateResult.get(0).getAttributes();
+        assertTrue(eNodeBAttributes.containsKey("dUpLMNId"));
+        assertEquals(JSONB.jsonb("{\"mcc\":\"209\",\"mnc\":\"751\"}"), eNodeBAttributes.get("dUpLMNId"));
 
-        assertEquals(3, manyToOneResult.size());
-        assertEquals(3, oneToManyResult.size());
-        assertEquals(3, oneToOneResult.size());
+        assertEquals("NRSectorCarrier_1", manyToOneCreateResult.get(1).getId());
+        assertEquals("NRSectorCarrier", manyToOneCreateResult.get(1).getType());
+        Map<String, Object> lteSectorAttributes = manyToOneCreateResult.get(1).getAttributes();
+        assertTrue(lteSectorAttributes.containsKey("arfcnDL"));
+        assertEquals(64L, lteSectorAttributes.get("arfcnDL"));
 
-        manyToOneResult = mergeSingleTestEvent(VALIDATE_MANY_TO_ONE_DIR + "ce-create-many-to-one.json");
-        oneToManyResult = mergeSingleTestEvent(VALIDATE_ONE_TO_MANY_DIR + "ce-create-one-to-many.json");
-        oneToOneResult = mergeSingleTestEvent(VALIDATE_ONE_TO_ONE_DIR + "ce-create-one-to-one.json");
+        assertEquals("Relation_ManyToOne_1", manyToOneCreateResult.get(2).getId());
+        assertEquals("ODUFUNCTION_PROVIDES_NRSECTORCARRIER", manyToOneCreateResult.get(2).getType());
+        assertEquals("ODU_1", manyToOneCreateResult.get(2).getASide());
+        assertEquals("NRSectorCarrier_1", manyToOneCreateResult.get(2).getBSide());
 
-        // If an entity already exists with the given id and there's no attribute to
-        // merge in the json, then the entity is not updated.
-        // If it's not updated, then it shouldn't be in the OperationResult list
-        assertEquals(2, manyToOneResult.size());
-        assertEquals(1, oneToManyResult.size());
-        assertEquals(1, oneToOneResult.size());
+        CloudEvent cloudEvent = CloudEventTestUtil.getCloudEventFromJsonFile(
+                VALIDATE_MANY_TO_ONE_DIR + "ce-merge-many-to-one-null-attribute.json");
 
-        assertDbContainsOperationResults(manyToOneResult);
-        assertDbContainsOperationResults(oneToManyResult);
-        assertDbContainsOperationResults(oneToOneResult);
+        ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
+        List<OperationResult> mergeResult = assertDoesNotThrow(() -> tiesDbOperations
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "dmi-plugin:nm-1"));
+
+        assertEquals(3, mergeResult.size());
+        assertEquals("ODU_1", mergeResult.get(0).getId());
+        assertEquals("ODUFunction", mergeResult.get(0).getType());
+        eNodeBAttributes = mergeResult.get(0).getAttributes();
+        assertTrue(eNodeBAttributes.containsKey("dUpLMNId"));
+        assertNull(eNodeBAttributes.get("dUpLMNId"));
+
+        assertEquals("NRSectorCarrier_1", mergeResult.get(1).getId());
+        assertEquals("NRSectorCarrier", mergeResult.get(1).getType());
+        lteSectorAttributes = mergeResult.get(1).getAttributes();
+        assertTrue(lteSectorAttributes.containsKey("arfcnDL"));
+        assertNull(lteSectorAttributes.get("arfcnDL"));
     }
 
     @Test // Existing but free endpoints and an existing relationship ID is received.
@@ -1072,16 +1108,17 @@ class TiesDbOperationResultsTest {
     }
 
     @Test
-    void testRelationRelatedMethodsWhenRelationshipIsStoredInSeparateTable() {
+    void testRelationRelatedMethodsWhenRelationshipIsStoredInSeparateTable() throws SchemaRegistryException {
 
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-ran-logical",
-                "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION", "relation_4", "GNBCUUP_1", "CloudNativeApplication_4",
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY", "relation_4", "ANTENNAMODULE_1", "ANTENNACAPABILITY_4",
                 new ArrayList<>());
 
         assertNull(manyToManyRelationship.getStoringSideEntityId());
         assertNull(manyToManyRelationship.getNotStoringSideEntityId());
 
-        RelationType manyToManyRelationType = SchemaRegistry.getRelationTypeByName(manyToManyRelationship.getType());
+        RelationType manyToManyRelationType = SchemaRegistry.getRelationTypeByModuleAndName(manyToManyRelationship
+                .getModule(), manyToManyRelationship.getType());
 
         assertNull(manyToManyRelationType.getNotStoringSideTableName());
         assertNull(manyToManyRelationType.getNotStoringSideEntityIdColumnNameInStoringSideTable());
@@ -1091,29 +1128,52 @@ class TiesDbOperationResultsTest {
     }
 
     @Test
-    void testRelationRelatedMethodsWhenRelationshipIsStoredOnBSide() {
+    void testRelationRelatedMethodsWhenRelationshipIsStoredOnBSide() throws SchemaRegistryException {
 
-        Relationship relationship = new Relationship("o-ran-smo-teiv-ran-logical", "GNBDUFUNCTION_PROVIDES_NRCELLDU",
-                "relation_2", "GNBDUFunction_1", "NRCellDU_5", new ArrayList<>());
+        Relationship relationship = new Relationship("o-ran-smo-teiv-ran", "ODUFUNCTION_PROVIDES_NRCELLDU", "relation_2",
+                "ODUFunction_1", "NRCellDU_5", new ArrayList<>());
 
         assertEquals("NRCellDU_5", relationship.getStoringSideEntityId());
-        assertEquals("GNBDUFunction_1", relationship.getNotStoringSideEntityId());
+        assertEquals("ODUFunction_1", relationship.getNotStoringSideEntityId());
 
-        RelationType relationType = SchemaRegistry.getRelationTypeByName(relationship.getType());
+        RelationType relationType = SchemaRegistry.getRelationTypeByModuleAndName(relationship.getModule(), relationship
+                .getType());
 
-        assertEquals("ties_data.\"o-ran-smo-teiv-ran-logical_GNBDUFunction\"", relationType.getNotStoringSideTableName());
-        assertEquals("REL_FK_provided-by-gnbduFunction", relationType
+        assertEquals("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", relationType.getNotStoringSideTableName());
+        assertEquals("REL_FK_provided-by-oduFunction", relationType
                 .getNotStoringSideEntityIdColumnNameInStoringSideTable());
-        assertEquals("NRCellDU", relationType.getStoringSideEntityType());
-        assertEquals("GNBDUFunction", relationType.getNotStoringSideEntityType());
+        assertEquals("NRCellDU", relationType.getStoringSideEntityType().getName());
+        assertEquals("ODUFunction", relationType.getNotStoringSideEntityType().getName());
 
+    }
+
+    // testing exceptions loadModules() in PostgresSchemaLoader.java for Sonarqube code coverage
+    @Test
+    void testLoadModulesThrowsException() throws JsonProcessingException {
+        ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
+        PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, objectMapper);
+
+        Mockito.when(objectMapper.readValue(anyString(), eq(List.class))).thenThrow(JsonProcessingException.class);
+
+        assertThrows(SchemaLoaderException.class, postgresSchemaLoader::loadModules);
+    }
+
+    // testing exceptions in loadEntityTypes() in PostgresSchemaLoader.java for Sonarqube code coverage
+    @Test
+    void testLoadEntityTypesThrowsException() throws JsonProcessingException {
+        ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
+        PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, objectMapper);
+
+        Mockito.when(objectMapper.readValue(anyString(), eq(List.class))).thenThrow(JsonProcessingException.class);
+
+        assertThrows(SchemaLoaderException.class, postgresSchemaLoader::loadEntityTypes);
     }
 
     private List<OperationResult> mergeSingleTestEvent(String path) throws MaximumCardinalityViolationException,
             InvalidFieldInYangDataException {
         CloudEvent cloudEvent = CloudEventTestUtil.getCloudEventFromJsonFile(path);
         ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
-        return tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData);
+        return tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "dmi-plugin:nm-1");
     }
 
     private void assertDbContainsOperationResults(List<OperationResult> results) {

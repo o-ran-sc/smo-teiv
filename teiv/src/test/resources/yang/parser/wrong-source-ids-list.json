@@ -1,0 +1,20 @@
+{
+    "o-ran-smo-teiv-ran:GNBDUFunction": [
+        {
+            "id": "gnbdu_21",
+            "sourceIds": [
+                "fdn_gnbdu_21",
+                "cmHandle_gnbdu_21",
+                false
+            ],
+            "attributes": {
+                "gNBDUId": 1,
+                "gNBId": 21,
+                "dUpLMNId": {
+                    "mcc": "210",
+                    "mnc": "021"
+                }
+            }
+        }
+    ]
+}

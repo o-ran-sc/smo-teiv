@@ -27,10 +27,12 @@ import org.springframework.context.annotation.Configuration;
 import lombok.Data;
 
 import org.oran.smo.teiv.service.kafka.KafkaAddressSupplier;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Data
 @Slf4j
+@Profile({ "exposure", "ingestion" })
 public class KafkaAdminConfig {
 
     private String bootstrapServer;

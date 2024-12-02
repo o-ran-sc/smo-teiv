@@ -28,7 +28,10 @@ public enum DataType {
     INTEGER,
     BIGINT,
     CONTAINER,
-    GEOGRAPHIC;
+    GEOGRAPHIC,
+    TIMESTAMPTZ,
+    BYTEA,
+    RELIABILITY;
 
     public static DataType fromDbDataType(final String dbDatatype) {
         return switch (dbDatatype.toUpperCase(Locale.US)) {
@@ -38,6 +41,9 @@ public enum DataType {
             case "BIGINT", "INT8" -> BIGINT;
             case "JSONB" -> CONTAINER;
             case "GEOGRAPHY" -> GEOGRAPHIC;
+            case "TIMESTAMPTZ" -> TIMESTAMPTZ;
+            case "BYTEA" -> BYTEA;
+            case "RELIABILITY" -> RELIABILITY;
             default -> throw new IllegalStateException("Unexpected value: " + dbDatatype.toUpperCase(Locale.US));
         };
     }

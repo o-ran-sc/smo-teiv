@@ -1,0 +1,146 @@
+{
+    "84E676149362F50C55FE1E004B98D4891916BBF3": [
+        {
+            "id": "NRCellDU_41"
+        },
+        {
+            "id": "NRCellDU_51",
+            "CD_sourceIds": [
+                "relation_one_to_one_missing_bSide"
+            ]
+        }
+    ],
+    "28C9A375E800E82308EBE7DA2932EF2C0AF13C38": [
+        {
+            "id": "ManagedElement_61",
+            "REL_FK_used-nrCellDu": "NRCellDU_51",
+            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_one_to_one_missing_bSide",
+            "REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4": [
+                "source1",
+                "source2"
+            ]
+        },
+        {
+            "id": "ManagedElement_81",
+            "REL_FK_used-nrCellDu": "NRCellDU_41",
+            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_one_to_one_missing_aSide",
+            "CD_sourceIds": [
+                "relation_one_to_one_missing_aSide"
+            ],
+            "REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4": [
+                "source1",
+                "source2"
+            ]
+        }
+    ],
+    "o-ran-smo-teiv-ran_NRCellDU": [
+        {
+            "id": "NRCellDU_4",
+            "cellLocalId": 470,
+            "REL_FK_provided-by-oduFunction": "ODU_3",
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_one_to_many_aSide_missing",
+            "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU": [
+                "source1",
+                "source2"
+            ]
+        },
+        {
+            "id": "NRCellDU_5",
+            "REL_FK_provided-by-oduFunction": "ODU_2",
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_one_to_many_bSide_missing",
+            "CD_sourceIds": [
+                "relation_one_to_many_bSide_missing"
+            ],
+            "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU": [
+                "source1",
+                "source2"
+            ]
+        }
+    ],
+    "o-ran-smo-teiv-ran_ODUFunction": [
+        {
+            "id": "ODU_2",
+            "dUpLMNId": {
+                "mcc": "111",
+                "mnc": "211"
+            },
+            "gNBDUId": 13,
+            "gNBId": 12345,
+            "gNBIdLength": 5
+        },
+        {
+            "id": "ODU_3",
+            "CD_sourceIds": [
+                "relation_one_to_many_aSide_missing"
+            ]
+        }
+    ],
+    "o-ran-smo-teiv-equipment_AntennaModule": [
+        {
+            "id": "AntennaModule_3",
+            "positionWithinSector": "center3"
+        },
+        {
+            "id": "AntennaModule_123",
+            "CD_sourceIds": [
+                "relation_many_to_many_aSide_missing"
+            ]
+        },
+        {
+            "id": "AntennaModule_11",
+            "CD_sourceIds": [
+                "relation_many_to_many_both_sides_missing"
+            ]
+        }
+    ],
+    "o-ran-smo-teiv-ran_AntennaCapability": [
+        {
+            "id": "AntennaCapability_3",
+            "geranFqBands": {
+                "attribute_1": "1",
+                "attribute_2": "2"
+            }
+        },
+        {
+            "id": "AntennaCapability_123",
+            "CD_sourceIds": [
+                "relation_many_to_many_bSide_missing"
+            ]
+        },
+        {
+            "id": "AntennaCapability_22",
+            "CD_sourceIds": [
+                "relation_many_to_many_both_sides_missing"
+            ]
+        }
+    ],
+    "CFC235E0404703D1E4454647DF8AAE2C193DB402": [
+        {
+            "id": "relation_many_to_many_aSide_missing",
+            "aSide_AntennaModule": "AntennaModule_123",
+            "bSide_AntennaCapability": "AntennaCapability_3",
+            "CD_sourceIds": [
+                "source1",
+                "source2"
+            ]
+        },
+        {
+            "id": "relation_many_to_many_bSide_missing",
+            "aSide_AntennaModule": "AntennaModule_3",
+            "bSide_AntennaCapability": "AntennaCapability_123",
+            "CD_sourceIds": [
+                "source1",
+                "source2"
+            ]
+        },
+        {
+            "id": "relation_many_to_many_both_sides_missing",
+            "aSide_AntennaModule": "AntennaModule_11",
+            "bSide_AntennaCapability": "AntennaCapability_22",
+            "CD_sourceIds": [
+                "source1",
+                "source2"
+            ]
+        }
+    ]
+}

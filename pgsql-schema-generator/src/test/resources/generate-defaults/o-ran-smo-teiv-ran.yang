@@ -26,6 +26,12 @@ module o-ran-smo-teiv-ran {
     which represents the functional capability of the deployed RAN that are
     relevant to rApps use cases.";
 
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -33,26 +39,26 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:domain RAN;
 
-    list GNBDUFunction {
-        description "gNodeB Distributed Unit (gNB-DU).
+    list ODUFunction {
+        description "O-RAN Distributed Unit (O-DU).
 
-            A gNB may consist of a gNB-Centralized Unit (gNB-CU) and a gNB-DU.
-            The CU processes non-real time protocols and services, and the DU
-            processes PHY level protocol and real time services. The gNB-CU and
-            the gNB-DU units are connected via F1 logical interface.
+        The O-DU is an O-RAN NF in the O-RAN Architecture. An O-DU, combined
+        with one or more O-RU(s) connected to it, supports and is fully
+        compatible with the functions of a gNB-DU as defined by 3GPP TS 38.401.
 
-            The following is true for a gNB-DU:
-            Is connected to the gNB-CU-CP through the F1-C interface. Is
-            connected to the gNB-CU-UP through the F1-U interface. One gNB-DU is
-            connected to only one gNB-CU-CP. One gNB-DU can be connected to
-            multiple gNB-CU-UPs under the control of the same gNB-CU-CP.
+        The following is true for a O-DU:
+        Is connected to the O-CU-CP through the F1-C interface. Is
+        connected to the O-CU-UP through the F1-U interface. One O-DU is
+        connected to only one O-CU-CP. One O-DU can be connected to
+        multiple O-CU-UPs under the control of the same O-CU-CP.
 
-            Note: A gNB may consist of a gNB-CU-CP, multiple gNB-CU-UPs and
-            multiple gNB-DUs. gNB-DU is a concrete class that extends the NG-RAN
-            node object. In Topology, you can create, read, update, and delete
-            the gNB-DU object.";
+        Note: A gNB may consist of a O-CU-CP, multiple O-CU-UPs and
+        multiple O-DUs. O-DU is a concrete class that extends the NG-RAN
+        node object. In Topology, you can create, read, update, and delete
+        the gNB-DU object.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -80,52 +86,53 @@ module o-ran-smo-teiv-ran {
 
     list ENodeBFunction {
         description "An Evolved Node B (eNodeB) is the only mandatory node in
-            the radio access network (RAN) of Long-Term Evolution (LTE). The
-            eNodeB is a complex base station that handles radio communications
-            in the cell and carries out radio resource management and handover
-            decisions. Unlike 2/3G wireless RAN, there is no centralized radio
-            network controller in LTE. It is the hardware that is connected to
-            the mobile phone network that communicates directly with mobile
-            handsets (User Equipment), like a base transceiver station (BTS) in
-            GSM networks. This simplifies the architecture and allows lower
-            response times.";
+        the radio access network (RAN) of Long-Term Evolution (LTE). The
+        eNodeB is a complex base station that handles radio communications
+        in the cell and carries out radio resource management and handover
+        decisions. Unlike 2/3G wireless RAN, there is no centralized radio
+        network controller in LTE. It is the hardware that is connected to
+        the mobile phone network that communicates directly with mobile
+        handsets (User Equipment), like a base transceiver station (BTS) in
+        GSM networks. This simplifies the architecture and allows lower
+        response times.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
             leaf eNBId {
                 description "The ENodeB ID that forms part of the Cell Global
-                    Identity, and is also used to identify the node over the S1
-                    interface";
+                Identity, and is also used to identify the node over the S1
+                interface";
                 type int32;
                 default 11;
             }
 
             container eNodeBPlmnId {
                 description "The ENodeB Public Land Mobile Network (PLMN) ID
-                    that forms part of the ENodeB Global ID used to identify the
-                    node over the S1 interface. Note: The value
-                    (MCC=001, MNC=01) indicates that the PLMN is not initiated.
-                    The value can not be used as a valid PLMN Identity.";
+                that forms part of the ENodeB Global ID used to identify the
+                node over the S1 interface. Note: The value
+                (MCC=001, MNC=01) indicates that the PLMN is not initiated.
+                The value can not be used as a valid PLMN Identity.";
 
                 leaf mcc {
                     description "The MCC part of a PLMN identity used in the
-                        radio network.";
+                    radio network.";
                     type int32 {
                         range 0..999;
                     }
                 }
                 leaf mnc {
                     description "The MNC part of a PLMN identity used in the
-                        radio network.";
+                    radio network.";
                     type int32 {
                         range 0..999;
                     }
                 }
                 leaf mncLength {
                     description "The length of the MNC part of a PLMN identity
-                        used in the radio network.";
+                    used in the radio network.";
                     type int32 {
                         range 2..3;
                     }
@@ -136,20 +143,21 @@ module o-ran-smo-teiv-ran {
 
     list LTESectorCarrier {
         description "The LTE Sector Carrier object provides the attributes for
-            defining the logical characteristics of a carrier (cell) in a
-            sector. A sector is a coverage area associated with a base station
-            having its own antennas, radio ports, and control channels. The
-            concept of sectors was developed to improve co-channel interference
-            in cellular systems, and most wireless systems use three sector
-            cells.";
+        defining the logical characteristics of a carrier (cell) in a
+        sector. A sector is a coverage area associated with a base station
+        having its own antennas, radio ports, and control channels. The
+        concept of sectors was developed to improve co-channel interference
+        in cellular systems, and most wireless systems use three sector
+        cells.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
             leaf sectorCarrierType {
                 description "Indicates whether or not the sector carrier
-                    modelled by MO SectorCarrier is a digital sector.";
+                modelled by MO SectorCarrier is a digital sector.";
                 type enumeration {
                     enum normal_sector {
                         value 0;
@@ -182,28 +190,29 @@ module o-ran-smo-teiv-ran {
 
     list AntennaCapability {
         description "This MO serves as a mapping between the cell and the RBS
-            equipment used to provide coverage in a certain geographical area.
-            The MO also controls the maximum output power of the sector.";
+        equipment used to provide coverage in a certain geographical area.
+        The MO also controls the maximum output power of the sector.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
             leaf-list eUtranFqBands {
                 description "List of LTE frequency bands that associated
-                    hardware supports";
+                hardware supports";
                 type string;
             }
 
             leaf-list geranFqBands {
                 description "List of GERAN frequency bands that associated
-                    hardware supports";
+                hardware supports";
                 type string;
             }
 
             leaf-list nRFqBands {
                 description "List of NR frequency bands associated hardware
-                    supports";
+                supports";
                 type string;
             }
         }
@@ -211,7 +220,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER { // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ENodeBFunction type.
+            The bSide of this relationship is an instance of the LteSector type.
+            The ENodeBFunction represents the base station that provides the EUtranCell.
+            An ENodeBFunction instance can provide many LTESectorCarriers.
+            An LTESectorCarrier instance must be provided by an ENodeBFunction.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list provided-lteSectorCarrier {
@@ -230,7 +248,16 @@ module o-ran-smo-teiv-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship LTESECTORCARRIER_USES_ANTENNACAPABILITY { // 0..n to 0..1
 
+        description
+            "The aSide of this relationship is an instance of the LTESectorCarrier type.
+            The bSide of this relationship is an instance of the AntennaCapability type.
+            The LTESectorCarrier represents the carrier that uses the AntennaCapability.
+            An LTESectorCarrier instance can use only one AntennaCapability.
+            An AntennaCapability instance can be used by many LTESectorCarriers.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf used-antennaCapability {

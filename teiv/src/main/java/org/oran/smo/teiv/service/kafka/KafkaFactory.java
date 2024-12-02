@@ -33,6 +33,7 @@ import org.oran.smo.teiv.config.KafkaAdminConfig;
 import org.oran.smo.teiv.config.KafkaConfig;
 import org.oran.smo.teiv.config.KafkaSecurityConfig;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -47,6 +48,7 @@ import org.springframework.util.backoff.FixedBackOff;
 @Component
 @EnableKafka
 @RequiredArgsConstructor
+@Profile({ "exposure", "ingestion" })
 public class KafkaFactory {
 
     private final KafkaConfig kafkaConfig;

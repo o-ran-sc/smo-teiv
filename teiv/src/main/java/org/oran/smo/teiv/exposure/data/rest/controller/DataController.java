@@ -33,6 +33,7 @@ import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.exposure.utils.RequestValidator;
 import org.oran.smo.teiv.utils.TiesConstants;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +51,7 @@ import jakarta.validation.constraints.NotNull;
 @RestController
 @RequestMapping(TiesConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
+@Profile("exposure")
 public class DataController implements EntitiesAndRelationshipsApi {
     public static final String SCOPE_FILTER = "scopeFilter";
     public static final String TARGET_FILTER = "targetFilter";

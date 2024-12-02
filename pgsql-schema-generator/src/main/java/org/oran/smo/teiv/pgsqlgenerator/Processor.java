@@ -32,6 +32,7 @@ import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.EntityGraphGeneratorUml;
 import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.RelationshipGraphGeneratorUml;
 import org.oran.smo.teiv.pgsqlgenerator.schema.consumerdata.ConsumerDataSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.data.DataSchemaGenerator;
+import org.oran.smo.teiv.pgsqlgenerator.schema.groups.GroupsSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.schema.model.ModelSchemaGenerator;
 import org.oran.smo.teiv.pgsqlgenerator.graphgenerator.RelationshipGraphGenerator;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,7 @@ public class Processor {
     private final DataSchemaGenerator dataSchemaGenerator;
     private final ModelSchemaGenerator modelSchemaGenerator;
     private final ConsumerDataSchemaGenerator consumerDataSchemaGenerator;
+    private final GroupsSchemaGenerator groupSchemaGenerator;
     private final RelationshipGraphGenerator relationshipGraphGenerator;
     private final RelationshipGraphGeneratorUml relationshipGraphGeneratorUml;
     private final EntityGraphGenerator entityGraphGenerator;
@@ -75,9 +77,7 @@ public class Processor {
 
         // retrieve info from the model
         List<Entity> entitiesFromModelService = yangModelProcessor.getEntitiesAndAttributesFromYang(pathToImplementing);
-
         List<Module> moduleReferences = storeRelatedModuleRefsFromIncludedModules(entitiesFromModelService, modules);
-
         List<Relationship> relationshipsFromModelService = yangModelProcessor.getRelationshipsFromYang(pathToImplementing);
 
         relationshipGraphGenerator.generate(relationshipsFromModelService, entitiesFromModelService);
@@ -87,6 +87,7 @@ public class Processor {
         dataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
         modelSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
         consumerDataSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
+        groupSchemaGenerator.generate(moduleReferences, entitiesFromModelService, relationshipsFromModelService);
     }
 
     /**

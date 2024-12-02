@@ -49,6 +49,8 @@ class EndToEndTest {
 
     @Autowired
     private Processor processor;
+    @Value("${green-field-installation}")
+    private boolean isGreenFieldInstallation;
     @Value("${test-result.data}")
     private String expectedDataSql;
     @Value("${schema.data.output}")
@@ -61,6 +63,14 @@ class EndToEndTest {
     private String expectedConsumerDataSql;
     @Value("${schema.consumer-data.output}")
     private String actualConsumerDataSql;
+    @Value("${test-result.groups}")
+    private String expectedGroupSql;
+    @Value("${schema.groups.output}")
+    private String actualGroupSql;
+    @Value("${custom-query-execution}")
+    private boolean isCustomQueryExecutionEnabled;
+    @Value("${schema.data.custom-sql-script}")
+    private String customSqlScripts;
     @Value("${graphs.output}")
     private String graphOutput;
 
@@ -73,12 +83,16 @@ class EndToEndTest {
         File generatedDataSql = new File(actualDataSql);
         File generatedModelSql = new File(actualModelSql);
         File generatedConsumerDataSql = new File(actualConsumerDataSql);
+        File generatedGroupSql = new File(actualGroupSql);
+        File customSqlScript = new File(customSqlScripts);
         File generatedGraphs = new File(graphOutput);
 
         //then
         Assertions.assertTrue(generatedDataSql.exists());
         Assertions.assertTrue(generatedModelSql.exists());
         Assertions.assertTrue(generatedConsumerDataSql.exists());
+        Assertions.assertTrue(generatedGroupSql.exists());
+        Assertions.assertTrue(customSqlScript.exists());
         Assertions.assertTrue(generatedGraphs.exists() && generatedGraphs.isDirectory() && generatedGraphs
                 .listFiles().length > 0);
     }
@@ -191,7 +205,29 @@ class EndToEndTest {
     }
 
     @Test
+    @Order(4)
+    void verifyGeneratedConsumerDataSqlFileTest() {
+        //when
+        Set<String> expectedSqlStatements = TestHelper.readFile(expectedConsumerDataSql);
+        Set<String> actualSqlStatements = TestHelper.readFile(actualConsumerDataSql);
+        //then
+        Assertions.assertEquals(expectedSqlStatements.size(), actualSqlStatements.size());
+        Assertions.assertEquals(expectedSqlStatements, actualSqlStatements);
+    }
+
+    @Test
     @Order(5)
+    void verifyGeneratedTopologyGroupSqlFileTest() {
+        //when
+        Set<String> expectedSqlStatements = TestHelper.readFile(expectedGroupSql);
+        Set<String> actualSqlStatements = TestHelper.readFile(actualGroupSql);
+        //then
+        Assertions.assertEquals(expectedSqlStatements.size(), actualSqlStatements.size());
+        Assertions.assertEquals(expectedSqlStatements, actualSqlStatements);
+    }
+
+    @Test
+    @Order(6)
     void verifyGeneratedAlterStatementsSchemaTest() {
         //when
         Set<String> expectedSqlStatements = TestHelper.readFile(expectedDataSql);
@@ -212,11 +248,13 @@ class EndToEndTest {
                 "ALTER TABLE") && s.contains("ADD CONSTRAINT")).count());
 
         //then
-        Assertions.assertEquals(0, actualAlterStatements.get("ALTER ADD COLUMN"));
         Assertions.assertEquals(expectedAlterStatements.get("ALTER ADD DEFAULT"), actualAlterStatements.get(
                 "ALTER ADD DEFAULT"));
         Assertions.assertEquals(expectedAlterStatements.get("ALTER ADD CONSTRAINT"), actualAlterStatements.get(
                 "ALTER ADD CONSTRAINT"));
+        if (!isGreenFieldInstallation) {
+            Assertions.assertEquals(17, actualAlterStatements.get("ALTER ADD COLUMN"));
+        }
 
     }
 
@@ -232,7 +270,7 @@ class EndToEndTest {
                             "o-ran-smo-teiv-common-yang-extensions", "ietf-geo-location"))).build());
         mockModuleRefFromYangParser.add(
             Module.builder().name("o-ran-smo-teiv-ran-equipment-to-logical")
-                    .namespace("urn:rdns:o-ran:smo:teiv:ericsson-topologyandinventory-ran-logical-to-equipment")
+                    .namespace("urn:rdns:o-ran:smo:teiv:oran-topologyandinventory-ran-logical-to-equipment")
                     .domain("EQUIPMENT_TO_RAN_LOGICAL")
                     .includedModules(new ArrayList<>(List.of( "o-ran-smo-teiv-common-yang-types",
                     "o-ran-smo-teiv-common-yang-extensions", "o-ran-smo-teiv-ran-logical",
@@ -266,7 +304,7 @@ class EndToEndTest {
                     .namespace("urn:rdns:o-ran:smo:teiv:o-ran-smo-teiv-ran-equipment")
                     .domain("RAN_EQUIPMENT").build(),
             Module.builder().name("o-ran-smo-teiv-ran-equipment-to-logical")
-                    .namespace("urn:rdns:o-ran:smo:teiv:ericsson-topologyandinventory-ran-logical-to-equipment")
+                    .namespace("urn:rdns:o-ran:smo:teiv:oran-topologyandinventory-ran-logical-to-equipment")
                     .domain("EQUIPMENT_TO_RAN_LOGICAL")
                     .includedModules(new ArrayList<>(List.of("o-ran-smo-teiv-ran-logical",
                             "o-ran-smo-teiv-ran-equipment"))).build(),

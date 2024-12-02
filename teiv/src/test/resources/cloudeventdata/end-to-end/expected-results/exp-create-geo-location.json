@@ -1,0 +1,22 @@
+{
+    "o-ran-smo-teiv-equipment_Site": [
+        {
+            "id": "Site1",
+            "name": "geo-location1",
+            "ST_AsText(\"geo-location\")": "POINT(12.78232 56.7455)",
+            "CD_sourceIds": [
+                "urn:3gpp:dn:fdn1",
+                "urn:cmHandle:1234"
+            ]
+        },
+        {
+            "id": "Site2",
+            "name": "geo-location2",
+            "ST_AsText(\"geo-location\")": "POINT Z (12.78232 56.7455 123.1234)",
+            "CD_sourceIds": [
+                "urn:3gpp:dn:fdn2",
+                "urn:cmHandle:2234"
+            ]
+        }
+    ]
+}

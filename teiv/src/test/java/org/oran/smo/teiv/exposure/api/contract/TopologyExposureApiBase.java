@@ -26,66 +26,48 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.oran.smo.teiv.db.TestPostgresqlContainerV1;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.oran.smo.teiv.TopologyApiBase;
+import org.oran.smo.teiv.db.TestPostgresqlContainer;
+import org.oran.smo.teiv.exception.YangException;
+import org.oran.smo.teiv.startup.SchemaCleanUpHandler;
+import org.oran.smo.teiv.utils.yangparser.ExposureYangParser;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
-import org.oran.smo.teiv.startup.SchemaHandler;
+
+import java.util.List;
+
+import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL_SCHEMA;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public abstract class TopologyExposureApiBase {
-    public static TestPostgresqlContainerV1 postgresSQLContainer = TestPostgresqlContainerV1.getInstance();
+@ActiveProfiles({ "test", "exposure" })
+public abstract class TopologyExposureApiBase extends TopologyApiBase {
 
+    // This is required so that "Schema in deleting state" contract test works from 03_postSchemas.groovy
     @MockBean
-    private SchemaHandler schemaHandler;
-
-    @Autowired
-    private ApplicationContext context;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.read.jdbc-url", () -> postgresSQLContainer.getJdbcUrl());
-        registry.add("spring.datasource.read.username", () -> postgresSQLContainer.getUsername());
-        registry.add("spring.datasource.read.password", () -> postgresSQLContainer.getPassword());
-
-        registry.add("spring.datasource.write.jdbc-url", () -> postgresSQLContainer.getJdbcUrl());
-        registry.add("spring.datasource.write.username", () -> postgresSQLContainer.getUsername());
-        registry.add("spring.datasource.write.password", () -> postgresSQLContainer.getPassword());
-    }
+    private SchemaCleanUpHandler schemaCleanUpHandler;
 
     @BeforeAll
-    public static void beforeAll() throws UnsupportedOperationException, SchemaLoaderException {
+    public static void beforeAll() throws SchemaLoaderException, YangException {
         String url = postgresSQLContainer.getJdbcUrl();
         DataSource ds = DataSourceBuilder.create().url(url).username("test").password("test").build();
         DSLContext dslContext = DSL.using(ds, SQLDialect.POSTGRES);
-        TestPostgresqlContainerV1.loadSampleData();
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA, TIES_MODEL_SCHEMA),
+                dslContext);
+        TestPostgresqlContainer.loadModels();
+        TestPostgresqlContainer.loadSampleData();
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
-    }
-
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup((WebApplicationContext) context).addFilters().build();
-
-        RestAssuredMockMvc.mockMvc(mockMvc);
+        ExposureYangParser.loadAndValidateModels();
     }
 }

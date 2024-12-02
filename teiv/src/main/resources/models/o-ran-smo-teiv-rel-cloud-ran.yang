@@ -35,6 +35,11 @@ module o-ran-smo-teiv-rel-cloud-ran {
 
         SPDX-License-Identifier: Apache-2.0";
 
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Relationship_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-02" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -50,6 +55,7 @@ module o-ran-smo-teiv-rel-cloud-ran {
     or-teiv-yext:biDirectionalTopologyRelationship NFDEPLOYMENT_SERVES_ODUFUNCTION { // 0..n to 0..m
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list serviced-oduFunction {
@@ -68,6 +74,7 @@ module o-ran-smo-teiv-rel-cloud-ran {
     or-teiv-yext:biDirectionalTopologyRelationship NFDEPLOYMENT_SERVES_OCUCPFUNCTION { // 0..n to 0..m
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list serviced-ocucpFunction {
@@ -86,6 +93,7 @@ module o-ran-smo-teiv-rel-cloud-ran {
     or-teiv-yext:biDirectionalTopologyRelationship NFDEPLOYMENT_SERVES_OCUUPFUNCTION { // 0..n to 0..m
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list serviced-ocuupFunction {
@@ -104,6 +112,7 @@ module o-ran-smo-teiv-rel-cloud-ran {
     or-teiv-yext:biDirectionalTopologyRelationship NFDEPLOYMENT_SERVES_NEARRTRICFUNCTION { // 0..n to 0..m
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list serviced-nearRTRICFunction {

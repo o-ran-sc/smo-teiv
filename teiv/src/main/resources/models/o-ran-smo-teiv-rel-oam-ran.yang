@@ -35,9 +35,9 @@ module o-ran-smo-teiv-rel-oam-ran {
 
         SPDX-License-Identifier: Apache-2.0";
 
-    revision "2024-05-24" {
-        description "Initial revision.";
-        or-teiv-yext:label 0.3.0;
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Relationship_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.5.0;
     }
 
     revision "2024-07-15" {
@@ -45,11 +45,25 @@ module o-ran-smo-teiv-rel-oam-ran {
         or-teiv-yext:label 0.4.0;
     }
 
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
     or-teiv-yext:domain REL_OAM_RAN;
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_ODUFUNCTION {    // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ManagedElement type.
+            The bSide of this relationship is an instance of the ODUFunction type.
+            The ManagedElement represents the node that manages the ODUFunction.
+            A ManagedElement instance can manage many ODUFunctions.
+            An ODUFunction instance must be managed by one ManagedElement.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list managed-oduFunction {
@@ -68,7 +82,16 @@ module o-ran-smo-teiv-rel-oam-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_OCUCPFUNCTION {    // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ManagedElement type.
+            The bSide of this relationship is an instance of the OCUCPFunction type.
+            The ManagedElement represents the node that manages the OCUCPFunction.
+            A ManagedElement instance can manage many OCUCPFunctions.
+            An OCUCPFunction instance must be managed by one ManagedElement.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list managed-ocucpFunction {
@@ -87,7 +110,16 @@ module o-ran-smo-teiv-rel-oam-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_OCUUPFUNCTION {    // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ManagedElement type.
+            The bSide of this relationship is an instance of the OCUUPFunction type.
+            The ManagedElement represents the node that manages the OCUUPFunction.
+            A ManagedElement instance can manage many OCUUPFunctions.
+            An OCUUPFunction instance must be managed by one ManagedElement.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list managed-ocuupFunction {
@@ -106,7 +138,16 @@ module o-ran-smo-teiv-rel-oam-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_ORUFUNCTION {    // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ManagedElement type.
+            The bSide of this relationship is an instance of the ORUFunction type.
+            The ManagedElement represents the node that manages the ORUFunction.
+            A ManagedElement instance can manage many ORUFunction.
+            An ORUFunction instance must be managed by one ManagedElement.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list managed-oruFunction {
@@ -125,7 +166,16 @@ module o-ran-smo-teiv-rel-oam-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENT_MANAGES_NEARRTRICFUNCTION {    // 1 to 0..n
 
+        description
+            "The aSide of this relationship is an instance of the ManagedElement type.
+            The bSide of this relationship is an instance of the NearRTRICFunction type.
+            The ManagedElement represents the node that manages the NearRTRICFunction.
+            A ManagedElement instance can manage many NearRTRICFunction.
+            An NearRTRICFunction instance must be managed by one ManagedElement.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         leaf-list managed-nearRTRICFunction {

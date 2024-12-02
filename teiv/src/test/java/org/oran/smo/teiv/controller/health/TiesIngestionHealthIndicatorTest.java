@@ -37,6 +37,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
@@ -44,8 +45,9 @@ import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.startup.SchemaHandler;
 
 @AutoConfigureMockMvc
-@SpringBootTest(properties = { "spring.profiles.active=test,ingestion", "management.endpoint.health.probes.enabled=true",
+@SpringBootTest(properties = { "management.endpoint.health.probes.enabled=true",
         "management.endpoint.health.group.readiness.include=readinessState,tiesIngestion" })
+@ActiveProfiles({ "test", "ingestion" })
 class TiesIngestionHealthIndicatorTest {
     private final String readinessProbePath = "/actuator/health/readiness";
     private final String livenessProbePath = "/actuator/health/liveness";
@@ -97,8 +99,7 @@ class TiesIngestionHealthIndicatorTest {
 
     @Test
     void downKafkaUnavailable() throws Exception {
-        SchemaHandler schemaHandlerSpy = Mockito.spy(new SchemaHandler(postgresSchemaLoader, healthStatus, modelRepository,
-                schemaCleanUpService));
+        SchemaHandler schemaHandlerSpy = Mockito.spy(new SchemaHandler(postgresSchemaLoader, healthStatus));
         schemaHandlerSpy.initializeSchema();
         assertTrue(healthStatus.isSchemaInitialized());
         doReturn(false).when(spiedDependentServiceAvailabilityKafka).checkService();

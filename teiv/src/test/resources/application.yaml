@@ -59,6 +59,7 @@ logging.level.state.change: "ERROR"
 spring.datasource.read.maximum-pool-size: 2
 spring.datasource.write.maximum-pool-size: 2
 spring.caching.consumer-data-ttl-ms: 60000
+spring.freemarker.check-template-location: false
 
 consumer-data.batch-size: 50
 
@@ -98,3 +99,12 @@ database:
     deadlock:
       retry-attempts: 3
       retry-backoff-ms: 200
+
+groups:
+  static:
+    provided-members-ids:
+      max-limit: 15
+      insert-max-limit: 10
+
+yang-data-validation:
+  ingestion-events: false

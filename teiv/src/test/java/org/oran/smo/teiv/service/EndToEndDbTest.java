@@ -25,10 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TiesTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
+import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_HOST;
+import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_PORT;
 
 import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +55,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.oran.smo.teiv.CustomMetrics;
@@ -62,6 +67,7 @@ import org.oran.smo.teiv.service.kafka.KafkaTopicService;
 import org.oran.smo.teiv.startup.AppInit;
 import org.oran.smo.teiv.utils.CloudEventTestUtil;
 import org.oran.smo.teiv.utils.EndToEndExpectedResults;
+import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -73,16 +79,22 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestExecutionListeners;
 
 @EmbeddedKafka
-@SpringBootTest(properties = {
-        "kafka.server.bootstrap-server-host:#{environment.getProperty(\"spring.embedded.kafka.brokers\").split(\":\")[0]}",
-        "kafka.server.bootstrap-server-port:#{environment.getProperty(\"spring.embedded.kafka.brokers\").split(\":\")[1]}",
-        "kafka.availability.retryIntervalMs:10", "kafka.topic.replicas:1",
-        "kafka.topology-ingestion.consumer.concurrency:2" })
 @ActiveProfiles({ "test", "ingestion" })
+@SpringBootTest(properties = { SPRING_BOOT_SERVER_HOST, SPRING_BOOT_SERVER_PORT, KAFKA_RETRY_INTERVAL_10_MS,
+        "kafka.topic.replicas:1", "kafka.topology-ingestion.consumer.concurrency:2", "data-catalog.enabled:true" })
+@TestExecutionListeners(listeners = KafkaTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class EndToEndDbTest {
     private static TestPostgresqlContainer postgresqlContainer = TestPostgresqlContainer.getInstance();
+
+    private AppInit appInit;
+
+    static Producer<String, CloudEvent> producer;
+
+    private static final String TEST_EVENT_FOLDER = "src/test/resources/cloudeventdata/end-to-end/";
+    private static final String EXPECTED_RESULTS_FOLDER = "src/test/resources/cloudeventdata/end-to-end/expected-results/";
 
     @Autowired
     private DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka;
@@ -99,8 +111,6 @@ public class EndToEndDbTest {
     @Autowired
     private CustomMetrics customMetrics;
 
-    private AppInit appInit;
-
     @Autowired
     private KafkaConfig kafkaConfig;
 
@@ -109,11 +119,6 @@ public class EndToEndDbTest {
 
     @Autowired
     private DSLContext writeDataDslContext;
-
-    static Producer<String, CloudEvent> producer;
-
-    private static final String TEST_EVENT_FOLDER = "src/test/resources/cloudeventdata/end-to-end/";
-    private static final String EXPECTED_RESULTS_FOLDER = "src/test/resources/cloudeventdata/end-to-end/expected-results/";
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -125,10 +130,15 @@ public class EndToEndDbTest {
         registry.add("spring.datasource.write.password", () -> postgresqlContainer.getPassword());
     }
 
+    @BeforeAll
+    static void beforeAll() {
+        TestPostgresqlContainer.loadData();
+        TestPostgresqlContainer.loadIngestionTestData();
+    }
+
     @BeforeEach
-    void setUp() {
-        writeDataDslContext.meta().filterSchemas(s -> s.getName().equals(TIES_DATA_SCHEMA)).getTables().forEach(
-                t -> writeDataDslContext.truncate(t).cascade().execute());
+    void setupEach() {
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA), writeDataDslContext);
         appInit = new AppInit(dependentServiceAvailabilityKafka, kafkaTopicService, listenerStarter);
         appInit.startUpHandler();
         producer = new DefaultKafkaProducerFactory<>(new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker)),
@@ -146,6 +156,8 @@ public class EndToEndDbTest {
         final String CREATE_ONE_TO_ONE_PATH = TEST_EVENT_FOLDER + "ce-create-one-to-one.json";
         final String CREATE_MANY_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-create-many-to-many.json";
         final String CREATE_SECOND_CASE_PATH = TEST_EVENT_FOLDER + "ce-create-second-case.json";
+        final String CREATE_INFERRED_ENTITIES = TEST_EVENT_FOLDER + "ce-create-inferred.json";
+        final String CREATE_GEOLOCATION_PATH = TEST_EVENT_FOLDER + "ce-create-geo-location.json";
         final String MERGE_ONE_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-merge-one-to-many.json";
         final String DELETE_MANY_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-delete-many-to-many.json";
         final String DELETE_ONE_TO_ONE_PATH = TEST_EVENT_FOLDER + "ce-delete-one-to-one.json";
@@ -154,6 +166,8 @@ public class EndToEndDbTest {
         final String EXP_CREATE_ONE_TO_ONE_PATH = EXPECTED_RESULTS_FOLDER + "exp-create-one-to-one.json";
         final String EXP_CREATE_MANY_TO_MANY_PATH = EXPECTED_RESULTS_FOLDER + "exp-create-many-to-many.json";
         final String EXP_CREATE_SECOND_CASE_PATH = EXPECTED_RESULTS_FOLDER + "exp-create-second-case.json";
+        final String EXP_CREATE_INFERRED_ENTITIES = EXPECTED_RESULTS_FOLDER + "exp-create-inferred.json";
+        final String EXP_CREATE_GEOLOCATION_PATH = EXPECTED_RESULTS_FOLDER + "exp-create-geo-location.json";
         final String EXP_MERGE_ONE_TO_MANY_PATH = EXPECTED_RESULTS_FOLDER + "exp-merge-one-to-many.json";
         final String EXP_DELETE_ONE_TO_ONE_PATH = EXPECTED_RESULTS_FOLDER + "exp-delete-one-to-one.json";
         final String NOT_EXP_DELETE_ONE_TO_ONE_PATH = EXPECTED_RESULTS_FOLDER + "not-exp-delete-one-to-one.json";
@@ -162,55 +176,76 @@ public class EndToEndDbTest {
 
         validateReceivedCloudEventMetrics(0, 0, 0, 0);
         sendEventFromFile(CREATE_ONE_TO_ONE_PATH);
-        validateWithTimeout(999999, () -> {
+        validateWithTimeout(20, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_ONE_TO_ONE_PATH);
             assertDbContainsExpectedValues(expected);
             validateReceivedCloudEventMetrics(1, 0, 0, 0);
         });
 
         sendEventFromFile(CREATE_MANY_TO_MANY_PATH);
-        validateWithTimeout(20, () -> {
+        validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_MANY_TO_MANY_PATH);
             assertDbContainsExpectedValues(expected);
             validateReceivedCloudEventMetrics(2, 0, 0, 0);
         });
 
-        sendEventFromFile(MERGE_ONE_TO_MANY_PATH);
-
+        sendEventFromFile(CREATE_GEOLOCATION_PATH);
         validateWithTimeout(20, () -> {
-            EndToEndExpectedResults expected = getExpectedResults(EXP_MERGE_ONE_TO_MANY_PATH);
+            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_GEOLOCATION_PATH);
             assertDbContainsExpectedValues(expected);
-            validateReceivedCloudEventMetrics(2, 1, 0, 0);
+            validateReceivedCloudEventMetrics(3, 0, 0, 0);
         });
 
-        sendEventFromFile(CREATE_SECOND_CASE_PATH);
-        validateWithTimeout(20, () -> {
-            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_SECOND_CASE_PATH);
+        sendEventFromFile(MERGE_ONE_TO_MANY_PATH);
+
+        validateWithTimeout(15, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_MERGE_ONE_TO_MANY_PATH);
             assertDbContainsExpectedValues(expected);
             validateReceivedCloudEventMetrics(3, 1, 0, 0);
         });
 
-        sendEventFromFile(DELETE_MANY_TO_MANY_PATH);
+        sendEventFromFile(CREATE_SECOND_CASE_PATH);
+        validateWithTimeout(15, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_SECOND_CASE_PATH);
+            assertDbContainsExpectedValues(expected);
+            validateReceivedCloudEventMetrics(4, 1, 0, 0);
+        });
+
+        sendEventFromFile(CREATE_INFERRED_ENTITIES);
         validateWithTimeout(20, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_INFERRED_ENTITIES);
+            assertDbContainsExpectedValues(expected);
+            validateReceivedCloudEventMetrics(5, 1, 0, 0);
+        });
+
+        sendEventFromFile(CREATE_GEOLOCATION_PATH);
+        validateWithTimeout(20, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_GEOLOCATION_PATH);
+            assertDbContainsExpectedValues(expected);
+            validateReceivedCloudEventMetrics(6, 1, 0, 0);
+        });
+
+        sendEventFromFile(DELETE_MANY_TO_MANY_PATH);
+        validateWithTimeout(15, () -> {
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_MANY_TO_MANY_PATH);
             assertDbNotContainsExpectedValues(notExpected);
-            validateReceivedCloudEventMetrics(3, 1, 1, 0);
+            validateReceivedCloudEventMetrics(6, 1, 1, 0);
         });
 
         sendEventFromFile(DELETE_ONE_TO_ONE_PATH);
-        validateWithTimeout(20, () -> {
+        validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_DELETE_ONE_TO_ONE_PATH);
             assertDbContainsExpectedValues(expected);
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_ONE_TO_ONE_PATH);
             assertDbNotContainsExpectedValues(notExpected);
-            validateReceivedCloudEventMetrics(3, 1, 2, 0);
+            validateReceivedCloudEventMetrics(6, 1, 2, 0);
         });
 
         sendEventFromFile(DELETE_CMHANDLE_PATH);
-        validateWithTimeout(20, () -> {
+        validateWithTimeout(15, () -> {
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_CMHANDLE_PATH);
-            assertDbNotContainsExpectedValues(notExpected);
-            validateReceivedCloudEventMetrics(3, 1, 2, 1);
+            assertDbContainsExpectedValues(notExpected);
+            validateReceivedCloudEventMetrics(6, 1, 2, 1);
         });
     }
 
@@ -272,25 +307,46 @@ public class EndToEndDbTest {
 
     private void assertDbContainsExpectedValues(EndToEndExpectedResults expectedResults) {
         expectedResults.getTables().forEach(tableName -> expectedResults.getTableData(tableName).forEach(
-                attributes -> assertDatabaseContainsValues(tableName, attributes)));
+                expectedAttributes -> assertDatabaseContainsValues(tableName, expectedAttributes)));
     }
 
     private void assertDbNotContainsExpectedValues(EndToEndExpectedResults expectedResults) {
-        expectedResults.getTables().forEach(tableName -> expectedResults.getTableEntryIds(tableName).forEach(
-                ids -> assertDatabaseDoesNotContainRecord(tableName, ids)));
+        expectedResults.getTables().forEach(tableName -> {
+            expectedResults.getTableEntryIds(tableName).forEach(ids -> assertDatabaseDoesNotContainRecord(tableName, ids));
+        });
     }
 
     private void assertDatabaseContainsValues(final String table, final Map<String, Object> attributes) {
         Result<Record> results = TiesDbServiceContainerizedTest.selectAllRowsFromTable(writeDataDslContext,
                 "ties_data.\"" + table + "\"");
-        boolean containsExpectedData = results.stream().anyMatch(row -> attributes.entrySet().stream().allMatch(attr -> {
-            if (attr.getValue() != null) {
-                return Objects.equals(attr.getValue().toString(), row.get(attr.getKey()).toString());
-            }
-            return row.get(attr.getKey()) == null;
-        }));
-        assertTrue(containsExpectedData, String.format(
-                "Database table \"%s\" does not contain expected data, but it should.", table));
+        boolean containsExpectedData = results.stream().anyMatch(row -> attributes.entrySet().stream().allMatch(
+                expectedField -> {
+                    if (expectedField.getValue() != null) {
+                        if (row.get(expectedField.getKey()) == null) {
+                            return false;
+                        }
+                        if (row.get(expectedField.getKey()) instanceof byte[]) {
+                            String hashString = bytesToHex((byte[]) Objects.requireNonNull(row.get(expectedField
+                                    .getKey())));
+                            return Objects.equals(expectedField.getValue().toString(), hashString);
+                        }
+                        return Objects.equals(expectedField.getValue().toString(), row.get(expectedField.getKey())
+                                .toString());
+                    }
+                    return row.get(expectedField.getKey()) == null;
+
+                }));
+        assertTrue(containsExpectedData, getAsserDbValuesFailureMessage(table, attributes, results));
+    }
+
+    private String bytesToHex(byte[] hashBytes) {
+        return Base64.getEncoder().encodeToString(hashBytes);
+    }
+
+    private String getAsserDbValuesFailureMessage(String table, Map<String, Object> attributes, Result<Record> results) {
+        return String.format(
+                "Database table \"%s\" does not contain expected data, but it should.\nExpected row:\n" + attributes + "\nActual data (all rows):\n" + results
+                        .formatCSV(), table);
     }
 
     private void assertDatabaseDoesNotContainRecord(final String table, final String id) {

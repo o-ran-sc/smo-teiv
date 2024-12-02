@@ -42,6 +42,7 @@ import org.oran.smo.teiv.schema.DataType;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.Persistable;
 import org.oran.smo.teiv.schema.RelationType;
+import org.oran.smo.teiv.schema.Reliability;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ import java.util.List;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.TargetObject;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,8 +62,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 import static org.oran.smo.teiv.schema.DataType.BIGINT;
 import static org.oran.smo.teiv.schema.DataType.DECIMAL;
@@ -583,7 +586,7 @@ public class BasePathRefinement {
             }
             case RELATION -> {
                 RelationType relationType = SchemaRegistry.getRelationTypeByName(topologyObject);
-                List<String> notMatchingParams2 = params.stream().filter(a -> !relationType.getAttributes().containsKey(a))
+                List<String> notMatchingParams2 = params.stream().filter(a -> !relationType.getAttributeNames().contains(a))
                         .toList();
                 if (!notMatchingParams2.isEmpty()) {
                     throw TiesPathException.columnNamesError(topologyObject, notMatchingParams2);
@@ -627,6 +630,9 @@ public class BasePathRefinement {
             case DECORATORS:
                 validateDecoratorsParameter(so);
                 break;
+            case METADATA:
+                validateMetadataParameter(so);
+                break;
             default:
                 break;
         }
@@ -665,6 +671,19 @@ public class BasePathRefinement {
         so.setDataType(DataType.PRIMITIVE);
     }
 
+    private void validateMetadataParameter(final ScopeObject so) {
+        if (so.getLeaf() != null && so.getLeaf().equals("reliabilityIndicator")) {
+            if (so.getResolverDataType().equals(ResolverDataType.STRING)) {
+                validateReliabilityIndicator(so.getParameter());
+            } else {
+                throw TiesPathException.grammarError("Invalid data type provided for scopeFilter");
+            }
+        } else {
+            throw TiesPathException.invalidMetadaFilter(so.getLeaf());
+        }
+        so.setDataType(DataType.PRIMITIVE);
+    }
+
     private void validateClassifiersParameter(final ScopeObject so) {
         if (so.getResolverDataType().equals(ResolverDataType.INTEGER)) {
             throw TiesPathException.grammarError("Invalid data type provided for scopeFilter");
@@ -677,7 +696,7 @@ public class BasePathRefinement {
     private void validateDecoratorsParameter(final ScopeObject so) {
         Object value = null;
         if (so.getResolverDataType().equals(ResolverDataType.INTEGER)) {
-            so.setDataType(BIGINT);
+            so.setDataType(DataType.BIGINT);
             value = Integer.valueOf(so.getParameter());
         } else {
             so.setDataType(DataType.PRIMITIVE);
@@ -883,5 +902,13 @@ public class BasePathRefinement {
         return new ScopeLogicalBlock(ScopeObject.builder(criteria.getTargets().get(0).getTopologyObject())
                 .topologyObjectType(TopologyObjectType.RELATION).queryFunction(QueryFunction.NOT_NULL).container(
                         ContainerType.ID).resolverDataType(ResolverDataType.STRING).dataType(PRIMITIVE).build());
+    }
+
+    private boolean validateReliabilityIndicator(String param) {
+        try {
+            return Reliability.valueOf(param) != null;
+        } catch (IllegalArgumentException e) {
+            throw TiesPathException.grammarError("Invalid parameter type provided for scopeFilter");
+        }
     }
 }

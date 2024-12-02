@@ -39,6 +39,7 @@ import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.classifiers.api.ClassifiersService;
 import org.oran.smo.teiv.utils.TiesConstants;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(TiesConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
+@Profile("exposure")
 public class ClassifiersRestController implements ClassifiersApi {
 
     private final ClassifiersService classifiersService;

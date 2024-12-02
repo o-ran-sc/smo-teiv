@@ -21,6 +21,7 @@
 package org.oran.smo.teiv.exposure.spi;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -73,14 +74,6 @@ public interface ModelRepository {
     String getModuleContentByName(final String name);
 
     /**
-     * Creates module.
-     *
-     * @param module
-     *     - module to create
-     */
-    void createModule(Module module);
-
-    /**
      * Updates module status.
      *
      * @param name
@@ -97,5 +90,17 @@ public interface ModelRepository {
      *     - name of the module
      */
     void deleteModuleByName(final String name);
+
+    /**
+     * Creates module and store classifiers and decorators.
+     *
+     * @param module
+     *     - module to create
+     * @param classifiers
+     *     - list of classifiers
+     * @param decorators
+     *     - Map of decorators
+     */
+    void createConsumerDataModule(Module module, final List<String> classifiers, final Map<String, String> decorators);
 
 }

@@ -25,11 +25,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
+import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.sql.DataSource;
@@ -44,9 +46,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 
 import org.oran.smo.teiv.db.TestPostgresqlContainer;
@@ -57,21 +58,16 @@ import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.schema.SchemaRegistry;
-import org.oran.smo.teiv.startup.SchemaHandler;
 
 @Configuration
-@SpringBootTest
 class DataRepositoryImplGETRequestsContainerizedTest {
-    public static TestPostgresqlContainer postgreSQLContainer = TestPostgresqlContainer.getInstance();
+    private static TestPostgresqlContainer postgreSQLContainer = TestPostgresqlContainer.getInstance();
     private static DataRepositoryImpl underTest;
     private static ModelRepository modelRepository;
     private static BasePathRefinement basePathRefinement;
     private static DSLContext readWriteDataDslContext;
     private static DSLContext readDataDslContext;
     private static DSLContext writeDataDslContext;
-
-    @MockBean
-    private SchemaHandler schemaHandler;
 
     @BeforeAll
     public static void beforeAll() throws UnsupportedOperationException, SchemaLoaderException {
@@ -83,13 +79,11 @@ class DataRepositoryImplGETRequestsContainerizedTest {
         modelRepository = new ModelRepositoryImpl(readDataDslContext, readWriteDataDslContext, writeDataDslContext);
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(readDataDslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
-        TestPostgresqlContainer.loadSampleData();
     }
 
     @BeforeEach
     public void deleteAll() {
-        writeDataDslContext.meta().filterSchemas(s -> s.getName().equals(TIES_DATA_SCHEMA)).getTables().forEach(
-                t -> writeDataDslContext.truncate(t).cascade().execute());
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA), writeDataDslContext);
         TestPostgresqlContainer.loadSampleData();
     }
 
@@ -101,11 +95,9 @@ class DataRepositoryImplGETRequestsContainerizedTest {
         Assertions.assertFalse(schemaByName.isPresent());
 
         Module schema = Module.builder().name(moduleName).namespace("new-namespace").domain("NEW_DOMAIN").content(
-                "yang content {} \n\n \t\t\t;").ownerAppId("APP").status(ModuleStatus.IN_USAGE).revision("2024-07-15")
+                "yang content {} \n\n \t\t\t;").ownerAppId("APP").revision("2024-07-15").status(ModuleStatus.IN_USAGE)
                 .build();
-
-        modelRepository.createModule(schema);
-
+        modelRepository.createConsumerDataModule(schema, List.of(), Map.of());
         schemaByName = modelRepository.getConsumerModuleByName(moduleName);
         Assertions.assertTrue(schemaByName.isPresent());
 
@@ -139,43 +131,49 @@ class DataRepositoryImplGETRequestsContainerizedTest {
     }
 
     @Test
-    void getRelationshipIdsForDecoratorDeletionTest() {
+    void getRelationshipIdsForDecoratorDeletionTest() throws SchemaRegistryException {
         Assertions.assertEquals(Collections.singletonList(
-                "urn:base64:R05CQ1VVUEZ1bmN0aW9uOkJGRUVBQzJDRTYwMjczQ0IwQTc4MzE5Q0MyMDFBN0ZFOlJFQUxJU0VEX0JZOkNsb3VkTmF0aXZlQXBwbGljYXRpb246QUQ0MkQ5MDQ5N0U5M0QyNzYyMTVERjZEM0I4OTlFMTc="),
-                underTest.getRelationshipIdsForDecoratorDeletion(SchemaRegistry.getRelationTypeByName(
-                        "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION"), Set.of("gnbcucp-gnbcuup-model:metadata")));
+                "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65"),
+                underTest.getRelationshipIdsForDecoratorDeletion(SchemaRegistry.getRelationTypeByModuleAndName(
+                        "o-ran-smo-teiv-rel-equipment-ran", "ANTENNAMODULE_SERVES_ANTENNACAPABILITY"), Set.of(
+                                "ocucp-ocuup-model:metadata")));
 
         Assertions.assertEquals(Collections.singletonList(
-                "urn:base64:TWFuYWdlZEVsZW1lbnQ6RTY0MzcxQ0Q0RDEyRUQwQ0VEMjAwREQzQTc1OTE3ODQ6TUFOQUdFUzpHTkJDVVVQRnVuY3Rpb246QkZFRUFDMkNFNjAyNzNDQjBBNzgzMTlDQzIwMUE3RkU="),
-                underTest.getRelationshipIdsForDecoratorDeletion(SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION"), Set.of("gnbcucp-gnbcuup-model:metadata")));
+                "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A"),
+                underTest.getRelationshipIdsForDecoratorDeletion(SchemaRegistry.getRelationTypeByModuleAndName(
+                        "o-ran-smo-teiv-rel-oam-ran", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"), Set.of(
+                                "ocucp-ocuup-model:metadata")));
     }
 
     @Test
-    void getRelationshipIdsForClassifierDeletionTest() {
+    void getRelationshipIdsForClassifierDeletionTest() throws SchemaRegistryException {
         Assertions.assertEquals(Collections.singletonList(
-                "urn:base64:R05CQ1VVUEZ1bmN0aW9uOkJGRUVBQzJDRTYwMjczQ0IwQTc4MzE5Q0MyMDFBN0ZFOlJFQUxJU0VEX0JZOkNsb3VkTmF0aXZlQXBwbGljYXRpb246QUQ0MkQ5MDQ5N0U5M0QyNzYyMTVERjZEM0I4OTlFMTc="),
-                underTest.getRelationshipIdsForClassifierDeletion(SchemaRegistry.getRelationTypeByName(
-                        "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION"), Set.of("gnbcucp-gnbcuup-model:Weekend")));
+                "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65"),
+                underTest.getRelationshipIdsForClassifierDeletion(SchemaRegistry.getRelationTypeByModuleAndName(
+                        "o-ran-smo-teiv-rel-equipment-ran", "ANTENNAMODULE_SERVES_ANTENNACAPABILITY"), Set.of(
+                                "ocucp-ocuup-model:Weekend")));
 
         Assertions.assertEquals(Collections.singletonList(
-                "urn:base64:TWFuYWdlZEVsZW1lbnQ6RTY0MzcxQ0Q0RDEyRUQwQ0VEMjAwREQzQTc1OTE3ODQ6TUFOQUdFUzpHTkJDVVVQRnVuY3Rpb246QkZFRUFDMkNFNjAyNzNDQjBBNzgzMTlDQzIwMUE3RkU="),
-                underTest.getRelationshipIdsForClassifierDeletion(SchemaRegistry.getRelationTypeByName(
-                        "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION"), Set.of("gnbcucp-gnbcuup-model:Weekend")));
+                "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A"),
+                underTest.getRelationshipIdsForClassifierDeletion(SchemaRegistry.getRelationTypeByModuleAndName(
+                        "o-ran-smo-teiv-rel-oam-ran", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION"), Set.of(
+                                "ocucp-ocuup-model:Weekend")));
     }
 
     @Test
-    void getEntityIdsForDecoratorDeletionTest() {
-        Assertions.assertEquals(Collections.singletonList("E49D942C16E0364E1E0788138916D70C"), underTest
-                .getEntityIdsForDecoratorDeletion(SchemaRegistry.getEntityTypeByName("NRSectorCarrier"), Set.of(
-                        "gnbcucp-gnbcuup-model:metadata")));
+    void getEntityIdsForDecoratorDeletionTest() throws SchemaRegistryException {
+        Assertions.assertEquals(Collections.singletonList(
+                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=1"),
+                underTest.getEntityIdsForDecoratorDeletion(SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                        "NRSectorCarrier"), Set.of("ocucp-ocuup-model:metadata")));
     }
 
     @Test
-    void getEntityIdsForClassifierDeletionTest() {
-        Assertions.assertEquals(Collections.singletonList("E49D942C16E0364E1E0788138916D70C"), underTest
-                .getEntityIdsForClassifierDeletion(SchemaRegistry.getEntityTypeByName("NRSectorCarrier"), Set.of(
-                        "gnbcucp-gnbcuup-model:Weekend")));
+    void getEntityIdsForClassifierDeletionTest() throws SchemaRegistryException {
+        Assertions.assertEquals(Collections.singletonList(
+                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=1"),
+                underTest.getEntityIdsForClassifierDeletion(SchemaRegistry.getEntityTypeByModuleAndName(
+                        "o-ran-smo-teiv-ran", "NRSectorCarrier"), Set.of("ocucp-ocuup-model:Weekend")));
     }
 
 }

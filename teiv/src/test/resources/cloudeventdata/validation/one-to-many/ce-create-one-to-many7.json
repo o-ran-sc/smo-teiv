@@ -2,18 +2,22 @@
     "specversion": "1.0",
     "id": "a30e63c9-d29e-46ff-b99a-b63ed83f0003",
     "source": "dmi-plugin:nm-1",
-    "type": "ran-logical-topology.create",
+    "type": "topology-inventory-ingestion.create",
     "time": "2023-10-25T13:30:01Z",
     "datacontenttype": "application/json",
-    "dataschema": "https://ties:8080/schemas/v1/r1-topology",
+    "dataschema": "topology-inventory-ingestion:events:create:1.0.0",
     "data": {
         "relationships": [
             {
-                "o-ran-smo-teiv-ran-oam-to-logical:MANAGEDELEMENT_MANAGES_GNBCUCPFUNCTION": [
+                "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_OCUCPFUNCTION": [
                     {
                         "id": "Relation_OneToMany_1",
                         "aSide": "ManagedElement_1",
-                        "bSide": "GNBCUCPFunction_1"
+                        "bSide": "OCUCPFunction_1",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
                     }
                 ]
             }

@@ -21,7 +21,9 @@
 package org.oran.smo.teiv.db;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.jooq.DSLContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
@@ -38,27 +40,44 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
         if (container == null) {
             container = new TestPostgresqlContainer(DockerImageName.parse("postgis/postgis:13-3.4-alpine")
                     .asCompatibleSubstituteFor("postgres"));
-
-            container.withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "pgsqlschema/00_init-oran-smo-teiv-data.sql"), "/pgsqlschema/00_init-oran-smo-teiv-data.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource(
                     "pgsqlschema/01_init-oran-smo-teiv-model.sql"), "/pgsqlschema/01_init-oran-smo-teiv-model.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql"),
-                    "/pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql");
-            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/data.sql"), "/03_data.sql");
-            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/consumer-data-v1.sql"),
-                    "/04_consumer-data.sql");
+                    "pgsqlschema/00_init-oran-smo-teiv-data.sql"), "/pgsqlschema/00_init-oran-smo-teiv-data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource(
+                    "pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql"),
+                    "/pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource(
+                    "pgsqlschema/03_init-oran-smo-teiv-groups.sql"), "/pgsqlschema/03_init-oran-smo-teiv-groups.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/model.sql"),
+                    "/pgsqlschema/model.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/data.sql"),
+                    "/pgsqlschema/data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/ingestion-test-model.sql"),
+                    "/pgsqlschema/ingestion-test-model.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/ingestion-test-data.sql"),
+                    "/pgsqlschema/ingestion-test-data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/consumer-data.sql"),
+                    "/pgsqlschema/consumer-data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/groups.sql"),
+                    "/pgsqlschema/groups.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource(
+                    "pgsqlschema/test-model-for-ingestion-validation.sql"),
+                    "/pgsqlschema/test-model-for-ingestion-validation.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource(
+                    "pgsqlschema/test-data-for-ingestion-validation.sql"),
+                    "/pgsqlschema/test-data-for-ingestion-validation.sql");
             container.setCommand("postgres", "-c", "max_connections=2000");
 
             container.start();
             try {
+                loadModels();
                 container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/00_init-oran-smo-teiv-data.sql",
                         "--set=pguser=\"test\";");
-                container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/01_init-oran-smo-teiv-model.sql",
-                        "--set=pguser=\"test\";");
                 container.execInContainer("psql", "-U", "test", "-w", "-f",
-                        "/pgsqlschema/02_init-oran-smo-teiv-consumer-data-v1.sql", "--set=pguser=\"test\";");
+                        "/pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql", "--set=pguser=\"test\";");
+                container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/03_init-oran-smo-teiv-groups.sql",
+                        "--set=pguser=\"test\";");
             } catch (UnsupportedOperationException | IOException | InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -68,8 +87,64 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
 
     public static void loadSampleData() {
         try {
-            container.execInContainer("psql", "-U", "test", "-w", "-f", "/03_data.sql", "--set=pguser=\"test\";");
-            container.execInContainer("psql", "-U", "test", "-w", "-f", "/04_consumer-data.sql", "--set=pguser=\"test\";");
+            loadData();
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/consumer-data.sql",
+                    "--set=pguser=\"test\";");
+        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static void loadSampleGroupsData() {
+        try {
+            loadSampleData();
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/groups.sql",
+                    "--set=pguser=\"test\";");
+        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static void loadIngestionTestData() {
+        try {
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/ingestion-test-data.sql",
+                    "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/ingestion-test-model.sql",
+                    "--set=pguser=\"test\";");
+        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static void truncateSchemas(List<String> schemas, DSLContext dslContext) {
+        dslContext.meta().filterSchemas(s -> schemas.contains(s.getName())).getTables().forEach(t -> dslContext.truncate(t)
+                .cascade().execute());
+    }
+
+    public static void loadData() {
+        try {
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/data.sql", "--set=pguser=\"test\";");
+        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static void loadModels() {
+        try {
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/01_init-oran-smo-teiv-model.sql",
+                    "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/model.sql", "--set=pguser=\"test\";");
+        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static void loadValidationTestData() {
+        try {
+            container.execInContainer("psql", "-U", "test", "-w", "-f",
+                    "/pgsqlschema/test-data-for-ingestion-validation.sql", "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f",
+                    "/pgsqlschema/test-model-for-ingestion-validation.sql", "--set=pguser=\"test\";");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }

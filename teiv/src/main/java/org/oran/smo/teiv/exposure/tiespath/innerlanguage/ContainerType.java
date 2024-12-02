@@ -35,7 +35,8 @@ public enum ContainerType {
 
     //ToDo Resolver should not treat below two as containers but refinement do so this needs to be fixed
     ASSOCIATION("association", false),
-    RELATION("relation", false);
+    RELATION("relation", false),
+    METADATA("metadata", false);
 
     private final String value;
     private final boolean isParamAllowedInTargetFilter;

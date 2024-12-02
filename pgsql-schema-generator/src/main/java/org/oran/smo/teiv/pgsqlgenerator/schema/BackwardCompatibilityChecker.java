@@ -86,7 +86,7 @@ public class BackwardCompatibilityChecker {
         }
     }
 
-    public void checkForNBCChangesInConsumerDataSchema(String baselineConsumerDataSchema,
+    public void checkForNBCChangesInConsumerAndGroupsSchema(String baselineConsumerDataSchema,
             String skeletonConsumerDataSchema) {
         if (!isGreenFieldInstallation) {
             final List<Table> baselineTables = SchemaParser.extractDataFromBaseline(baselineConsumerDataSchema);

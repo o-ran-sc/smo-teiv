@@ -21,6 +21,7 @@
 package org.oran.smo.teiv.pgsqlgenerator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Value;
 import org.oran.smo.teiv.pgsqlgenerator.schema.Table;
@@ -28,6 +29,7 @@ import lombok.Builder;
 
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CLASSIFIERS;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.DECORATORS;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.ID;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.JSONB;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.SOURCE_IDS;
 
@@ -52,11 +54,18 @@ public class Entity implements Table {
 
     @Override
     public String getColumnsForCopyStatement() {
-        return "(\"storedAt\", \"name\", \"moduleReferenceName\")";
+        return "(\"storedAt\", \"name\", \"moduleReferenceName\", \"attributeNames\")";
     }
 
     @Override
     public String getRecordForCopyStatement() {
-        return this.getStoredAt() + "\t" + this.getEntityName() + "\t" + this.getModuleReferenceName() + "\n";
+        return this.getStoredAt() + "\t" + this.getEntityName() + "\t" + this.getModuleReferenceName() + "\t" + this
+                .getAttributesNames().stream().map(attr -> "\"" + attr + "\"").toList() + "\n";
     }
+
+    public List<String> getAttributesNames() {
+        return this.getAttributes().stream().map(Attribute::getName).filter(name -> !name.equals(ID)).collect(Collectors
+                .toList());
+    }
+
 }

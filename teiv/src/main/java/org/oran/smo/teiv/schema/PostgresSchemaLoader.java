@@ -98,7 +98,7 @@ public class PostgresSchemaLoader extends SchemaLoader {
     }
 
     @Override
-    public void loadEntityTypes() {
+    public void loadEntityTypes() throws SchemaLoaderException {
         log.debug("Start loading entities");
         List<EntityType> entityTypes = new ArrayList<>();
         final String tableName = "table_name";
@@ -110,9 +110,17 @@ public class PostgresSchemaLoader extends SchemaLoader {
         SelectJoinStep<Record> entityInfoRecords = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
                 TIES_MODEL, "entity_info")));
 
-        entityInfoRecords.forEach(entityInfoRecord -> {
+        for (Record entityInfoRecord : entityInfoRecords) {
             String name = (String) entityInfoRecord.get("name");
             final String storedAt = (String) entityInfoRecord.get("storedAt");
+            JSONB attributeNames = (JSONB) entityInfoRecord.get("attributeNames");
+            List<String> attributeNamesList = new ArrayList<>();
+            try {
+                attributeNamesList = objectMapper.readValue(attributeNames.data(), List.class);
+            } catch (IOException e) {
+                log.error("Exception occurred while retrieving attribute name", e);
+                throw new SchemaLoaderException("Unable to load entities please check the logs for more details.", e);
+            }
 
             //load attributes
             Map<String, DataType> fields = new HashMap<>();
@@ -123,9 +131,10 @@ public class PostgresSchemaLoader extends SchemaLoader {
                     });
 
             final EntityType entityType = EntityType.builder().name(name).tableName(storedAt).fields(fields).module(
-                    SchemaRegistry.getModuleByName((String) entityInfoRecord.get("moduleReferenceName"))).build();
+                    SchemaRegistry.getModuleByName((String) entityInfoRecord.get("moduleReferenceName"))).attributeNames(
+                            attributeNamesList).build();
             entityTypes.add(entityType);
-        });
+        }
 
         SchemaRegistry.initializeEntityTypes(entityTypes);
         log.debug("Entities initialized successfully");
@@ -163,7 +172,7 @@ public class PostgresSchemaLoader extends SchemaLoader {
                     .relationshipStorageLocation(RelationshipDataLocation.valueOf((String) entry.get(
                             "relationshipDataLocation"))).connectsSameEntity((Boolean) (entry.get("connectSameEntity")))
                     .tableName((String) entry.get("storedAt")).module(SchemaRegistry.getModuleByName((String) entry.get(
-                            "moduleReferenceName"))).build();
+                            "moduleReferenceName"))).attributeNames(List.of()).build();
             relationTypes.add(relationType);
         }
 

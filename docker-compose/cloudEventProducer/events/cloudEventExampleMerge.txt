@@ -236,134 +236,222 @@ ce_specversion:::1.0,ce_id:::a30e63c9-d29e-46ff-b99a-b63ed83fd237,ce_source:::dm
         {
           "id": "urn:oran:smo:teiv:MANAGEDELEMENT_MANAGES_ODUFUNCTION=1",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRSECTORCARRIER": [
         {
           "id": "urn:oran:smo:teiv:ODUFUNCTION_PROVIDES_NRSECTORCARRIER=1",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=1"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:ODUFUNCTION_PROVIDES_NRSECTORCARRIER=2",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=2"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:ODUFUNCTION_PROVIDES_NRSECTORCARRIER=3",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=3"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=3",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU": [
         {
           "id": "urn:oran:smo:teiv:ODUFUNCTION_PROVIDES_NRCELLDU=1",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=1"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:ODUFUNCTION_PROVIDES_NRCELLDU=2",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=2"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER": [
         {
           "id": "urn:oran:smo:teiv:NRCELLDU_USES_NRSECTORCARRIER=1",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=1"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:NRCELLDU_USES_NRSECTORCARRIER=2",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=2",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=2"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:NRCELLDU_USES_NRSECTORCARRIER=3",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=2",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=3"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=3",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-ran:NRSECTORCARRIER_USES_ANTENNACAPABILITY": [
         {
           "id": "urn:oran:smo:teiv:NRSECTORCARRIER_USES_ANTENNACAPABILITY=1",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=1",
-          "bSide": "urn:oran:smo:teiv:AntennaCapability=1"
+          "bSide": "urn:oran:smo:teiv:AntennaCapability=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:NRSECTORCARRIER_USES_ANTENNACAPABILITY=2",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=2",
-          "bSide": "urn:oran:smo:teiv:AntennaCapability=2"
+          "bSide": "urn:oran:smo:teiv:AntennaCapability=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:NRSECTORCARRIER_USES_ANTENNACAPABILITY=3",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRSectorCarrier=3",
-          "bSide": "urn:oran:smo:teiv:AntennaCapability=2"
+          "bSide": "urn:oran:smo:teiv:AntennaCapability=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY": [
         {
           "id": "urn:oran:smo:teiv:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=1",
           "aSide": "urn:oran:smo:teiv:AntennaModule=1",
-          "bSide": "urn:oran:smo:teiv:AntennaCapability=1"
+          "bSide": "urn:oran:smo:teiv:AntennaCapability=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=2",
           "aSide": "urn:oran:smo:teiv:AntennaModule=2",
-          "bSide": "urn:oran:smo:teiv:AntennaCapability=2"
+          "bSide": "urn:oran:smo:teiv:AntennaCapability=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
         {
           "id": "urn:oran:smo:teiv:ANTENNAMODULE_INSTALLED_AT_SITE=1",
           "aSide": "urn:oran:smo:teiv:AntennaModule=1",
-          "bSide": "urn:oran:smo:teiv:Site=1"
+          "bSide": "urn:oran:smo:teiv:Site=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:ANTENNAMODULE_INSTALLED_AT_SITE=2",
           "aSide": "urn:oran:smo:teiv:AntennaModule=2",
-          "bSide": "urn:oran:smo:teiv:Site=2"
+          "bSide": "urn:oran:smo:teiv:Site=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-ran:SECTOR_GROUPS_NRCELLDU": [
         {
           "id": "urn:oran:smo:teiv:SECTOR_GROUPS_NRCELLDU=1",
           "aSide": "urn:oran:smo:teiv:Sector=1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=1"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         },
         {
           "id": "urn:oran:smo:teiv:SECTOR_GROUPS_NRCELLDU=2",
           "aSide": "urn:oran:smo:teiv:Sector=2",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=2"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1,NRCellDU=2",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-rel-oam-cloud:NFDEPLOYMENT_SERVES_MANAGEDELEMENT": [
         {
           "id": "urn:oran:smo:teiv:NFDEPLOYMENT_SERVES_MANAGEDELEMENT=1",
           "aSide": "urn:oran:smo:teiv:NFDeployment:1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-rel-oam-cloud:MANAGEDELEMENT_DEPLOYED_AS_CLOUDIFIEDNF": [
         {
           "id": "urn:o-ran:smo-teiv-rel-oam-cloud:1",
           "aSide": "urn:3gpp:dn:ManagedElement=NR01",
-          "bSide": "urn:oran:smo:teiv:CloudifiedNF:1"
+          "bSide": "urn:oran:smo:teiv:CloudifiedNF:1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-cloud:CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT": [
         {
           "id": "urn:o-ran:smo-teiv-cloud:1",
           "aSide": "urn:oran:smo:teiv:CloudifiedNF:1",
-          "bSide": "urn:oran:smo:teiv:NFDeployment:1"
+          "bSide": "urn:oran:smo:teiv:NFDeployment:1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ],
       "o-ran-smo-teiv-rel-cloud-ran:NFDEPLOYMENT_SERVES_ODUFUNCTION": [
         {
           "id": "urn:o-ran:smo-teiv-rel-cloud-ran:1",
           "aSide": "urn:oran:smo:teiv:NFDeployment:1",
-          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1"
+          "bSide": "urn:3gpp:dn:ManagedElement=NR01,ODUFunction=1",
+          "sourceIds": [
+            "source1",
+            "source2"
+          ]
         }
       ]
     }

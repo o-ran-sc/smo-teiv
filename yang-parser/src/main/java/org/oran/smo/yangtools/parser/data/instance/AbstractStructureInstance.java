@@ -21,13 +21,17 @@
 package org.oran.smo.yangtools.parser.data.instance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.oran.smo.yangtools.parser.data.dom.YangDataDomNode;
 import org.oran.smo.yangtools.parser.model.statements.AbstractStatement;
+import org.oran.smo.yangtools.parser.util.NamespaceModuleIdentifier;
 
 /**
  * This class represents a structural element, which can be either a true (singleton)
@@ -47,6 +51,8 @@ public abstract class AbstractStructureInstance extends AbstractDataInstance {
      * data).
      */
     private final List<AbstractContentInstance> contentChildren = new ArrayList<>();
+
+    private Set<NamespaceModuleIdentifier> emptyChildLeafListIdentifiers;
 
     /**
      * Constructor for a structure instance that was specified in data.
@@ -77,6 +83,24 @@ public abstract class AbstractStructureInstance extends AbstractDataInstance {
 
     public List<AbstractContentInstance> getContentChildren() {
         return contentChildren;
+    }
+
+    public void setEmptyChildLeafListIdentifiers(final Set<NamespaceModuleIdentifier> val) {
+        this.emptyChildLeafListIdentifiers = val;
+    }
+
+    public void addEmptyChildLeafListIdentifiers(final Set<NamespaceModuleIdentifier> toAdd) {
+        if (toAdd.isEmpty()) {
+            return;
+        }
+        if (emptyChildLeafListIdentifiers == null) {
+            emptyChildLeafListIdentifiers = new HashSet<>();
+        }
+        emptyChildLeafListIdentifiers.addAll(toAdd);
+    }
+
+    public Set<NamespaceModuleIdentifier> getEmptyChildLeafListIdentifiers() {
+        return emptyChildLeafListIdentifiers == null ? Collections.emptySet() : emptyChildLeafListIdentifiers;
     }
 
     /**

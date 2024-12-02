@@ -79,6 +79,81 @@ class ScopeResolverTest {
     }
 
     @Test
+    void resolveScopeWithCoveredByGeoLocationCondition() {
+        ScopeLogicalBlock expected = new ScopeLogicalBlock(ScopeObject.builder("*").container(ContainerType.ATTRIBUTES)
+                .leaf("geo-location").parameter(
+                        "POLYGON (12.3426 45.24568, 13.3426 45.24568, 12.3426 44.24568, 13.3426 44.24568)")
+                .resolverDataType(ResolverDataType.STRING).queryFunction(QueryFunction.COVERED_BY).build());
+
+        final LogicalBlock resolverLB = scopeResolver.resolve(null,
+                "/attributes[coveredBy(@geo-location, 'POLYGON (12.3426 45.24568, 13.3426 45.24568, 12.3426 44.24568, 13.3426 44.24568)')]");
+        Assertions.assertEquals(expected, resolverLB);
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithInteger() {
+        ScopeLogicalBlock expected = new ScopeLogicalBlock(ScopeObject.builder("*").container(ContainerType.ATTRIBUTES)
+                .leaf("geo-location").parameter("'POINT (12.3426 45.24568)', 500").resolverDataType(ResolverDataType.STRING)
+                .queryFunction(QueryFunction.WITHIN_METERS).build());
+
+        final LogicalBlock resolverLB = scopeResolver.resolve(null,
+                "/attributes[withinMeters(@geo-location, 'POINT (12.3426 45.24568)', 500)]");
+        Assertions.assertEquals(expected, resolverLB);
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithDouble() {
+        ScopeLogicalBlock expected = new ScopeLogicalBlock(ScopeObject.builder("*").container(ContainerType.ATTRIBUTES)
+                .leaf("geo-location").parameter("'POINT (12.3426 45.24568)', 500.34e1").resolverDataType(
+                        ResolverDataType.STRING).queryFunction(QueryFunction.WITHIN_METERS).build());
+
+        final LogicalBlock resolverLB = scopeResolver.resolve(null,
+                "/attributes[withinMeters(@geo-location, 'POINT (12.3426 45.24568)', 500.34e1)]");
+        Assertions.assertEquals(expected, resolverLB);
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithDecimal() {
+        ScopeLogicalBlock expected = new ScopeLogicalBlock(ScopeObject.builder("*").container(ContainerType.ATTRIBUTES)
+                .leaf("geo-location").parameter("'POINT (12.3426 45.24568)', 500.34").resolverDataType(
+                        ResolverDataType.STRING).queryFunction(QueryFunction.WITHIN_METERS).build());
+
+        final LogicalBlock resolverLB = scopeResolver.resolve(null,
+                "/attributes[withinMeters(@geo-location, 'POINT (12.3426 45.24568)', 500.34)]");
+        Assertions.assertEquals(expected, resolverLB);
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithInvalidNumber() {
+        assertThrows(TiesPathException.class, () -> scopeResolver.resolve(null,
+                "/attributes[withinMeters(@geo-location, 'POINT (12.3426 45.24568)', 50asd0)]"));
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithInvalidGrammar1() {
+        assertThrows(TiesPathException.class, () -> scopeResolver.resolve(null,
+                "/attributes[withinMeters(@geo-location, 'POINT (12.3426 45.24568)' 500)]"));
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithInvalidGrammar2() {
+        assertThrows(TiesPathException.class, () -> scopeResolver.resolve(null,
+                "/attributes[withinMeters(@geo-location, ,'POINT (12.3426 45.24568)', 500)]"));
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithInvalidGrammar3() {
+        assertThrows(TiesPathException.class, () -> scopeResolver.resolve(null,
+                "/attributes[withinMeters('POINT (12.3426 45.24568)', 500)]"));
+    }
+
+    @Test
+    void resolveScopeWithWithinMetersGeoLocationConditionWithInvalidGrammar4() {
+        assertThrows(TiesPathException.class, () -> scopeResolver.resolve(null,
+                "/attributes[withinMeters('POINT (12.3426 45.24568)', )]"));
+    }
+
+    @Test
     void resolveScopeWithMultipleTokensWithDifferentContainers() {
         ScopeLogicalBlock scopeLogicalBlock1 = new ScopeLogicalBlock(ScopeObject.builder("GNBDUFunction").container(
                 ContainerType.ATTRIBUTES).leaf("gnBId").queryFunction(QueryFunction.EQ).parameter("1").resolverDataType(
@@ -279,6 +354,18 @@ class ScopeResolverTest {
                 "/ManagedElement/attr[contains(@id,'me1')]"));
         assertEquals("Target/Scope filter can only contain Root Object types mentioned in the path parameter", thrown
                 .getDetails());
+    }
+
+    @Test
+    void testAssociation() {
+        ScopeLogicalBlock expected = new ScopeLogicalBlock(ScopeObject.builder("AntennaCapability").container(null)
+                .queryFunction(QueryFunction.CONTAINS).parameter(
+                        "AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A")
+                .resolverDataType(ResolverDataType.STRING).innerContainer(List.of("serving-antennaModule")).leaf("id")
+                .build());
+        final LogicalBlock resolvedScope = scopeResolver.resolve("AntennaCapability",
+                "/serving-antennaModule[contains(@id,'AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A')]");
+        Assertions.assertEquals(expected, resolvedScope);
     }
 
 }

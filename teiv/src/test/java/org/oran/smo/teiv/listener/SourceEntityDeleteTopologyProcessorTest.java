@@ -21,11 +21,11 @@
 package org.oran.smo.teiv.listener;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
@@ -33,33 +33,33 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.oran.smo.teiv.listener.audit.ExecutionStatus;
+import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
+import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.models.OperationResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.oran.smo.teiv.utils.CloudEventTestUtil;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.builder.CloudEventBuilder;
 
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.schema.BidiDbNameMapper;
@@ -67,103 +67,104 @@ import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.service.TiesDbOperations;
 import org.oran.smo.teiv.service.TiesDbService;
-import org.oran.smo.teiv.startup.SchemaHandler;
 
-@SpringBootTest
-@AutoConfigureJson
-@ActiveProfiles({ "test", "ingestion" })
+@ExtendWith(MockitoExtension.class)
 class SourceEntityDeleteTopologyProcessorTest {
 
-    @Autowired
     private SourceEntityDeleteTopologyProcessor sourceEntityDeleteTopologyProcessor;
-    @Autowired
-    CustomMetrics metrics;
-    @MockBean
+
+    @Mock
+    private CloudEventParser cloudEventParser;
+
+    @Mock
+    private CustomMetrics metrics;
+
+    @Mock
     private TiesDbService tiesDbService;
-    @MockBean
+
+    @Mock
     private TiesDbOperations tiesDbOperations;
-    @MockBean
-    private SchemaHandler schemaHandler;
+
+    @Mock
+    private IngestionAuditLogger auditLogger;
+
+    private static final String EVENT_TYPE = "topology-inventory-ingestion.source-entity-delete";
+
+    @BeforeEach
+    void setUp() {
+        sourceEntityDeleteTopologyProcessor = new SourceEntityDeleteTopologyProcessor(tiesDbService, new ObjectMapper(),
+                metrics, tiesDbOperations, auditLogger);
+    }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testSourceEntityDeleteWithInvalidEventData() {
-        //given
+        // given
         try (MockedStatic<SchemaRegistry> mockedSchemaRegistry = Mockito.mockStatic(SchemaRegistry.class)) {
-            CloudEvent event = CloudEventBuilder.v1().withId("test-id").withType("ran-logical.source-entity-delete")
-                    .withSource(URI.create("http://localhost:8080/test-source")).withDataContentType("application/json")
-                    .withDataSchema(URI.create("http://localhost:8080/schema/v1/source-entity-delete")).withData(
-                            "{\"type\":\"cmHandle\",\"invalid\":\"abc\"}".getBytes(StandardCharsets.UTF_8)).build();
-            //when
+            CloudEvent event = CloudEventTestUtil.getCloudEvent(EVENT_TYPE, "{\"type\":\"cmHandle\",\"invalid\":\"abc\"}");
+            // when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
-            //then
+            // then
             mockedSchemaRegistry.verifyNoInteractions();
             verifyNoInteractions(tiesDbService);
+            verify(metrics, times(1)).incrementNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents();
+            verifyNoMoreInteractions(metrics);
 
-            assertEquals(0, metrics.getNumSuccessfullyParsedSourceEntityDeleteCloudEvents().count());
-            assertEquals(1, metrics.getNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getNumSuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getCloudEventSourceEntityDeleteParseTime().count());
-            assertEquals(0, metrics.getCloudEventSourceEntityDeletePersistTime().count());
+            verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
+                    anyString(), anyString());
         }
     }
 
     @Test
     void testSourceEntityDeleteWithUnsupportedEntityType() {
-        //given
+        // given
         try (MockedStatic<SchemaRegistry> mockedSchemaRegistry = Mockito.mockStatic(SchemaRegistry.class)) {
-            CloudEvent event = CloudEventBuilder.v1().withId("test-id").withType("ran-logical.source-entity-delete")
-                    .withSource(URI.create("http://localhost:8080/test-source")).withDataContentType("application/json")
-                    .withDataSchema(URI.create("http://localhost:8080/schema/v1/source-entity-delete")).withData(
-                            "{\"type\":\"unsupported-type\",\"value\":\"abc\"}".getBytes(StandardCharsets.UTF_8)).build();
-            //when
+            CloudEvent event = CloudEventTestUtil.getCloudEvent(EVENT_TYPE,
+                    "{\"type\":\"unsupported-type\",\"value\":\"abc\"}");
+            // when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
-            //then
+            // then
             mockedSchemaRegistry.verifyNoInteractions();
             verifyNoInteractions(tiesDbService);
+            verify(metrics, times(1)).incrementNumReceivedCloudEventNotSupported();
+            verifyNoMoreInteractions(metrics);
+
+            verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
+                    anyString(), anyString());
         }
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testSourceEntityDeleteUponRuntimeExceptionDuringDeletion() {
-        //given
+        // given
         try (MockedStatic<SchemaRegistry> mockedSchemaRegistry = Mockito.mockStatic(SchemaRegistry.class)) {
             EntityType entityType = mock(EntityType.class);
-            CloudEvent event = CloudEventBuilder.v1().withId("test-id").withType("ran-logical.source-entity-delete")
-                    .withSource(URI.create("http://localhost:8080/test-source")).withDataContentType("application/json")
-                    .withDataSchema(URI.create("http://localhost:8080/schema/v1/source-entity-delete")).withData(
-                            "{\"type\":\"cmHandle\",\"value\":\"abc\"}".getBytes(StandardCharsets.UTF_8)).build();
+            CloudEvent event = CloudEventTestUtil.getCloudEvent(EVENT_TYPE, "{\"type\":\"cmHandle\",\"value\":\"abc\"}");
+
             mockedSchemaRegistry.when(SchemaRegistry::getEntityTypes).thenReturn(List.of(entityType));
             doThrow(new RuntimeException()).when(tiesDbService).execute(anyList());
-            //when
+            // when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
-            //then
+            // then
             mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypes, times(1));
             verify(tiesDbService, times(1)).execute(anyList());
 
-            assertEquals(1, metrics.getNumSuccessfullyParsedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getNumSuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
-            assertEquals(1, metrics.getNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
-            assertEquals(1, metrics.getCloudEventSourceEntityDeleteParseTime().count());
-            assertTrue(metrics.getCloudEventSourceEntityDeleteParseTime().totalTime(TimeUnit.NANOSECONDS) > 0);
-            assertEquals(0, metrics.getCloudEventSourceEntityDeletePersistTime().count());
+            verify(metrics, times(1)).incrementNumSuccessfullyParsedSourceEntityDeleteCloudEvents();
+            verify(metrics, times(1)).incrementNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents();
+            verify(metrics, times(1)).recordCloudEventSourceEntityDeleteParseTime(anyLong());
+            verifyNoMoreInteractions(metrics);
+
+            verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
+                    anyString(), any());
         }
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testSourceEntityDelete() throws NoSuchFieldException {
-        //given
+        // given
         try (MockedStatic<SchemaRegistry> mockedSchemaRegistry = Mockito.mockStatic(SchemaRegistry.class)) {
             DSLContext stream = mock(DSLContext.class);
-            CloudEvent event = CloudEventBuilder.v1().withId("test-id").withType("ran-logical.source-entity-delete")
-                    .withSource(URI.create("http://localhost:8080/test-source")).withDataContentType("application/json")
-                    .withDataSchema(URI.create("http://localhost:8080/schema/v1/source-entity-delete")).withData(
-                            "{\"type\":\"cmHandle\",\"value\":\"395221E080CCF0FD1924103B15873814\"}".getBytes(
-                                    StandardCharsets.UTF_8)).build();
+            CloudEvent event = CloudEventTestUtil.getCloudEvent(EVENT_TYPE,
+                    "{\"type\":\"cmHandle\",\"value\":\"395221E080CCF0FD1924103B15873814\"}");
 
             Map<String, String> mockNameMap = new HashMap<>();
             mockNameMap.put("GNBDUFunction", "GNBDUFunction");
@@ -187,20 +188,24 @@ class SourceEntityDeleteTopologyProcessorTest {
                     return null;
                 }
             }).when(tiesDbService).execute(anyList());
-            //when
+            // when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
-            //then
+            // then
             mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypes, times(1));
             verify(tiesDbService, atLeastOnce()).execute(anyList());
             verify(tiesDbOperations, atLeastOnce()).selectByCmHandleFormSourceIds(any(), anyString(), anyString());
             verify(tiesDbOperations, atLeastOnce()).deleteEntity(any(), any(), anyString());
 
-            assertEquals(1, metrics.getNumSuccessfullyParsedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents().count());
-            assertEquals(1, metrics.getNumSuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
-            assertEquals(0, metrics.getNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents().count());
-            assertEquals(1, metrics.getCloudEventSourceEntityDeleteParseTime().count());
-            assertEquals(1, metrics.getCloudEventSourceEntityDeletePersistTime().count());
+            verify(metrics, times(1)).incrementNumSuccessfullyParsedSourceEntityDeleteCloudEvents();
+            verify(metrics, times(1)).incrementNumSuccessfullyPersistedSourceEntityDeleteCloudEvents();
+            verify(metrics, times(1)).recordCloudEventSourceEntityDeleteParseTime(anyLong());
+            verify(metrics, times(1)).recordCloudEventSourceEntityDeletePersistTime(anyLong());
+
+            verifyNoMoreInteractions(metrics);
+
+            verify(auditLogger).auditLog(eq(ExecutionStatus.SUCCESS), eq("source-entity-delete"), any(CloudEvent.class),
+                    anyString(), any());
+            verifyNoMoreInteractions(metrics);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

@@ -29,11 +29,6 @@ SET default_table_access_method = heap;
 
 SET ROLE :'pguser';
 
-CREATE TABLE IF NOT EXISTS ties_model.execution_status (
-    "schema" VARCHAR(127) PRIMARY KEY,
-    "status" VARCHAR(127)
-);
-
 CREATE TABLE IF NOT EXISTS ties_model.hash_info (
     "name"        TEXT PRIMARY KEY,
     "hashedValue" VARCHAR(63) NOT NULL,
@@ -53,6 +48,7 @@ CREATE TABLE IF NOT EXISTS ties_model.entity_info (
     "storedAt"            TEXT PRIMARY KEY,
     "name"                TEXT NOT NULL,
     "moduleReferenceName" TEXT NOT NULL,
+    "attributeNames"      jsonb DEFAULT '[]'::jsonb,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 
@@ -78,9 +74,6 @@ CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
     FOREIGN KEY ("bSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
-
--- Update model schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_model', 'success');
 
 COPY ties_model.hash_info("name", "hashedValue", "type") FROM stdin;
 FK_o-ran-smo-teiv-ran_LTESectorCarrier_REL_FK_provided-by-enodebFunction	FK_D0868FBC0BBE2754F4B765C4898C1A1700E2BEFD	CONSTRAINT
@@ -131,12 +124,12 @@ o-ran-smo-teiv-ran	urn:o-ran:smo-teiv-ran	RAN	[]	2024-05-24	bW9kdWxlIG8tcmFuLXNt
 o-ran-smo-teiv-rel-equipment-ran	urn:o-ran:smo-teiv-rel-equipment-ran	REL_EQUIPMENT_RAN	["o-ran-smo-teiv-equipment", "o-ran-smo-teiv-ran"]	2024-05-24	bW9kdWxlIG8tcmFuLXNtby10ZWl2LXJlbC1lcXVpcG1lbnQtcmFuIHsKICAgIHlhbmctdmVyc2lvbiAxLjE7CiAgICBuYW1lc3BhY2UgInVybjpvLXJhbjpzbW8tdGVpdi1yZWwtZXF1aXBtZW50LXJhbiI7CiAgICBwcmVmaXggb3ItdGVpdi1yZWwtZXF1aXByYW47CgogICAgaW1wb3J0IG8tcmFuLXNtby10ZWl2LWNvbW1vbi15YW5nLXR5cGVzIHsgcHJlZml4IG9yLXRlaXYtdHlwZXM7IH0KCiAgICBpbXBvcnQgby1yYW4tc21vLXRlaXYtY29tbW9uLXlhbmctZXh0ZW5zaW9ucyB7IHByZWZpeCBvci10ZWl2LXlleHQ7IH0KCiAgICBpbXBvcnQgby1yYW4tc21vLXRlaXYtZXF1aXBtZW50IHsgcHJlZml4IG9yLXRlaXYtZXF1aXA7IH0KCiAgICBpbXBvcnQgby1yYW4tc21vLXRlaXYtcmFuIHsgcHJlZml4IG9yLXRlaXYtcmFuOyB9CgogICAgb3JnYW5pemF0aW9uICJFcmljc3NvbiBBQiI7CiAgICBjb250YWN0ICJFcmljc3NvbiBmaXJzdCBsaW5lIHN1cHBvcnQgdmlhIGVtYWlsIjsKICAgIGRlc2NyaXB0aW9uCiAgICAiRXF1aXBtZW50IGFuZCBSQU4gdG9wb2xvZ3kgcmVsYXRpb24gbW9kZWwuCgogICAgQ29weXJpZ2h0IChjKSAyMDI0IEVyaWNzc29uIEFCLiBBbGwgcmlnaHRzIHJlc2VydmVkLgoKICAgIFRoaXMgbW9kZWwgY29udGFpbnMgdGhlIHRvcG9sb2d5IHJlbGF0aW9ucyBiZXR3ZWVuIEVxdWlwbWVudCBhbmQgUkFOLiI7CgogICAgcmV2aXNpb24gIjIwMjQtMDUtMjQiIHsKICAgICAgICBkZXNjcmlwdGlvbiAiSW5pdGlhbCByZXZpc2lvbi4iOwogICAgICAgIG9yLXRlaXYteWV4dDpsYWJlbCAwLjMuMDsKICAgIH0KCiAgICBvci10ZWl2LXlleHQ6ZG9tYWluIFJFTF9FUVVJUE1FTlRfUkFOOwoKICAgIG9yLXRlaXYteWV4dDpiaURpcmVjdGlvbmFsVG9wb2xvZ3lSZWxhdGlvbnNoaXAgQU5URU5OQU1PRFVMRV9TRVJWRVNfQU5URU5OQUNBUEFCSUxJVFkgeyAvLyAwLi5uIHRvIDAuLm0KCiAgICAgICAgdXNlcyBvci10ZWl2LXR5cGVzOlRvcF9HcnBfVHlwZTsKICAgICAgICBrZXkgaWQ7CgogICAgICAgIGxlYWYtbGlzdCBzZXJ2aWNlZC1hbnRlbm5hQ2FwYWJpbGl0eSB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJBbnRlbm5hIENhcGFiaWxpdHkgc2VydmljZWQgYnkgdGhpcyBBbnRlbm5hIE1vZHVsZS4iOwogICAgICAgICAgICBvci10ZWl2LXlleHQ6YVNpZGUgb3ItdGVpdi1lcXVpcDpBbnRlbm5hTW9kdWxlOwogICAgICAgICAgICB0eXBlIGluc3RhbmNlLWlkZW50aWZpZXI7CiAgICAgICAgfQoKICAgICAgICBsZWFmLWxpc3Qgc2VydmluZy1hbnRlbm5hTW9kdWxlIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIkFudGVubmEgTW9kdWxlIHNlcnZlcyB0aGlzIEFudGVubmEgQ2FwYWJpbGl0eS4iOwogICAgICAgICAgICBvci10ZWl2LXlleHQ6YlNpZGUgb3ItdGVpdi1yYW46QW50ZW5uYUNhcGFiaWxpdHk7CiAgICAgICAgICAgIHR5cGUgaW5zdGFuY2UtaWRlbnRpZmllcjsKICAgICAgICB9CiAgICB9Cn0=
 \.
 
-COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName") FROM stdin;
-o-ran-smo-teiv-equipment_AntennaModule	AntennaModule	o-ran-smo-teiv-equipment
-o-ran-smo-teiv-ran_AntennaCapability	AntennaCapability	o-ran-smo-teiv-ran
-o-ran-smo-teiv-ran_ENodeBFunction	ENodeBFunction	o-ran-smo-teiv-ran
-o-ran-smo-teiv-ran_GNBDUFunction	GNBDUFunction	o-ran-smo-teiv-ran
-o-ran-smo-teiv-ran_LTESectorCarrier	LTESectorCarrier	o-ran-smo-teiv-ran
+COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName", "attributeNames") FROM stdin;
+o-ran-smo-teiv-equipment_AntennaModule	AntennaModule	o-ran-smo-teiv-equipment ["antennaBeamWidth", "antennaModelNumber", "electricalAntennaTilt", "geo-location", "mechanicalAntennaBearing", "mechanicalAntennaTilt", "positionWithinSector", "totalTilt"]
+o-ran-smo-teiv-ran_AntennaCapability	AntennaCapability	o-ran-smo-teiv-ran	["eUtranFqBands", "geranFqBands", "nRFqBands"]
+o-ran-smo-teiv-ran_ENodeBFunction	ENodeBFunction	o-ran-smo-teiv-ran	["eNBId", "eNodeBPlmnId"]
+o-ran-smo-teiv-ran_ODUFunction	ODUFunction	o-ran-smo-teiv-ran	["dUpLMNId", "gNBDUId", "gNBId", "gNBIdLength"]
+o-ran-smo-teiv-ran_LTESectorCarrier	LTESectorCarrier	o-ran-smo-teiv-ran	["sectorCarrierType"]
 \.
 
 COPY ties_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;

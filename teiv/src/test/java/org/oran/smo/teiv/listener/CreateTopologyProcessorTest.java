@@ -20,13 +20,16 @@
  */
 package org.oran.smo.teiv.listener;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -35,14 +38,17 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.oran.smo.teiv.ingestion.validation.IngestionOperationValidatorFactory;
+import org.oran.smo.teiv.listener.audit.ExecutionStatus;
+import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
+import org.oran.smo.teiv.service.RelationshipMergeValidator;
+import org.oran.smo.teiv.service.TiesDbOperations;
 
 import io.cloudevents.CloudEvent;
 
@@ -54,33 +60,43 @@ import org.oran.smo.teiv.service.TiesDbService;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
-import org.oran.smo.teiv.startup.SchemaHandler;
 import org.oran.smo.teiv.utils.CloudEventTestUtil;
 
-@SpringBootTest
-@ActiveProfiles({ "test", "ingestion" })
+@ExtendWith(MockitoExtension.class)
 class CreateTopologyProcessorTest {
-    @Autowired
+
     private CreateTopologyProcessor createTopologyProcessor;
 
-    @MockBean
+    @Mock
     private CloudEventParser cloudEventParser;
-    @MockBean
-    private TiesDbService tiesDbService;
-    @MockBean
-    private SchemaHandler schemaHandler;
 
-    @Autowired
+    @Mock
     private CustomMetrics metrics;
 
+    @Mock
+    private TiesDbService tiesDbService;
+
+    @Mock
+    private IngestionAuditLogger auditLogger;
+
+    private TiesDbOperations tiesDbOperations;
+
     @BeforeAll
-    static void setUp() throws SchemaLoaderException {
+    static void setUpAll() throws SchemaLoaderException {
+        // Load mock schema for testing
         SchemaLoader mockSchemaLoader = new MockSchemaLoader();
         mockSchemaLoader.loadSchemaRegistry();
     }
 
+    @BeforeEach
+    void setUp() {
+        tiesDbOperations = new TiesDbOperations(tiesDbService, new IngestionOperationValidatorFactory(),
+                new RelationshipMergeValidator());
+        createTopologyProcessor = new CreateTopologyProcessor(cloudEventParser, metrics, tiesDbOperations, auditLogger);
+    }
+
     @Test
-    void testCreateODUFunctionEntity1() {
+    void testCreateEntity() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("create", "{}");
         String entityType = "ODUFunction";
         Map<String, Object> yangParserOutputMapBSide = new HashMap<>();
@@ -92,76 +108,70 @@ class CreateTopologyProcessorTest {
         doThrow(new RuntimeException("test error")).when(tiesDbService).execute(anyList());
         Assertions.assertDoesNotThrow(() -> createTopologyProcessor.process(event, anyString()));
 
-        Mockito.verify(tiesDbService, times(1)).execute(anyList());
+        verify(tiesDbService, times(1)).execute(anyList());
+
+        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+                anyString());
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testInvalidAttribute() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("create", "{}");
-        String entityType = "NFDeployment";
+        String entityType = "ManagedElement";
         Map<String, Object> yangParserOutputMap = new HashMap<>();
         yangParserOutputMap.put("invalidfield", "value1");
         Entity entity = new Entity("", entityType, "id1", yangParserOutputMap, List.of());
         ParsedCloudEventData parsedData = new ParsedCloudEventData(List.of(entity), List.of());
-        when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(parsedData);
+        when(cloudEventParser.getCloudEventData(any())).thenReturn(parsedData);
 
         createTopologyProcessor.process(event, anyString());
         verifyNoInteractions(tiesDbService);
 
-        assertEquals(1, metrics.getNumSuccessfullyParsedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyParsedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyParsedDeleteCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyPersistedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyPersistedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyPersistedDeleteCloudEvents().count());
-        assertEquals(0, metrics.getCloudEventCreatePersistTime().count());
-        assertEquals(0, metrics.getCloudEventMergePersistTime().count());
-        assertEquals(0, metrics.getCloudEventDeletePersistTime().count());
-        assertEquals(1, metrics.getCloudEventCreateParseTime().count());
-        assertEquals(0, metrics.getCloudEventMergeParseTime().count());
-        assertEquals(0, metrics.getCloudEventDeleteParseTime().count());
+        verify(metrics, times(1)).incrementNumSuccessfullyParsedCreateCloudEvents();
+        verify(metrics, times(1)).incrementNumUnsuccessfullyPersistedCreateCloudEvents();
+        verify(metrics, times(1)).recordCloudEventCreateParseTime(anyLong());
 
-        assertEquals(0, metrics.getNumUnsuccessfullyParsedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyParsedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyParsedDeleteCloudEvents().count());
-        assertEquals(1, metrics.getNumUnsuccessfullyPersistedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyPersistedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyPersistedDeleteCloudEvents().count());
+        verifyNoMoreInteractions(metrics);
+
+        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+                anyString());
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testInvalidGeoLocationAttribute() {
         CloudEvent event = CloudEventTestUtil.getCloudEvent("create", "{}");
-        String entityType = "PhysicalNetworkAppliance";
+        String entityType = "Sector";
         Map<String, Object> yangParserOutputMap = new HashMap<>();
         yangParserOutputMap.put("geo-location", 0);
         Entity entity = new Entity("", entityType, "id1", yangParserOutputMap, List.of());
         ParsedCloudEventData parsedData = new ParsedCloudEventData(List.of(entity), List.of());
-        when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(parsedData);
+        when(cloudEventParser.getCloudEventData(any())).thenReturn(parsedData);
 
         createTopologyProcessor.process(event, anyString());
         verifyNoInteractions(tiesDbService);
 
-        assertEquals(1, metrics.getNumSuccessfullyParsedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyParsedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyParsedDeleteCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyPersistedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyPersistedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumSuccessfullyPersistedDeleteCloudEvents().count());
-        assertEquals(0, metrics.getCloudEventCreatePersistTime().count());
-        assertEquals(0, metrics.getCloudEventMergePersistTime().count());
-        assertEquals(0, metrics.getCloudEventDeletePersistTime().count());
-        assertEquals(1, metrics.getCloudEventCreateParseTime().count());
-        assertEquals(0, metrics.getCloudEventMergeParseTime().count());
-        assertEquals(0, metrics.getCloudEventDeleteParseTime().count());
+        verify(metrics, times(1)).incrementNumSuccessfullyParsedCreateCloudEvents();
+        verify(metrics, times(1)).incrementNumUnsuccessfullyPersistedCreateCloudEvents();
+        verify(metrics, times(1)).recordCloudEventCreateParseTime(anyLong());
 
-        assertEquals(0, metrics.getNumUnsuccessfullyParsedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyParsedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyParsedDeleteCloudEvents().count());
-        assertEquals(1, metrics.getNumUnsuccessfullyPersistedCreateCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyPersistedMergeCloudEvents().count());
-        assertEquals(0, metrics.getNumUnsuccessfullyPersistedDeleteCloudEvents().count());
+        verifyNoMoreInteractions(metrics);
+
+        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+                anyString());
+    }
+
+    @Test
+    void testNullParsedCloudEventData() {
+        CloudEvent event = CloudEventTestUtil.getCloudEvent("create", "{}");
+        when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(null);
+
+        createTopologyProcessor.process(event, anyString());
+        verifyNoInteractions(tiesDbService);
+        verify(metrics, times(1)).incrementNumUnsuccessfullyParsedCreateCloudEvents();
+
+        verifyNoMoreInteractions(metrics);
+
+        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+                anyString());
     }
 }

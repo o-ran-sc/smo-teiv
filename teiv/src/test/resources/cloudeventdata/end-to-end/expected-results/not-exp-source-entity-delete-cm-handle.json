@@ -1,15 +1,10 @@
 {
-    "o-ran-smo-teiv-ran-logical_GNBDUFunction": [
-        "GNBDU_SED_1"
+    "o-ran-smo-teiv-ran_AntennaCapability": [
+        "AntennaCapability_3",
+        "AntennaCapability_4"
     ],
-    "c4a425179d3089b5288fdf059079d0ea26977f0f": [
-        "GNBCUCP_SED_1",
-        "GNBCUCP_SED_2"
-    ],
-    "7cd7062ea24531b2f48e4f2fdc51eaf0b82f88c7": [
-        "relation_sed_1"
-    ],
-    "10484f157f490eb5b27e40dbfaf4d5f2be17c57c": [
-        "relation_sed_2"
+    "CFC235E0404703D1E4454647DF8AAE2C193DB402": [
+        "relation_3",
+        "relation_4"
     ]
 }

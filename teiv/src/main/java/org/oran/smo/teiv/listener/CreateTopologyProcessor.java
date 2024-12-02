@@ -25,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.exception.InvalidFieldInYangDataException;
+import org.oran.smo.teiv.listener.audit.ExecutionStatus;
+import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
 import org.oran.smo.teiv.service.TiesDbOperations;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
@@ -32,6 +34,8 @@ import org.oran.smo.teiv.utils.CloudEventUtil;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+
+import static org.oran.smo.teiv.utils.TiesConstants.CLOUD_EVENT_WITH_TYPE_CREATE;
 
 @Component
 @Slf4j
@@ -42,6 +46,7 @@ public class CreateTopologyProcessor implements TopologyProcessor {
     private final CloudEventParser cloudEventParser;
     private final CustomMetrics customMetrics;
     private final TiesDbOperations tiesDbOperations;
+    private final IngestionAuditLogger auditLogger;
 
     @Override
     public void process(final CloudEvent cloudEvent, final String messageKey) {
@@ -49,7 +54,10 @@ public class CreateTopologyProcessor implements TopologyProcessor {
         stopWatch.start();
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
         if (null == parsedCloudEventData) {
+            log.error("Failed to parse the following CloudEvent: {}", CloudEventUtil.cloudEventToPrettyString(cloudEvent));
             customMetrics.incrementNumUnsuccessfullyParsedCreateCloudEvents();
+            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey,
+                    "Failed to parse the CloudEvent");
             return;
         }
         parsedCloudEventData.sort();
@@ -58,21 +66,27 @@ public class CreateTopologyProcessor implements TopologyProcessor {
         customMetrics.incrementNumSuccessfullyParsedCreateCloudEvents();
 
         stopWatch.start();
+        final String sourceAdapter = String.valueOf(cloudEvent.getSource());
         try {
-            tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData);
+            tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData, sourceAdapter);
         } catch (InvalidFieldInYangDataException e) {
             log.error("Invalid field in yang data. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                     CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedCreateCloudEvents();
+            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, e
+                    .getMessage());
             return;
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                     CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedCreateCloudEvents();
+            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, e
+                    .getMessage());
             return;
         }
         stopWatch.stop();
         customMetrics.incrementNumSuccessfullyPersistedCreateCloudEvents();
         customMetrics.recordCloudEventCreatePersistTime(stopWatch.lastTaskInfo().getTimeNanos());
+        auditLogger.auditLog(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, "");
     }
 }

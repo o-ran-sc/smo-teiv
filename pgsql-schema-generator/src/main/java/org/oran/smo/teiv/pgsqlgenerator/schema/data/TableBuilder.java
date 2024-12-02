@@ -51,6 +51,7 @@ import org.oran.smo.teiv.pgsqlgenerator.ForeignKeyConstraint;
 import org.oran.smo.teiv.pgsqlgenerator.IndexType;
 import org.oran.smo.teiv.pgsqlgenerator.PostgresIndex;
 import org.oran.smo.teiv.pgsqlgenerator.PrimaryKeyConstraint;
+import org.oran.smo.teiv.pgsqlgenerator.StaticColumnsGenerator;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -121,6 +122,7 @@ public class TableBuilder {
                     .postgresIndexList(getIndexesForColumn(entity.getStoredAt(), hashedTableName, attributeName,
                             hashedAttributeName, cd.getIndexTypes())).build();
         }).toList());
+        entityCols.addAll(StaticColumnsGenerator.getStaticColumnsForEntityTables(hashInfoDataGenerator));
         return entityCols;
     }
 
@@ -168,6 +170,8 @@ public class TableBuilder {
                     .getDefaultValue()).postgresIndexList(getIndexesForColumn(tableName, hashedTableName, columnName,
                             hashedColumnName, cd.getIndexTypes())).build());
         });
+        relColumns.addAll(StaticColumnsGenerator.getStaticColumnsForRelationshipsInEntity(rel.getName(),
+                hashInfoDataGenerator));
         return relColumns;
     }
 
@@ -199,6 +203,7 @@ public class TableBuilder {
                     .getDefaultValue()).postgresIndexList(getIndexesForColumn(tableName, hashedTableName, columnName,
                             hashedColumnName, cd.getIndexTypes())).build());
         });
+        relColumns.addAll(StaticColumnsGenerator.getStaticColumnsForRelationshipTables(hashInfoDataGenerator));
         return relColumns;
     }
 

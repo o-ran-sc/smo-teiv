@@ -1,0 +1,265 @@
+#
+# ============LICENSE_START=======================================================
+# Copyright (C) 2024 Ericsson
+# Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+#
+
+asyncapi: '2.6.0'
+info:
+  x-api-id: 65a97ba2-dadb-475b-be39-d55f0c5bd9af
+  x-audience: external-partner
+  title: Topology Exposure and Inventory Ingestion API
+  version: 0.0.1
+  description: |
+    Topology Exposure and Inventory data is information that represents entities in a
+    telecommunications network and the relationships between them that
+    provide insight into a particular aspect of the network of importance to
+    specific use cases. Topology data can be derived from inventory,
+    configuration, or other data.
+
+    The Network Topology objects are managed and standardized using YANG
+    models which are structured into modules and submodules. These YANG
+    models describe managed network entities and their attributes, while also
+    providing information on the relations between the network entities.
+
+    The Kafka interface is the integration point that allows for Network
+    Topology to be populated. Topology and Inventory Kafka API provides the
+    capabilities to create, update and delete Entities and Relationships.
+
+    The format of the Kafka message received from the interface is cloudEvent
+    containing all the entities and their associated relationships in
+    yang-data+json format.
+
+  license:
+    name: Copyright (C) 2024 Ericsson, Modifications Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  termsOfService: http://www.apache.org/licenses/LICENSE-2.0
+defaultContentType: application/json
+
+channels:
+  topology-inventory-ingestion:
+    publish:
+      summary: Use this channel to perform create, merge, and delete operations.
+      operationId: Ingestion
+      description: This channel is used for Topology and Inventory operations
+        related to the creating, merging, and deleting of topology entities
+        and relationships.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/ingestionCreate'
+          - $ref: '#/components/messages/ingestionMerge'
+          - $ref: '#/components/messages/ingestionDelete'
+
+components:
+  messages:
+    ingestionCreate:
+      messageId: create
+      name: ingestionCreate
+      title: Topology and Inventory Create
+      summary: Creates components in topology and inventory.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: "#/components/schemas/topologyChangePayload"
+      examples:
+        - name: CloudEvents format for Create
+          payload:
+            entities:
+              - o-ran-smo-teiv-ran:NRCellDU:
+                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                    attributes:
+                      cellLocalId: 4589
+                      nRPCI: 12
+                      nRTAC: 310
+                      sourceIds:
+                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                        - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
+              - o-ran-smo-teiv-ran:NRCellDU:
+                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                    attributes:
+                      cellLocalId: 4590
+                      nRPCI: 32
+                      nRTAC: 510
+                      sourceIds:
+                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                        - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
+            relationships:
+              - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
+                  - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1"
+              - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
+                  - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2"
+          headers:
+            ce_specversion: '1.0'
+            ce_id: a30e63c9-d29e-46ff-b99a-b63ed83fd233
+            ce_source: dmi-plugin:nm-1
+            ce_type: topology-inventory-ingestion.create
+            ce_time: 2023-06-12T09:05:00Z
+            content-type: application/json
+            ce_dataschema: topology-inventory-ingestion:events:create:1.0.0
+
+    ingestionMerge:
+      messageId: merge
+      name: ingestionMerge
+      title: Topology and Inventory Merge
+      summary: Updates components in topology and inventory.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: "#/components/schemas/topologyChangePayload"
+      examples:
+        - name: CloudEvents format for Merge
+          payload:
+            entities:
+              - o-ran-smo-teiv-ran:NRCellDU:
+                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                    attributes:
+                      cellLocalId: 4579
+                      nRPCI: 12
+                      nRTAC: 310
+                      sourceIds:
+                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                        - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
+              - o-ran-smo-teiv-ran:NRCellDU:
+                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                    attributes:
+                      cellLocalId: 4580
+                      nRPCI: 32
+                      nRTAC: 510
+                      sourceIds:
+                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                        - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
+            relationships:
+              - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
+                  - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1"
+              - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
+                  - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2"
+          headers:
+            ce_specversion: '1.0'
+            ce_id: a30e63c9-d29e-46ff-b99a-b63ed83fd234
+            ce_source: dmi-plugin:nm-1
+            ce_type: topology-inventory-ingestion.merge
+            ce_time: 2023-06-12T09:05:00Z
+            content-type: application/json
+            ce_dataschema: topology-inventory-ingestion:events:merge:1.0.0
+
+    ingestionDelete:
+      messageId: delete
+      name: ingestionDelete
+      title: Topology and Inventory Delete
+      summary: Deletes components in topology and inventory.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: "#/components/schemas/topologyChangePayload"
+      examples:
+        - name: CloudEvents format for Delete
+          payload:
+            entities:
+              - o-ran-smo-teiv-ran:NRCellDU:
+                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+              - o-ran-smo-teiv-ran:NRCellDU:
+                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+            relationships:
+              - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
+                  - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
+              - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
+                  - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78"
+          headers:
+            ce_specversion: '1.0'
+            ce_id: a30e63c9-d29e-46ff-b99a-b63ed83fd235
+            ce_source: dmi-plugin:nm-1
+            ce_type: topology-inventory-ingestion.delete
+            ce_time: 2023-06-12T09:05:00Z
+            content-type: application/json
+            ce_dataschema: topology-inventory-ingestion:events:delete:1.0.0
+
+  schemas:
+    topologyChangePayload:
+      type: object
+      properties:
+        entities:
+          $ref: "#/components/schemas/entities"
+        relationships:
+          $ref: "#/components/schemas/relationships"
+    entities:
+      type: array
+      items:
+        type: object
+        description: Entities schema will adhere to the entity types and
+          attributes mentioned in the yang modules. Refer to EIC Developer
+          Portal for Yang Modules.
+    relationships:
+      type: array
+      items:
+        type: object
+        description: Relationship schema will adhere to the relationship
+          types mentioned in the yang modules. Refer to EIC Developer Portal
+          for Yang Modules.
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        required:
+          - ce_specversion
+          - ce_id
+          - ce_source
+          - ce_type
+        properties:
+          ce_specversion:
+            description: The version of the CloudEvents specification which
+              the event uses.
+            type: string
+            const: '1.0'
+          ce_id:
+            description: Unique identifier for the event
+            type: string
+          ce_source:
+            description: Source of the CloudEvent
+            type: string
+            format: uri
+          ce_type:
+            description: Event type. It shall be one of
+              topology-inventory-ingestion.merge,
+              topology-inventory-ingestion.delete or
+              topology-inventory-ingestion.create
+            type: string
+          ce_time:
+            description: Event timestamp
+            type: string
+            format: date-time
+          content-type:
+            description: Content-type of the data contained within the cloud
+              event. It will be application/json
+            type: string
+            const: 'application/json'
+          ce_dataschema:
+            description: URI representing the schema of the data. This
+              references the event-specific yang schema
+            type: string
+            format: uri

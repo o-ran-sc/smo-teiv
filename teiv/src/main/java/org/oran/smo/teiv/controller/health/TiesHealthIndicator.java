@@ -20,8 +20,6 @@
  */
 package org.oran.smo.teiv.controller.health;
 
-import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
-
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 
@@ -31,14 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class TiesHealthIndicator implements HealthIndicator {
 
     protected final HealthStatus healthStatus;
-    protected final DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka;
 
     protected abstract String getServiceName();
 
-    protected TiesHealthIndicator(HealthStatus healthStatus,
-            DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka) {
+    protected TiesHealthIndicator(HealthStatus healthStatus) {
         this.healthStatus = healthStatus;
-        this.dependentServiceAvailabilityKafka = dependentServiceAvailabilityKafka;
     }
 
     protected Health healthUp() {
@@ -51,9 +46,5 @@ public abstract class TiesHealthIndicator implements HealthIndicator {
         String errorMessage = getServiceName() + " is DOWN because: " + reason;
         log.error(errorMessage);
         return Health.down().withDetail("Error", errorMessage).build();
-    }
-
-    protected boolean isKafkaReachable() {
-        return dependentServiceAvailabilityKafka.checkService();
     }
 }

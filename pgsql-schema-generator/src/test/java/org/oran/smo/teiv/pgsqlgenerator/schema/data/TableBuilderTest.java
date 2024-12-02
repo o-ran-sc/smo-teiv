@@ -44,6 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CLASSIFIERS;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.DECORATORS;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.JSONB;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.METADATA;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.REL_METADATA_PREFIX;
 
 @Slf4j
 @SpringBootTest(classes = { TableBuilder.class, HashInfoDataGenerator.class })
@@ -242,6 +244,7 @@ class TableBuilderTest {
                         .tableName("module-a_EntityA").columnToAddConstraintTo("id").build())).build(),
                     Column.builder().name("sectorId").dataType("jsonb").build(),
                     Column.builder().name("geo-location").dataType("geography").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name("REL_FK_used-EntityB").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_MODULE-A_ENTITYA_REL_FK_USED-ENTITYB").tableName("module-a_EntityA")
@@ -250,6 +253,7 @@ class TableBuilderTest {
                         .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_MODULE-A_ENTITYA_REL_ID_ONETOONE").tableName("module-a_EntityA")
                             .columnToAddConstraintTo("REL_ID_oneToOne").build())).build(),
                     Column.builder().name("REL_CD_sourceIds_oneToOne").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(REL_METADATA_PREFIX+"oneToOne").dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType(JSONB).defaultValue("{}").build(),
                     Column.builder().name(String.format("REL_CD_%s_oneToOne", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
@@ -260,6 +264,7 @@ class TableBuilderTest {
                     Column.builder().name("id").dataType("TEXT").postgresConstraints(List.of(PrimaryKeyConstraint.builder().constraintName("PK_module-b_EntityB_id")
                         .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
                     Column.builder().name("name").dataType("TEXT").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
@@ -287,6 +292,7 @@ class TableBuilderTest {
                     Column.builder().name("sectorId").dataType("jsonb").build(),
                     Column.builder().name("geo-location").dataType("geography").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
@@ -296,6 +302,7 @@ class TableBuilderTest {
                         .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
                     Column.builder().name("name").dataType("TEXT").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name("REL_FK_used-by-EntityA").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-b_EntityB_REL_FK_used-by-EntityA")
                             .tableName("module-b_EntityB").referencedTable("module-a_EntityA").columnToAddConstraintTo("REL_FK_used-by-EntityA").build())).build(),
@@ -305,6 +312,7 @@ class TableBuilderTest {
                         .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_module-b_EntityB_REL_ID_oneToMany").tableName("module-b_EntityB")
                             .columnToAddConstraintTo("REL_ID_oneToMany").build())).build(),
                     Column.builder().name("REL_CD_sourceIds_oneToMany").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(REL_METADATA_PREFIX+"oneToMany").dataType(JSONB).build(),
                     Column.builder().name(String.format("REL_CD_%s_oneToMany", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("REL_CD_%s_oneToMany", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
@@ -332,6 +340,7 @@ class TableBuilderTest {
                     Column.builder().name("sectorId").dataType("jsonb").build(),
                     Column.builder().name("geo-location").dataType("geography").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name("REL_FK_used-EntityB").dataType("TEXT")
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_MODULE-A_ENTITYA_REL_FK_USED-ENTITYB").tableName("module-a_EntityA")
                             .referencedTable("module-b_EntityB").columnToAddConstraintTo("REL_FK_used-EntityB").build())).build(),
@@ -339,6 +348,7 @@ class TableBuilderTest {
                         .postgresConstraints(List.of(UniqueConstraint.builder().constraintName("UNIQUE_MODULE-A_ENTITYA_REL_ID_MANYTOONE").tableName("module-a_EntityA")
                             .columnToAddConstraintTo("REL_ID_ManyToOne").build())).build(),
                     Column.builder().name("REL_CD_sourceIds_ManyToOne").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(REL_METADATA_PREFIX+"ManyToOne").dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType(JSONB).defaultValue("{}").build(),
                     Column.builder().name(String.format("REL_CD_%s_ManyToOne", CLASSIFIERS)).dataType(JSONB).defaultValue("[]").build(),
@@ -350,6 +360,7 @@ class TableBuilderTest {
                         .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
                     Column.builder().name("name").dataType("TEXT").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
@@ -374,6 +385,7 @@ class TableBuilderTest {
                     Column.builder().name("sectorId").dataType("jsonb").build(),
                     Column.builder().name("geo-location").dataType("geography").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
@@ -383,6 +395,7 @@ class TableBuilderTest {
                         .tableName("module-b_EntityB").columnToAddConstraintTo("id").build())).build(),
                     Column.builder().name("name").dataType("TEXT").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
@@ -397,6 +410,7 @@ class TableBuilderTest {
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-a-b_manyToMany_bSide_EntityB")
                             .tableName("module-a-b_ManyToMany").referencedTable("module-b_EntityB").columnToAddConstraintTo("bSide_EntityB").build())).build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on
@@ -432,6 +446,7 @@ class TableBuilderTest {
                     Column.builder().name("sectorId").dataType("jsonb").build(),
                     Column.builder().name("geo-location").dataType("geography").build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build(),
 
@@ -447,6 +462,7 @@ class TableBuilderTest {
                         .postgresConstraints(List.of(ForeignKeyConstraint.builder().constraintName("FK_module-a_relationshipConnectingSameEntity_bSide_EntityA")
                             .tableName("module-a_relationshipConnectingSameEntity").referencedTable("module-a_EntityA").columnToAddConstraintTo("bSide_EntityA").build())).build(),
                     Column.builder().name("CD_sourceIds").dataType("jsonb").defaultValue("[]").build(),
+                    Column.builder().name(METADATA).dataType(JSONB).build(),
                     Column.builder().name(String.format("CD_%s", CLASSIFIERS)).dataType("jsonb").defaultValue("[]").build(),
                     Column.builder().name(String.format("CD_%s", DECORATORS)).dataType("jsonb").defaultValue("{}").build())).build());
         //spotless:on

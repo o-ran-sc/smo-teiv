@@ -20,7 +20,6 @@
  */
 package org.oran.smo.teiv.exposure.consumerdata.operation;
 
-import lombok.extern.slf4j.Slf4j;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -30,6 +29,7 @@ import org.jooq.Result;
 import org.jooq.UpdateResultStep;
 import org.oran.smo.teiv.exposure.consumerdata.model.PersistableIdMap;
 import org.oran.smo.teiv.service.models.OperationResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -39,12 +39,13 @@ import java.util.ArrayList;
 
 import static org.jooq.impl.DSL.condition;
 import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.inline;
 import static org.jooq.impl.DSL.not;
 import static org.jooq.impl.DSL.table;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 
-@Slf4j
 @Component
+@Profile("exposure")
 public class MergeDecoratorsOperation extends DecoratorsOperation {
 
     public MergeDecoratorsOperation(DSLContext readDataDslContext, DSLContext writeDataDslContext) {
@@ -88,10 +89,10 @@ public class MergeDecoratorsOperation extends DecoratorsOperation {
     }
 
     private Condition keyValuePairExistsCondition(final String decoratorsColumnName, final String key, final Object value) {
-        return condition(String.format("%s -> '%s' = '%s'", decoratorsColumnName, key, transformValue(value)));
+        return condition("? -> ? = ?", field(decoratorsColumnName), inline(key), inline(transformValue(value)));
     }
 
     private Condition keyExistsCondition(final String decoratorsColumnName, final String key) {
-        return condition(String.format("jsonb_exists(%s, '%s')", decoratorsColumnName, key));
+        return condition("jsonb_exists(?, ?)", field(decoratorsColumnName), inline(key));
     }
 }

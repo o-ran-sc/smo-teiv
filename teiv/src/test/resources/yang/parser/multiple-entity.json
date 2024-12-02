@@ -1,0 +1,47 @@
+{
+    "o-ran-smo-teiv-ran:OCUCPFunction": [
+        {
+            "id": "ocucp_1",
+            "sourceIds": [
+                "fdn_ocucp_1",
+                "cmHandle_ocucp_1"
+            ],
+            "attributes": {
+                "gNBCUName": "str",
+                "gNBId": 12
+            }
+        }
+    ],
+    "o-ran-smo-teiv-ran:ODUFunction": [
+        {
+            "id": "odu_21",
+            "sourceIds": [
+                "fdn_odu_21",
+                "cmHandle_odu_21"
+            ],
+            "attributes": {
+                "gNBDUId": 1,
+                "gNBId": 21,
+                "dUpLMNId": {
+                    "mcc": "210",
+                    "mnc": "021"
+                }
+            }
+        },
+        {
+            "id": "odu_22",
+            "sourceIds": [
+                "fdn_odu_22",
+                "cmHandle_odu_22"
+            ],
+            "attributes": {
+                "gNBDUId": 2,
+                "gNBId": 22,
+                "dUpLMNId": {
+                    "mcc": "220",
+                    "mnc": "022"
+                }
+            }
+        }
+    ]
+}

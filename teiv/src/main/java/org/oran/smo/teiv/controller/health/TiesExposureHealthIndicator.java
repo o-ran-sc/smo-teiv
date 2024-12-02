@@ -30,8 +30,8 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Profile("!ingestion")
-public class TiesExposureHealthIndicator extends TiesHealthIndicator {
+@Profile("exposure")
+public class TiesExposureHealthIndicator extends TiesKafkaHealthIndicator {
 
     public TiesExposureHealthIndicator(HealthStatus healthStatus,
             DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka) {

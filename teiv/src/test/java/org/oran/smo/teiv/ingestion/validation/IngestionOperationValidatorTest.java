@@ -40,6 +40,7 @@ import java.util.Map;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -77,7 +78,7 @@ import jakarta.annotation.PostConstruct;
 @SpringBootTest
 @ActiveProfiles({ "test", "ingestion" })
 class IngestionOperationValidatorTest {
-    public static TestPostgresqlContainer postgresqlContainer = TestPostgresqlContainer.getInstance();
+    private static TestPostgresqlContainer postgresqlContainer = TestPostgresqlContainer.getInstance();
 
     @Autowired
     private TiesDbOperations tiesDbOperations;
@@ -104,8 +105,14 @@ class IngestionOperationValidatorTest {
 
     private TiesDbServiceForValidation spiedDbServiceForValidation;
 
+    @BeforeAll
+    static void beforeAll() {
+        TestPostgresqlContainer.loadIngestionTestData();
+        TestPostgresqlContainer.loadValidationTestData();
+    }
+
     @PostConstruct
-    public void beforeAll() throws UnsupportedOperationException, SchemaLoaderException {
+    public void postConstruct() throws UnsupportedOperationException, SchemaLoaderException {
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(writeDataDslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
         when(validatorFactory.createValidator(any())).thenAnswer(i -> {
@@ -116,8 +123,7 @@ class IngestionOperationValidatorTest {
 
     @BeforeEach
     public void deleteAll() {
-        writeDataDslContext.meta().filterSchemas(s -> s.getName().equals(TIES_DATA_SCHEMA)).getTables().forEach(
-                t -> writeDataDslContext.truncate(t).cascade().execute());
+        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA), writeDataDslContext);
         if (spiedDbServiceForValidation != null) {
             reset(spiedDbServiceForValidation);
         }
@@ -125,36 +131,36 @@ class IngestionOperationValidatorTest {
 
     @Test
     void maximumCardinalityViolationOneToOne_aSideMax() throws InvalidFieldInYangDataException {
-        //MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM is a 0..1 to 1 relationship
+        //ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU is a 0..1 to 1 relationship
         List<Entity> entities = generateEntities(MAXIMUM_CARDINALITY_CASE.ONE_ONE);
         List<Relationship> relationships = new ArrayList<>();
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-oam-to-cloud",
-                "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "rel_1", "ManagedElement_1", "CloudNativeSystem_1", List
+        relationships.add(new Relationship("o-ran-smo-teiv-rel-oam-ran",
+                "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU", "rel_1", "ManagedElement_1", "NRCellDU_1", List
                         .of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-oam-to-cloud",
-                "MANAGEDELEMENT_DEPLOYED_AS_CLOUDNATIVESYSTEM", "rel_2", "ManagedElement_2", "CloudNativeSystem_1", List
+        relationships.add(new Relationship("o-ran-smo-teiv-rel-oam-ran",
+                "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU", "rel_2", "ManagedElement_2", "NRCellDU_1", List
                         .of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
-        //It's expected to fail, because the CloudNativeSystem_1 entity would be connected to 2 ManagedElement instances
+        //It's expected to fail, because the NRCellDU_1 entity would be connected to 2 ManagedElement instances
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-oam_ManagedElement\"");
-        assertEmptyTable("ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"");
+        assertEmptyTable("ties_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
+        assertEmptyTable("ties_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
 
         //Remove the extra relationship that caused the cardinality violation. Successfully insert the others.
         Relationship redundantRelationship = relationships.remove(1);
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
         assertEquals(entities.size() + relationships.size(), tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData2).size());
+                parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"163276fa439cdfccabb80f7acacb6fa638e8d314\"", "CloudNativeSystem_1");
+                "ties_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"", "NRCellDU_1");
 
-        //Try to insert an extra relationship. It's expected to fail, because the CloudNativeSystem_1 entity already has the maximum number of relationships.
+        //Try to insert an extra relationship. It's expected to fail, because the NRCellDU_1 entity already has the maximum number of relationships.
         ParsedCloudEventData parsedCloudEventData3 = new ParsedCloudEventData(List.of(), List.of(redundantRelationship));
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData3));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData3, "testSource"));
     }
 
     @Test
@@ -162,39 +168,39 @@ class IngestionOperationValidatorTest {
         // TESTENTITYA_USES_TESTENTITYB is a 0..1 to 0..2 relationship
         List<Entity> entities = generateEntities(MAXIMUM_CARDINALITY_CASE.ONE_CONST);
         List<Relationship> relationships = new ArrayList<>();
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_USES_TESTENTITYB", "rel_1",
-                "TestEntityA_1", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_USES_TESTENTITYB", "rel_2",
-                "TestEntityA_1", "TestEntityB_2", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_USES_TESTENTITYB", "rel_3",
-                "TestEntityA_1", "TestEntityB_3", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran_", "TESTENTITYA_USES_TESTENTITYB", "rel_1", "TestEntityA_1",
+                "TestEntityB_1", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_USES_TESTENTITYB", "rel_2", "TestEntityA_1",
+                "TestEntityB_2", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_USES_TESTENTITYB", "rel_3", "TestEntityA_1",
+                "TestEntityB_3", List.of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityA_1 entity would be connected to 3 TestEntityB instances
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"", "TestEntityA_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
 
         //Remove the extra relationship that caused the cardinality violation. Successfully insert the others.
         Relationship redundantRelationship = relationships.remove(2);
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
         assertEquals(entities.size() + relationships.size(), tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData2).size());
+                parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation, times(2)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"", "TestEntityA_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
         verify(spiedDbServiceForValidation, times(2)).executeValidationQuery(any(), any(), any(), any(Long.class));
         verifyNoMoreInteractions(spiedDbServiceForValidation);
 
         //Try to insert an extra relationship. It's expected to fail, because the CloudNativeSystem_1 entity already has the maximum number of relationships.
         ParsedCloudEventData parsedCloudEventData3 = new ParsedCloudEventData(List.of(), List.of(redundantRelationship));
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData3));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData3, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"", "TestEntityA_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
     }
 
     @Test
@@ -202,46 +208,46 @@ class IngestionOperationValidatorTest {
         // TESTENTITYA_PROVIDES_TESTENTITYB is a 0..2 to 0..3 relationship
         List<Entity> entities = generateEntities(MAXIMUM_CARDINALITY_CASE.CONST_CONST);
         List<Relationship> relationships = new ArrayList<>();
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_1",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_1",
                 "TestEntityA_1", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_2",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_2",
                 "TestEntityA_1", "TestEntityB_2", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_3",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_3",
                 "TestEntityA_1", "TestEntityB_3", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_4",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_4",
                 "TestEntityA_1", "TestEntityB_4", List.of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityA_1 entity would be connected to 4 TestEntityB instances
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"", "TestEntityB_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"", "TestEntityA_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"");
-        assertEmptyTable("ties_data.\"73936e503f137d82d1422c0f08c66c7ff8b90209\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB\"");
 
         //Test the other side's cardinality as well
         relationships = new ArrayList<>();
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_1",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_1",
                 "TestEntityA_1", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_2",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_2",
                 "TestEntityA_2", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_3",
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_PROVIDES_TESTENTITYB", "rel_3",
                 "TestEntityA_3", "TestEntityB_1", List.of()));
 
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityB_1 entity would be connected to 3 TestEntityA instances
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData2));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData2, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"", "TestEntityB_1");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"");
-        assertEmptyTable("ties_data.\"73936e503f137d82d1422c0f08c66c7ff8b90209\"");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB\"");
     }
 
     @Test
@@ -249,43 +255,43 @@ class IngestionOperationValidatorTest {
         // TESTENTITYA_GROUPS_TESTENTITYB is a 0..2 to 0..n relationship
         List<Entity> entities = generateEntities(MAXIMUM_CARDINALITY_CASE.CONST_INFINITE);
         List<Relationship> relationships = new ArrayList<>();
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_1",
-                "TestEntityA_1", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_2",
-                "TestEntityA_2", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_3",
-                "TestEntityA_3", "TestEntityB_1", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_1", "TestEntityA_1",
+                "TestEntityB_1", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_2", "TestEntityA_2",
+                "TestEntityB_1", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_3", "TestEntityA_3",
+                "TestEntityB_1", List.of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityB_1 entity would be connected to 3 TestEntityB instances
         assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
-                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData));
+                .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"", "TestEntityB_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"");
-        assertEmptyTable("ties_data.\"70003c8082751e1832e7bc5c0d83db6d22c4fcdc\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TESTENTITYA_GROUPS_TESTENTITYB\"");
 
         //Test the other side's cardinality
-        entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityB", "TestEntityB_2", Map.of(), List.of()));
-        entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityB", "TestEntityB_3", Map.of(), List.of()));
+        entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_2", Map.of(), List.of()));
+        entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_3", Map.of(), List.of()));
         relationships = new ArrayList<>();
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_1",
-                "TestEntityA_1", "TestEntityB_1", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_2",
-                "TestEntityA_1", "TestEntityB_2", List.of()));
-        relationships.add(new Relationship("o-ran-smo-teiv-ran-logical", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_3",
-                "TestEntityA_1", "TestEntityB_3", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_1", "TestEntityA_1",
+                "TestEntityB_1", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_2", "TestEntityA_1",
+                "TestEntityB_2", List.of()));
+        relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_3", "TestEntityA_1",
+                "TestEntityB_3", List.of()));
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
         assertEquals(entities.size() + relationships.size(), tiesDbOperations.executeEntityAndRelationshipMergeOperations(
-                parsedCloudEventData2).size());
+                parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"", "TestEntityB_1");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"", "TestEntityB_2");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_2");
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran-logical_TestEntityB\"", "TestEntityB_3");
+                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_3");
         verify(spiedDbServiceForValidation, times(3)).executeValidationQuery(any(), any(), any(), any(Long.class));
         verifyNoMoreInteractions(spiedDbServiceForValidation);
     }
@@ -340,23 +346,27 @@ class IngestionOperationValidatorTest {
         List<Entity> entities = new ArrayList<>();
         switch (cardinalityCase) {
             case ONE_ONE:
-                entities.add(new Entity("o-ran-smo-teiv-ran-oam", "ManagedElement", "ManagedElement_1", Map.of("fdn",
-                        "fdn1"), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-oam", "ManagedElement", "ManagedElement_2", Map.of("fdn",
-                        "fdn2"), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-cloud", "CloudNativeSystem", "CloudNativeSystem_1", Map.of(
-                        "name", "name1"), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-cloud", "CloudNativeSystem", "CloudNativeSystem_2", Map.of(
-                        "name", "name2"), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-rel-oam-ran",
+                        "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt", "ManagedElement_1", Map.of(),
+                        List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-rel-oam-ran",
+                        "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt", "ManagedElement_2", Map.of(),
+                        List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran",
+                        "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU", "NRCellDU_1", Map.of(), List
+                                .of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran",
+                        "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU", "NRCellDU_2", Map.of(), List
+                                .of()));
                 break;
             default:
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityA", "TestEntityA_1", Map.of(), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityA", "TestEntityA_2", Map.of(), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityA", "TestEntityA_3", Map.of(), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityB", "TestEntityB_1", Map.of(), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityB", "TestEntityB_2", Map.of(), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityB", "TestEntityB_3", Map.of(), List.of()));
-                entities.add(new Entity("o-ran-smo-teiv-ran-logical", "TestEntityB", "TestEntityB_4", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityA", "TestEntityA_1", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityA", "TestEntityA_2", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityA", "TestEntityA_3", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_1", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_2", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_3", Map.of(), List.of()));
+                entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_4", Map.of(), List.of()));
                 break;
         }
         return entities;

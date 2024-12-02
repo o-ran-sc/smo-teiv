@@ -21,10 +21,11 @@
 package org.oran.smo.teiv.availability;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@Profile({ "exposure", "ingestion" })
 public class DependentServiceAvailabilityKafka extends DependentServiceAvailability {
 
     @Getter
@@ -68,7 +70,7 @@ public class DependentServiceAvailabilityKafka extends DependentServiceAvailabil
     boolean isServiceAvailable() throws UnsatisfiedExternalDependencyException {
         log.debug("Checking if Kafka is reachable, bootstrap server: '{}'", kafkaAdminConfig.getBootstrapServer());
 
-        try (AdminClient client = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
+        try (Admin client = Admin.create(kafkaAdmin.getConfigurationProperties())) {
             ListTopicsResult topics = client.listTopics(new ListTopicsOptions().timeoutMs(listTopicTimeout));
             topics.names().get();
             return true;

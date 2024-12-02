@@ -46,6 +46,7 @@ import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.service.models.OperationResult;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Profile("exposure")
 public class SchemaCleanUpService {
     private final ModelRepository modelRepository;
     private final DataRepository dataRepository;
@@ -83,8 +85,8 @@ public class SchemaCleanUpService {
                 log.error("Exception during [{}] schema deletion: {}", name, ex.getMessage(), ex);
             }
         }
-
         modelRepository.deleteModuleByName(name);
+        log.debug("Schema {} deletion successful", name);
     }
 
     private boolean innerCleanUp(final String schemaName) {

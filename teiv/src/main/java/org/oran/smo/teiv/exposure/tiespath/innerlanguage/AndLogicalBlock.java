@@ -20,13 +20,26 @@
  */
 package org.oran.smo.teiv.exposure.tiespath.innerlanguage;
 
-import lombok.EqualsAndHashCode;
+import java.util.List;
+
 import org.jooq.Condition;
+
+import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class AndLogicalBlock extends AndOrLogicalBlock {
+    public static AndLogicalBlock fromLogicalBlockList(List<LogicalBlock> children) {
+        AndLogicalBlock andLogicalBlock = new AndLogicalBlock();
+        andLogicalBlock.addAllChild(children);
+        return andLogicalBlock;
+    }
+
     @Override
     public Condition getCondition() {
-        return children.get(0).getCondition().and(children.get(1).getCondition());
+        Condition combinedCondition = children.get(0).getCondition();
+        for (int i = 1; i < children.size(); i++) {
+            combinedCondition = combinedCondition.and(children.get(i).getCondition());
+        }
+        return combinedCondition;
     }
 }

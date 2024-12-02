@@ -132,6 +132,8 @@
                                     <exclude>dependencies*/</exclude>
                                     <exclude>teiv/src/main/resources/v1/**/*.html</exclude>
                                     <exclude>teiv/src/main/resources/v1/topology-exposure-inventory-openapi.json</exclude>
+                                    <exclude>pgsql-schema-generator/src/main/resources/scripts/custom-sql-script.sql</exclude>
+                                    <exclude>pgsql-schema-generator/src/test/resources/baseline-schema/custom-sql-script.sql</exclude>
                                 </excludes>
                             </licenseSet>
                         </licenseSets>

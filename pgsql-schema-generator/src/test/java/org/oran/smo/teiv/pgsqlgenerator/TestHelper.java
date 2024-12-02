@@ -100,7 +100,8 @@ public class TestHelper {
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (!line.isEmpty() && Character.isLetterOrDigit(line.charAt(0)) && !line.startsWith("SELECT") && !line
-                        .startsWith("FOREIGN KEY")) {
+                        .startsWith("FOREIGN KEY") && !line.startsWith("BEGIN") && !line.startsWith("END IF;") && !line
+                                .startsWith("END;")) {
                     Assertions.assertTrue(lines.add(line), String.format("Duplicate identified in file - %s on line --> %s",
                             filePath, line));
                 }

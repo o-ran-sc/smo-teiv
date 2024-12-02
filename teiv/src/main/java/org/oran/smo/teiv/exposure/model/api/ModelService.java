@@ -32,7 +32,7 @@ public interface ModelService {
      * @param yangFile
      *     the yang content
      */
-    void createModule(final MultipartFile yangFile);
+    String createModule(final MultipartFile yangFile);
 
     /**
      * Gets all modules in a domain
@@ -49,7 +49,7 @@ public interface ModelService {
      * Gets module content
      *
      * @param name
-     *     name name
+     *     name
      * @return the content
      */
     String getModuleContentByName(final String name);

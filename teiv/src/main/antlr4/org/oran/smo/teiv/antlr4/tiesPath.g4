@@ -49,7 +49,7 @@
 
 grammar tiesPath ;
 
-tiesPath : ( prefix | incorrectPrefix ) multipleLeafConditions? containsTextFunctionCondition? textFunctionCondition? containsFunctionCondition? ancestorAxis? invalidPostFix? containerName? fieldLeaf?;
+tiesPath : ( prefix | incorrectPrefix ) multipleLeafConditions? containsTextFunctionCondition? textFunctionCondition? containsFunctionCondition? withinMetersFunctionCondition? coveredByFunctionCondition? ancestorAxis? invalidPostFix? containerName? fieldLeaf?;
 
 ancestorAxis : SLASH KW_ANCESTOR COLONCOLON ancestorPath ;
 
@@ -80,6 +80,10 @@ leafCondition : AT leafName comparativeOperators ( IntegerLiteral | StringLitera
 leafName : QName ;
 
 booleanOperators : ( KW_AND | KW_OR ) ;
+
+withinMetersFunctionCondition : OB KW_WITHIN_METERS OP AT leafName COMMA StringLiteral COMMA ( IntegerLiteral | DoubleLiteral | DecimalLiteral) CP CB ;
+
+coveredByFunctionCondition : OB KW_COVERED_BY OP AT leafName COMMA StringLiteral CP CB ;
 
 // Onnly EQ supported for now
 comparativeOperators : ( EQ /*| GT | LT | GE | LE */ ) ;
@@ -115,6 +119,8 @@ KW_AND : 'and' ;
 KW_TEXT_FUNCTION: 'text()' ;
 KW_OR : 'or' ;
 KW_CONTAINS_FUNCTION: 'contains' ;
+KW_WITHIN_METERS: 'withinMeters' ;
+KW_COVERED_BY: 'coveredBy' ;
 
 IntegerLiteral : FragDigits ;
 // Add below type definitions for leafvalue comparision in https://jira.onap.org/browse/CPS-440

@@ -38,6 +38,12 @@ module o-ran-smo-teiv-cloud {
 
         SPDX-License-Identifier: Apache-2.0";
 
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology objects.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-02" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -54,6 +60,7 @@ module o-ran-smo-teiv-cloud {
         description "A RAN Network Function software that is deployed in the O-Cloud via one or more NF Deployments.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -68,6 +75,7 @@ module o-ran-smo-teiv-cloud {
         description "A software deployment on O-Cloud resources that realizes, all or part of, a Cloudified NF.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -83,6 +91,7 @@ module o-ran-smo-teiv-cloud {
         groups of resources within a single cluster.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -97,6 +106,7 @@ module o-ran-smo-teiv-cloud {
         description "A NodeCluster manages a collection of Nodes.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -112,6 +122,7 @@ module o-ran-smo-teiv-cloud {
         hosts the NF Deployment.";
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
@@ -128,6 +139,7 @@ module o-ran-smo-teiv-cloud {
     or-teiv-yext:biDirectionalTopologyRelationship CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT { // 1 to 1..n
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list comprised-nFDeployment {
@@ -148,6 +160,7 @@ module o-ran-smo-teiv-cloud {
     or-teiv-yext:biDirectionalTopologyRelationship NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE { // 1..n to 1..n
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list deployed-on-ocloudNamespace {
@@ -168,6 +181,7 @@ module o-ran-smo-teiv-cloud {
     or-teiv-yext:biDirectionalTopologyRelationship OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER { // 1..n to 1
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf deployed-on-nodeCluster {
@@ -188,6 +202,7 @@ module o-ran-smo-teiv-cloud {
     or-teiv-yext:biDirectionalTopologyRelationship NODECLUSTER_LOCATED_AT_OCLOUDSITE { // 1..n to 1..n
 
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list located-at-ocloudSite {

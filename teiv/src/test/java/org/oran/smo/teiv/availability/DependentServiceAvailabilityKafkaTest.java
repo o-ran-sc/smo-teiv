@@ -32,7 +32,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.admin.MockAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -49,6 +49,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -66,20 +67,23 @@ import org.oran.smo.teiv.exception.UnsatisfiedExternalDependencyException;
 import org.oran.smo.teiv.service.kafka.KafkaFactory;
 import org.oran.smo.teiv.startup.SchemaHandler;
 import lombok.Getter;
+import org.springframework.test.context.TestExecutionListeners;
 
-@EmbeddedKafka
-@ExtendWith(OutputCaptureExtension.class)
+@ActiveProfiles({ "test", "ingestion" })
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles({ "test", "ingestion" })
+@TestExecutionListeners(listeners = KafkaTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+@EmbeddedKafka
+@ExtendWith(OutputCaptureExtension.class)
 public class DependentServiceAvailabilityKafkaTest {
-    @Autowired
-    protected EmbeddedKafkaBroker embeddedKafkaBroker;
 
     @Value("${spring.embedded.kafka.brokers}")
     @Getter
     private String embeddedKafkaServer;
+
+    @Autowired
+    protected EmbeddedKafkaBroker embeddedKafkaBroker;
 
     @Autowired
     private KafkaAdminConfig kafkaAdminConfig;
@@ -126,8 +130,8 @@ public class DependentServiceAvailabilityKafkaTest {
     void testIsServiceAvailable_ThrowsInterruptedException(CapturedOutput output) throws Exception {
         Node controller = new Node(0, "localhost", 8121);
         List<Node> brokers = Arrays.asList(controller, new Node(1, "localhost", 8122), new Node(2, "localhost", 8123));
-        AdminClient mockedAdminClient = new MockAdminClient(brokers, controller);
-        AdminClient spiedAdminClient = Mockito.spy(mockedAdminClient);
+        Admin mockedAdminClient = new MockAdminClient(brokers, controller);
+        Admin spiedAdminClient = Mockito.spy(mockedAdminClient);
         final NewTopic newTopic = new NewTopic("test_topic", 1, (short) 1);
         mockedAdminClient.createTopics(List.of(newTopic));
 
@@ -137,8 +141,8 @@ public class DependentServiceAvailabilityKafkaTest {
         doReturn(kafkaFutures).when(topicListresult).names();
         doThrow(InterruptedException.class).when(kafkaFutures).get();
 
-        MockedStatic<AdminClient> mockedStaticAdminClient = Mockito.mockStatic(AdminClient.class);
-        mockedStaticAdminClient.when(() -> AdminClient.create(ArgumentMatchers.any(Properties.class)).listTopics().names())
+        MockedStatic<Admin> mockedStaticAdminClient = Mockito.mockStatic(Admin.class);
+        mockedStaticAdminClient.when(() -> Admin.create(ArgumentMatchers.any(Properties.class)).listTopics().names())
                 .thenReturn(spiedAdminClient);
 
         DependentServiceAvailabilityKafka spiedDependentServiceAvailabilityKafka = Mockito.spy(

@@ -34,7 +34,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
-import org.apache.kafka.clients.admin.AdminClient;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.admin.MockAdminClient;
@@ -49,6 +50,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.oran.smo.teiv.startup.SchemaHandler;
+import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,11 +63,18 @@ import org.springframework.test.context.ActiveProfiles;
 import lombok.Getter;
 
 import org.oran.smo.teiv.service.kafka.KafkaTopicService;
+import org.springframework.test.context.TestExecutionListeners;
 
+@Slf4j
 @EmbeddedKafka
-@SpringBootTest
 @ActiveProfiles({ "test", "ingestion" })
+@SpringBootTest
+@TestExecutionListeners(listeners = KafkaTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class KafkaTopicServiceTest {
+    @Value("${spring.embedded.kafka.brokers}")
+    @Getter
+    private String embeddedKafkaServer;
+
     @Autowired
     private KafkaAdmin kafkaAdmin;
 
@@ -75,24 +84,20 @@ class KafkaTopicServiceTest {
     @MockBean
     private SchemaHandler schemaHandler;
 
-    @Value("${spring.embedded.kafka.brokers}")
-    @Getter
-    private String embeddedKafkaServer;
-
     @BeforeEach
-    public void setup() {
+    public void setupEach() {
         Supplier<String> brokers = () -> getEmbeddedKafkaServer();
         kafkaAdmin.setBootstrapServersSupplier(brokers);
     }
 
     @AfterEach
-    protected void tearDown() {
-        AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties());
+    protected void cleanupEach() {
+        Admin adminClient = Admin.create(kafkaAdmin.getConfigurationProperties());
         ListTopicsResult listTopicsResult = adminClient.listTopics(new ListTopicsOptions().timeoutMs(1000));
         try {
             adminClient.deleteTopics(listTopicsResult.names().get());
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            log.info("Error deleting topics", e.getMessage());
         }
     }
 
@@ -133,8 +138,8 @@ class KafkaTopicServiceTest {
 
         Node controller = new Node(0, "localhost", 8121);
         List<Node> brokers = Arrays.asList(controller, new Node(1, "localhost", 8122), new Node(2, "localhost", 8123));
-        AdminClient mockedAdminClient = new MockAdminClient(brokers, controller);
-        AdminClient spiedAdminClient = Mockito.spy(mockedAdminClient);
+        Admin mockedAdminClient = new MockAdminClient(brokers, controller);
+        Admin spiedAdminClient = Mockito.spy(mockedAdminClient);
         final NewTopic newTopic = new NewTopic("test_topic", 1, (short) 1);
         mockedAdminClient.createTopics(List.of(newTopic));
 
@@ -144,8 +149,8 @@ class KafkaTopicServiceTest {
         doReturn(kafkaFutures).when(topicListResult).names();
         doThrow(ExecutionException.class).when(kafkaFutures).get();
 
-        MockedStatic<AdminClient> mockedStaticAdminClient = Mockito.mockStatic(AdminClient.class);
-        mockedStaticAdminClient.when(() -> AdminClient.create(kafkaAdmin.getConfigurationProperties()).listTopics().names())
+        MockedStatic<Admin> mockedStaticAdminClient = Mockito.mockStatic(Admin.class);
+        mockedStaticAdminClient.when(() -> Admin.create(kafkaAdmin.getConfigurationProperties()).listTopics().names())
                 .thenReturn(spiedAdminClient);
 
         KafkaTopicService spiedTopicService = Mockito.spy(kafkaTopicService);

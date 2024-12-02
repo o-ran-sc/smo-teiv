@@ -23,5 +23,8 @@ package org.oran.smo.teiv.utils;
 public class TiesTestConstants {
 
     public static final String APPLICATION_JSON = "application/json";
+    public static final String SPRING_BOOT_SERVER_HOST = "kafka.server.bootstrap-server-host:#{environment.getProperty(\"spring.embedded.kafka.brokers\").split(\":\")[0]}";
+    public static final String SPRING_BOOT_SERVER_PORT = "kafka.server.bootstrap-server-port:#{environment.getProperty(\"spring.embedded.kafka.brokers\").split(\":\")[1]}";
+    public static final String KAFKA_RETRY_INTERVAL_10_MS = "kafka.availability.retryIntervalMs:10";
 
 }

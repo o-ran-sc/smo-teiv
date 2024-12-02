@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS ties_model.entity_info (
     "storedAt"            VARCHAR(511) PRIMARY KEY,
     "name"                VARCHAR(511) NOT NULL,
     "moduleReferenceName" VARCHAR(511) NOT NULL,
+    "attributeNames"      jsonb DEFAULT '[]'::jsonb,
     FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
 );
 
@@ -86,7 +87,7 @@ COPY ties_model.hash_info("name", "hashedValue", "type") FROM stdin;
 COPY ties_model.module_reference("name", "namespace", "domain", "includedModules", "revision", "content") FROM stdin;
 \.
 
-COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName") FROM stdin;
+COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName", "attributeNames") FROM stdin;
 \.
 
 COPY ties_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;

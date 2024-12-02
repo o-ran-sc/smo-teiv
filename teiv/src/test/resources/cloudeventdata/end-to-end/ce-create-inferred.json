@@ -1,0 +1,183 @@
+{
+    "specversion": "1.0",
+    "id": "a30e63c9-d29e-46ff-b99a-b63ed83f0001",
+    "source": "dmi-plugin:nm-1",
+    "type": "topology-inventory-ingestion.create",
+    "time": "2023-10-25T13:30:01Z",
+    "datacontenttype": "application/json",
+    "dataschema": "topology-inventory-ingestion:events:create:1.0.0",
+    "data": {
+        "entities": [
+            {
+                "o-ran-smo-teiv-equipment:AntennaModule": [
+                    {
+                        "id": "AntennaModule_3",
+                        "attributes": {
+                            "positionWithinSector": "center3"
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-ran:AntennaCapability": [
+                    {
+                        "id": "AntennaCapability_3",
+                        "attributes": {
+                            "geranFqBands": {
+                                "attribute_1": "1",
+                                "attribute_2": "2"
+                            }
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-ran:ODUFunction": [
+                    {
+                        "id": "ODU_2",
+                        "attributes": {
+                            "dUpLMNId": {
+                                "mcc": "111",
+                                "mnc": "211"
+                            },
+                            "gNBDUId": 13,
+                            "gNBId": 12345,
+                            "gNBIdLength": 5
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-ran:NRCellDU": [
+                    {
+                        "id": "NRCellDU_4",
+                        "attributes": {
+                            "cellLocalId": 470
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
+                    {
+                        "id": "ManagedElement_61",
+                        "attributes": {
+
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-ran:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
+                    {
+                        "id": "NRCellDU_41",
+                        "attributes": {
+
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "o-ran-smo-teiv-rel-oam-ran:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
+                    {
+                        "id": "relation_one_to_one_missing_bSide",
+                        "aSide": "ManagedElement_61",
+                        "bSide": "NRCellDU_51",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "relation_one_to_one_missing_aSide",
+                        "aSide": "ManagedElement_81",
+                        "bSide": "NRCellDU_41",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU": [
+                    {
+                        "id": "relation_one_to_many_bSide_missing",
+                        "aSide": "ODU_2",
+                        "bSide": "NRCellDU_5",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "relation_one_to_many_aSide_missing",
+                        "aSide": "ODU_3",
+                        "bSide": "NRCellDU_4",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            },
+            {
+                "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY": [
+                    {
+                        "id": "relation_many_to_many_aSide_missing",
+                        "aSide": "AntennaModule_123",
+                        "bSide": "AntennaCapability_3",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "relation_many_to_many_bSide_missing",
+                        "aSide": "AntennaModule_3",
+                        "bSide": "AntennaCapability_123",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "relation_many_to_many_both_sides_missing",
+                        "aSide": "AntennaModule_11",
+                        "bSide": "AntennaCapability_22",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

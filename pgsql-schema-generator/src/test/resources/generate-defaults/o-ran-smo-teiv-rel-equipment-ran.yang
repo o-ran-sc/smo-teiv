@@ -21,6 +21,11 @@ module o-ran-smo-teiv-rel-equipment-ran {
 
     This model contains the topology relations between Equipment and RAN.";
 
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Relationship_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
     revision "2024-05-24" {
         description "Initial revision.";
         or-teiv-yext:label 0.3.0;
@@ -30,7 +35,16 @@ module o-ran-smo-teiv-rel-equipment-ran {
 
     or-teiv-yext:biDirectionalTopologyRelationship ANTENNAMODULE_SERVES_ANTENNACAPABILITY { // 0..n to 0..m
 
+        description
+            "The aSide of this relationship is an instance of the AntennaModule type.
+            The bSide of this relationship is an instance of the AntennaCapability type.
+            The AntennaModule represents the physical antenna that serves the AntennaCapability.
+            An AntennaModule instance can serve many AntennaCapabilities.
+            An AntennaCapability instance can be served by many AntennaModules.
+            ";
+
         uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list serviced-antennaCapability {

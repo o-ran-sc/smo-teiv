@@ -26,6 +26,7 @@ import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
 import static org.oran.smo.teiv.utils.PersistableUtil.getFullyQualifiedNameWithColumnName;
 import static org.oran.smo.teiv.utils.PersistableUtil.getTableNameWithColumnName;
 import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TiesConstants.METADATA;
 import static org.oran.smo.teiv.utils.TiesConstants.PROPERTY_A_SIDE;
 import static org.oran.smo.teiv.utils.TiesConstants.PROPERTY_B_SIDE;
 import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
@@ -41,7 +42,6 @@ import org.jooq.Table;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.exception.TiesException;
 import org.oran.smo.teiv.schema.DataType;
 import org.oran.smo.teiv.schema.Persistable;
@@ -55,7 +55,6 @@ import java.util.Map;
 import java.util.Set;
 
 @Data
-@Slf4j
 @Builder
 public class InnerFilterCriteria {
     private List<TargetObject> targets;
@@ -126,7 +125,7 @@ public class InnerFilterCriteria {
         switch (targetObject.getContainer()) {
             case ATTRIBUTES -> {
                 if (targetObject.isAllParamQueried()) {
-                    select.putAll(persistable.getSpecificAttributeColumns(List.of()));
+                    select.putAll(persistable.getSpecificAttributeColumns(persistable.getAttributeNames()));
                 } else {
                     select.putAll(persistable.getSpecificAttributeColumns(targetObject.getParams()));
                 }
@@ -137,6 +136,9 @@ public class InnerFilterCriteria {
             case CLASSIFIERS -> select.put(field(getTableNameWithColumnName(persistable.getTableName(), persistable
                     .getClassifiersColumnName()), JSONB.class).as(hashAlias(getFullyQualifiedNameWithColumnName(persistable
                             .getFullyQualifiedName(), CLASSIFIERS))), DataType.CONTAINER);
+            case METADATA -> select.put(field(getTableNameWithColumnName(persistable.getTableName(), persistable
+                    .getMetadataColumnName()), JSONB.class).as(hashAlias(getFullyQualifiedNameWithColumnName(persistable
+                            .getFullyQualifiedName(), METADATA))), DataType.CONTAINER);
             case ID -> {
             }
             case SOURCE_IDS -> select.put(field(getTableNameWithColumnName(persistable.getTableName(), persistable

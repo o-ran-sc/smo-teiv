@@ -36,6 +36,7 @@ import org.oran.smo.teiv.exposure.consumerdata.model.PersistableIdMap;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.service.models.OperationResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import org.jooq.Result;
@@ -44,9 +45,11 @@ import org.jooq.UpdateResultStep;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.condition;
+import static org.jooq.impl.DSL.val;
 import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
 
 @Component
+@Profile("exposure")
 public class DeleteDecoratorsOperation extends DecoratorsOperation {
 
     public DeleteDecoratorsOperation(DSLContext readDataDslContext, DSLContext writeDataDslContext) {
@@ -79,7 +82,7 @@ public class DeleteDecoratorsOperation extends DecoratorsOperation {
     }
 
     private Condition keyExistsCondition(final String decoratorsColumnName, final String key) {
-        return condition(String.format("jsonb_exists(%s, '%s')", decoratorsColumnName, key));
+        return condition("jsonb_exists(?, ?)", field(decoratorsColumnName), val(key));
     }
 
     /**

@@ -168,7 +168,28 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "o-ran-smo-teiv-equipment:AntennaModule": [
                             {
+                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=72AC3D5E2A5F1C47BD09258A9F7B48E0123E9AD752AC54F7E8D8F9D3A6BC487A89A762A5D12CB9D148BB9E5D53A4F3F981345ACDF7B4CB55D67BC12A13FD5B7A"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-equipment:AntennaModule": [
+                            {
+                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=84A3E5D7C916F4B2390DC45F178BE6A9235FD80CB41972E3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-equipment:AntennaModule": [
+                            {
                                 "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-equipment:AntennaModule": [
+                            {
+                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=B7F52C914E8D36A0185BC9D47EF230A95C681D7B4F923E0A5D8C741F6B9203E85A4D967B312C8F405E9B7831A6D2C5904F8B3E167A9D204C5B8371F9E6A02D45"
                             }
                         ]
                     },
@@ -237,21 +258,24 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/entities?offset=0&limit=100&targetFilter=/AntennaModule;/OCUUPFunction"
                 },
-                "totalCount": 9
+                "totalCount": 12
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(9)
+                    occurrence(12)
                 })
-                jsonPath('$.items[2].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
-                jsonPath('$.items[3].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
-                jsonPath('$.items[4].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
                 jsonPath('$.items[5].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
                 jsonPath('$.items[6].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
                 jsonPath('$.items[7].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
                 jsonPath('$.items[8].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
+                jsonPath('$.items[9].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
+                jsonPath('$.items[10].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
+                jsonPath('$.items[11].o-ran-smo-teiv-ran:OCUUPFunction[0].id', byEquality())
                 jsonPath('$.items[0].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
                 jsonPath('$.items[1].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
+                jsonPath('$.items[3].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
+                jsonPath('$.items[4].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
             }
         }
     },
