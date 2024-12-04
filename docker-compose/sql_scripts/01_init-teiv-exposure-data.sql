@@ -34,7 +34,7 @@ ALTER SCHEMA ties_data OWNER TO topology_exposure_user;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
-SET ROLE 'topology_exposure_user';
+SET ROLE topology_exposure_user;
 
 -- Function to create CONSTRAINT only if it does not exists
 CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
@@ -871,43 +871,43 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'3C2E2CE7BDF8321BC824B6318B190690F58DBB82',
  'FK_BE847E738902EA979AC709D5A3D0CCD3FD8911CA',
- 'ALTER TABLE ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" ADD CONSTRAINT "FK_BE847E738902EA979AC709D5A3D0CCD3FD8911CA" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" ADD CONSTRAINT "FK_BE847E738902EA979AC709D5A3D0CCD3FD8911CA" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'3C2E2CE7BDF8321BC824B6318B190690F58DBB82',
  'FK_CCC0DEA6E4ABAB8614332070E83D953254D5A3A5',
- 'ALTER TABLE ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" ADD CONSTRAINT "FK_CCC0DEA6E4ABAB8614332070E83D953254D5A3A5" FOREIGN KEY ("bSide_NearRTRICFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" ADD CONSTRAINT "FK_CCC0DEA6E4ABAB8614332070E83D953254D5A3A5" FOREIGN KEY ("bSide_NearRTRICFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'CFC235E0404703D1E4454647DF8AAE2C193DB402',
  'FK_D80D1E6B26DF620B4DE659C600A3B7F709A41960',
- 'ALTER TABLE ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ADD CONSTRAINT "FK_D80D1E6B26DF620B4DE659C600A3B7F709A41960" FOREIGN KEY ("aSide_AntennaModule") REFERENCES ties_data."o-ran-smo-teiv-equipment_AntennaModule" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ADD CONSTRAINT "FK_D80D1E6B26DF620B4DE659C600A3B7F709A41960" FOREIGN KEY ("aSide_AntennaModule") REFERENCES ties_data."o-ran-smo-teiv-equipment_AntennaModule" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'CFC235E0404703D1E4454647DF8AAE2C193DB402',
  'FK_7148BEED02C0617DE1DEEB6639F34A9FA9251B06',
- 'ALTER TABLE ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ADD CONSTRAINT "FK_7148BEED02C0617DE1DEEB6639F34A9FA9251B06" FOREIGN KEY ("bSide_AntennaCapability") REFERENCES ties_data."o-ran-smo-teiv-ran_AntennaCapability" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."CFC235E0404703D1E4454647DF8AAE2C193DB402" ADD CONSTRAINT "FK_7148BEED02C0617DE1DEEB6639F34A9FA9251B06" FOREIGN KEY ("bSide_AntennaCapability") REFERENCES ties_data."o-ran-smo-teiv-ran_AntennaCapability" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE',
  'FK_A08D274894ECB6799E56C2089A494AF0345B9B16',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE" ADD CONSTRAINT "FK_A08D274894ECB6799E56C2089A494AF0345B9B16" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE" ADD CONSTRAINT "FK_A08D274894ECB6799E56C2089A494AF0345B9B16" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE',
  'FK_D39953B79C8D39296B892FCF2C00B9C99AC7023F',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE" ADD CONSTRAINT "FK_D39953B79C8D39296B892FCF2C00B9C99AC7023F" FOREIGN KEY ("bSide_OCloudNamespace") REFERENCES ties_data."o-ran-smo-teiv-cloud_OCloudNamespace" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE" ADD CONSTRAINT "FK_D39953B79C8D39296B892FCF2C00B9C99AC7023F" FOREIGN KEY ("bSide_OCloudNamespace") REFERENCES ties_data."o-ran-smo-teiv-cloud_OCloudNamespace" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_NFDeployment',
  'FK_127C21CB9B8871C3BCACA05A5400BE6B8E7FCAC0',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDeployment" ADD CONSTRAINT "FK_127C21CB9B8871C3BCACA05A5400BE6B8E7FCAC0" FOREIGN KEY ("REL_FK_comprised-by-cloudifiedNF") REFERENCES ties_data."o-ran-smo-teiv-cloud_CloudifiedNF" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDeployment" ADD CONSTRAINT "FK_127C21CB9B8871C3BCACA05A5400BE6B8E7FCAC0" FOREIGN KEY ("REL_FK_comprised-by-cloudifiedNF") REFERENCES ties_data."o-ran-smo-teiv-cloud_CloudifiedNF" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -919,7 +919,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_NFDeployment',
  'FK_AC1348E208C2E64F2EB1DECE2CCA5DB10B89CBD9',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDeployment" ADD CONSTRAINT "FK_AC1348E208C2E64F2EB1DECE2CCA5DB10B89CBD9" FOREIGN KEY ("REL_FK_serviced-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NFDeployment" ADD CONSTRAINT "FK_AC1348E208C2E64F2EB1DECE2CCA5DB10B89CBD9" FOREIGN KEY ("REL_FK_serviced-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -931,19 +931,19 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE',
  'FK_AE882D77CE8D21B8032B124E1822E0EEE5DAAD92',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE" ADD CONSTRAINT "FK_AE882D77CE8D21B8032B124E1822E0EEE5DAAD92" FOREIGN KEY ("aSide_NodeCluster") REFERENCES ties_data."o-ran-smo-teiv-cloud_NodeCluster" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE" ADD CONSTRAINT "FK_AE882D77CE8D21B8032B124E1822E0EEE5DAAD92" FOREIGN KEY ("aSide_NodeCluster") REFERENCES ties_data."o-ran-smo-teiv-cloud_NodeCluster" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE',
  'FK_888BF6FF782916E61B3FE80643A549A1CFDB6117',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE" ADD CONSTRAINT "FK_888BF6FF782916E61B3FE80643A549A1CFDB6117" FOREIGN KEY ("bSide_OCloudSite") REFERENCES ties_data."o-ran-smo-teiv-cloud_OCloudSite" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_NODECLUSTER_LOCATED_AT_OCLOUDSITE" ADD CONSTRAINT "FK_888BF6FF782916E61B3FE80643A549A1CFDB6117" FOREIGN KEY ("bSide_OCloudSite") REFERENCES ties_data."o-ran-smo-teiv-cloud_OCloudSite" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-cloud_OCloudNamespace',
  'FK_143EFC1953E68469572446EFB56BDEBBC83B8EBF',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_OCloudNamespace" ADD CONSTRAINT "FK_143EFC1953E68469572446EFB56BDEBBC83B8EBF" FOREIGN KEY ("REL_FK_deployed-on-nodeCluster") REFERENCES ties_data."o-ran-smo-teiv-cloud_NodeCluster" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-cloud_OCloudNamespace" ADD CONSTRAINT "FK_143EFC1953E68469572446EFB56BDEBBC83B8EBF" FOREIGN KEY ("REL_FK_deployed-on-nodeCluster") REFERENCES ties_data."o-ran-smo-teiv-cloud_NodeCluster" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -955,7 +955,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-equipment_AntennaModule',
  'FK_E3BAEF04443354C0FC1837CF7964E05BEF9FD6CC',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "FK_E3BAEF04443354C0FC1837CF7964E05BEF9FD6CC" FOREIGN KEY ("REL_FK_installed-at-site") REFERENCES ties_data."o-ran-smo-teiv-equipment_Site" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "FK_E3BAEF04443354C0FC1837CF7964E05BEF9FD6CC" FOREIGN KEY ("REL_FK_installed-at-site") REFERENCES ties_data."o-ran-smo-teiv-equipment_Site" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -967,7 +967,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-equipment_AntennaModule',
  'FK_078764B2F3D613D44CC6E3586F564C83164D2481',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "FK_078764B2F3D613D44CC6E3586F564C83164D2481" FOREIGN KEY ("REL_FK_grouped-by-sector") REFERENCES ties_data."o-ran-smo-teiv-ran_Sector" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-equipment_AntennaModule" ADD CONSTRAINT "FK_078764B2F3D613D44CC6E3586F564C83164D2481" FOREIGN KEY ("REL_FK_grouped-by-sector") REFERENCES ties_data."o-ran-smo-teiv-ran_Sector" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -979,7 +979,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-oam_ManagedElement',
  'FK_899B8130A861D1450FC49D3159D8B29C0628A717',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-oam_ManagedElement" ADD CONSTRAINT "FK_899B8130A861D1450FC49D3159D8B29C0628A717" FOREIGN KEY ("REL_FK_deployed-as-cloudifiedNF") REFERENCES ties_data."o-ran-smo-teiv-cloud_CloudifiedNF" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-oam_ManagedElement" ADD CONSTRAINT "FK_899B8130A861D1450FC49D3159D8B29C0628A717" FOREIGN KEY ("REL_FK_deployed-as-cloudifiedNF") REFERENCES ties_data."o-ran-smo-teiv-cloud_CloudifiedNF" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -991,7 +991,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NRCellCU',
  'FK_o-ran-smo-teiv-ran_NRCellCU_REL_FK_provided-by-ocucpFunction',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRCellCU" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRCellCU_REL_FK_provided-by-ocucpFunction" FOREIGN KEY ("REL_FK_provided-by-ocucpFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUCPFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRCellCU" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRCellCU_REL_FK_provided-by-ocucpFunction" FOREIGN KEY ("REL_FK_provided-by-ocucpFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1003,7 +1003,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NRCellDU',
  'FK_o-ran-smo-teiv-ran_NRCellDU_REL_FK_provided-by-oduFunction',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRCellDU" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRCellDU_REL_FK_provided-by-oduFunction" FOREIGN KEY ("REL_FK_provided-by-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRCellDU" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRCellDU_REL_FK_provided-by-oduFunction" FOREIGN KEY ("REL_FK_provided-by-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1015,7 +1015,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NRCellDU',
  'FK_o-ran-smo-teiv-ran_NRCellDU_REL_FK_grouped-by-sector',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRCellDU" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRCellDU_REL_FK_grouped-by-sector" FOREIGN KEY ("REL_FK_grouped-by-sector") REFERENCES ties_data."o-ran-smo-teiv-ran_Sector" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRCellDU" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRCellDU_REL_FK_grouped-by-sector" FOREIGN KEY ("REL_FK_grouped-by-sector") REFERENCES ties_data."o-ran-smo-teiv-ran_Sector" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1027,7 +1027,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NRSectorCarrier',
  'FK_o-ran-smo-teiv-ran_NRSectorCarrier_REL_FK_used-by-nrCellDu',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRSectorCarrier_REL_FK_used-by-nrCellDu" FOREIGN KEY ("REL_FK_used-by-nrCellDu") REFERENCES ties_data."o-ran-smo-teiv-ran_NRCellDU" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ADD CONSTRAINT "FK_o-ran-smo-teiv-ran_NRSectorCarrier_REL_FK_used-by-nrCellDu" FOREIGN KEY ("REL_FK_used-by-nrCellDu") REFERENCES ties_data."o-ran-smo-teiv-ran_NRCellDU" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1039,7 +1039,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NRSectorCarrier',
  'FK_65D538D54EB33081C808540235FEB28823428E64',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ADD CONSTRAINT "FK_65D538D54EB33081C808540235FEB28823428E64" FOREIGN KEY ("REL_FK_used-antennaCapability") REFERENCES ties_data."o-ran-smo-teiv-ran_AntennaCapability" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ADD CONSTRAINT "FK_65D538D54EB33081C808540235FEB28823428E64" FOREIGN KEY ("REL_FK_used-antennaCapability") REFERENCES ties_data."o-ran-smo-teiv-ran_AntennaCapability" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1051,7 +1051,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NRSectorCarrier',
  'FK_9B73B9E2DBA36736FB76606005C823A6D565A5CD',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ADD CONSTRAINT "FK_9B73B9E2DBA36736FB76606005C823A6D565A5CD" FOREIGN KEY ("REL_FK_provided-by-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NRSectorCarrier" ADD CONSTRAINT "FK_9B73B9E2DBA36736FB76606005C823A6D565A5CD" FOREIGN KEY ("REL_FK_provided-by-oduFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1063,7 +1063,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_NearRTRICFunction',
  'FK_32BDE0334EA6AD74ABB3958A2B163F63A3F05203',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ADD CONSTRAINT "FK_32BDE0334EA6AD74ABB3958A2B163F63A3F05203" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_NearRTRICFunction" ADD CONSTRAINT "FK_32BDE0334EA6AD74ABB3958A2B163F63A3F05203" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1075,7 +1075,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_OCUCPFunction',
  'FK_122DD9709032528D161177B3624AD7AAF6589005',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ADD CONSTRAINT "FK_122DD9709032528D161177B3624AD7AAF6589005" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ADD CONSTRAINT "FK_122DD9709032528D161177B3624AD7AAF6589005" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1087,7 +1087,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_OCUUPFunction',
  'FK_8062AF50E5EE5543FBCC68D66FDFF673E31E081D',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUUPFunction" ADD CONSTRAINT "FK_8062AF50E5EE5543FBCC68D66FDFF673E31E081D" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_OCUUPFunction" ADD CONSTRAINT "FK_8062AF50E5EE5543FBCC68D66FDFF673E31E081D" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1099,7 +1099,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_ODUFunction',
  'FK_B6F0A4F9024FB47DA39C9A4F1DFFF78330222A80',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "FK_B6F0A4F9024FB47DA39C9A4F1DFFF78330222A80" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ODUFunction" ADD CONSTRAINT "FK_B6F0A4F9024FB47DA39C9A4F1DFFF78330222A80" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1111,7 +1111,7 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-ran_ORUFunction',
  'FK_B497A8C3DC2D647938E6DB4C7E691509DD8C90DE',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_B497A8C3DC2D647938E6DB4C7E691509DD8C90DE" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-ran_ORUFunction" ADD CONSTRAINT "FK_B497A8C3DC2D647938E6DB4C7E691509DD8C90DE" FOREIGN KEY ("REL_FK_managed-by-managedElement") REFERENCES ties_data."o-ran-smo-teiv-oam_ManagedElement" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
@@ -1123,49 +1123,49 @@ SELECT ties_data.create_constraint_if_not_exists(
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION',
  'FK_2B4B09AF7CC9C877B1140BB127B4CB4DA438195D',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION" ADD CONSTRAINT "FK_2B4B09AF7CC9C877B1140BB127B4CB4DA438195D" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION" ADD CONSTRAINT "FK_2B4B09AF7CC9C877B1140BB127B4CB4DA438195D" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION',
  'FK_BCF2F9776761ABC19AE0BBD0244D7CD5785E7AC6',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION" ADD CONSTRAINT "FK_BCF2F9776761ABC19AE0BBD0244D7CD5785E7AC6" FOREIGN KEY ("bSide_OCUCPFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUCPFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUCPFUNCTION" ADD CONSTRAINT "FK_BCF2F9776761ABC19AE0BBD0244D7CD5785E7AC6" FOREIGN KEY ("bSide_OCUCPFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUCPFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION',
  'FK_AC1393DCBA845EDA13DADCB5BD87DF4163CD1669',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION" ADD CONSTRAINT "FK_AC1393DCBA845EDA13DADCB5BD87DF4163CD1669" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION" ADD CONSTRAINT "FK_AC1393DCBA845EDA13DADCB5BD87DF4163CD1669" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION',
  'FK_8585D545BC37A473A298E0F5F5942F897A7105B1',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION" ADD CONSTRAINT "FK_8585D545BC37A473A298E0F5F5942F897A7105B1" FOREIGN KEY ("bSide_OCUUPFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUUPFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_OCUUPFUNCTION" ADD CONSTRAINT "FK_8585D545BC37A473A298E0F5F5942F897A7105B1" FOREIGN KEY ("bSide_OCUUPFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_OCUUPFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION',
  'FK_ABA5D0BEEB45E6A5B14DB24E880029CA38DF3F79',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION" ADD CONSTRAINT "FK_ABA5D0BEEB45E6A5B14DB24E880029CA38DF3F79" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION" ADD CONSTRAINT "FK_ABA5D0BEEB45E6A5B14DB24E880029CA38DF3F79" FOREIGN KEY ("aSide_NFDeployment") REFERENCES ties_data."o-ran-smo-teiv-cloud_NFDeployment" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION',
  'FK_C7C12DB840FBCF4EA729B8C2BBCD8BFDE06F0F08',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION" ADD CONSTRAINT "FK_C7C12DB840FBCF4EA729B8C2BBCD8BFDE06F0F08" FOREIGN KEY ("bSide_ODUFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-cloud-ran_NFDEPLOYMENT_SERVES_ODUFUNCTION" ADD CONSTRAINT "FK_C7C12DB840FBCF4EA729B8C2BBCD8BFDE06F0F08" FOREIGN KEY ("bSide_ODUFunction") REFERENCES ties_data."o-ran-smo-teiv-ran_ODUFunction" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU',
  'FK_1AB1E0CC29DA2E122D43A6616EC60A3F73E68649',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU" ADD CONSTRAINT "FK_1AB1E0CC29DA2E122D43A6616EC60A3F73E68649" FOREIGN KEY ("aSide_AntennaModule") REFERENCES ties_data."o-ran-smo-teiv-equipment_AntennaModule" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU" ADD CONSTRAINT "FK_1AB1E0CC29DA2E122D43A6616EC60A3F73E68649" FOREIGN KEY ("aSide_AntennaModule") REFERENCES ties_data."o-ran-smo-teiv-equipment_AntennaModule" ("id");'
 );
 
 SELECT ties_data.create_constraint_if_not_exists(
 	'o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU',
  'FK_8605800A4923C52258A8CE3989E18A7C93D22E8C',
- 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU" ADD CONSTRAINT "FK_8605800A4923C52258A8CE3989E18A7C93D22E8C" FOREIGN KEY ("bSide_NRCellDU") REFERENCES ties_data."o-ran-smo-teiv-ran_NRCellDU" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE ties_data."o-ran-smo-teiv-rel-equipment-ran_ANTENNAMODULE_SERVES_NRCELLDU" ADD CONSTRAINT "FK_8605800A4923C52258A8CE3989E18A7C93D22E8C" FOREIGN KEY ("bSide_NRCellDU") REFERENCES ties_data."o-ran-smo-teiv-ran_NRCellDU" ("id");'
 );
 
 CREATE INDEX IF NOT EXISTS "IDX_996D2C34C2458A6EFE8599C1A0E6942D3D288B7A" ON ties_data."3C2E2CE7BDF8321BC824B6318B190690F58DBB82" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);

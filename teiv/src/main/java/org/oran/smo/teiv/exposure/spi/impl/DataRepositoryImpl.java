@@ -85,8 +85,6 @@ public class DataRepositoryImpl implements DataRepository {
             final int offset) {
         basePathRefinement.refine(filterCriteria);
         SelectOrderByStep<Record> query = PathToJooqRefinement.toJooq(filterCriteria, offset, limit);
-        log.debug("SQL: {}", query);
-
         return runMethodSafe(() -> readDataDslContext.fetch(query));
     }
 

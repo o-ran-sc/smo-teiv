@@ -26,7 +26,7 @@ ALTER SCHEMA ties_groups OWNER TO topology_exposure_user;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
-SET ROLE 'topology_exposure_user';
+SET ROLE topology_exposure_user;
 
 -- Function to create CONSTRAINT only if it does not exists
 CREATE OR REPLACE FUNCTION ties_groups.create_constraint_if_not_exists (

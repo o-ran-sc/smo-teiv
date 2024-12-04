@@ -130,7 +130,7 @@ public class DataServiceImpl implements DataService {
         final EntityType entityType = SchemaRegistry.getEntityTypeByName(entityName);
         final Result<Record> result = dataRepository.getEntityById(entityType, id);
         if (result.isEmpty()) {
-            throw TiesException.resourceNotFoundException();
+            throw TiesException.resourceNotFoundException(id);
         }
 
         return entityMapper.getItemsWithTotalCount(result).getLeft().get(0);
@@ -218,7 +218,7 @@ public class DataServiceImpl implements DataService {
         final RelationType relationType = SchemaRegistry.getRelationTypeByName(relationName);
         final Result<Record> result = dataRepository.getRelationshipById(id, relationType);
         if (result.isEmpty()) {
-            throw TiesException.resourceNotFoundException();
+            throw TiesException.resourceNotFoundException(id);
         }
 
         return relationshipMapper.getItemsWithTotalCount(result).getLeft().get(0);

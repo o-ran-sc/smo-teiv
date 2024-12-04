@@ -130,8 +130,6 @@ public class SchemaParser {
 
         String alterStatement = br.readLine();
         String columnToAddForeignKeyTo = StringUtils.substringBetween(alterStatement, "(", ")").replace("\"", "");
-        String[] stringInQuotes = StringUtils.substringsBetween(alterStatement, "\"", "\"");
-        String referenceTable = stringInQuotes[stringInQuotes.length - 1];
 
         identifiedTables.stream().filter(table -> table.getName().equals(tableToAddConstraintTo)).findFirst().flatMap(
                 table -> table.getColumns().stream().filter(column -> column.getName().equals(columnToAddForeignKeyTo))
@@ -153,9 +151,16 @@ public class SchemaParser {
                                         .tableName(tableToAddConstraintTo).columnToAddConstraintTo(columnToAddForeignKeyTo)
                                         .build());
                             } else if (alterStatement.contains("FOREIGN KEY")) {
+                                String substringFromLastTiesData = alterStatement.substring(StringUtils.lastIndexOf(
+                                        alterStatement, "ties_data.\""));
+                                String referenceTable = StringUtils.substringBetween(substringFromLastTiesData, "\"", "\"");
+                                String referenceTableColumn = alterStatement.substring(StringUtils.lastIndexOf(
+                                        alterStatement, "(") + 1, StringUtils.lastIndexOf(alterStatement, ")")).replace(
+                                                "\"", "").trim();
                                 postgresConstraintCollection.add(ForeignKeyConstraint.builder().constraintName(
                                         constraintName).tableName(tableToAddConstraintTo).columnToAddConstraintTo(
-                                                columnToAddForeignKeyTo).referencedTable(referenceTable).build());
+                                                columnToAddForeignKeyTo).referencedTable(referenceTable).referencedColumn(
+                                                        referenceTableColumn).build());
                             }
                             column.setPostgresConstraints(postgresConstraintCollection);
                         });

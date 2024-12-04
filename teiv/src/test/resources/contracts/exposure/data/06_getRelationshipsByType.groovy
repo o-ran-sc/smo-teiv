@@ -341,7 +341,7 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
+        description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'LongEntityType2'."
         request {
             method GET()
             url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
@@ -361,6 +361,15 @@ import org.springframework.cloud.contract.spec.Contract
                                 "id": "Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
                             }
                         ]
+                    },
+                    {
+                        "test-built-in-module:ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS": [
+                            {
+                                "bSide": "LongEntityType3",
+                                "aSide": "LongEntityType2",
+                                "id": "Rel_OneToOne_SameEntity_LongEntityType2_LongEntityType3"
+                            }
+                        ]
                     }
                 ],
                 "self": {
@@ -378,7 +387,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
                 },
-                "totalCount": 1
+                "totalCount": 2
             }''')
         }
     },

@@ -25,16 +25,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.ContainerType;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.TargetObject;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 
 class TargetResolverTest {
 
     private final TargetResolver targetResolver = new TargetResolver();
+
+    @BeforeAll
+    public static void beforeAll() throws UnsupportedOperationException, SchemaLoaderException {
+        SchemaLoader mockedSchemaLoader = new MockSchemaLoader();
+        mockedSchemaLoader.loadSchemaRegistry();
+
+    }
 
     @Test
     void testIdOnlyWhenTopologyObjectInRootObjectType() {

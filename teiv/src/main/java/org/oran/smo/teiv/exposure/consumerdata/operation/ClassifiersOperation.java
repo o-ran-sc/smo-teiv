@@ -50,8 +50,8 @@ public abstract class ClassifiersOperation extends ConsumerDataOperation<List<St
             String id = (String) record.get(persistable.getIdColumnNameWithTableName());
             List<String> classifierListAfterUpdate = JooqTypeConverter.jsonbToList(record.get(String.format(QUOTED_STRING,
                     persistable.getClassifiersColumnName()), JSONB.class));
-            OperationResult operationResult = OperationResult.createClassifierOperationResult(id, persistable.getName(),
-                    persistable.getCategory(), classifierListAfterUpdate);
+            OperationResult operationResult = OperationResult.builder().id(id).type(persistable.getName()).category(
+                    persistable.getCategory()).classifiers(classifierListAfterUpdate).isUpdatedInDb(true).build();
 
             opResults.put(id, operationResult);
         }

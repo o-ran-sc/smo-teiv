@@ -156,7 +156,7 @@ public class TableBuilder {
                 COLUMN);
 
         relColumns.add(Column.builder().name(hashedRelFk).dataType(TEXT).postgresConstraints(new ArrayList<>(List.of(
-                createForeignKeyConstraints(tableName, hashedTableName, hashedReferenceTable, relFk, hashedRelFk))))
+                createForeignKeyConstraints(tableName, hashedTableName, hashedReferenceTable, ID, relFk, hashedRelFk))))
                 .build());
 
         relColumns.add(Column.builder().name(hashedRelId).dataType(TEXT).postgresConstraints(new ArrayList<>(List.of(
@@ -191,10 +191,11 @@ public class TableBuilder {
         List<Column> relColumns = new ArrayList<>(Arrays.asList(Column.builder().name(ID).dataType(TEXT)
                 .postgresConstraints(new ArrayList<>(List.of(createPrimaryKeyConstraints(tableName, hashedTableName, ID))))
                 .build(), Column.builder().name(hashedRelASide).dataType(TEXT).postgresConstraints(new ArrayList<>(List.of(
-                        createForeignKeyConstraints(tableName, hashedTableName, hashedASideMOType, relASide,
+                        createForeignKeyConstraints(tableName, hashedTableName, hashedASideMOType, ID, relASide,
                                 hashedRelASide)))).build(), Column.builder().name(hashedRelBSide).dataType(TEXT)
                                         .postgresConstraints(new ArrayList<>(List.of(createForeignKeyConstraints(tableName,
-                                                hashedTableName, hashedBSideMOType, relBSide, hashedRelBSide)))).build()));
+                                                hashedTableName, hashedBSideMOType, ID, relBSide, hashedRelBSide))))
+                                        .build()));
         rel.getConsumerData().forEach(cd -> {
             final String columnName = CONSUMER_DATA + cd.getName();
             final String hashedColumnName = hashInfoDataGenerator.generateHashAndRegisterTableRow(CONSUMER_DATA, cd
@@ -239,11 +240,13 @@ public class TableBuilder {
     }
 
     private PostgresConstraint createForeignKeyConstraints(String tableToAddForeignKeyTo,
-            String hashedTableToAddForeignKeyTo, String hashedReferenceTable, String columnName, String hashedColumnName) {
+            String hashedTableToAddForeignKeyTo, String hashedReferenceTable, String referencedColumn, String columnName,
+            String hashedColumnName) {
         String constraintName = hashInfoDataGenerator.generateHashAndRegisterTableRow(FOREIGN_KEY,
                 tableToAddForeignKeyTo + "_" + columnName, CONSTRAINT);
         return ForeignKeyConstraint.builder().constraintName(constraintName).tableName(hashedTableToAddForeignKeyTo)
-                .referencedTable(hashedReferenceTable).columnToAddConstraintTo(hashedColumnName).build();
+                .referencedTable(hashedReferenceTable).columnToAddConstraintTo(hashedColumnName).referencedColumn(
+                        referencedColumn).build();
     }
 
     private PostgresConstraint createPrimaryKeyConstraints(String tableName, String hashedTableName, String columnName) {

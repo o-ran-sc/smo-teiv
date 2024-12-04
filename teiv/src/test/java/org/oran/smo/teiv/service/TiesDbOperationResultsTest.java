@@ -22,6 +22,8 @@ package org.oran.smo.teiv.service;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.oran.smo.teiv.service.models.OperationResult.ENTITY_CATEGORY;
+import static org.oran.smo.teiv.service.models.OperationResult.RELATIONSHIP_CATEGORY;
 import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -155,8 +157,8 @@ class TiesDbOperationResultsTest {
                 .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElement"), "managed_element_entity_id1");
 
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
-        assertTrue(deleteResultMatch.contains(OperationResult.createEntityOperationResult("managed_element_entity_id1",
-                "ManagedElement")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("managed_element_entity_id1").type(
+                "ManagedElement").category(ENTITY_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'managed_element_entity_id1'");
 
         // Delete operation with the same EIID - expected to fail
@@ -194,8 +196,8 @@ class TiesDbOperationResultsTest {
                         "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"));
 
         assertTrue(deleteASideResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.createRelationshipOperationResult("eiid1",
-                "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"), deleteASideResultMatch.get(),
+        assertEquals(OperationResult.builder().id("eiid1").type("ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU")
+                .category(RELATIONSHIP_CATEGORY).build(), deleteASideResultMatch.get(),
                 "The delete operation result should be present for: 'eiid1'");
 
         // Delete operation with the same EIID - expected to fail
@@ -245,8 +247,8 @@ class TiesDbOperationResultsTest {
                         "MANAGEDELEMENT_MANAGES_ORUFUNCTION"));
 
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid1",
-                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid1").type(
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid1'");
 
         // Delete operation with the same entity ID - expected to return an empty list
@@ -297,17 +299,17 @@ class TiesDbOperationResultsTest {
 
         // Check if all expected IDs are present in the deletion result
         assertEquals(4, deleteResultMatch.size(), "Delete operation should match expected size");
-        assertTrue(deleteResultMatch.contains(OperationResult.createEntityOperationResult("me-id1", "ManagedElement")),
-                "The list should contain the delete operation result with id: 'me-id1'");
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("me-id1").type("ManagedElement").category(
+                ENTITY_CATEGORY).build()), "The list should contain the delete operation result with id: 'me-id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid1",
-                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid1").type(
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid1'");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid2",
-                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid2").type(
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid2'");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("eiid3",
-                "MANAGEDELEMENT_MANAGES_ORUFUNCTION")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid3").type(
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid3'");
 
         // Verify all related entities have their relationships deleted
@@ -374,8 +376,8 @@ class TiesDbOperationResultsTest {
         Optional<OperationResult> deleteResultMatch = tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
                 relType, "rel_id1");
         assertTrue(deleteResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.createRelationshipOperationResult("rel_id1", "ANTENNAMODULE_SERVES_ANTENNACAPABILITY"),
-                deleteResultMatch.get(), "Deleted relationship ID should match 'rel_id1'");
+        assertEquals(OperationResult.builder().id("rel_id1").type("ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(
+                RELATIONSHIP_CATEGORY).build(), deleteResultMatch.get(), "Deleted relationship ID should match 'rel_id1'");
 
         // Test deletion of the same relationship ID again (expected failure)
         Optional<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
@@ -433,12 +435,12 @@ class TiesDbOperationResultsTest {
         List<OperationResult> deleteResultMatch = tiesDbOperations.deleteManyToManyRelationByEntityId(dslContext, relType,
                 "antennamodule_id1", "aSide_AntennaModule", "bSide_AntennaCapability");
         assertEquals(2, deleteResultMatch.size(), "Expected two relations to be deleted");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id1",
-                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id1").type(
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'rel_id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id2",
-                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY")),
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id2").type(
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'rel_id2'");
 
         // Test deletion of relations by the same entity ID again (expected to find no
@@ -503,9 +505,9 @@ class TiesDbOperationResultsTest {
                 antennaRelType1, "rel_id1");
 
         assertTrue(deleteResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.createRelationshipOperationResult("rel_id1",
-                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE"), deleteResultMatch.get(),
-                "Deleted relationship ID should match 'rel_id1'");
+        assertEquals(OperationResult.builder().id("rel_id1").type(
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(RELATIONSHIP_CATEGORY).build(),
+                deleteResultMatch.get(), "Deleted relationship ID should match 'rel_id1'");
 
         // Test deletion of the same relationship ID again (expected failure)
         Optional<OperationResult> deleteResultNoMatch = tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
@@ -567,13 +569,13 @@ class TiesDbOperationResultsTest {
                 "module_id1", "aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C",
                 "bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E");
         assertEquals(2, deleteResultMatch.size(), "Expected two relations to be deleted");
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id1",
-                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE")),
-                "The list should contain the delete operation result with id: 'rel_id1'");
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id1").type(
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(RELATIONSHIP_CATEGORY)
+                .build()), "The list should contain the delete operation result with id: 'rel_id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.createRelationshipOperationResult("rel_id2",
-                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE")),
-                "The list should contain the delete operation result with id: 'rel_id2'");
+        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id2").type(
+                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(RELATIONSHIP_CATEGORY)
+                .build()), "The list should contain the delete operation result with id: 'rel_id2'");
 
         // Test deletion of relations by the same entity ID again (expected to find no
         // relations to delete)

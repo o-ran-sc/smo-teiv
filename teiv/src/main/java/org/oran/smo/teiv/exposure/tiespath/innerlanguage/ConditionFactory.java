@@ -33,7 +33,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.jooq.Condition;
 import org.jooq.JSONB;
@@ -43,7 +42,6 @@ import org.oran.smo.teiv.schema.DataType;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.Persistable;
 import org.oran.smo.teiv.schema.RelationType;
-import org.oran.smo.teiv.schema.RelationshipDataLocation;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 
@@ -89,56 +87,11 @@ public class ConditionFactory {
                     return JSONB.valueOf(scopeObject.getParameter());
                 }
                 case GEOGRAPHIC -> {
-                    validateGeographicPoint(scopeObject.getParameter(), true);
+                    validateGeographicPoint(scopeObject.getParameter());
                     return scopeObject.getParameter();
                 }
                 default -> throw TiesPathException.invalidQueryCondition("Unexpected value: " + scopeObject.getDataType());
             }
-        }
-
-        protected static String processContainers(final Persistable persistable, final List<String> innerContainer) {
-            String tableName = persistable.getTableName();
-            String rootElement = name(innerContainer.get(0)).toString();
-            if (innerContainer.size() == 1) {
-                return String.format("%s.%s", tableName, rootElement);
-            }
-
-            List<String> remainingElements = innerContainer.subList(1, innerContainer.size());
-            String path = remainingElements.stream().map(element -> String.format("'%s'", element)).collect(Collectors
-                    .joining(" -> "));
-            return String.format("%s.%s -> %s", tableName, rootElement, path);
-        }
-
-        protected static String processArrayContainers(final Persistable persistable, final List<String> innerContainer) {
-            String tableName = persistable.getTableName();
-            String rootElement = name(innerContainer.get(0)).toString();
-            if (innerContainer.size() == 1) {
-                return String.format("%s.%s", tableName, rootElement);
-            }
-
-            List<String> middleElements = innerContainer.subList(1, innerContainer.size() - 1);
-            String middlePath = middleElements.stream().map(element -> String.format("'%s'", element)).collect(Collectors
-                    .joining(" -> "));
-
-            String lastElement = String.format("'%s'", innerContainer.get(innerContainer.size() - 1));
-            String path = middleElements.isEmpty() ?
-                    String.format("->> %s", lastElement) :
-                    String.format("-> %s ->> %s", middlePath, lastElement);
-            return String.format("%s.%s %s", tableName, rootElement, path);
-        }
-
-        public static String handleEqComplexParameter(final ScopeObject scopeObject) {
-            if (scopeObject.getDataType() == DataType.INTEGER) {
-                return scopeObject.getParameter();
-            }
-            return String.valueOf(name(scopeObject.getParameter()));
-        }
-
-        public static String handleLikeComplexParameter(final ScopeObject scopeObject) {
-            if (scopeObject.getDataType() == DataType.INTEGER) {
-                return scopeObject.getParameter();
-            }
-            return String.format("%%%s%%", scopeObject.getParameter());
         }
 
         protected static Persistable getPersistable(final ScopeObject scopeObject) {
@@ -153,20 +106,13 @@ public class ConditionFactory {
             }
         }
 
-        private static void validateGeographicPoint(final String point, boolean allowHeight) {
+        private static void validateGeographicPoint(final String point) {
             final boolean is2D = point.matches("(?i)POINT\\([-?\\d]+(\\.\\d+)? -?\\d+(\\.\\d+)?\\)");
             final boolean is3D = point.matches("(?i)POINT Z \\([-?\\d]+(\\.\\d+)? -?\\d+(\\.\\d+)? -?\\d+(\\.\\d+)?\\)");
 
             if (!is2D && !is3D) {
-                if (allowHeight) {
-                    throw TiesPathException.invalidQueryCondition(
-                            "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)");
-                } else {
-                    throw TiesPathException.invalidQueryCondition(
-                            "Invalid geographic format, geographic type must be 2D coordinate. For example: POINT(39.40 67.94)");
-                }
-            } else if (is3D && !allowHeight) {
-                throw TiesPathException.invalidQueryCondition("Invalid geographic format, 3D coordinates are not allowed.");
+                throw TiesPathException.invalidQueryCondition(
+                        "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)");
             }
         }
     }
@@ -175,85 +121,130 @@ public class ConditionFactory {
 
         @Override
         public Condition getCondition(final ScopeObject scopeObject) {
-            return switch (scopeObject.getQueryFunction()) {
-                case EQ -> equalsCondition(scopeObject);
-                case CONTAINS -> containsCondition(scopeObject);
-                case WITHIN_METERS -> withinMetersCondition(scopeObject);
-                case COVERED_BY -> coveredByCondition(scopeObject);
-                case NOT_NULL -> {
-                    if (!scopeObject.getInnerContainer().isEmpty()) {
-                        throw TiesPathException.invalidQueryCondition("Inner container should be empty");
+            if (scopeObject.getInnerContainer().isEmpty()) {
+                return handleSimpleAttribute(scopeObject);
+            }
+            return handleComplexAttribute(scopeObject);
+        }
+
+        private Condition handleSimpleAttribute(final ScopeObject scopeObject) {
+            switch (scopeObject.getQueryFunction()) {
+                case EQ -> {
+                    if (scopeObject.getDataType().equals(DataType.GEOGRAPHIC)) {
+                        return condition("? = st_geomfromtext(?)", field(handleSimpleLeaf(scopeObject)), val(convert(
+                                scopeObject)));
                     }
-                    yield field(getTableNameWithColumnName(getPersistable(scopeObject).getTableName(), scopeObject
-                            .getLeaf())).isNotNull();
+                    return field(handleSimpleLeaf(scopeObject)).eq(convert(scopeObject));
+                }
+                case CONTAINS -> {
+                    if (scopeObject.getDataType().equals(DataType.GEOGRAPHIC)) {
+                        throw TiesPathException.invalidQueryCondition("Cannot have CONTAINS on geography type data");
+                    }
+                    return field(handleSimpleLeaf(scopeObject)).contains(convert(scopeObject));
+                }
+                case WITHIN_METERS -> {
+                    if (!scopeObject.getDataType().equals(DataType.GEOGRAPHIC)) {
+                        throw TiesPathException.invalidQueryCondition("Within meters condition needs geography type data");
+                    }
+
+                    String[] parameters = scopeObject.getParameter().split(",");
+                    if (parameters.length != 2 || !parameters[0].matches(pointRegex)) {
+                        throw TiesPathException.invalidQueryCondition("Invalid parameter for within meters condition");
+                    }
+
+                    return condition("ST_DWithin(?, ST_GeographyFromText(?), ?)", field("\"" + scopeObject
+                            .getLeaf() + "\""), field(parameters[0]), field(parameters[1].replaceAll(" ", "")));
+                }
+                case COVERED_BY -> {
+                    if (!scopeObject.getDataType().equals(DataType.GEOGRAPHIC)) {
+                        throw TiesPathException.invalidQueryCondition("Covered by condition needs geography type data");
+                    }
+
+                    if (!scopeObject.getParameter().matches(polygonRegex)) {
+                        throw TiesPathException.invalidQueryCondition("Invalid parameter for covered by condition");
+                    }
+
+                    return condition("ST_CoveredBy(?, ST_GeographyFromText(?))", field("\"" + scopeObject.getLeaf() + "\""),
+                            val(scopeObject.getParameter()));
                 }
                 default -> {
-                    throw TiesPathException.invalidQueryFunction();
+                    return field(handleSimpleLeaf(scopeObject)).isNotNull();
                 }
-            };
-        }
-
-        private static Condition equalsCondition(final ScopeObject scopeObject) {
-            if (scopeObject.getInnerContainer().isEmpty()) {
-                if (scopeObject.getDataType() == DataType.GEOGRAPHIC) {
-                    return condition(getTableNameWithColumnName(getPersistable(scopeObject).getTableName(), scopeObject
-                            .getLeaf()) + " = st_geomfromtext(?)", val(convert(scopeObject)));
-                }
-                return field(getTableNameWithColumnName(getPersistable(scopeObject).getTableName(), scopeObject.getLeaf()))
-                        .eq(convert(scopeObject));
-            } else if (scopeObject.getLeaf().equals(ITEM)) {
-                return condition(processContainers(getPersistable(scopeObject), scopeObject.getInnerContainer()) + " @> ?",
-                        inline(handleEqComplexParameter(scopeObject)));
-            } else {
-                return field(processContainers(getPersistable(scopeObject), scopeObject.getInnerContainer()) + " -> ?", val(
-                        scopeObject.getLeaf())).eq(field(inline(handleEqComplexParameter(scopeObject))));
             }
         }
 
-        private static Condition containsCondition(final ScopeObject scopeObject) {
-            if (scopeObject.getInnerContainer().isEmpty()) {
-                if (scopeObject.getDataType() == DataType.GEOGRAPHIC) {
-                    throw TiesPathException.invalidQueryCondition("Cannot have CONTAINS on geography type data");
-                }
-                return field(getTableNameWithColumnName(getPersistable(scopeObject).getTableName(), scopeObject.getLeaf()))
-                        .contains(convert(scopeObject));
-            } else if (scopeObject.getLeaf().equals(ITEM)) {
-                return condition(processArrayContainers(getPersistable(scopeObject), scopeObject
-                        .getInnerContainer()) + "::text like ?", val("%" + scopeObject.getParameter() + "%"));
-            } else {
-                return condition(field(processContainers(getPersistable(scopeObject), scopeObject
-                        .getInnerContainer()) + " ->> ?", val(scopeObject.getLeaf())).like(handleLikeComplexParameter(
+        private Condition handleComplexAttribute(final ScopeObject scopeObject) {
+            switch (scopeObject.getQueryFunction()) {
+                case EQ -> {
+                    if (scopeObject.getLeaf().equals(ITEM)) {
+                        return condition(handleContainers(scopeObject) + " @> ?", inline(handleEqComplexParameter(
                                 scopeObject)));
+                    }
+                    return field(handleContainers(scopeObject) + " -> ?", val(scopeObject.getLeaf())).eq(field(applyQuotes(
+                            handleEqComplexParameter(scopeObject))));
+                }
+                case CONTAINS -> {
+                    if (scopeObject.getLeaf().equals(ITEM)) {
+                        return condition(handleContainersForArray(scopeObject) + "::text like ?", val("%" + scopeObject
+                                .getParameter() + "%"));
+                    }
+                    return condition(field(handleContainers(scopeObject) + " ->> ?", val(scopeObject.getLeaf())).like(
+                            handleLikeComplexParameter(scopeObject)));
+                }
+                default -> throw TiesPathException.invalidQueryFunction();
             }
         }
 
-        private static Condition withinMetersCondition(final ScopeObject scopeObject) {
-            if (scopeObject.getDataType() != DataType.GEOGRAPHIC) {
-                throw TiesPathException.invalidQueryCondition("Within meters condition needs geography type data");
+        private String handleEqComplexParameter(final ScopeObject scopeObject) {
+            if (scopeObject.getDataType().equals(DataType.INTEGER)) {
+                return scopeObject.getParameter();
             }
-
-            String[] parameters = scopeObject.getParameter().split(",");
-            if (parameters.length != 2 || !parameters[0].matches(pointRegex)) {
-                throw TiesPathException.invalidQueryCondition("Invalid parameter for within meters condition");
-            }
-
-            return condition("ST_DWithin(?, ST_GeographyFromText(?), ?)", field("\"" + scopeObject.getLeaf() + "\""), field(
-                    parameters[0]), field(parameters[1].replaceAll(" ", "")));
+            return String.valueOf(name(scopeObject.getParameter()));
         }
 
-        private static Condition coveredByCondition(final ScopeObject scopeObject) {
-            if (scopeObject.getDataType() != DataType.GEOGRAPHIC) {
-                throw TiesPathException.invalidQueryCondition("Covered by condition needs geography type data");
+        private String handleLikeComplexParameter(final ScopeObject scopeObject) {
+            if (scopeObject.getDataType().equals(DataType.INTEGER)) {
+                return scopeObject.getParameter();
             }
-
-            if (!scopeObject.getParameter().matches(polygonRegex)) {
-                throw TiesPathException.invalidQueryCondition("Invalid parameter for covered by condition");
-            }
-
-            return condition("ST_CoveredBy(?, ST_GeographyFromText(?))", field("\"" + scopeObject.getLeaf() + "\""), val(
-                    scopeObject.getParameter()));
+            return String.format("%%%s%%", scopeObject.getParameter());
         }
 
+        private String handleSimpleLeaf(final ScopeObject scopeObject) {
+            return getPersistable(scopeObject).getTableName() + "." + name(scopeObject.getLeaf());
+        }
+
+        private String handleContainers(final ScopeObject scopeObject) {
+
+            if (scopeObject.getInnerContainer().size() > 1) {
+                StringBuilder sb = new StringBuilder();
+
+                for (String element : scopeObject.getInnerContainer().subList(1, scopeObject.getInnerContainer().size())) {
+                    sb.append(" -> ").append(applyQuotes(element));
+                }
+                return getPersistable(scopeObject).getTableName() + "." + name(scopeObject.getInnerContainer().get(0)) + sb;
+            }
+            return getPersistable(scopeObject).getTableName() + "." + name(scopeObject.getInnerContainer().get(0));
+        }
+
+        private String handleContainersForArray(final ScopeObject scopeObject) {
+
+            if (scopeObject.getInnerContainer().size() > 1) {
+                StringBuilder sb = new StringBuilder();
+
+                for (String element : scopeObject.getInnerContainer().subList(1, scopeObject.getInnerContainer()
+                        .size() - 1)) {
+                    sb.append(" -> ").append(applyQuotes(element));
+                }
+                sb.append(" ->> ").append(applyQuotes(scopeObject.getInnerContainer().get(scopeObject.getInnerContainer()
+                        .size() - 1)));
+                return getPersistable(scopeObject).getTableName() + "." + name(scopeObject.getInnerContainer().get(0)) + sb;
+            }
+            return getPersistable(scopeObject).getTableName() + "." + name(scopeObject.getInnerContainer().get(0));
+        }
+
+        private static String applyQuotes(String element) {
+            return String.format("'%s'", element);
+        }
     }
 
     static class RelationCondition extends AnyCondition {
@@ -307,132 +298,63 @@ public class ConditionFactory {
         @Override
         public Condition getCondition(final ScopeObject scopeObject) {
             return switch (scopeObject.getQueryFunction()) {
-                case EQ, CONTAINS -> createEqOrContainsCondition(scopeObject);
+                case EQ, CONTAINS, COVERED_BY, WITHIN_METERS -> createCondition(scopeObject);
                 case NOT_NULL -> field(SchemaRegistry.getReferenceColumnName(getRelationType(scopeObject))).isNotNull();
-                default -> throw TiesPathException.invalidQueryFunction();
             };
         }
 
-        private Condition createEqOrContainsCondition(final ScopeObject scopeObject) {
-            return scopeObject.getLeaf().equals("id") ?
-                    createIdCondition(scopeObject) :
-                    createAttributeCondition(scopeObject);
+        private Condition createCondition(final ScopeObject scopeObject) {
+            if (scopeObject.getLeaf().equals("id")) {
+                return createIdConditionForFilterSide(scopeObject);
+            }
+            return createAttributeConditionForFilterSide(scopeObject);
         }
 
-        private static Condition createIdCondition(final ScopeObject scopeObject) {
+        private Condition createIdConditionForFilterSide(final ScopeObject scopeObject) {
             RelationType relation = getRelationType(scopeObject);
-            if (scopeObject.getDataType() == null) {
-                scopeObject.setDataType(DataType.PRIMITIVE);
-            }
-
-            String idColumn = getIdColumn(scopeObject, relation);
-            if (relation.getRelationshipStorageLocation() == RelationshipDataLocation.RELATION) {
-                String fullColumnName = getTableNameWithColumnName(relation.getTableName(), idColumn);
-                return createEqualsOrContainsCondition(scopeObject, fullColumnName);
-            }
-
-            EntityType entityType = relation.getStoringSideEntityType();
-            idColumn = relation.getNotStoringSideEntityIdColumnNameInStoringSideTable();
-            boolean isEntityTypeMatch = matchTopologyObjectOrAssociation(scopeObject, entityType);
-            if (isEntityTypeMatch) {
-                String fullIdColumn = getTableNameWithColumnName(entityType.getTableName(), idColumn);
-                return createEqualsOrContainsCondition(scopeObject, fullIdColumn);
-            }
-
-            String nonNullColumn = getTableNameWithColumnName(entityType.getTableName(), idColumn);
-            String fullIdColumn = getTableNameWithColumnName(entityType.getTableName(), entityType.getIdColumnName());
-            return field(nonNullColumn).isNotNull().and(createEqualsOrContainsCondition(scopeObject, fullIdColumn));
+            String associationName = scopeObject.getInnerContainer().get(0);
+            EntityType filter = relation.getAssociationSide(associationName);
+            ScopeObject modifiedScopeObject = ScopeObject.copy(scopeObject);
+            modifiedScopeObject.setContainer(ContainerType.ID);
+            modifiedScopeObject.setTopologyObject(filter.getName());
+            modifiedScopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
+            modifiedScopeObject.setDataType(DataType.PRIMITIVE);
+            return ConditionFactory.create(modifiedScopeObject).getCondition(modifiedScopeObject);
         }
 
-        private static Condition createAttributeCondition(final ScopeObject scopeObject) {
+        private Condition createAttributeConditionForFilterSide(final ScopeObject scopeObject) {
+            ScopeObject modifiedScopeObject = ScopeObject.copy(scopeObject);
             RelationType relation = getRelationType(scopeObject);
-            EntityType entityType = getEntityTypeOnFilterSide(scopeObject, relation);
+            EntityType filter = relation.getAssociationSide(scopeObject.getInnerContainer().get(0));
+            modifiedScopeObject.setContainer(ContainerType.ATTRIBUTES);
+            modifiedScopeObject.setTopologyObject(filter.getName());
+            modifiedScopeObject.setInnerContainer(modifiedScopeObject.getInnerContainer().subList(1, modifiedScopeObject
+                    .getInnerContainer().size()));
+            modifiedScopeObject.setTopologyObjectType(TopologyObjectType.ENTITY);
             if (scopeObject.getDataType() == null) {
-                throw TiesPathException.invalidQueryCondition("Datatype for parameter is missing");
+                throw TiesPathException.invalidQueryCondition("Data type was not found");
             }
-            if (scopeObject.getQueryFunction().equals(QueryFunction.CONTAINS) && scopeObject.getDataType().equals(
-                    DataType.GEOGRAPHIC)) {
-                throw TiesPathException.invalidQueryCondition("Cannot have CONTAINS on geography type data");
+            Condition condition = ConditionFactory.create(modifiedScopeObject).getCondition(modifiedScopeObject);
+            if (filter.equals(relation.getStoringSideEntityType())) {
+                condition = field(getTableNameWithColumnName(filter.getTableName(), relation
+                        .getNotStoringSideEntityIdColumnNameInStoringSideTable())).isNotNull().and(condition);
             }
-            List<String> innerContainer = scopeObject.getInnerContainer().subList(1, scopeObject.getInnerContainer()
-                    .size());
-            if (innerContainer.isEmpty() && scopeObject.getDataType() == DataType.GEOGRAPHIC) {
-                return condition(getTableNameWithColumnName(entityType.getTableName(), scopeObject
-                        .getLeaf()) + " = st_geomfromtext(?)", val(convert(scopeObject)));
-            }
-
-            String compareField = getAttributeColumn(scopeObject, innerContainer, relation);
-            if (!relation.getRelationshipStorageLocation().equals(RelationshipDataLocation.RELATION)) {
-                if (relation.getStoringSideEntityType().equals(entityType)) {
-                    String idColumn = getTableNameWithColumnName(entityType.getTableName(), getIdColumn(scopeObject,
-                            relation));
-                    return field(idColumn).isNotNull().and(createEqualsOrContainsCondition(scopeObject, compareField));
-                }
-                return createEqualsOrContainsCondition(scopeObject, compareField);
-            }
-            return createEqualsOrContainsCondition(scopeObject, compareField);
-        }
-
-        private static String getIdColumn(final ScopeObject scopeObject, final RelationType relation) {
-            if (relation.getRelationshipStorageLocation() != RelationshipDataLocation.RELATION) {
-                return relation.getNotStoringSideEntityIdColumnNameInStoringSideTable();
-            }
-            if (!relation.isConnectsSameEntity()) {
-                return matchTopologyObjectOrAssociation(scopeObject, relation.getASide()) ?
-                        relation.bSideColumnName() :
-                        relation.aSideColumnName();
-            }
-            boolean aSideAssociation = relation.getASideAssociation().getName().equals(scopeObject.getInnerContainer().get(
-                    0));
-            return aSideAssociation ? relation.aSideColumnName() : relation.bSideColumnName();
-        }
-
-        private static String getAttributeColumn(final ScopeObject scopeObject, final List<String> innerContainer,
-                final RelationType relation) {
-            if (!scopeObject.getTopologyObjectType().equals(TopologyObjectType.ENTITY)) {
-                throw TiesPathException.invalidTopologyObjectType();
-            }
-            EntityType entityType = getEntityTypeOnFilterSide(scopeObject, relation);
-            if (innerContainer.isEmpty()) {
-                return getTableNameWithColumnName(entityType.getTableName(), scopeObject.getLeaf());
-            }
-            return processContainers(entityType, innerContainer) + String.format(" -> '%s'", scopeObject.getLeaf());
+            return condition;
         }
 
         private static RelationType getRelationType(final ScopeObject scopeObject) {
-            switch (scopeObject.getTopologyObjectType()) {
-                case ENTITY:
-                    return SchemaRegistry.getAllRelationNamesByAssociationName(scopeObject.getInnerContainer().get(0))
-                            .stream().filter(r -> topologyObjectEquals(scopeObject, r.getASide()) || topologyObjectEquals(
-                                    scopeObject, r.getBSide())).findFirst().orElseThrow(() -> TiesPathException
-                                            .invalidQueryCondition("Relation was not found"));
-                case RELATION:
-                    return SchemaRegistry.getRelationTypeByName(scopeObject.getTopologyObject());
-                default:
-                    throw TiesPathException.invalidTopologyObjectType();
-            }
-        }
-
-        private static EntityType getEntityTypeOnFilterSide(final ScopeObject scopeObject, final RelationType relation) {
-            boolean isTopologyObjASide = matchTopologyObjectOrAssociation(scopeObject, relation.getASide());
-            return isTopologyObjASide ? relation.getBSide() : relation.getASide();
-        }
-
-        private static boolean matchTopologyObjectOrAssociation(final ScopeObject scopeObject,
-                final EntityType entityType) {
-            RelationType relation = getRelationType(scopeObject);
-            return topologyObjectEquals(scopeObject, entityType) || SchemaRegistry.getEntityTypeOnAssociationSide(relation,
-                    scopeObject.getInnerContainer().get(0)).equals(entityType);
+            return switch (scopeObject.getTopologyObjectType()) {
+                case ENTITY -> SchemaRegistry.getAllRelationNamesByAssociationName(scopeObject.getInnerContainer().get(0))
+                        .stream().filter(r -> topologyObjectEquals(scopeObject, r.getASide()) || topologyObjectEquals(
+                                scopeObject, r.getBSide())).findFirst().orElseThrow(() -> TiesPathException
+                                        .invalidQueryCondition("Relation was not found"));
+                case RELATION -> SchemaRegistry.getRelationTypeByName(scopeObject.getTopologyObject());
+                default -> throw TiesPathException.invalidTopologyObjectType();
+            };
         }
 
         private static boolean topologyObjectEquals(final ScopeObject scopeObject, final EntityType entityType) {
             return entityType.getName().equals(scopeObject.getTopologyObject());
-        }
-
-        private static Condition createEqualsOrContainsCondition(final ScopeObject scopeObject, final String field) {
-            return scopeObject.getQueryFunction() == EQ ?
-                    condition(field(field).eq(convert(scopeObject))) :
-                    condition(field(field).contains(convert(scopeObject)));
         }
     }
 

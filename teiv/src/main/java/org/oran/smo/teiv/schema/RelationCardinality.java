@@ -18,13 +18,11 @@
  *  SPDX-License-Identifier: Apache-2.0
  *  ============LICENSE_END=========================================================
  */
-package org.oran.smo.teiv.utils;
+package org.oran.smo.teiv.schema;
 
-/**
- * Constant Environment Variables.
- */
-public class EnvironmentVariableConstants {
-
-    private EnvironmentVariableConstants() {
-    }
+public enum RelationCardinality {
+    ONE_TO_MANY,
+    MANY_TO_ONE,
+    MANY_TO_MANY,
+    ONE_TO_ONE
 }

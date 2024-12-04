@@ -245,4 +245,52 @@ public class RelationType implements Persistable {
             return getDbName(String.format(REL_UPDATETIME_COL_PREFIX, name));
         }
     }
+
+    public RelationCardinality getRelationCardinality(String targetSide) {
+        if (getNotStoringSideEntityType() == null || getStoringSideEntityType() == null) {
+            if (!isAssociationOneSide(getASideAssociation())) {
+                return RelationCardinality.MANY_TO_MANY;
+            }
+            return RelationCardinality.ONE_TO_ONE;
+        } else if (targetSide.equals(getStoringSideEntityType().getName())) {
+            return RelationCardinality.MANY_TO_ONE;
+        } else if (targetSide.equals(getNotStoringSideEntityType().getName())) {
+            return RelationCardinality.ONE_TO_MANY;
+        }
+        return null;
+    }
+
+    public EntityType getAssociationSide(String associationName) {
+        if (getBSideAssociation().getName().equals(associationName)) {
+            return getASide();
+        } else if (getASideAssociation().getName().equals(associationName)) {
+            return getBSide();
+        }
+        return null;
+    }
+
+    public EntityType getNotAssociationSide(String associationName) {
+        if (getBSideAssociation().getName().equals(associationName)) {
+            return getBSide();
+        } else if (getASideAssociation().getName().equals(associationName)) {
+            return getASide();
+        }
+        return null;
+    }
+
+    public String getOtherSideTableName(String targetSide) {
+        if (getASide() == null || getBSide() == null) {
+            return null;
+        }
+        if (targetSide.equals(getASide().getName())) {
+            return getBSide().getTableName();
+        } else if (targetSide.equals(getBSide().getName())) {
+            return getASide().getTableName();
+        }
+        return null;
+    }
+
+    private static boolean isAssociationOneSide(Association association) {
+        return (association.getMinCardinality() <= 1) && association.getMaxCardinality() == 1;
+    }
 }

@@ -213,11 +213,14 @@ class DtoToJooqTest {
                         "POINT(39.4019881 67.9419888").dataType(DataType.GEOGRAPHIC).build();
 
         // spotless:off
-        assertEquals(condition("ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"geoColumn\" = st_geomfromtext('point(39.4019881 67.9419888)')")
+        assertEquals(condition(
+            "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"geoColumn\" = st_geomfromtext('point(39.4019881 67.9419888)')")
             .toString(), new ScopeLogicalBlock(valid1).getCondition().toString());
-        assertEquals(condition("ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"geoColumn\" = st_geomfromtext('POINT(39.4019881 67.9419888)')")
+        assertEquals(condition(
+            "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"geoColumn\" = st_geomfromtext('POINT(39.4019881 67.9419888)')")
             .toString(), new ScopeLogicalBlock(valid2).getCondition().toString());
-        assertEquals(condition("ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"geoColumn\" = st_geomfromtext('POINT Z (39.4019881 67.9419888 123.9878)')")
+        assertEquals(condition(
+            "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"geoColumn\" = st_geomfromtext('POINT Z (39.4019881 67.9419888 123.9878)')")
             .toString(), new ScopeLogicalBlock(valid3).getCondition().toString());
 
         assertThrows(TiesPathException.class, new ScopeLogicalBlock(invalidContains)::getCondition);
@@ -768,10 +771,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-                "\n" +
-                    "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\" = 'me1'\n"
-                    +
-                    "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+                "\n" + //
+                    "  ties_data.\"o-ran-smo-teiv-oam_ManagedElement\".\"id\" = 'me1'\n" + //
+                    "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" + //
+                    ""
+            )
                 .toString(),
             getTestAndCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
@@ -786,12 +790,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-                "\n" +
-                    "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n"
-                    +
-                    "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\" = 'odu1'\n"
-                    +
-                    "  and ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+                "\n" + //
+                    "  ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\" = 'odu1'\n" + //
+                    "  and ties_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" + //
+                    ""
+            )
                 .toString(),
             getTestAndCondition(List.of(scopeObject3, scopeObject4)).toString());
         // spotless:on
@@ -832,15 +835,14 @@ class DtoToJooqTest {
         Condition actualCondition = scopeObject1.getCondition();
         // spotless:off
         assertEquals(
-            ("ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\"like(('%'||replace("
-                + "\n" +
-                "replace(" + "\n" +
-                "replace('me1','!','!!')," + "\n" +
-                "'%'," + "\n" +
-                "'!%'" + "\n" +
-                ")," + "\n" +
-                "'_'," + "\n" +
-                "'!_'" + "\n" +
+            ("ties_data.\"o-ran-smo-teiv-oam_ManagedElement\".\"id\"like(('%'||replace(\n" + //
+                "replace(\n" + //
+                "replace('me1','!','!!'),\n" + //
+                "'%',\n" + //
+                "'!%'\n" + //
+                "),\n" + //
+                "'_',\n" + //
+                "'!_'\n" + //
                 "))||'%')escape'!'").replace(" ", ""),
             actualCondition.toString().replace(" ", ""));
         // spotless:on
@@ -858,11 +860,10 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-                "\n" +
-                    "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" = 'site1'\n"
-                    +
-                    "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n")
-                .toString(),
+                "\n" + //
+                    "  ties_data.\"o-ran-smo-teiv-equipment_Site\".\"id\" = 'site1'\n" + //
+                    "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" + //
+                    "").toString(),
             getTestOrCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
 
@@ -877,14 +878,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-                "\n" +
-                    "  (\n" +
-                    "    ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n"
-                    +
-                    "    and ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n"
-                    +
-                    "  )\n" +
-                    "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n")
+                "\n" + //
+                    "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n" + //
+                    "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" + //
+                    ""
+            )
                 .toString(),
             getTestOrCondition(List.of(scopeObject3, scopeObject4)).toString());
         // spotless:on
@@ -926,21 +924,16 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n"
-                +
-                "and ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" like ("
-                +
-                "('%' || replace(" + "\n" +
-                "replace(" + "\n" +
-                "replace('am1', '!', '!!')," + "\n" +
-                "'%'," + "\n" +
-                "'!%'" + "\n" +
-                ")," + "\n" +
-                "'_'," + "\n" +
-                "'!_'" + "\n" +
-                ")) || '%') escape '!'" + "\n")
-            .toString().replace(" ", ""), scopeObject1.getCondition().toString().replace(" ", ""));
+                "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\"like(('%'||replace(\n" + //
+                    "replace(\n" + //
+                    "replace('am1','!','!!'),\n" + //
+                    "'%',\n" + //
+                    "'!%'\n" + //
+                    "),\n" + //
+                    "'_',\n" + //
+                    "'!_'\n" + //
+                    "))||'%')escape'!'" ).toString().replace(" ", ""),
+            String.format("(%s)",scopeObject1.getCondition().toString()).replace(" ", ""));
         // spotless:on
 
         ScopeLogicalBlock scopeObject2 = new ScopeLogicalBlock(ScopeObject.builder(ANTENNA_MODULE).topologyObjectType(
@@ -949,15 +942,14 @@ class DtoToJooqTest {
                 .build());
 
         // spotless:off
-        assertEquals(("ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"" +
-            ".\"bSide_AntennaCapability\"like(('%'||replace(" + "\n" +
-            "replace(" + "\n" +
-            "replace('ac1','!','!!')," + "\n" +
-            "'%'," + "\n" +
-            "'!%'" + "\n" +
-            ")," + "\n" +
-            "'_'," + "\n" +
-            "'!_'" + "\n" +
+        assertEquals(("ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\".\"id\"like(('%'||replace(\n" + //
+            "replace(\n" + //
+            "replace('ac1','!','!!'),\n" + //
+            "'%',\n" + //
+            "'!%'\n" + //
+            "),\n" + //
+            "'_',\n" + //
+            "'!_'\n" + //
             "))||'%')escape'!'")
             .replace(" ", ""), scopeObject2.getCondition().toString().replace(" ", ""));
         // spotless:on
@@ -976,10 +968,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\" = 'ac1'\n"
-                +
-                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\".\"id\" = 'ac1'\n"
+                + //
+                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n"
+        )
             .toString(), getTestAndCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
 
@@ -993,10 +986,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\" = 'am1'\n"
-                +
-                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n"
+                + //
+                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n"
+        )
             .toString(), getTestAndCondition(List.of(scopeObject3, scopeObject4)).toString());
         // spotless:on
     }
@@ -1020,16 +1014,15 @@ class DtoToJooqTest {
                                 "AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A")
                 .build());
         // spotless:off
-        assertEquals(("ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"" +
-            ".\"aSide_AntennaModule\"like(('%'||replace(" + "\n" +
-            "replace(" + "\n" +
-            "replace('AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A','!','!!'),"
-            + "\n" +
-            "'%'," + "\n" +
-            "'!%'" + "\n" +
-            ")," + "\n" +
-            "'_'," + "\n" +
-            "'!_'" + "\n" +
+        assertEquals(("ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\"like(('%'||replace(\n" + //
+            "replace(\n" + //
+            "replace('AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A','!','!!'),\n"
+            + //
+            "'%',\n" + //
+            "'!%'\n" + //
+            "),\n" + //
+            "'_',\n" + //
+            "'!_'\n" + //
             "))||'%')escape'!'")
             .replace(" ", ""), associationScope2.getCondition().toString().replace(" ", ""));
         // spotless:on
@@ -1073,10 +1066,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\" = 'me1'\n"
-                +
-                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-oam_ManagedElement\".\"id\" = 'me1'\n" + //
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" + //
+                ""
+        )
             .toString(), getTestAndCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
 
@@ -1091,12 +1085,10 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n"
-                +
-                "  and ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"id\" = 'oruf1'\n"
-                +
-                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-ran_ORUFunction\".\"id\" = 'oruf1'\n" + //
+                "  and ties_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" + //
+                "")
             .toString(), getTestAndCondition(List.of(scopeObject3, scopeObject4)).toString());
         // spotless:on
     }
@@ -1113,10 +1105,10 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" = 'site1'\n"
-                +
-                "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-equipment_Site\".\"id\" = 'site1'\n" + //
+                "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" + //
+                "")
             .toString(), getTestOrCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
 
@@ -1132,14 +1124,10 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  (\n" +
-                "    ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n"
-                +
-                "    and ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n"
-                +
-                "  )\n" +
-                "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n" + //
+                "  or ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" + //
+                "")
             .toString(), getTestOrCondition(List.of(scopeObject3, scopeObject4)).toString());
         // spotless:on
     }
@@ -1158,10 +1146,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\" = 'ac1'\n"
-                +
-                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-ran_AntennaCapability\".\"id\" = 'ac1'\n"
+                + //
+                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n"
+        )
             .toString(), getTestAndCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
 
@@ -1176,10 +1165,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\" = 'am1'\n"
-                +
-                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n"
+                + //
+                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n"
+        )
             .toString(), getTestAndCondition(List.of(scopeObject3, scopeObject4)).toString());
         // spotless:on
     }
@@ -1196,10 +1186,11 @@ class DtoToJooqTest {
 
         // spotless:off
         assertEquals(condition(
-            "\n" +
-                "  ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\" = 'ac1'\n"
-                +
-                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
+            "\n" + //
+                "  ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'ac1'\n"
+                + //
+                "  and ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n"
+        )
             .toString(), getTestAndCondition(List.of(scopeObject1, scopeObject2)).toString());
         // spotless:on
     }
@@ -1208,13 +1199,13 @@ class DtoToJooqTest {
     void testConditions_entityAssociation_equals_attributes_nested_leaf() {
         ScopeLogicalBlock associationScope3 = new ScopeLogicalBlock(ScopeObject.builder(SECTOR).topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of("grouped-nrCellDu",
-                        "plmnId")).leaf("mcc").queryFunction(QueryFunction.EQ).parameter("599").dataType(DataType.BIGINT)
+                        "plmnId")).leaf("mcc").queryFunction(QueryFunction.EQ).parameter("599").dataType(DataType.INTEGER)
                 .build());
         // spotless:off
-        assertEquals(condition("\n" +
-                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_grouped-by-sector\" is not null\n"
-                +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"plmnId\" -> 'mcc' = 599\n")
+        assertEquals(condition("\n" + //
+                "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_grouped-by-sector\" is not null\n" + //
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"plmnId\" -> 'mcc' = '599'\n" + //
+                "")
                 .toString(),
             associationScope3.getCondition().toString());
         // spotless:on
@@ -1222,12 +1213,12 @@ class DtoToJooqTest {
         ScopeLogicalBlock associationScope4 = new ScopeLogicalBlock(ScopeObject.builder(SECTOR).topologyObjectType(
                 TopologyObjectType.ENTITY).container(ContainerType.ASSOCIATION).innerContainer(List.of("grouped-nrCellDu",
                         "plmnId", "mcc")).leaf("mcca").queryFunction(QueryFunction.EQ).parameter("599").dataType(
-                                DataType.BIGINT).build());
+                                DataType.INTEGER).build());
         // spotless:off
         assertEquals(condition("\n" +
                 "  ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_grouped-by-sector\" is not null\n"
                 +
-                "  and ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"plmnId\" -> 'mcc' -> 'mcca' = 599\n")
+                "  and ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"plmnId\" -> 'mcc' -> 'mcca' = '599'\n")
                 .toString(),
             associationScope4.getCondition().toString());
         // spotless:on

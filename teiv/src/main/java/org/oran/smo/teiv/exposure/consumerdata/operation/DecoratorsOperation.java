@@ -47,8 +47,8 @@ public abstract class DecoratorsOperation extends ConsumerDataOperation<Map<Stri
             String id = (String) record.get(persistable.getIdColumnNameWithTableName());
             Map<String, Object> decoratorsAfterUpdate = JooqTypeConverter.jsonbToMap(record.get(String.format(QUOTED_STRING,
                     persistable.getDecoratorsColumnName()), JSONB.class));
-            OperationResult operationResult = OperationResult.createDecoratorOperationResult(id, persistable.getName(),
-                    persistable.getCategory(), decoratorsAfterUpdate);
+            OperationResult operationResult = OperationResult.builder().id(id).type(persistable.getName()).category(
+                    persistable.getCategory()).decorators(decoratorsAfterUpdate).isUpdatedInDb(true).build();
 
             results.put(id, operationResult);
         }

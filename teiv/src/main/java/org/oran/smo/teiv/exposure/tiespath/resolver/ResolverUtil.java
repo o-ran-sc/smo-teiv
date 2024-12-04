@@ -27,6 +27,7 @@ import lombok.experimental.UtilityClass;
 
 import jakarta.annotation.Nullable;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.ContainerType;
+import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 
 import static org.oran.smo.teiv.utils.TiesConstants.ATTRIBUTES;
@@ -38,7 +39,9 @@ public class ResolverUtil {
     public static String getTopologyObject(final String rootObject, final List<String> containerNames) {
         final int noOfContainers = containerNames.size();
         final String firstContainer = containerNames.get(0);
-
+        if (isContainingAssociation(containerNames)) {
+            return Optional.ofNullable(rootObject).orElse(WILDCARD);
+        }
         if (isComplexAttribute(containerNames)) {
             return getTopologyObjectOnComplexAttributeCondition(rootObject, firstContainer);
         } else if (noOfContainers > 2) {
@@ -55,8 +58,15 @@ public class ResolverUtil {
         return index != -1 && containerNames.size() - 1 > index;
     }
 
+    public static boolean isContainingAssociation(final List<String> containerNames) {
+        return !containerNames.isEmpty() && containerNames.stream().anyMatch(SchemaRegistry::isValidAssociation);
+    }
+
     @Nullable
     public static ContainerType getContainerType(final List<String> containerNames) {
+        if (isContainingAssociation(containerNames)) {
+            return null;
+        }
         return ContainerType.fromValue(containerNames.get(containerNames.size() - 1));
     }
 

@@ -58,8 +58,8 @@ public class PresentProvidedMembersRetriever extends ProvidedMembersRetriever {
             if (topologyObjectType == null) {
                 return;
             }
-            combinedQueries.add(groupsRepository.createQueryForPresentProvidedMembers(topologyObjectType.getTableName(),
-                    topologyType, providedMembersIds, topologyObjectType.getIdColumnName()));
+            combinedQueries.add(groupsRepository.createQueryForPresentProvidedMembers(groupId, topologyObjectType
+                    .getTableName(), topologyType, topologyObjectType.getIdColumnName()));
         });
         return processCombinedQueries(combinedQueries, requestDetails);
     }

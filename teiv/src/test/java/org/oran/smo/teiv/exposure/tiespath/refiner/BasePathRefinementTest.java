@@ -1012,6 +1012,18 @@ class BasePathRefinementTest {
         // Reason: invalid association added in innerContainer list for RELATION type scopeObject
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateContainers(filterCriteria));
 
+        final FilterCriteria filterCriteria2 = FilterCriteria.builder("EQUIPMENT").filterCriteriaList(List.of(
+                InnerFilterCriteria.builder().targets(targetResolver.resolve(null, null)).scope(scopeResolver.resolve(null,
+                        "/installed-at-site/attributes[@geo-location='POINT(60.4019881 18.9419888)']")).build()))
+                .resolvingTopologyObjectType(FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
+
+        basePathRefinement.refine(filterCriteria2);
+
+        ScopeLogicalBlock expected2 = new ScopeLogicalBlock(ScopeObject.builder("AntennaModule").container(
+                ContainerType.ASSOCIATION).topologyObjectType(TopologyObjectType.ENTITY).queryFunction(QueryFunction.EQ)
+                .parameter("POINT(60.4019881 18.9419888)").resolverDataType(ResolverDataType.STRING).dataType(
+                        DataType.GEOGRAPHIC).innerContainer(List.of("installed-at-site")).leaf("geo-location").build());
+        Assertions.assertEquals(expected2, filterCriteria2.getFilterCriteriaList().get(0).getScope());
     }
 
     @Test
@@ -1055,16 +1067,6 @@ class BasePathRefinementTest {
                 .topologyObjectType(TopologyObjectType.ENTITY).queryFunction(QueryFunction.EQ).leaf(ID_COLUMN_NAME)
                 .parameter("1").resolverDataType(ResolverDataType.INTEGER).build());
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(scopeLogicalBlock2).build()));
-
-        Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
-                filterCriteria));
-
-        // error reason: scopeFilter: /provided-nrCellDu[@cellLocalId=1] -> only id can be queried for associations
-        ScopeLogicalBlock scopeLogicalBlock3 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).innerContainer(
-                new ArrayList<>(Arrays.asList("provided-nrCellDu"))).container(ContainerType.ASSOCIATION)
-                .topologyObjectType(TopologyObjectType.ENTITY).queryFunction(QueryFunction.EQ).leaf("cellLocalId")
-                .parameter("1").resolverDataType(ResolverDataType.INTEGER).build());
-        filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(scopeLogicalBlock3).build()));
 
         Assertions.assertThrows(TiesPathException.class, () -> basePathRefinement.validateScopeParametersDataType(
                 filterCriteria));

@@ -99,7 +99,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",
-                "details": "The requested resource is not found"
+                "details": "The requested resource is not found. ID: non-existing-id"
             }''')
         }
     }

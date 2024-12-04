@@ -138,8 +138,8 @@ public class EntityType implements Persistable {
      *
      * @return the reliability indicator column as String
      */
-    public String getReliabilityColumnName(String attributeDbName) {
-        return getDbName(String.format(RELIABILITY_INDICATOR_COL, attributeDbName));
+    public String getReliabilityColumnName(String attributeName) {
+        return getDbName(String.format(RELIABILITY_INDICATOR_COL, attributeName));
     }
 
     /**
@@ -156,8 +156,8 @@ public class EntityType implements Persistable {
      *
      * @return the responsible adapter column as String
      */
-    public String getResponsibleAdapterAttributeColumnName(String attributeDbName) {
-        return getDbName(String.format(RESPONSIBLE_ADAPTER_COL, attributeDbName));
+    public String getResponsibleAdapterAttributeColumnName(String attributeName) {
+        return getDbName(String.format(RESPONSIBLE_ADAPTER_COL, attributeName));
     }
 
     @Override

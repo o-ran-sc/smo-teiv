@@ -31,6 +31,7 @@ import java.util.Set;
 @Data
 public abstract class LogicalBlock {
     private boolean isValid = true;
+    private boolean isFirstHop = false;
 
     public abstract Condition getCondition();
 

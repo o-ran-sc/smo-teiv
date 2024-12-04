@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.oran.smo.teiv.service.cloudevent.data.Entity;
-import org.oran.smo.teiv.service.cloudevent.data.Relationship;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,6 +34,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public class OperationResult {
     private String id;
     private String type; // e.g.: NRCellDU, Site, CloudNativeApplication
@@ -46,72 +48,17 @@ public class OperationResult {
     private Map<String, Object> metadata;
     private List<String> sourceIds;
     private boolean isUpdatedInDb;
-    private static final String ENTITY = "entity";
-
-    public static OperationResult createEntityOperationResult(String id, String type, Map<String, Object> attributes,
-            List<String> sourceIds, boolean isUpdatedInDb) {
-        return new OperationResult(id, type, ENTITY, attributes, null, null, null, null, null, sourceIds, isUpdatedInDb);
-    }
-
-    public static OperationResult createEntityOperationResult(String id, String type, Map<String, Object> attributes,
-            List<String> sourceIds) {
-        return new OperationResult(id, type, ENTITY, attributes, null, null, null, null, null, sourceIds, false);
-    }
-
-    public static OperationResult createEntityOperationResult(String id, String type, Map<String, Object> attributes) {
-        return createEntityOperationResult(id, type, attributes, null);
-    }
-
-    public static OperationResult createEntityOperationResult(String id, String type) {
-        return OperationResult.createEntityOperationResult(id, type, null, null);
-    }
-
-    public static OperationResult createEntityOperationResult(String id, String type, List<String> sourceIds) {
-        return OperationResult.createEntityOperationResult(id, type, null, sourceIds);
-    }
-
-    public static OperationResult createEntityOperationResult(Entity entity) {
-        return OperationResult.createEntityOperationResult(entity.getId(), entity.getType(), entity.getAttributes(), entity
-                .getSourceIds());
-    }
-
-    public static OperationResult createRelationshipOperationResult(String id, String type, String aSide, String bSide,
-            List<String> sourceIds, boolean isUpdatedInDb) {
-        return new OperationResult(id, type, "relationship", null, aSide, bSide, null, null, null, sourceIds,
-                isUpdatedInDb);
-    }
-
-    public static OperationResult createRelationshipOperationResult(String id, String type, String aSide, String bSide) {
-        return createRelationshipOperationResult(id, type, aSide, bSide, null, false);
-    }
-
-    public static OperationResult createRelationshipOperationResult(String id, String type) {
-        return OperationResult.createRelationshipOperationResult(id, type, null, null, null, false);
-    }
-
-    public static OperationResult createRelationshipOperationResult(Relationship relationship, boolean isUpdatedInDb) {
-        return OperationResult.createRelationshipOperationResult(relationship.getId(), relationship.getType(), relationship
-                .getASide(), relationship.getBSide(), relationship.getSourceIds(), isUpdatedInDb);
-    }
-
-    public static OperationResult createClassifierOperationResult(String id, String type, String category,
-            List<String> classifiers) {
-        return new OperationResult(id, type, category, null, null, null, classifiers, null, null, null, true);
-    }
-
-    public static OperationResult createDecoratorOperationResult(String id, String type, String category,
-            Map<String, Object> decorators) {
-        return new OperationResult(id, type, category, null, null, null, null, decorators, null, null, true);
-    }
+    public static final String ENTITY_CATEGORY = "entity";
+    public static final String RELATIONSHIP_CATEGORY = "relationship";
 
     @JsonIgnore
     public boolean isRelationship() {
-        return getCategory().equals("relationship");
+        return getCategory().equals(RELATIONSHIP_CATEGORY);
     }
 
     @JsonIgnore
     public boolean isEntity() {
-        return getCategory().equals(ENTITY);
+        return getCategory().equals(ENTITY_CATEGORY);
     }
 
     public OperationResult setMetadata(Map<String, Object> metadata) {

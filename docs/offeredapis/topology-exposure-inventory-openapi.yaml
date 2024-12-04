@@ -161,7 +161,7 @@ tags:
   - name: Decorators
     description: "Provides the capability to update or remove user-defined values on entities and relationships."
   - name: Groups
-    description: "Provides the capability to group topology entities and/or relationships of any type. Groups can be created in static or dynamic way. *Static groups*: Group members are defined statically upon group creation. It can include a maximum of 25,000 members. *Dynamic groups*: Group members are dynamically selected based on the defined resource query."
+    description: "Provides the capability to group topology entities and/or relationships of any type. Groups can be created in static or dynamic way. *Static groups*: Group members are defined statically upon group creation. It can include a maximum of 10,000 members. *Dynamic groups*: Group members are dynamically selected based on the defined resource query."
 
 servers:
   - url: https://{host}/topology-inventory/v1alpha11

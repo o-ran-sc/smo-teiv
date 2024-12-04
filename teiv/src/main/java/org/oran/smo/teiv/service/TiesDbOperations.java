@@ -23,6 +23,8 @@ package org.oran.smo.teiv.service;
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getDbName;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.B_SIDE;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.RELATION;
+import static org.oran.smo.teiv.service.models.OperationResult.ENTITY_CATEGORY;
+import static org.oran.smo.teiv.service.models.OperationResult.RELATIONSHIP_CATEGORY;
 import static org.oran.smo.teiv.utils.JooqTypeConverter.toJsonb;
 import static org.oran.smo.teiv.utils.TiesConstants.FOREIGN_KEY_VIOLATION_ERROR_CODE;
 import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
@@ -150,7 +152,7 @@ public class TiesDbOperations {
         int affectedRows = context.delete(table(entityType.getTableName())).where(field(ID_COLUMN_NAME).eq(entityId))
                 .execute();
         if (affectedRows > 0) {
-            result.add(OperationResult.createEntityOperationResult(entityId, entityType.getName()));
+            result.add(OperationResult.builder().id(entityId).type(entityType.getName()).category(ENTITY_CATEGORY).build());
         }
         return result;
     }
@@ -164,8 +166,8 @@ public class TiesDbOperations {
         List<OperationResult> relationshipList = context.select(field(String.format(QUOTED_STRING, relationType
                 .getIdColumnName()), String.class)).from(table(relationType.getTableName())).where(field(String.format(
                         QUOTED_STRING, manySideEntityIdColumn)).eq(manySideEntityId)).forUpdate().fetchInto(String.class)
-                .stream().filter(Objects::nonNull).map(id -> OperationResult.createRelationshipOperationResult(id,
-                        relationType.getName())).collect(Collectors.toList());
+                .stream().filter(Objects::nonNull).map(id -> OperationResult.builder().id(id).type(relationType.getName())
+                        .category(RELATIONSHIP_CATEGORY).build()).collect(Collectors.toList());
         if (relationshipList.isEmpty()) {
             return relationshipList;
         } else {
@@ -189,7 +191,8 @@ public class TiesDbOperations {
                         field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), toJsonb(List.of()))
                 .where(field(String.format(QUOTED_STRING, relationType.getIdColumnName())).eq(relationshipId)).execute();
         return affectedRows > 0 ?
-                Optional.of(OperationResult.createRelationshipOperationResult(relationshipId, relationType.getName())) :
+                Optional.of(OperationResult.builder().id(relationshipId).type(relationType.getName()).category(
+                        RELATIONSHIP_CATEGORY).build()) :
                 Optional.empty();
     }
 
@@ -200,8 +203,8 @@ public class TiesDbOperations {
                         entityId))).returning(field(TiesConstants.ID_COLUMN_NAME)).fetch().getValues(field(
                                 TiesConstants.ID_COLUMN_NAME), String.class);
 
-        return deletedIds.stream().map(id -> OperationResult.createRelationshipOperationResult(id, relationType.getName()))
-                .collect(Collectors.toList());
+        return deletedIds.stream().map(id -> OperationResult.builder().id(id).type(relationType.getName()).category(
+                RELATIONSHIP_CATEGORY).build()).collect(Collectors.toList());
     }
 
     public Optional<OperationResult> deleteManyToManyRelationByRelationId(DSLContext context, RelationType relationType,
@@ -209,7 +212,8 @@ public class TiesDbOperations {
         int affectedRows = context.delete(table(relationType.getTableName())).where(field(ID_COLUMN_NAME).eq(
                 relationshipId)).execute();
         return affectedRows > 0 ?
-                Optional.of(OperationResult.createRelationshipOperationResult(relationshipId, relationType.getName())) :
+                Optional.of(OperationResult.builder().id(relationshipId).type(relationType.getName()).category(
+                        RELATIONSHIP_CATEGORY).build()) :
                 Optional.empty();
     }
 
@@ -285,8 +289,9 @@ public class TiesDbOperations {
                 dbMap.remove(entityType.getResponsibleAdapterIdColumnName());
                 dbMap.remove(entityType.getMetadataColumnName());
                 resultExclusion.forEach(dbMap::remove);
-                results.add(OperationResult.createEntityOperationResult(entity.getId(), entity.getType(), dbMap, entity
-                        .getSourceIds(), isUpdatedInDb).setMetadata(metadata));
+                results.add(OperationResult.builder().id(entity.getId()).type(entity.getType()).category(ENTITY_CATEGORY)
+                        .attributes(dbMap).sourceIds(entity.getSourceIds()).isUpdatedInDb(isUpdatedInDb).metadata(metadata)
+                        .build());
 
             }
         };
@@ -387,8 +392,10 @@ public class TiesDbOperations {
 
         if (fetch != null) {
             boolean isUpdatedInDb = fetch.getValue("xmax", int.class) != 0;
-            return Optional.of(OperationResult.createRelationshipOperationResult(relationship, isUpdatedInDb).setMetadata(
-                    RELIABILITY_INDICATOR_OK_MAP));
+            return Optional.of(OperationResult.builder().id(relationship.getId()).type(relationship.getType()).category(
+                    RELATIONSHIP_CATEGORY).aSide(relationship.getASide()).bSide(relationship.getBSide()).sourceIds(
+                            relationship.getSourceIds()).isUpdatedInDb(isUpdatedInDb).metadata(RELIABILITY_INDICATOR_OK_MAP)
+                    .build());
         }
         return Optional.empty();
     }
@@ -421,8 +428,10 @@ public class TiesDbOperations {
                 .returning(field("xmax", int.class)).fetchOne();
         if (fetch != null) {
             boolean isUpdatedInDb = fetch.getValue("xmax", int.class) != 0;
-            results.add(OperationResult.createRelationshipOperationResult(relationship, isUpdatedInDb).setMetadata(
-                    RELIABILITY_INDICATOR_OK_MAP));
+            results.add(OperationResult.builder().id(relationship.getId()).type(relationship.getType()).category(
+                    RELATIONSHIP_CATEGORY).aSide(relationship.getASide()).bSide(relationship.getBSide()).sourceIds(
+                            relationship.getSourceIds()).isUpdatedInDb(isUpdatedInDb).metadata(RELIABILITY_INDICATOR_OK_MAP)
+                    .build());
         } else {
             throw new IllegalManyToManyRelationshipUpdateException(relationship);
         }
@@ -438,13 +447,13 @@ public class TiesDbOperations {
 
         if (createMissingEntity(aSideTableName, aSideId, relationshipId, dslContext, relationType.getASide(), updateTime,
                 respAdapterByteArray) == 1) {
-            results.add(OperationResult.createEntityOperationResult(aSideId, relationType.getASide().getName(), List.of(
-                    relationshipId)));
+            results.add(OperationResult.builder().id(aSideId).type(relationType.getASide().getName()).category(
+                    ENTITY_CATEGORY).sourceIds(List.of(relationshipId)).build());
         }
         if (createMissingEntity(bSideTableName, bSideId, relationshipId, dslContext, relationType.getBSide(), updateTime,
                 respAdapterByteArray) == 1) {
-            results.add(OperationResult.createEntityOperationResult(bSideId, relationType.getBSide().getName(), List.of(
-                    relationshipId)));
+            results.add(OperationResult.builder().id(bSideId).type(relationType.getBSide().getName()).category(
+                    ENTITY_CATEGORY).sourceIds(List.of(relationshipId)).build());
         }
     }
 
@@ -498,7 +507,8 @@ public class TiesDbOperations {
 
     private void addEntityToOperationResults(List<OperationResult> results, String entityId, Map<String, Object> metadata,
             String entityType) {
-        OperationResult result = OperationResult.createEntityOperationResult(entityId, entityType).setMetadata(metadata);
+        OperationResult result = OperationResult.builder().id(entityId).type(entityType).category(ENTITY_CATEGORY).metadata(
+                metadata).build();
         if (!results.contains(result)) {
             results.add(result);
         }

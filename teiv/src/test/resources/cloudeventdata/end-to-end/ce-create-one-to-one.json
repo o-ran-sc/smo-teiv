@@ -37,7 +37,10 @@
                     {
                         "id": "NRCellDU_21",
                         "attributes": {
-
+                            "cellLocalIdddddddddddddddddddddddddddddddddddddddddddddddddddddd": 4589,
+                            "nCI": 1,
+                            "nRPCI": 12,
+                            "nRTAC": 310
                         },
                         "sourceIds": [
                             "source1",

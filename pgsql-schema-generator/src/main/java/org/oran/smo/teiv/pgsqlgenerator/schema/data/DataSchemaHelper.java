@@ -178,11 +178,12 @@ public class DataSchemaHelper {
             return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "PRIMARY KEY (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint
                             .getColumnToAddConstraintTo());
-        } else if (postgresConstraint instanceof ForeignKeyConstraint foreignKeyConstraint) {
+        } else if (postgresConstraint instanceof ForeignKeyConstraint fkConstraint) {
             return String.format(
-                    ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "FOREIGN KEY (\"%s\") REFERENCES ties_data.\"%s\" (id) ON DELETE CASCADE",
-                    postgresConstraint.getTableToAddConstraintTo(), postgresConstraint.getConstraintName(),
-                    postgresConstraint.getColumnToAddConstraintTo(), foreignKeyConstraint.getReferencedTable());
+                    ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "FOREIGN KEY (\"%s\") REFERENCES ties_data.\"%s\" (\"%s\")",
+                    fkConstraint.getTableToAddConstraintTo(), fkConstraint.getConstraintName(), fkConstraint
+                            .getColumnToAddConstraintTo(), fkConstraint.getReferencedTable(), fkConstraint
+                                    .getReferencedColumn());
         } else if (postgresConstraint instanceof UniqueConstraint) {
             return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "UNIQUE (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint

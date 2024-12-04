@@ -26,7 +26,7 @@ ALTER SCHEMA ties_consumer_data OWNER TO topology_exposure_user;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
-SET ROLE 'topology_exposure_user';
+SET ROLE topology_exposure_user;
 
 CREATE TABLE IF NOT EXISTS ties_consumer_data."module_reference" (
     "name"            TEXT PRIMARY KEY,

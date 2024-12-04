@@ -29,6 +29,8 @@ public class ForeignKeyConstraint implements PostgresConstraint {
     private String tableName;
     @Getter
     private String referencedTable;
+    @Getter
+    private String referencedColumn;
     private String columnToAddConstraintTo;
 
     @Override

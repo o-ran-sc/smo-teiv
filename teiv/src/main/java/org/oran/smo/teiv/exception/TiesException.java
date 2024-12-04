@@ -120,8 +120,9 @@ public class TiesException extends RuntimeException {
                 "Please check the logs for more details", null);
     }
 
-    public static TiesException resourceNotFoundException() {
-        return new TiesException("Resource Not Found", "The requested resource is not found", HttpStatus.NOT_FOUND, null);
+    public static TiesException resourceNotFoundException(final String id) {
+        return new TiesException("Resource Not Found", String.format("The requested resource is not found. ID: %s", id),
+                HttpStatus.NOT_FOUND, null);
     }
 
     public static TiesException resourceNotFoundException(Set<String> entityIds, Set<String> relationshipIds) {

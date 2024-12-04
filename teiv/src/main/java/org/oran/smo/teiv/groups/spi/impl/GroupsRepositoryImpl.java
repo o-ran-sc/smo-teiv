@@ -285,11 +285,13 @@ public class GroupsRepositoryImpl implements GroupsRepository {
     }
 
     @Override
-    public Select<Record2<String, String>> createQueryForPresentProvidedMembers(String tableName, String topologyType,
-            List<String> providedMembersIds, String idColumnName) {
+    public Select<Record2<String, String>> createQueryForPresentProvidedMembers(String groupId, String tableName,
+            String topologyType, String idColumnName) {
         return readDataDslContext.select(DSL.field(DSL.name(idColumnName), String.class).as("id"), DSL.inline(topologyType)
                 .as("topology_type")).from(DSL.table(tableName)).where(DSL.field(DSL.name(idColumnName)).in(
-                        providedMembersIds));
+                        readDataDslContext.select(DSL.field("unnest(" + PROVIDED_MEMBERS_IDS.getName() + ")", String.class)
+                                .as("unnested_id")).from(STATIC_GROUPS_TABLE).where(GROUP_ID.eq(groupId)).and(TOPOLOGY_TYPE
+                                        .eq(topologyType))));
     }
 
     @Override

@@ -215,18 +215,18 @@ public interface GroupsRepository {
     /**
      * Retrieves all members of the specified static group that are present in the network for the given topology type
      *
+     * @param groupId
+     *     - group id
      * @param tableName
      *     - table name where entity is stored
      * @param topologyType
      *     - topology type entity relates to
-     * @param providedMembersIds
-     *     - provided members ids to be matched on
      * @param idColumnName
      *     - id column name
      * @return a query to select present provided members
      */
-    Select<Record2<String, String>> createQueryForPresentProvidedMembers(String tableName, String topologyType,
-            List<String> providedMembersIds, String idColumnName);
+    Select<Record2<String, String>> createQueryForPresentProvidedMembers(String groupId, String tableName,
+            String topologyType, String idColumnName);
 
     /**
      * Retrieves all members of the specified static group that are not present in the network for the given topology type

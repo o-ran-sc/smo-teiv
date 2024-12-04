@@ -114,29 +114,34 @@ public class BackwardCompatibilityChecker {
     }
 
     private void validateColumnConstraints(Column baselineColumn, Column modelColumn, String tableName) {
-        for (PostgresConstraint constraint : baselineColumn.getPostgresConstraints()) {
+        for (PostgresConstraint baselineConstraint : baselineColumn.getPostgresConstraints()) {
             Optional<PostgresConstraint> matchingConstraint = modelColumn.getPostgresConstraints().stream().filter(
-                    constraint1 -> constraint1.getConstraintName().equals(constraint.getConstraintName())).findFirst();
+                    generatedConstraint -> generatedConstraint.getConstraintName().equals(baselineConstraint
+                            .getConstraintName())).findFirst();
 
-            String modifiedOrRemovedConstraintFromBaseline = "modified/removed constraint for column(%s.%s) present in baseline";
-            matchingConstraint.ifPresentOrElse(constraint1 -> {
-                if (!constraint.getTableToAddConstraintTo().equals(constraint1.getTableToAddConstraintTo()) && !constraint
-                        .getColumnToAddConstraintTo().equals(constraint1.getColumnToAddConstraintTo()) && !constraint
-                                .getConstraintName().equals(constraint1.getConstraintName())) {
+            matchingConstraint.ifPresentOrElse(generatedConstraint -> {
+                if (!baselineConstraint.getTableToAddConstraintTo().equals(generatedConstraint
+                        .getTableToAddConstraintTo()) && !baselineConstraint.getColumnToAddConstraintTo().equals(
+                                generatedConstraint.getColumnToAddConstraintTo()) && !baselineConstraint.getConstraintName()
+                                        .equals(generatedConstraint.getConstraintName())) {
                     throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                            modifiedOrRemovedConstraintFromBaseline, tableName, baselineColumn.getName()),
-                            new UnsupportedOperationException());
+                            "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
+                                    .getName()), new UnsupportedOperationException());
                 }
-                if (constraint instanceof ForeignKeyConstraint && !constraint.getTableToAddConstraintTo().equals(constraint1
-                        .getTableToAddConstraintTo())) {
+                if ((baselineConstraint instanceof ForeignKeyConstraint fkBaselineConstraint && generatedConstraint instanceof ForeignKeyConstraint fkGeneratedConstraint) && !fkBaselineConstraint
+                        .getTableToAddConstraintTo().equals(fkGeneratedConstraint
+                                .getTableToAddConstraintTo()) && !fkBaselineConstraint.getReferencedColumn().equals(
+                                        fkGeneratedConstraint.getReferencedTable()) && !fkBaselineConstraint
+                                                .getReferencedColumn().equals(fkGeneratedConstraint
+                                                        .getReferencedColumn())) {
                     throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                            modifiedOrRemovedConstraintFromBaseline, tableName, baselineColumn.getName()),
-                            new UnsupportedOperationException());
+                            "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
+                                    .getName()), new UnsupportedOperationException());
                 }
             }, () -> {
                 throw PgSchemaGeneratorException.nbcChangeIdentifiedException(String.format(
-                        modifiedOrRemovedConstraintFromBaseline, tableName, baselineColumn.getName()),
-                        new UnsupportedOperationException());
+                        "modified/removed constraint for column(%s.%s) present in baseline", tableName, baselineColumn
+                                .getName()), new UnsupportedOperationException());
             });
         }
     }

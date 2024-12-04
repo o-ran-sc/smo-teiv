@@ -105,6 +105,7 @@ class ScopeLogicalBlockTest {
         ScopeLogicalBlock scopeLogicalBlock8 = new ScopeLogicalBlock(scopeObject8);
 
         resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_NRCellDU\""));
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock.getTables());
         resultTables.clear();
 
@@ -122,6 +123,7 @@ class ScopeLogicalBlockTest {
         Assertions.assertEquals(resultTables, scopeLogicalBlock4.getTables());
         resultTables.clear();
 
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-oam_ManagedElement\""));
         resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock5.getTables());
         resultTables.clear();
@@ -130,6 +132,7 @@ class ScopeLogicalBlockTest {
         Assertions.assertEquals(resultTables, scopeLogicalBlock6.getTables());
         resultTables.clear();
 
+        resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_Sector\""));
         resultTables.add(table("ties_data.\"o-ran-smo-teiv-ran_NRCellDU\""));
         Assertions.assertEquals(resultTables, scopeLogicalBlock8.getTables());
         resultTables.clear();
