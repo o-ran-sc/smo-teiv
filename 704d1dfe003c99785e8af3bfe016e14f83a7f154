@@ -16,6 +16,52 @@
       "message": "Looks good. \nBut maybe include a copy of the generated graphs for the current models too in docs?",
       "revId": "704d1dfe003c99785e8af3bfe016e14f83a7f154",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7da59d44_74909249",
+        "filename": "pgsql-schema-generator/src/main/java/org/oran/smo/teiv/pgsqlgenerator/graphgenerator/EntityGraphGenerator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-12-05T10:07:17Z",
+      "side": 1,
+      "message": "Think sourceIds is also missing. See if below works.\n\n\n    private void addAttributeNodeToGraph(MutableGraph graph, List\u003cAttribute\u003e attributes, Entity moduleEntity,\n            MutableNode moduleNode) {\n        String label \u003d \"\u003cTABLE border\u003d\u00270\u0027 cellborder\u003d\u00270\u0027 cellspacing\u003d\u00270\u0027 cellpadding\u003d\u00274\u0027\u003e\";\n        label +\u003d \"\u003cTR\u003e \u003cTD align\u003d\u0027left\u0027\u003eid\u003c/TD\u003e \u003cTD align\u003d\u0027right\u0027\u003estring{key}\u003c/TD\u003e \u003c/TR\u003e\";\n        label +\u003d \"\u003cTR\u003e \u003cTD align\u003d\u0027left\u0027\u003esourceIds\u003c/TD\u003e \u003cTD align\u003d\u0027right\u0027 \u003e\u0026lt;\u0026lt; Refer to Module \u0026gt;\u0026gt;\u003c/TD\u003e \u003c/TR\u003e\";\n        label +\u003d \"\u003cTR\u003e \u003cTD colspan\u003d\u00272\u0027 align\u003d\u0027left\u0027 \u003eattributes:\u003c/TD\u003e \u003c/TR\u003e\";\n        for (Attribute attribute : attributes) {\n            label \u003d label.concat(\"\u003cTR\u003e \u003cTD align\u003d\u0027left\u0027\u003e\u0026nbsp;\u0026nbsp;\u0026nbsp;\" + attribute\n                    .getName() + \"\u003c/TD\u003e \u003cTD align\u003d\u0027right\u0027\u003e\" + escapeHtml(attribute.getYangDataType()) + \"\u003c/TD\u003e \u003c/TR\u003e\");\n        }\n        label \u003d label.concat(\"\u003c/TABLE\u003e\");\n        MutableNode attributeNode \u003d Factory.mutNode(moduleEntity.getEntityName() + \"-attributes\").attrs().add(Label.html(\n                label));\n        graph.add(attributeNode);\n        graph.add(moduleNode.addLink(attributeNode));\n    }",
+      "range": {
+        "startLine": 95,
+        "startChar": 17,
+        "endLine": 95,
+        "endChar": 40
+      },
+      "revId": "704d1dfe003c99785e8af3bfe016e14f83a7f154",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ff29ff8_955a0f83",
+        "filename": "pgsql-schema-generator/src/main/java/org/oran/smo/teiv/pgsqlgenerator/graphgenerator/EntityGraphGeneratorUml.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2024-12-05T10:07:17Z",
+      "side": 1,
+      "message": "SourceIds missing also...........Have a look at below.\n\n\n\n    private String prepareGraphSource(String moduleName, List\u003cEntity\u003e entities) {\n        StringBuilder sb \u003d new StringBuilder();\n        sb.append(\"@startuml\\n\");\n        sb.append(\"skinparam class {\\n\");\n        sb.append(\"    BackgroundColor\u003c\u003cEntity\u003e\u003e LightGray\\n\");\n        sb.append(\"    BackgroundColor\u003c\u003cModule\u003e\u003e LightBlue\\n\");\n        sb.append(\"}\\n\");\n        sb.append(String.format(\"class %s \u003c\u003cModule\u003e\u003e {\\n}\\n\", moduleName));\n        for (Entity entity : entities) {\n            sb.append(String.format(\"class %s \u003c\u003cEntity\u003e\u003e {\\n\", entity.getEntityName()));\n            sb.append(\"    id : string\\n\");\n            sb.append(\"    sourceIds : \u003c\u003c Refer to Module \u003e\u003e\\n\");\n            sb.append(\"    attributes: \\\\n\");\n            List\u003cAttribute\u003e attributes \u003d entity.getAttributes();\n            for (Attribute attribute : attributes) {\n                sb.append(String.format(\"    %s : %s\\\\n\", attribute.getName(), attribute.getYangDataType()));\n            }\n            sb.append(\"\\n}\\n\");\n            sb.append(String.format(\"\\\"%s\\\" --\u003e %s\\n\", moduleName, entity.getEntityName()));\n        }\n        sb.append(\"@enduml\\n\");\n        return sb.toString();\n    }",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 37
+      },
+      "revId": "704d1dfe003c99785e8af3bfe016e14f83a7f154",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
