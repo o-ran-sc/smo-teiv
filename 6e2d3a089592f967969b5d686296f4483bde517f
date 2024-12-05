@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf5c4b54_a7880a77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-05T12:53:21Z",
+      "side": 1,
+      "message": "Verified with jenkins job \nhttps://jenkins.o-ran-sc.org/view/smo-teiv/job/smo-teiv-maven-docker-verify-master-mvn36-openjdk17/78/ \n\nReporting/voting not working for OSC jenkins ATM.",
+      "revId": "6e2d3a089592f967969b5d686296f4483bde517f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
