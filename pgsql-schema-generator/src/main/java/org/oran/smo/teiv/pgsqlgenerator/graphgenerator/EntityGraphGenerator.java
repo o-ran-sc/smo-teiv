@@ -36,6 +36,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir;
 
@@ -94,10 +95,20 @@ public class EntityGraphGenerator {
     private void addAttributeNodeToGraph(MutableGraph graph, List<Attribute> attributes, Entity moduleEntity,
             MutableNode moduleNode) {
         String label = "<TABLE border='1' cellborder='0' cellspacing='0' cellpadding='4'>";
-        for (Attribute attribute : attributes) {
-            label = label.concat("<TR> <TD bgcolor='#EEEEEE' align='left'>" + attribute
-                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + helperFunctions.escapeHtml(attribute
+        Optional<Attribute> optionalId = attributes.stream().filter(att -> "id".equals(att.getName())).findFirst();
+        if (optionalId.isPresent()) {
+            Attribute id = optionalId.get();
+            label = label.concat("<TR> <TD bgcolor='#EEEEEE' align='left'>" + id
+                    .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + helperFunctions.escapeHtml(id
                             .getYangDataType()) + "</TD> </TR>");
+        }
+        label = label.concat("<TR> <TD colspan='2' bgcolor='#EEEEEE' align='left'> attributes: </TD> </TR>");
+        for (Attribute attribute : attributes) {
+            if (!"id".equals(attribute.getName())) {
+                label = label.concat("<TR> <TD bgcolor='#EEEEEE' align='left'>        " + attribute
+                        .getName() + "</TD> <TD align='right' bgcolor='#EEEEEE'>" + helperFunctions.escapeHtml(attribute
+                                .getYangDataType()) + "</TD> </TR>");
+            }
         }
         label = label.concat("</TABLE>");
         MutableNode attributeNode = Factory.mutNode(moduleEntity.getEntityName() + "-attributes").attrs().add(Label.html(
