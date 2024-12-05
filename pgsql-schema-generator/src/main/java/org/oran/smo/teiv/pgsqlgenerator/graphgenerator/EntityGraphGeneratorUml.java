@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Optional;
 
 import org.oran.smo.teiv.pgsqlgenerator.Attribute;
 import org.oran.smo.teiv.pgsqlgenerator.Entity;
@@ -71,15 +72,27 @@ public class EntityGraphGeneratorUml {
         StringBuilder sb = new StringBuilder();
         sb.append("@startuml\n");
         sb.append("skinparam class {\n");
-        sb.append("    BackgroundColor<<Entity>> " + helperFunctions.getNodeFillColour(moduleName) + " \n");
+        sb.append("    BackgroundColor<<Entity>> ").append(helperFunctions.getNodeFillColour(moduleName)).append("\n");
         sb.append("    BackgroundColor<<Module>> LightBlue\n");
         sb.append("}\n");
         sb.append(String.format("class %s <<Module>> {%n}%n", moduleName));
+
         for (Entity entity : entities) {
             sb.append(String.format("class %s <<Entity>> {%n", entity.getEntityName()));
             List<Attribute> attributes = entity.getAttributes();
+
+            Optional<Attribute> optionalId = attributes.stream().filter(att -> "id".equals(att.getName())).findFirst();
+
+            if (optionalId.isPresent()) {
+                Attribute id = optionalId.get();
+                sb.append(String.format("    %s : %s%n", id.getName(), id.getYangDataType()));
+            }
+
+            sb.append("    attributes:\n");
             for (Attribute attribute : attributes) {
-                sb.append(String.format("    %s : %s\n", attribute.getName(), attribute.getYangDataType()));
+                if (!"id".equals(attribute.getName())) {
+                    sb.append(String.format("        %s : %s%n", attribute.getName(), attribute.getYangDataType()));
+                }
             }
             sb.append("}\n");
             sb.append(String.format("\"%s\" --> %s\n", moduleName, entity.getEntityName()));
