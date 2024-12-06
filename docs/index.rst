@@ -19,6 +19,7 @@ to share and operate on a common view of the topology.
    ./developer-guide.rst
    ./query-api-examples.rst
    ./classifiers-and-decorators.rst
+   ./groupings.rst
    ./data-models-guide.rst
    ./discover-and-reconciliation-interface-guide.rst
    ./discover-and-reconciliation-interface.rst

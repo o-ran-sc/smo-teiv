@@ -1,109 +1,95 @@
-<svg width="703px" height="322px"
- viewBox="0.00 0.00 703.00 322.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 318.0)">
+<svg width="715px" height="328px"
+ viewBox="0.00 0.00 715.00 327.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 323.5)">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;equipment</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-318 699,-318 699,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-323.5 711,-323.5 711,4 -4,4"/>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;equipment -->
 <g id="node1" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;equipment</title>
-<polygon fill="lightblue" stroke="black" points="173,-140.5 0,-140.5 0,-104.5 173,-104.5 173,-140.5"/>
-<text text-anchor="middle" x="86.5" y="-118.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;equipment</text>
+<polygon fill="lightblue" stroke="black" points="173,-143.5 0,-143.5 0,-107.5 173,-107.5 173,-143.5"/>
+<text text-anchor="middle" x="86.5" y="-121.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;equipment</text>
 </g>
 <!-- AntennaModule -->
 <g id="node4" class="node">
 <title>AntennaModule</title>
-<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="321,-195.5 209,-195.5 209,-159.5 321,-159.5 321,-195.5"/>
-<text text-anchor="middle" x="265" y="-173.8" font-family="Arial" font-size="14.00">AntennaModule</text>
+<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="321,-199.5 209,-199.5 209,-163.5 321,-163.5 321,-199.5"/>
+<text text-anchor="middle" x="265" y="-177.8" font-family="Arial" font-size="14.00">AntennaModule</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;equipment&#45;&gt;AntennaModule -->
 <g id="edge1" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;equipment&#45;&gt;AntennaModule</title>
-<path fill="none" stroke="black" d="M145.29,-140.51C162.51,-145.88 181.5,-151.79 199.14,-157.29"/>
-<polygon fill="black" stroke="black" points="198.19,-160.66 208.78,-160.29 200.27,-153.98 198.19,-160.66"/>
+<path fill="none" stroke="black" d="M144.32,-143.53C161.75,-149.06 181.06,-155.19 198.99,-160.88"/>
+<polygon fill="black" stroke="black" points="198.21,-164.3 208.8,-163.98 200.32,-157.62 198.21,-164.3"/>
 </g>
 <!-- Site -->
 <g id="node5" class="node">
 <title>Site</title>
-<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="292,-113.5 238,-113.5 238,-77.5 292,-77.5 292,-113.5"/>
-<text text-anchor="middle" x="265" y="-91.8" font-family="Arial" font-size="14.00">Site</text>
+<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="292,-116.5 238,-116.5 238,-80.5 292,-80.5 292,-116.5"/>
+<text text-anchor="middle" x="265" y="-94.8" font-family="Arial" font-size="14.00">Site</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;equipment&#45;&gt;Site -->
 <g id="edge2" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;equipment&#45;&gt;Site</title>
-<path fill="none" stroke="black" d="M173.16,-109.4C192.47,-106.44 211.95,-103.46 227.89,-101.02"/>
-<polygon fill="black" stroke="black" points="228.46,-104.48 237.81,-99.51 227.4,-97.56 228.46,-104.48"/>
+<path fill="none" stroke="black" d="M173.16,-112.4C192.47,-109.44 211.95,-106.46 227.89,-104.02"/>
+<polygon fill="black" stroke="black" points="228.46,-107.48 237.81,-102.51 227.4,-100.56 228.46,-107.48"/>
 </g>
 <!-- AntennaModule&#45;attributes -->
 <g id="node2" class="node">
 <title>AntennaModule&#45;attributes</title>
-<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="695,-314 357,-314 357,-97 695,-97 695,-314"/>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-285.5 366,-308.5 540,-308.5 540,-285.5 366,-285.5"/>
-<text text-anchor="start" x="370" y="-293.3" font-family="Arial" font-size="14.00">antennaBeamWidth</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-285.5 540,-308.5 686,-308.5 686,-285.5 540,-285.5"/>
-<text text-anchor="start" x="645" y="-293.3" font-family="Arial" font-size="14.00">uint32</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-262.5 366,-285.5 540,-285.5 540,-262.5 366,-262.5"/>
-<text text-anchor="start" x="370" y="-270.3" font-family="Arial" font-size="14.00">antennaModelNumber</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-262.5 540,-285.5 686,-285.5 686,-262.5 540,-262.5"/>
-<text text-anchor="start" x="648" y="-270.3" font-family="Arial" font-size="14.00">string</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-239.5 366,-262.5 540,-262.5 540,-239.5 366,-239.5"/>
-<text text-anchor="start" x="370" y="-247.3" font-family="Arial" font-size="14.00">electricalAntennaTilt</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-239.5 540,-262.5 686,-262.5 686,-239.5 540,-239.5"/>
-<text text-anchor="start" x="652" y="-247.3" font-family="Arial" font-size="14.00">int32</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-216.5 366,-239.5 540,-239.5 540,-216.5 366,-216.5"/>
-<text text-anchor="start" x="370" y="-224.3" font-family="Arial" font-size="14.00">geo&#45;location</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-216.5 540,-239.5 686,-239.5 686,-216.5 540,-216.5"/>
-<text text-anchor="start" x="544" y="-224.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-193.5 366,-216.5 540,-216.5 540,-193.5 366,-193.5"/>
-<text text-anchor="start" x="370" y="-201.3" font-family="Arial" font-size="14.00">id</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-193.5 540,-216.5 686,-216.5 686,-193.5 540,-193.5"/>
-<text text-anchor="start" x="648" y="-201.3" font-family="Arial" font-size="14.00">string</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-170.5 366,-193.5 540,-193.5 540,-170.5 366,-170.5"/>
-<text text-anchor="start" x="370" y="-178.3" font-family="Arial" font-size="14.00">mechanicalAntennaBearing</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-170.5 540,-193.5 686,-193.5 686,-170.5 540,-170.5"/>
-<text text-anchor="start" x="652" y="-178.3" font-family="Arial" font-size="14.00">int32</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-147.5 366,-170.5 540,-170.5 540,-147.5 366,-147.5"/>
-<text text-anchor="start" x="370" y="-155.3" font-family="Arial" font-size="14.00">mechanicalAntennaTilt</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-147.5 540,-170.5 686,-170.5 686,-147.5 540,-147.5"/>
-<text text-anchor="start" x="652" y="-155.3" font-family="Arial" font-size="14.00">int32</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-124.5 366,-147.5 540,-147.5 540,-124.5 366,-124.5"/>
-<text text-anchor="start" x="370" y="-132.3" font-family="Arial" font-size="14.00">positionWithinSector</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-124.5 540,-147.5 686,-147.5 686,-124.5 540,-124.5"/>
-<text text-anchor="start" x="648" y="-132.3" font-family="Arial" font-size="14.00">string</text>
-<polygon fill="#eeeeee" stroke="transparent" points="366,-101.5 366,-124.5 540,-124.5 540,-101.5 366,-101.5"/>
-<text text-anchor="start" x="370" y="-109.3" font-family="Arial" font-size="14.00">totalTilt</text>
-<polygon fill="#eeeeee" stroke="transparent" points="540,-101.5 540,-124.5 686,-124.5 686,-101.5 540,-101.5"/>
-<text text-anchor="start" x="652" y="-109.3" font-family="Arial" font-size="14.00">int32</text>
-<polygon fill="none" stroke="black" points="365,-101 365,-310 687,-310 687,-101 365,-101"/>
+<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="707,-319.5 357,-319.5 357,-101.5 707,-101.5 707,-319.5"/>
+<text text-anchor="start" x="365" y="-304.3" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="665" y="-304.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="365" y="-289.3" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="561" y="-289.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="365" y="-274.3" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="365" y="-259.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;antennaBeamWidth</text>
+<text text-anchor="start" x="662" y="-259.3" font-family="Arial" font-size="14.00">uint32</text>
+<text text-anchor="start" x="365" y="-244.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;antennaModelNumber</text>
+<text text-anchor="start" x="665" y="-244.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="365" y="-229.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;azimuth</text>
+<text text-anchor="start" x="636" y="-229.3" font-family="Arial" font-size="14.00">decimal64</text>
+<text text-anchor="start" x="365" y="-214.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;electricalAntennaTilt</text>
+<text text-anchor="start" x="669" y="-214.3" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="365" y="-199.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;geo&#45;location</text>
+<text text-anchor="start" x="561" y="-199.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="365" y="-184.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;horizontalBeamWidth</text>
+<text text-anchor="start" x="636" y="-184.3" font-family="Arial" font-size="14.00">decimal64</text>
+<text text-anchor="start" x="365" y="-169.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;mechanicalAntennaBearing</text>
+<text text-anchor="start" x="669" y="-169.3" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="365" y="-154.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;mechanicalAntennaTilt</text>
+<text text-anchor="start" x="669" y="-154.3" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="365" y="-139.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;positionWithinSector</text>
+<text text-anchor="start" x="665" y="-139.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="365" y="-124.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;totalTilt</text>
+<text text-anchor="start" x="669" y="-124.3" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="365" y="-109.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;verticalBeamWidth</text>
+<text text-anchor="start" x="636" y="-109.3" font-family="Arial" font-size="14.00">decimal64</text>
 </g>
 <!-- Site&#45;attributes -->
 <g id="node3" class="node">
 <title>Site&#45;attributes</title>
-<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="649,-79 403,-79 403,0 649,0 649,-79"/>
-<polygon fill="#eeeeee" stroke="transparent" points="412,-50.5 412,-73.5 494,-73.5 494,-50.5 412,-50.5"/>
-<text text-anchor="start" x="416" y="-58.3" font-family="Arial" font-size="14.00">geo&#45;location</text>
-<polygon fill="#eeeeee" stroke="transparent" points="494,-50.5 494,-73.5 640,-73.5 640,-50.5 494,-50.5"/>
-<text text-anchor="start" x="498" y="-58.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<polygon fill="#eeeeee" stroke="transparent" points="412,-27.5 412,-50.5 494,-50.5 494,-27.5 412,-27.5"/>
-<text text-anchor="start" x="416" y="-35.3" font-family="Arial" font-size="14.00">id</text>
-<polygon fill="#eeeeee" stroke="transparent" points="494,-27.5 494,-50.5 640,-50.5 640,-27.5 494,-27.5"/>
-<text text-anchor="start" x="602" y="-35.3" font-family="Arial" font-size="14.00">string</text>
-<polygon fill="#eeeeee" stroke="transparent" points="412,-4.5 412,-27.5 494,-27.5 494,-4.5 412,-4.5"/>
-<text text-anchor="start" x="416" y="-12.3" font-family="Arial" font-size="14.00">name</text>
-<polygon fill="#eeeeee" stroke="transparent" points="494,-4.5 494,-27.5 640,-27.5 640,-4.5 494,-4.5"/>
-<text text-anchor="start" x="602" y="-12.3" font-family="Arial" font-size="14.00">string</text>
-<polygon fill="none" stroke="black" points="411,-4 411,-75 641,-75 641,-4 411,-4"/>
+<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="661,-83 403,-83 403,0 661,0 661,-83"/>
+<text text-anchor="start" x="411" y="-67.3" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="619" y="-67.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="411" y="-52.3" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="515" y="-52.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="411" y="-37.3" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="411" y="-22.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;geo&#45;location</text>
+<text text-anchor="start" x="515" y="-22.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="411" y="-7.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;name</text>
+<text text-anchor="start" x="619" y="-7.3" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- AntennaModule&#45;&gt;AntennaModule&#45;attributes -->
 <g id="edge3" class="edge">
 <title>AntennaModule&#45;&gt;AntennaModule&#45;attributes</title>
-<path fill="none" stroke="black" d="M321.24,-183.47C329.23,-184.34 337.79,-185.26 346.71,-186.23"/>
-<polygon fill="black" stroke="black" points="346.6,-189.73 356.92,-187.33 347.35,-182.77 346.6,-189.73"/>
+<path fill="none" stroke="black" d="M321.23,-187.54C329.31,-188.43 337.97,-189.38 347.01,-190.37"/>
+<polygon fill="black" stroke="black" points="346.65,-193.85 356.97,-191.45 347.41,-186.89 346.65,-193.85"/>
 </g>
 <!-- Site&#45;&gt;Site&#45;attributes -->
 <g id="edge4" class="edge">
 <title>Site&#45;&gt;Site&#45;attributes</title>
-<path fill="none" stroke="black" d="M292.26,-89.82C316.46,-84.59 354.31,-76.41 392.51,-68.15"/>
-<polygon fill="black" stroke="black" points="393.72,-71.47 402.75,-65.93 392.24,-64.62 393.72,-71.47"/>
+<path fill="none" stroke="black" d="M292.38,-92.83C316.64,-87.61 354.59,-79.44 393.15,-71.15"/>
+<polygon fill="black" stroke="black" points="393.92,-74.57 402.96,-69.04 392.44,-67.72 393.92,-74.57"/>
 </g>
 </g>
 </svg>

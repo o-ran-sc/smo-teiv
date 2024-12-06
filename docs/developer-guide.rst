@@ -84,6 +84,56 @@ have one or multiple relationships which can be defined by the user. A
 possible relationship between ManagedElement and ODUFunction can be
 *MANAGEDELEMENT_MANAGES_ODUFUNCTION*.
 
+Consumer Data
+~~~~~~~~~~~~~
+
+Consumer data is data that enriches Topology & Inventory models. It can be 
+attached to topology entity or topology relation instance, outside of the
+declared topology entity or topology relationship attributes.
+
+Three types of consumer data are supported:
+
+- Source IDs (read only)
+- Classifiers (read and write)
+- Decorators (read and write)
+
+For information about how consumer data relates to the Topology & Inventory model
+and how this information is encoded, see
+:doc:`Topology & Inventory Data Models <data-models-guide>`
+
+Topology identifiers
+~~~~~~~~~~~~~~~~~~~~
+
+These identifiers are uniquely generated values used to identify objects within
+Topology & Inventory.
+
+    **NOTE:** To maintain robust design principles, Apps must avoid caching or
+    depending on topology identifiers (id), as these identifiers are assigned to
+    entities and relationships for data organization purposes only. Topology
+    identifiers carry no intrinsic meaning.
+
+Apps must rely on `sourceIds` which is a list that contains the URN prefixed source
+identifiers of a topology object.
+
+Metadata and reliability Indicator
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Metadata provides additional information about entities and relationships within the
+database.
+
+The **reliabilityIndicator** is used to indicate the status of the topology data
+within the network. See the
+:doc:`Common YANG Types <data-models/common-yang-types>`
+in the Topology & Inventory Data Models for more information. It is implemented as a name-value
+pair within the metadata column. It applies to every entity and relationship.
+
+Values for **reliabilityIndicator**:
+
+1. **RESTORED**: The data was restored from a backup and the responsible adapters are checking to ensure that the data is current.
+2. **OK**: The data is in alignment with the source of truth, as far as Topology Exposure Handling is aware.
+3. **ADVISED**: Entity implicitly created by Topology & Inventory Exposure Handling and potentially not aligned with the source of truth.
+
+
 Topology & Inventory models
 ---------------------------
 

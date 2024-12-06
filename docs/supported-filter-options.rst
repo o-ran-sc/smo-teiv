@@ -43,6 +43,10 @@ be retrieved and filtered using the /attributes.
 | | To return the ids for all instances of | RAN    | ODUFunction    |              |                        | | All ids of every     |
 | | the entityTypeName used in the query.  |        |                |              |                        | | ODUFunction          |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
+| | To return the metadata of every        | RAN    | ODUFunction    | /metadata    |                        | | All ODUFunctions     |
+| | instance of the entitytypeName used in |        |                |              |                        | | with metadata        |
+| | the query.                             |        |                |              |                        |                        |
++------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
 | | To return all attributes of every      | RAN    | ODUFunction    | /attributes  |                        | | All ODUFunctions     |
 | | instance of the entityTypeName used    |        |                |              |                        | | with every attribute |
 | | in the query.                          |        |                |              |                        |                        |
@@ -64,9 +68,15 @@ be retrieved and filtered using the /attributes.
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
 | | To return the ids for all instances of | RAN    | ODUFunction    |              | /sourceIds             | | Unique set of ids    |
 | | the entityTypeName used in the query,  |        |                |              | [contains (@item,      | | of ODUFunctions,     |
-| | that matches the given                 |        |                |              | 'SubNetwork=Ireland')] | | where sourceIds      |
+| | that partially matches the given       |        |                |              | 'SubNetwork=Ireland')] | | where sourceIds      |
 | | property in the *scopeFilter*          |        |                |              |                        | | contains             |
 | | parameter.                             |        |                |              |                        | | *SubNetwork=Ireland* |
++------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
+| | To return the metadata for all         | RAN    | ODUFunction    |              | /metadata              | | Unique set of        |
+| | instances of the entityTypeName used   |        |                |              | [@reliabilityIndicator | | metadata of          |
+| | in the query, that matches the given   |        |                |              | ='OK']                 | | ODUFunctions, where  |
+| | property in the *scopeFilter*          |        |                |              |                        | | reliabilityIndicator |
+| | parameter                              |        |                |              |                        | | equals OK            |
 +------------------------------------------+--------+----------------+--------------+------------------------+------------------------+
 | | To return the ids for all instances of | RAN    | ODUFunction    |              | /attributes            | | Unique set of ids of |
 | | the entityTypeName used in the query,  |        |                |              | [@gNBId                | | ODUFunctions,where   |
@@ -120,7 +130,41 @@ The *entityTypeName* is used as the root of the queries.
 |                                          |             |                |              | [@id='urn\:3gpp:dn:        |                                                  |
 |                                          |             |                |              | ManagedElement=2']         |                                                  |
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
+| | To return the ids for all instances of | RAN         | NRCellDU       |              | /serving-antennaModule/    | | All NRCellDU entities served by AntennaModule  |
+| | an entityTypeName related by an        |             |                |              | attributes[withinMeters    | | entities within 500.5 meters from a point with |
+| | association to other entities whose    |             |                |              | (@geo-location, 'POINT(    | | latitude and longitude values of -73.958444    |
+| | attribute matches the given            |             |                |              | -73.958444 40.800533)',    | | and 40.800533 respectively.                    |
+| | *scopeFilter* parameter.               |             |                |              | 500.5)]                    |                                                  |
++------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
 
+    **/domains/{domainName}/entities**
+
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
+| Use case                                 | domainName  | targetFilter   | scopeFilter                               | Query result                                     |
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | To return the ids of all entities in a | RAN         |                | /managed-by-managedElement                | | All entities that are managed by any           |
+| | given domain related by an association |             |                |                                           | | ManagedElement.                                |
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | To return the ids of all entities in a | RAN         | /ODUFunction   | /managed-by-managedElement                | | All ODUFunction entities that are managed by   |
+| | given domain related by an association |             |                | [@id = 'urn :3gpp :dn: ManagedElement=1'] | | the ManagedElement                             |
+| | to another entity specified by its     |             |                |                                           | | *urn:3gpp:dn: ManagedElement=1*.               |
+| | *id*.                                  |             |                |                                           |                                                  |
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | To return the attributes for all       | RAN         | /attributes    | /managed-by-managedElement [@id=          | | All entities managed by the                    |
+| | entities in a given domain related by  |             |                | 'urn: 3gpp:dn: ManagedElement=1'] |       | | ManagedElement *urn:3gpp:dn:ManagedElement=1*  |
+| | one or more associations to other      |             |                |                                           | | or *urn:3gpp:dn: ManagedElement=2*, and        |
+| | entities specified by their *id*.      |             |                | /managed-by-managedElement                | | provides NRCellDU *urn:3gpp:dn:*               |
+|                                          |             |                | [@id='urn: 3gpp:dn: ManagedElement=2'] ;  | | *ManagedElement=1, NRCellDU=2*.                |
+|                                          |             |                |                                           |                                                  |
+|                                          |             |                | /provided-nrCellDu [@id='urn: 3gpp        |                                                  |
+|                                          |             |                | :dn:ManagedElement=1, NRCellDU=2']        |                                                  |
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | To return the ids of all entities in a | EQUIPMENT   |                | /grouped-by-sector/attributes[sectorId=1] | | All entities that grouped by a Sector whose    |
+| | given domain related by one or more    |             |                |                                           | | sectorId equals 1                              |
+| | associations to other entities whose   |             |                |                                           |                                                  |
+| | attributes match a specified           |             |                |                                           |                                                  |
+| | *scopeFilter* query.                   |             |                |                                           |                                                  |
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
 
 Querying entities for relationships
 -----------------------------------
@@ -186,7 +230,7 @@ relationship with id *rel1* in the *REL_OAM_RAN* domain:
    GET https://<host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ORUFUNCTION/relationships/rel1
 
 Querying on classifiers and decorators
-**************************************
+--------------------------------------
 
 This functionality is supported by the following endpoints
 
@@ -214,7 +258,7 @@ This functionality is supported by the following endpoints
 +-------------------------------------------+--------+--------+-----------------------+------------------------------------------+
 | | Return all related entity IDs that are  | RAN    |        | /decorators[contains( | | All the entity IDs that are exactly    |
 | | exactly matched with key parameter      |        |        | @odu-function-model   | | matched with                           |
-| | where the value of the decorator is     |        |        | :textdata, "")]       | | "odu-function-model:textdata as key    |
+| | where the value of the decorator is     |        |        | :textdata, '')]       | | "odu-function-model:textdata as key    |
 | | unknown with given domain name.         |        |        |                       | | of the decorator in RAN domain.        |
 +-------------------------------------------+--------+--------+-----------------------+------------------------------------------+
 
@@ -222,7 +266,7 @@ This functionality is supported by the following endpoints
 
 ::
 
-   GET https://<eic-host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/entities?scopeFilter=/decorators[@o-ran-smo-teiv-ran:textdata = 'Stockholm']
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/entities?scopeFilter=/decorators[@o-ran-smo-teiv-ran:textdata = 'Stockholm']
 
 **Result**
 
@@ -306,11 +350,11 @@ This functionality is supported by the following endpoints
 |                                     |              |              |                           |                                                        | | the classifiers partially contain "Ind".        |
 +-------------------------------------+--------------+--------------+---------------------------+--------------------------------------------------------+---------------------------------------------------+
 
-**Example:** Get the entities and classifiers where the classifier contains the text *Indoor*
+**Example:** Get the entities and classifiers where the classifier contains the text *Rural*
 
 ::
 
-   GET https://<eic-host>/topology-inventory/<API_VERSION>/domains/RAN/entity-types/NRCellDU/entities?targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item, 'Rural')]
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/RAN/entity-types/NRCellDU/entities?targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item, 'Rural')]
 
 **Result**
 
@@ -430,3 +474,128 @@ This functionality is supported by the following endpoints
         },
         "totalCount": 1
     }
+
+Querying on Geographical Information
+------------------------------------
+
+This functionality is supported by the following endpoints:
+
+**/domains/{domainName}/entity-types/{entityTypeName}/entities**
+
+The *entityTypeName* is used as the root of the queries. Use the "Well-Known Text" (WKT) representation of geometry to
+specify geometry objects. See the `WKT documentation <https://libgeos.org/specifications/wkt/>`_ for more information.
+
+For supported geometry objects, see `Querying on geographical information <#capabilities/topology-inventory/developer-guide?chapter=querying-on-geographical-information>`_.
+
++------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
+| Use case                                 | entityName    | targetFilter   | scopeFilter                               | Query result                                     |
++------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the ids for all instances of an | AntennaModule |                | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by the      |
+| | entityTypeName covered by the given    |               |                | 'POLYGON ((-73.958444 40.800533           | | polygon ((-73.958444 40.800533, -73.981962     |
+| | polygon                                |               |                | ,-73.981962 40.768558, -73.973207         | | 40.768558, -73.973207 40.765048, -73.949861    |
+|                                          |               |                | 40.765048, -73.949861 40.797024           | | 40.797024, -73.958444 40.800533)).             |
+|                                          |               |                | ,-73.958444 40.800533))')]                | |                                                |
++------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the attributes for all          | AntennaModule | /attributes    | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities with attributes     |
+| | instances of an entityTypeName covered |               |                | 'POLYGON ((40 40, 20 45, 45 30,           | | covered by the polygon                         |
+| | by the given polygon.                  |               |                | 40 40))')]                                | | ((40 40, 20 45, 45 30, 40 40)).                |
++------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the ids for all instances of an | AntennaModule |                | /attributes[withinMeters(@geo-location,   | | All AntennaModule entities within 500.5 meters |
+| | entityTypeName within a specified      |               |                | 'POINT(-73.958444 40.800533)', 500.5)]    | | from a point with latitude and longitude       |
+| | distance in meters from a point.       |               |                |                                           | | values of -73.958444 and 40.800533             |
+|                                          |               |                |                                           | | respectively.                                  |
++------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
+
+**Example:** Get all 'AntennaModule' entities covered by the polygon with points (48 68), (50 68), (50 69), (48 69), and (48 68):
+
+::
+
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entity-types/AntennaModule/entities?scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]
+
+**Result**
+
+.. code-block:: json
+
+   {
+       "items": [
+           {
+               "o-ran-smo-teiv-equipment:AntennaModule": [
+                   {
+                       "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7"
+                   }
+               ]
+           }
+       ],
+       "self": {
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+       },
+       "first": {
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+       },
+       "prev": {
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+       },
+       "next": {
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+       },
+       "last": {
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+       },
+       "totalCount": 1
+   }
+
+**/domains/{domainName}/entities**
+
++------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
+| Use case                                 | targetFilter   | scopeFilter                               | Query result                                     |
++------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the ids for all entities in a   |                | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by the      |
+| | given domain that is covered by a      |                | 'POLYGON ((-73.958444 40.800533           | | polygon ((-73.958444 40.800533, -73.981962     |
+| | specified polygon.                     |                | ,-73.981962 40.768558, -73.973207         | | 40.768558, -73.973207 40.765048, -73.949861    |
+|                                          |                | 40.765048, -73.949861 40.797024           | | 40.797024, -73.958444 40.800533)).             |
+|                                          |                | ,-73.958444 40.800533))')]                | |                                                |
++------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the attributes for all          | /AntennaModule | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by          |
+| | AntennaModule entities in the given    | /attributes    | 'POLYGON ((40 40, 20 45, 45 30,           | | the polygon ((20 35, 10 30, 10 10, 30          |
+| | domain covered by a specified polygon. |                | 40 40))')]                                | | 5, 45 20, 20 35)).                             |
++------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the ids for all AntennaModule   | /AntennaModule | /attributes[withinMeters(@geo-location,   | | All AntennaModule entities within 500.5 meters |
+| | entities in the given domain within a  |                | 'POINT(-73.958444 40.800533)', 500.5)]    | | from a point with latitude and longitude       |
+| | specified distance in meters from a    |                |                                           | | values of -73.958444 and 40.800533             |
+| | point.                                 |                |                                           | | respectively.                                  |
++------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
+
+**Example:** Get all entities in the 'EQUIPMENT' domain within 500 meters from a point with latitude and longitude values of 49.40199 and 68.94199 respectively:
+
+::
+
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entities?scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]
+
+**Result**
+
+.. code-block:: json
+
+   {
+       "items": [
+           {
+               "o-ran-smo-teiv-equipment:AntennaModule": [
+                   {
+                       "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7"
+                   }
+               ]
+           }
+       ],
+       "self": {
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+       },
+       "first": {
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+       },
+       "prev": {
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+       },
+       "next": {
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+       },
+       "totalCount": 1
+   }

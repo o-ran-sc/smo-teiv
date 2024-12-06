@@ -46,9 +46,9 @@ CREATE Headers
 |                |        |                                           |                          | | (`uri`)       |                   |
 +----------------+--------+-------------------------------------------+--------------------------+-----------------+-------------------+
 | ce_type        | string | | Event type. It can be one of            | -                        | -               | -                 |
-|                |        | | topology-inventory-ingestion-merge,     |                          |                 |                   |
-|                |        | | topology-inventory-ingestion-delete, or |                          |                 |                   |
-|                |        | | topology-inventory-ingestion-create.    |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.merge,     |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.delete, or |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.create.    |                          |                 |                   |
 +----------------+--------+-------------------------------------------+--------------------------+-----------------+-------------------+
 | content-type   | string | | Content-type of the data contained      | | const                  | -               | -                 |
 |                |        | | within the cloud event. It is           | | (`"application/json"`) |                 |                   |
@@ -75,7 +75,7 @@ CREATE Headers
      "ce_specversion": "1.0",
      "ce_id": "a30e63c9-d29e-46ff-b99a-b63ed83fd233",
      "ce_source": "dmi-plugin:nm-1",
-     "ce_type": "topology-inventory-ingestion-create",
+     "ce_type": "topology-inventory-ingestion.create",
      "ce_time": "2023-06-12T09:05:00Z",
      "content-type": "application/json",
      "ce_dataschema": "topology-inventory-ingestion:events:create:1.0.0"
@@ -89,26 +89,22 @@ CREATE Payload
 +======================================================+===============+================================================================+
 | (root)                                               | Object        | -                                                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data                                                 | -             | | The data part consists of the actual topology data. It       |
-|                                                      |               | | contains all the entities and their associated               |
-|                                                      |               | | relationships.                                               |
-+------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data.entities                                        | Array<Object> | | Entities are topology objects comprising of an id, consumer  |
+| entities                                             | Array<Object> | | Entities are topology objects comprising of an id, consumer  |
 |                                                      |               | | data, attributes and metadata for each. It contains the id   |
 |                                                      |               | | only in case of delete cloud event.                          |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| | data.entities                                      | Object        | | Entities schema is adherent to the entity types and          |
+| | entities                                           | Object        | | Entities schema is adherent to the entity types and          |
 | | .<module_name>                                     |               | | attributes mentioned in the yang modules. For yang modules,  |
 | | :<mo_type>                                         |               | | see [Data Models][Data Models].                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data.relationships                                   | Array<Object> | | Relationships comprising of an A-side and a B-side for each. |
+| relationships                                        | Array<Object> | | Relationships comprising of an A-side and a B-side for each. |
 |                                                      |               | | The A-side is considered the originating side of the         |
 |                                                      |               | | relationship; the B-side is considered the terminating side  |
 |                                                      |               | | of the relationship. The order of A-side and B-side is of    |
 |                                                      |               | | importance and MUST NOT be changed once defined. It          |
 |                                                      |               | | contains the id only in case of delete event.                |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| | data.relationships                                 | Object        | | Relationship schema is adherent to the relationship types    |
+| | relationships                                      | Object        | | Relationship schema is adherent to the relationship types    |
 | | .<module_name>                                     |               | | mentioned in the yang modules. For yang modules,             |
 | | :<relationship_type>                               |               | | see [Data Models][Data Models].                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
@@ -118,96 +114,106 @@ CREATE Payload
 .. code:: json
 
    {
-     "data": {
-       "entities": [
-         {
-           "o-ran-smo-teiv-equipment:AntennaModule": [
-             {
-               "id": "urn:oran:smo:teiv:AntennaModule=1",
-               "attributes": {
-                 "antennaModelNumber": "1",
-                 "mechanicalAntennaBearing": 50,
-                 "mechanicalAntennaTilt": 10,
-                 "positionWithinSector": "Unknown",
-                 "totalTilt": 14,
-                 "electricalAntennaTilt": 2,
-                 "antennaBeamWidth": [
-                   35,
-                   23,
-                   21
-                 ],
-                 "geo-location": {
-                   "latitude": 41.73297,
-                   "longitude": -73.007696,
-                   "height": 3000
-                 }
-               },
-               "sourceIds": [
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+     "entities": [
+       {
+         "o-ran-smo-teiv-equipment:AntennaModule": [
+           {
+             "id": "urn:oran:smo:teiv:AntennaModule=1",
+             "attributes": {
+               "antennaModelNumber": "1",
+               "mechanicalAntennaBearing": 50,
+               "mechanicalAntennaTilt": 10,
+               "positionWithinSector": "Unknown",
+               "totalTilt": 14,
+               "electricalAntennaTilt": 2,
+               "antennaBeamWidth": [
+                 35,
+                 23,
+                 21
                ],
-               "metadata": {
-                 "trustLevel": "RELIABLE"
+               "geo-location": {
+                 "latitude": 41.73297,
+                 "longitude": -73.007696,
+                 "height": 3000
                }
+             },
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+             ],
+             "metadata": {
+               "reliabilityIndicator": "OK"
              }
-           ]
-         },
-         {
-           "o-ran-smo-teiv-equipment:AntennaModule": [
-             {
-               "id": "urn:oran:smo:teiv:AntennaModule=2",
-               "attributes": {
-                 "antennaModelNumber": "2",
-                 "mechanicalAntennaBearing": 61,
-                 "mechanicalAntennaTilt": 21,
-                 "positionWithinSector": "Unknown",
-                 "totalTilt": 25,
-                 "electricalAntennaTilt": 3,
-                 "antennaBeamWidth": [
-                   46,
-                   34,
-                   32
-                 ],
-                 "geo-location": {
-                   "latitude": 52.84308,
-                   "longitude": -84.118707,
-                   "height": 41111
-                 }
-               },
-               "sourceIds": [
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1"
+           }
+         ]
+       },
+       {
+         "o-ran-smo-teiv-equipment:AntennaModule": [
+           {
+             "id": "urn:oran:smo:teiv:AntennaModule=2",
+             "attributes": {
+               "antennaModelNumber": "2",
+               "mechanicalAntennaBearing": 61,
+               "mechanicalAntennaTilt": 21,
+               "positionWithinSector": "Unknown",
+               "totalTilt": 25,
+               "electricalAntennaTilt": 3,
+               "antennaBeamWidth": [
+                 46,
+                 34,
+                 32
                ],
-               "metadata": {
-                 "trustLevel": "RELIABLE"
+               "geo-location": {
+                 "latitude": 52.84308,
+                 "longitude": -84.118707,
+                 "height": 41111
                }
+             },
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1"
+             ],
+             "metadata": {
+               "reliabilityIndicator": "OK"
              }
-           ]
-         }
-       ],
-       "relationships": [
-         {
-           "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-             {
-               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
-               "aSide": "urn:oran:smo:teiv:AntennaModule=1",
-               "bSide": "urn:oran:smo:teiv:Site=1"
-             }
-           ]
-         },
-         {
-           "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-             {
-               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
-               "aSide": "urn:oran:smo:teiv:AntennaModule=2",
-               "bSide": "urn:oran:smo:teiv:Site=2"
-             }
-           ]
-         }
-       ]
-     }
+           }
+         ]
+       }
+     ],
+     "relationships": [
+       {
+         "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+           {
+             "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+             "aSide": "urn:oran:smo:teiv:AntennaModule=1",
+             "bSide": "urn:oran:smo:teiv:Site=1",
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+               "urn:oran:smo:teiv:Site=1"
+             ]
+           }
+         ]
+       },
+       {
+         "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+           {
+             "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
+             "aSide": "urn:oran:smo:teiv:AntennaModule=2",
+             "bSide": "urn:oran:smo:teiv:Site=2",
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
+               "urn:oran:smo:teiv:Site=2"
+             ]
+           }
+         ]
+       }
+     ]
    }
 
 .. _Ingestion Merge:
@@ -245,9 +251,9 @@ MERGE Headers
 |                |        |                                           |                          | | (`uri`)       |                   |
 +----------------+--------+-------------------------------------------+--------------------------+-----------------+-------------------+
 | ce_type        | string | | Event type. It can be one of            | -                        | -               | -                 |
-|                |        | | topology-inventory-ingestion-merge,     |                          |                 |                   |
-|                |        | | topology-inventory-ingestion-delete, or |                          |                 |                   |
-|                |        | | topology-inventory-ingestion-create.    |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.merge,     |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.delete, or |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.create.    |                          |                 |                   |
 +----------------+--------+-------------------------------------------+--------------------------+-----------------+-------------------+
 | content-type   | string | | Content-type of the data contained      | | const                  | -               | -                 |
 |                |        | | within the cloud event. It is           | | (`"application/json"`) |                 |                   |
@@ -275,7 +281,7 @@ MERGE Headers
      "ce_specversion": "1.0",
      "ce_id": "a30e63c9-d29e-46ff-b99a-b63ed83fd234",
      "ce_source": "dmi-plugin:nm-1",
-     "ce_type": "topology-inventory-ingestion-merge",
+     "ce_type": "topology-inventory-ingestion.merge",
      "ce_time": "2023-06-12T09:05:00Z",
      "content-type": "application/json",
      "ce_dataschema": "topology-inventory-ingestion:events:merge:1.0.0"
@@ -289,26 +295,22 @@ MERGE Payload
 +======================================================+===============+================================================================+
 | (root)                                               | Object        | -                                                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data                                                 | -             | | The data part consists of the actual topology data. It       |
-|                                                      |               | | contains all the entities and their associated               |
-|                                                      |               | | relationships.                                               |
-+------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data.entities                                        | Array<Object> | | Entities are topology objects comprising of an id, consumer  |
+| entities                                             | Array<Object> | | Entities are topology objects comprising of an id, consumer  |
 |                                                      |               | | data, attributes and metadata for each. It contains the id   |
 |                                                      |               | | only in case of delete cloud event.                          |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| | data.entities                                      | Object        | | Entities schema is adherent to the entity types and          |
+| | entities                                           | Object        | | Entities schema is adherent to the entity types and          |
 | | .<module_name>                                     |               | | attributes mentioned in the yang modules. For yang modules,  |
 | | :<mo_type>                                         |               | | see [Data Models][Data Models].                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data.relationships                                   | Array<Object> | | Relationships comprising of an A-side and a B-side for each. |
+| relationships                                        | Array<Object> | | Relationships comprising of an A-side and a B-side for each. |
 |                                                      |               | | The A-side is considered the originating side of the         |
 |                                                      |               | | relationship; the B-side is considered the terminating side  |
 |                                                      |               | | of the relationship. The order of A-side and B-side is of    |
 |                                                      |               | | importance and MUST NOT be changed once defined. It          |
 |                                                      |               | | contains the id only in case of delete event.                |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| | data.relationships                                 | Object        | | Relationship schema is adherent to the relationship types    |
+| | relationships                                      | Object        | | Relationship schema is adherent to the relationship types    |
 | | .<module_name>                                     |               | | mentioned in the yang modules. For yang modules,             |
 | | :<relationship_type>                               |               | | see [Data Models][Data Models].                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
@@ -320,96 +322,106 @@ MERGE Payload
 .. code:: json
 
    {
-     "data": {
-       "entities": [
-         {
-           "o-ran-smo-teiv-equipment:AntennaModule": [
-             {
-               "id": "urn:oran:smo:teiv:AntennaModule=1",
-               "attributes": {
-                 "antennaModelNumber": "1",
-                 "mechanicalAntennaBearing": 50,
-                 "mechanicalAntennaTilt": 10,
-                 "positionWithinSector": "Unknown",
-                 "totalTilt": 14,
-                 "electricalAntennaTilt": 2,
-                 "antennaBeamWidth": [
-                   35,
-                   23,
-                   21
-                 ],
-                 "geo-location": {
-                   "latitude": 41.73297,
-                   "longitude": -73.007696,
-                   "height": 3000
-                 }
-               },
-               "sourceIds": [
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+     "entities": [
+       {
+         "o-ran-smo-teiv-equipment:AntennaModule": [
+           {
+             "id": "urn:oran:smo:teiv:AntennaModule=1",
+             "attributes": {
+               "antennaModelNumber": "1",
+               "mechanicalAntennaBearing": 50,
+               "mechanicalAntennaTilt": 10,
+               "positionWithinSector": "Unknown",
+               "totalTilt": 14,
+               "electricalAntennaTilt": 2,
+               "antennaBeamWidth": [
+                 35,
+                 23,
+                 21
                ],
-               "metadata": {
-                 "trustLevel": "RELIABLE"
+               "geo-location": {
+                 "latitude": 41.73297,
+                 "longitude": -73.007696,
+                 "height": 3000
                }
+             },
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+             ],
+             "metadata": {
+               "reliabilityIndicator": "OK"
              }
-           ]
-         },
-         {
-           "o-ran-smo-teiv-equipment:AntennaModule": [
-             {
-               "id": "urn:oran:smo:teiv:AntennaModule=2",
-               "attributes": {
-                 "antennaModelNumber": "2",
-                 "mechanicalAntennaBearing": 61,
-                 "mechanicalAntennaTilt": 21,
-                 "positionWithinSector": "Unknown",
-                 "totalTilt": 25,
-                 "electricalAntennaTilt": 3,
-                 "antennaBeamWidth": [
-                   46,
-                   34,
-                   32
-                 ],
-                 "geo-location": {
-                   "latitude": 52.84308,
-                   "longitude": -84.118707,
-                   "height": 41111
-                 }
-               },
-               "sourceIds": [
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
-                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1"
+           }
+         ]
+       },
+       {
+         "o-ran-smo-teiv-equipment:AntennaModule": [
+           {
+             "id": "urn:oran:smo:teiv:AntennaModule=2",
+             "attributes": {
+               "antennaModelNumber": "2",
+               "mechanicalAntennaBearing": 61,
+               "mechanicalAntennaTilt": 21,
+               "positionWithinSector": "Unknown",
+               "totalTilt": 25,
+               "electricalAntennaTilt": 3,
+               "antennaBeamWidth": [
+                 46,
+                 34,
+                 32
                ],
-               "metadata": {
-                 "trustLevel": "RELIABLE"
+               "geo-location": {
+                 "latitude": 52.84308,
+                 "longitude": -84.118707,
+                 "height": 41111
                }
+             },
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1"
+             ],
+             "metadata": {
+               "reliabilityIndicator": "OK"
              }
-           ]
-         }
-       ],
-       "relationships": [
-         {
-           "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-             {
-               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
-               "aSide": "urn:oran:smo:teiv:AntennaModule=1",
-               "bSide": "urn:oran:smo:teiv:Site=1"
-             }
-           ]
-         },
-         {
-           "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-             {
-               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
-               "aSide": "urn:oran:smo:teiv:AntennaModule=2",
-               "bSide": "urn:oran:smo:teiv:Site=2"
-             }
-           ]
-         }
-       ]
-     }
+           }
+         ]
+       }
+     ],
+     "relationships": [
+       {
+         "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+           {
+             "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+             "aSide": "urn:oran:smo:teiv:AntennaModule=1",
+             "bSide": "urn:oran:smo:teiv:Site=1",
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+               "urn:oran:smo:teiv:Site=1"
+             ]
+           }
+         ]
+       },
+       {
+         "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+           {
+             "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
+             "aSide": "urn:oran:smo:teiv:AntennaModule=2",
+             "bSide": "urn:oran:smo:teiv:Site=2",
+             "sourceIds": [
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+               "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
+               "urn:oran:smo:teiv:Site=2"
+             ]
+           }
+         ]
+       }
+     ]
    }
 
 .. _Ingestion Delete:
@@ -447,9 +459,9 @@ DELETE Headers
 |                |        |                                           |                          | | (`uri`)       |                   |
 +----------------+--------+-------------------------------------------+--------------------------+-----------------+-------------------+
 | ce_type        | string | | Event type. It can be one of            | -                        | -               | -                 |
-|                |        | | topology-inventory-ingestion-merge,     |                          |                 |                   |
-|                |        | | topology-inventory-ingestion-delete, or |                          |                 |                   |
-|                |        | | topology-inventory-ingestion-create.    |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.merge,     |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.delete, or |                          |                 |                   |
+|                |        | | topology-inventory-ingestion.create.    |                          |                 |                   |
 +----------------+--------+-------------------------------------------+--------------------------+-----------------+-------------------+
 | content-type   | string | | Content-type of the data contained      | | const                  | -               | -                 |
 |                |        | | within the cloud event. It is           | | (`"application/json"`) |                 |                   |
@@ -476,7 +488,7 @@ DELETE Headers
      "ce_specversion": "1.0",
      "ce_id": "a30e63c9-d29e-46ff-b99a-b63ed83fd235",
      "ce_source": "dmi-plugin:nm-1",
-     "ce_type": "topology-inventory-ingestion-delete",
+     "ce_type": "topology-inventory-ingestion.delete",
      "ce_time": "2023-06-12T09:05:00Z",
      "content-type": "application/json",
      "ce_dataschema": "topology-inventory-ingestion:events:delete:1.0.0"
@@ -490,26 +502,22 @@ DELETE Payload
 +======================================================+===============+================================================================+
 | (root)                                               | Object        | -                                                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data                                                 | -             | | The data part consists of the actual topology data. It       |
-|                                                      |               | | contains all the entities and their associated               |
-|                                                      |               | | relationships.                                               |
-+------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data.entities                                        | Array<Object> | | Entities are topology objects comprising of an id, consumer  |
+| entities                                             | Array<Object> | | Entities are topology objects comprising of an id, consumer  |
 |                                                      |               | | data, attributes and metadata for each. It contains the id   |
 |                                                      |               | | only in case of delete cloud event.                          |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| | data.entities                                      | Object        | | Entities schema is adherent to the entity types and          |
+| | entities                                           | Object        | | Entities schema is adherent to the entity types and          |
 | | .<module_name>                                     |               | | attributes mentioned in the yang modules. For yang modules,  |
 | | :<mo_type>                                         |               | | see [Data Models][Data Models].                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| data.relationships                                   | Array<Object> | | Relationships comprising of an A-side and a B-side for each. |
+| relationships                                        | Array<Object> | | Relationships comprising of an A-side and a B-side for each. |
 |                                                      |               | | The A-side is considered the originating side of the         |
 |                                                      |               | | relationship; the B-side is considered the terminating side  |
 |                                                      |               | | of the relationship. The order of A-side and B-side is of    |
 |                                                      |               | | importance and MUST NOT be changed once defined. It          |
 |                                                      |               | | contains the id only in case of delete event.                |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
-| | data.relationships                                 | Object        | | Relationship schema is adherent to the relationship types    |
+| | relationships                                      | Object        | | Relationship schema is adherent to the relationship types    |
 | | .<module_name>                                     |               | | mentioned in the yang modules. For yang modules,             |
 | | :<relationship_type>                               |               | | see [Data Models][Data Models].                              |
 +------------------------------------------------------+---------------+----------------------------------------------------------------+
@@ -526,14 +534,24 @@ DELETE Payload
          {
            "o-ran-smo-teiv-equipment:AntennaModule": [
              {
-               "id": "urn:oran:smo:teiv:AntennaModule=1"
+               "id": "urn:oran:smo:teiv:AntennaModule=1",
+               "sourceIds": [
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+               ]
              }
            ]
          },
          {
            "o-ran-smo-teiv-equipment:AntennaModule": [
              {
-               "id": "urn:oran:smo:teiv:AntennaModule=2"
+               "id": "urn:oran:smo:teiv:AntennaModule=2",
+               "sourceIds": [
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1"
+               ]
              }
            ]
          }
@@ -542,14 +560,26 @@ DELETE Payload
          {
            "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
              {
-               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs="
+               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+               "sourceIds": [
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+                 "urn:oran:smo:teiv:Site=1"
+               ]
              }
            ]
          },
          {
            "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
              {
-               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2="
+               "id": "urn:sha512:TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVsYW5kLE1lQ2=",
+               "sourceIds": [
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+                 "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
+                 "urn:oran:smo:teiv:Site=2"
+               ]
              }
            ]
          }
