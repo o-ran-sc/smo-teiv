@@ -119,3 +119,38 @@ in the request as follows:
    **Note:** If the targetFilter is not used here, the result contains
    all entities and relationships that matches the condition in the RAN
    domain.
+
+Querying on geographical information examples
+---------------------------------------------
+
+Topology & Inventory supports querying entities based on geographical information
+by updating the filters. Use the "Well-Known Text" (WKT) representation of geometry
+to specify geometry objects. The WKT representation of coordinate systems is a text
+markup language standard for representing vector geometry objects. For more information,
+see the `WKT documentation <https://libgeos.org/specifications/wkt/>`_
+
+    **NOTE:** This filter option is restricted to entities that have been enriched with geographical data.
+
+Topology & Inventory supports the following geometric objects:
+
+**POINT:** This can be used with the *withinMeters* function. It requires the latitude
+and longitude of the point and then a range in meters. It returns the desired objects within the provided
+distance in meters from the given point.
+
+**Example:** Get all entities with geographical information in the 'EQUIPMENT' domain within 500 meters
+from a point with latitude and longitude values of 49.40199 and 68.94199 respectively:
+
+```
+GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entities?scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]
+```
+
+**POLYGON:** This can be used with the *coveredBy* function. It requires the latitude and longitude of the points of the polygon. It returns the desired objects covered by the given polygon.
+
+**Example:** Get all 'AntennaModule' entities covered by the polygon with points (48 68) , (50 68), (50 69), (48 69), and (48 68):
+
+```
+GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entity-types/AntennaModule/entities?scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]
+```
+
+    **NOTE:** To draw a valid polygon, the first and last points must be identical.
+

@@ -58,6 +58,8 @@ between the Site and an AntennaModule. Using the
 the data producer can create entities that support geographical
 enrichment. Attributes with null means not set.
 
+Header:
+
 .. code:: json
 
    {
@@ -67,73 +69,14 @@ enrichment. Attributes with null means not set.
        "ce_type": "topology-inventory-ingestion-create",
        "ce_time": "2023-06-12T09:05:00Z",
        "content-type": "application/json",
-       "ce_dataschema": "topology-inventory-ingestion:events:create:1.0.0",
-       "data": {
-         "entities": [
-           {
-             "o-ran-smo-teiv-equipment:Site": [
-               {
-                 "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
-                 "attributes": {
-                   "name": "Dublin",
-                   "location": {
-                     "geo-location": {
-                       "latitude": 41.73297,
-                       "longitude": -73.007696
-                     }
-                   }
-                 }
-               }
-             ]
-           },
-           {
-             "o-ran-smo-teiv-equipment:AntennaModule": [
-               {
-                 "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-                 "attributes": {
-                   "geo-location": {
-                     "latitude": 41.73297,
-                     "longitude": -73.007696
-                   }
-                 }
-               }
-             ]
-           }
-         ],
-         "relationships": [
-           {
-             "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-               {
-                 "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
-                 "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-                 "bSide": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153"
-               }
-             ]
-           }
-         ]
-       }
+       "ce_dataschema": "topology-inventory-ingestion:events:create:1.0.0"
    }
 
-Example of modify enriched Topology & Inventory with geographical data
-----------------------------------------------------------------------
-
-This example updates an existing Site entity. Using the
-:ref:`merge schema <Ingestion Merge>`
-the data producer can update entities that support geographical
-enrichment.
+Payload:
 
 .. code:: json
 
-
-   {
-     "ce_specversion": "1.0",
-     "ce_id": "a30e63c9-d29e-46ff-b99a-b63ed83fd234",
-     "ce_source": "dmi-plugin:nm-1",
-     "ce_type": "topology-inventory-ingestion-merge",
-     "ce_time": "2023-06-12T09:05:00Z",
-     "content-type": "application/json",
-     "ce_dataschema": "topology-inventory-ingestion:events:merge:1.0.0",
-     "data": {
+    {
        "entities": [
          {
            "o-ran-smo-teiv-equipment:Site": [
@@ -141,13 +84,14 @@ enrichment.
                "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
                "attributes": {
                  "name": "Dublin",
-                 "location": {
-                   "geo-location": {
-                     "latitude": 52.73297,
-                     "longitude": -84.007696
-                   }
+                 "geo-location": {
+                   "latitude": 41.73297,
+                   "longitude": -73.007696
                  }
-               }
+               },
+               "sourceIds": [
+                  "urn:oran:smo:teiv:Site=1"
+               ]
              }
            ]
          },
@@ -157,9 +101,14 @@ enrichment.
                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
                "attributes": {
                  "geo-location": {
-                   "latitude": 52.73297,
-                   "longitude": -84.007696
-                 }
+                   "latitude": 41.73297,
+                   "longitude": -73.007696
+                 },
+                 "sourceIds": [
+                    "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                    "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                    "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+                 ]
                }
              }
            ]
@@ -171,12 +120,100 @@ enrichment.
              {
                "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
                "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-               "bSide": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153"
+               "bSide": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
+               "sourceIds": [
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+                  "urn:oran:smo:teiv:Site=1"
+               ]
              }
            ]
          }
        ]
-     }
+   }
+
+Example of modify enriched Topology & Inventory with geographical data
+----------------------------------------------------------------------
+
+This example updates an existing Site entity. Using the
+:ref:`merge schema <Ingestion Merge>`
+the data producer can update entities that support geographical
+enrichment.
+
+Header:
+
+.. code:: json
+
+   {
+     "ce_specversion": "1.0",
+     "ce_id": "a30e63c9-d29e-46ff-b99a-b63ed83fd234",
+     "ce_source": "dmi-plugin:nm-1",
+     "ce_type": "topology-inventory-ingestion-merge",
+     "ce_time": "2023-06-12T09:05:00Z",
+     "content-type": "application/json",
+     "ce_dataschema": "topology-inventory-ingestion:events:merge:1.0.0"
+   }
+
+Payload:
+
+.. code:: json
+
+   {
+     "entities": [
+       {
+         "o-ran-smo-teiv-equipment:Site": [
+           {
+             "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
+             "attributes": {
+               "name": "Dublin",
+               "geo-location": {
+                 "latitude": 52.73297,
+                 "longitude": -84.007696
+               }
+             },
+             "sourceIds": [
+                "urn:oran:smo:teiv:atoll:Site=1"
+             ]
+           }
+         ]
+       },
+       {
+         "o-ran-smo-teiv-equipment:AntennaModule": [
+           {
+             "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
+             "attributes": {
+               "geo-location": {
+                 "latitude": 52.73297,
+                 "longitude": -84.007696
+               },
+               "sourceIds": [
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+               ]
+             }
+           }
+         ]
+       }
+     ],
+     "relationships": [
+       {
+         "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+           {
+             "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+             "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
+             "bSide": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
+             "sourceIds": [
+                "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+                "urn:oran:smo:teiv:atoll:Site=1"
+             ]
+           }
+         ]
+       }
+     ]
    }
 
 Example of delete enriched data from Topology & Inventory
@@ -188,6 +225,8 @@ AntennaModule entity. Using the
 the data producer can delete entities that support geographical
 enrichment.
 
+Header:
+
 .. code:: json
 
    {
@@ -197,27 +236,41 @@ enrichment.
        "ce_type": "topology-inventory-ingestion-delete",
        "ce_time": "2023-06-12T09:05:00Z",
        "content-type": "application/json",
-       "ce_dataschema": "topology-inventory-ingestion:events:delete:1.0.0",
-       "data": {
-           "entities" : [
-             {
-               "o-ran-smo-teiv-equipment:Site": [
-                   {
-                       "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153"
-                   }
-               ]
-             }
-           ],
-           "relationships": [
-             {
-               "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-                   {
-                       "id" : "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs="
-                   }
-               ]
-             }
-           ]
-       }
+       "ce_dataschema": "topology-inventory-ingestion:events:delete:1.0.0"
+   }
+
+Payload:
+
+.. code:: json
+
+   {
+      "entities" : [
+        {
+          "o-ran-smo-teiv-equipment:Site": [
+              {
+                  "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
+                  "sourceIds": [
+                     "urn:oran:smo:teiv:atoll:Site=1"
+                  ]
+              }
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+              {
+                  "id" : "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
+                  "sourceIds": [
+                     "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+                     "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+                     "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
+                     "urn:oran:smo:teiv:atoll:Site=1"
+                  ]
+              }
+          ]
+        }
+      ]
    }
 
 How to create and produce an event
