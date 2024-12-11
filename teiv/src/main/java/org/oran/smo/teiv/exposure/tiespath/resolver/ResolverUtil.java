@@ -27,7 +27,6 @@ import lombok.experimental.UtilityClass;
 
 import jakarta.annotation.Nullable;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.ContainerType;
-import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 
 import static org.oran.smo.teiv.utils.TiesConstants.ATTRIBUTES;
@@ -39,15 +38,12 @@ public class ResolverUtil {
     public static String getTopologyObject(final String rootObject, final List<String> containerNames) {
         final int noOfContainers = containerNames.size();
         final String firstContainer = containerNames.get(0);
-        if (isContainingAssociation(containerNames)) {
-            return Optional.ofNullable(rootObject).orElse(WILDCARD);
-        }
         if (isComplexAttribute(containerNames)) {
             return getTopologyObjectOnComplexAttributeCondition(rootObject, firstContainer);
         } else if (noOfContainers > 2) {
             throw TiesPathException.grammarError("More than two level deep path is not allowed");
         } else if (noOfContainers == 2) {
-            return getTopologyObjectWhenTwoContainers(rootObject, firstContainer, containerNames.get(1));
+            return getTopologyObjectWhenTwoContainers(rootObject, firstContainer);
         }
 
         return Optional.ofNullable(rootObject).orElse(WILDCARD);
@@ -58,21 +54,13 @@ public class ResolverUtil {
         return index != -1 && containerNames.size() - 1 > index;
     }
 
-    public static boolean isContainingAssociation(final List<String> containerNames) {
-        return !containerNames.isEmpty() && containerNames.stream().anyMatch(SchemaRegistry::isValidAssociation);
-    }
-
     @Nullable
     public static ContainerType getContainerType(final List<String> containerNames) {
-        if (isContainingAssociation(containerNames)) {
-            return null;
-        }
         return ContainerType.fromValue(containerNames.get(containerNames.size() - 1));
     }
 
-    private static String getTopologyObjectWhenTwoContainers(final String rootObject, final String firstContainer,
-            final String secondContainer) {
-        if (null == rootObject || firstContainer.equals(rootObject) || secondContainer.equals(rootObject)) {
+    private static String getTopologyObjectWhenTwoContainers(final String rootObject, final String firstContainer) {
+        if (null == rootObject || firstContainer.equals(rootObject)) {
             return firstContainer;
         } else {
             throw TiesPathException.grammarError(

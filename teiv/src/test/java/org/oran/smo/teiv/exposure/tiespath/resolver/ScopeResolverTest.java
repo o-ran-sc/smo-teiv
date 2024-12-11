@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.AndLogicalBlock;
@@ -38,22 +37,11 @@ import org.oran.smo.teiv.exposure.tiespath.innerlanguage.OrLogicalBlock;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.QueryFunction;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.ScopeLogicalBlock;
 import org.oran.smo.teiv.exposure.tiespath.innerlanguage.ScopeObject;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.TopologyObjectType;
-import org.oran.smo.teiv.schema.MockSchemaLoader;
-import org.oran.smo.teiv.schema.SchemaLoader;
-import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.utils.query.exception.TiesPathException;
 
 class ScopeResolverTest {
 
     private final ScopeResolver scopeResolver = new ScopeResolver();
-
-    @BeforeAll
-    public static void beforeAll() throws UnsupportedOperationException, SchemaLoaderException {
-        SchemaLoader mockedSchemaLoader = new MockSchemaLoader();
-        mockedSchemaLoader.loadSchemaRegistry();
-
-    }
 
     @Test
     void testEmptyScope() {
@@ -366,32 +354,5 @@ class ScopeResolverTest {
                 "/ManagedElement/attr[contains(@id,'me1')]"));
         assertEquals("Target/Scope filter can only contain Root Object types mentioned in the path parameter", thrown
                 .getDetails());
-    }
-
-    @Test
-    void testAssociationWithAndWithouthRootObject() {
-        ScopeLogicalBlock expected = new ScopeLogicalBlock(ScopeObject.builder("AntennaCapability").container(null)
-                .queryFunction(QueryFunction.CONTAINS).parameter(
-                        "AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A")
-                .resolverDataType(ResolverDataType.STRING).innerContainer(List.of("serving-antennaModule")).leaf("id")
-                .build());
-        final LogicalBlock resolvedScope = scopeResolver.resolve("AntennaCapability",
-                "/serving-antennaModule[contains(@id,'AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A')]");
-        Assertions.assertEquals(expected, resolvedScope);
-
-        ScopeLogicalBlock expected2 = new ScopeLogicalBlock(ScopeObject.builder(null).container(null).queryFunction(
-                QueryFunction.EQ).parameter("POINT(60.4019881 18.9419888)").resolverDataType(ResolverDataType.STRING)
-                .innerContainer(List.of("installed-at-site")).leaf("geo-location").build());
-        final LogicalBlock resolvedScope2 = scopeResolver.resolve(null,
-                "/installed-at-site/attributes[@geo-location='POINT(60.4019881 18.9419888)']");
-        Assertions.assertEquals(expected2, resolvedScope2);
-
-        ScopeLogicalBlock expected3 = new ScopeLogicalBlock(ScopeObject.builder("GNBCUCPFunction").topologyObjectType(
-                TopologyObjectType.UNDEFINED).container(ContainerType.ASSOCIATION).innerContainer(List.of(
-                        "provided-nrCellCu", "pLMNId")).leaf("mcc").queryFunction(QueryFunction.EQ).parameter("010")
-                .resolverDataType(ResolverDataType.STRING).build());
-        final LogicalBlock resolvedScope3 = scopeResolver.resolve("GNBCUCPFunction",
-                "/provided-nrCellCu/attributes/pLMNId[@mcc='010']");
-        Assertions.assertEquals(expected3, resolvedScope3);
     }
 }

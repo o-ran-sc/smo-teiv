@@ -36,9 +36,9 @@ import lombok.RequiredArgsConstructor;
 public class Geography {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     @NonNull
-    private Double latitude;
-    @NonNull
     private Double longitude;
+    @NonNull
+    private Double latitude;
     private Double height;
 
     /**
@@ -92,7 +92,7 @@ public class Geography {
     @Override
     public String toString() {
         return (height == null) ?
-                String.format("POINT(%s %s)", latitude, longitude) :
-                String.format("POINT Z (%s %s %s)", latitude, longitude, height);
+                String.format("POINT(%s %s)", longitude, latitude) :
+                String.format("POINT Z (%s %s %s)", longitude, latitude, height);
     }
 }

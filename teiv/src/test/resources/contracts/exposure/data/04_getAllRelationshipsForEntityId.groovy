@@ -655,6 +655,80 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "SUCCESS - 200: Get all relationships for entity type AntennaModule with ID urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A."
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY": [
+                            {
+                                "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1",
+                                "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A",
+                                "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE":[
+                            {
+                                "bSide":"urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A",
+                                "aSide":"Sector=2",
+                                "id":"urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=44F4F4FC906E9A7525065E4565246F7469CBD11FC7752C61EA6D74776845900AFF472DCAACA1F66443490B6CE0DD9AC9A5E1467022118599F6B4C6EC63400512"
+                            }
+                        ]
+                    },
+                    {
+                    "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU":[
+                        {
+                            "bSide":"urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1",
+                            "aSide":"urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A",
+                            "id":"urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_NRCELLDU=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65"
+                        }
+                    ]
+                }
+                ],
+                "self": {
+                    "href": "/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+                },
+                "first": {
+                    "href": "/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+                },
+                "prev": {
+                    "href": "/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+                },
+                "next": {
+                    "href": "/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+                },
+                "last": {
+                    "href": "/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+                },
+                "totalCount": 3
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(3)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY[0].aSide', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY[0].bSide', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE[0].aSide', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE[0].bSide', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].aSide', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].bSide', byEquality())
+            }
+        }
+    },
+    Contract.make {
         description "ERROR - 400: Get all relationships for NRCellDU entity with invalid offset (greater than total count)."
         request {
             method GET()

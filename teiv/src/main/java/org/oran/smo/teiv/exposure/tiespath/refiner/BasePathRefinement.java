@@ -618,11 +618,8 @@ public class BasePathRefinement {
             case ID:
                 validateIdParameter(so);
                 break;
-            case ASSOCIATION:
-                validateAssociationParameter(so);
-                break;
-            case RELATION:
-                validateRelationParameter(so);
+            case ASSOCIATION, RELATION:
+                validateAssociationAndRelationParameter(so);
                 break;
             case SOURCE_IDS:
                 validateSourceIdsParameter(so);
@@ -657,30 +654,13 @@ public class BasePathRefinement {
         so.setDataType(DataType.PRIMITIVE);
     }
 
-    private void validateRelationParameter(final ScopeObject so) {
+    private void validateAssociationAndRelationParameter(final ScopeObject so) {
         if (so.getLeaf() != null && !ID_COLUMN_NAME.equals(so.getLeaf())) {
-            throw TiesPathException.grammarError("Only id condition can be queried in case of relation container");
+            throw TiesPathException.grammarError("Only id condition can be queried in case of association container");
         } else if (so.getResolverDataType().equals(ResolverDataType.INTEGER)) {
             throw TiesPathException.grammarError("Invalid data type provided for scopeFilter");
         } else if (so.getResolverDataType().equals(ResolverDataType.STRING)) {
             so.setDataType(DataType.PRIMITIVE);
-        }
-    }
-
-    private void validateAssociationParameter(final ScopeObject so) {
-        if (so.getLeaf() == null) {
-            throw TiesPathException.grammarError("Leaf cannot be null in case of association container");
-        }
-        if (ID_COLUMN_NAME.equals(so.getLeaf())) {
-            validateIdParameter(so);
-            return;
-        }
-        if (so.getInnerContainer().size() == 1) {
-            so.setDataType(SchemaRegistry.getOtherEntityByEntityAndAssociation(so.getTopologyObject(), so
-                    .getInnerContainer().get(0)).getFields().get(so.getLeaf()));
-            compareResolverDataTypeToDataType(so);
-        } else if (so.getInnerContainer().size() > 1) {
-            setDataTypeForComplexAttribute(so);
         }
     }
 

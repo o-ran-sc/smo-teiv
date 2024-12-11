@@ -59,14 +59,14 @@ class JooqTypeConverterTest {
 
     @Test
     void testToGeography() throws InvalidFieldInYangDataException {
-        assertEquals(new Geography(47.497913, 19.040236), toGeography(
-                "{\"latitude\": 47.497913,\"longitude\": 19.040236}"));
+        assertEquals(new Geography(19.040236, 47.497913), toGeography(
+                "{\"longitude\": 19.040236,\"latitude\": 47.497913}"));
 
-        assertEquals(new Geography(47.497913, 19.040236, 100.1), toGeography(
-                "{\"latitude\": 47.497913,\"longitude\": 19.040236, \"height\": 100.1}"));
+        assertEquals(new Geography(19.040236, 47.497913, 100.1), toGeography(
+                "{\"longitude\": 19.040236,\"latitude\": 47.497913, \"height\": 100.1}"));
 
-        assertEquals(new Geography(47.497913, 19.040236, null), toGeography(
-                "{\"latitude\": 47.497913,\"longitude\": 19.040236}"));
+        assertEquals(new Geography(19.040236, 47.497913, null), toGeography(
+                "{\"longitude\": 19.040236,\"latitude\": 47.497913}"));
 
         assertThrows(InvalidFieldInYangDataException.class, () -> toGeography("{invalidjson"));
         assertThrows(InvalidFieldInYangDataException.class, () -> toGeography(9));

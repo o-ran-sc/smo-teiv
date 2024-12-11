@@ -37,7 +37,19 @@
                         "id": "entityId_3",
                         "attributes": {
                             "sectorId": "5",
-                            "azimuth": "-9223372036854.775808"
+                            "azimuth": "300.1"
+                        },
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    }
+                ],
+                "o-ran-smo-teiv-ran:OCUCPFunction": [
+                    {
+                        "id": "entityId_4",
+                        "attributes": {
+                            "gNBId": "-9223372036854775808"
                         },
                         "sourceIds": [
                             "source1",

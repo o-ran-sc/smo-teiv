@@ -406,14 +406,6 @@ public class SchemaRegistry {
                 associationName) || relationType.getBSideAssociation().getName().equals(associationName)).toList();
     }
 
-    public static boolean isValidAssociation(String associationName) {
-        if (associationName == null || associationName.isEmpty()) {
-            return false;
-        }
-        return relationTypes.stream().anyMatch(relationType -> relationType.getASideAssociation().getName().equals(
-                associationName) || relationType.getBSideAssociation().getName().equals(associationName));
-    }
-
     public static String getReferenceColumnName(RelationType relationType) {
         if (relationType.getRelationshipStorageLocation().equals(RelationshipDataLocation.A_SIDE)) {
             return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TiesConstants.QUOTED_STRING,
@@ -425,25 +417,11 @@ public class SchemaRegistry {
         return Objects.requireNonNull(relationType).getTableName() + "." + relationType.getIdColumnName();
     }
 
-    public static RelationType getRelationTypeBetweenEntities(String entityA, String entityB) {
-        return relationTypes.stream().filter(relationType -> (relationType.getASide().getName().equals(
-                entityA) && relationType.getBSide().getName().equals(entityB)) || (relationType.getASide().getName().equals(
-                        entityB) && relationType.getBSide().getName().equals(entityA))).findFirst().orElse(null);
-    }
-
-    public static EntityType getOtherEntityByEntityAndAssociation(String entityName, String associationName) {
-        RelationType relationType = getAllRelationNamesByAssociationName(associationName).stream().filter(
-                relation -> relation.getASide().getName().equals(entityName) || relation.getBSide().getName().equals(
-                        entityName)).findFirst().orElse(null);
-        if (relationType == null) {
-            return null;
+    public static EntityType getEntityTypeOnAssociationSide(RelationType relationType, String associationName) {
+        boolean isAssociationASide = relationType.getASideAssociation().getName().equals(associationName);
+        if (isAssociationASide) {
+            return relationType.getASide();
         }
-        return relationType.getASide().getName().equals(entityName) ? relationType.getBSide() : relationType.getASide();
-    }
-
-    public static RelationType getRelationTypeByRelationNameAndAssociationName(String relation, String associationName) {
-        return relationTypes.stream().filter(relationType -> relationType.getName().equals(relation) && (relationType
-                .getASideAssociation().getName().equals(associationName) || relationType.getBSideAssociation().getName()
-                        .equals(associationName))).findFirst().orElse(null);
+        return relationType.getBSide();
     }
 }

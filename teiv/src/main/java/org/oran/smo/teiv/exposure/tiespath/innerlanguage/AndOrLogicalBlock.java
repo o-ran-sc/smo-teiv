@@ -54,8 +54,4 @@ public abstract class AndOrLogicalBlock extends LogicalBlock {
     public void addChild(LogicalBlock logicalBlock) {
         children.add(logicalBlock);
     }
-
-    public void addAllChild(List<LogicalBlock> logicalBlocks) {
-        children.addAll(logicalBlocks);
-    }
 }

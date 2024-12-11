@@ -139,7 +139,7 @@ class TiesDbServiceContainerizedTest {
         Map<String, Object> mapWithGeoLocation = new HashMap<>();
         mapWithGeoLocation.put("id", "id1");
         mapWithGeoLocation.put("sectorId", 7);
-        mapWithGeoLocation.put("geo-location", new Geography("{\"latitude\": 47.497913,\"longitude\": 19.040236}"));
+        mapWithGeoLocation.put("geo-location", new Geography("{\"longitude\": 19.040236,\"latitude\": 47.497913}"));
         mapWithGeoLocation.put("azimuth", 7.3);
         tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_Sector\"", mapWithGeoLocation,
                 updatedTimeColumnName);
@@ -148,7 +148,7 @@ class TiesDbServiceContainerizedTest {
         mapWithGeoLocationAndHeight.put("id", "id2");
         mapWithGeoLocationAndHeight.put("sectorId", 8);
         mapWithGeoLocationAndHeight.put("geo-location", new Geography(
-                "{\"latitude\": 47.497913,\"longitude\": 19.040236,\"height\": 111.1}"));
+                "{\"longitude\": 19.040236,\"latitude\": 47.497913,\"height\": 111.1}"));
         mapWithGeoLocationAndHeight.put("azimuth", 8.3);
         tiesDbOperations.merge(dslContext, "ties_data.\"o-ran-smo-teiv-ran_Sector\"", mapWithGeoLocationAndHeight,
                 updatedTimeColumnName);
@@ -159,12 +159,12 @@ class TiesDbServiceContainerizedTest {
 
         assertEquals("id1", rows.get(0).get("id"));
         assertEquals(7L, rows.get(0).get("sectorId"));
-        assertEquals("POINT(47.497913 19.040236)", rows.get(0).get("ST_AsText(\"geo-location\")"));
+        assertEquals("POINT(19.040236 47.497913)", rows.get(0).get("ST_AsText(\"geo-location\")"));
         assertEquals(0, new BigDecimal("7.3").compareTo((BigDecimal) rows.get(0).get("azimuth")));
 
         assertEquals("id2", rows.get(1).get("id"));
         assertEquals(8L, rows.get(1).get("sectorId"));
-        assertEquals("POINT Z (47.497913 19.040236 111.1)", rows.get(1).get("ST_AsText(\"geo-location\")"));
+        assertEquals("POINT Z (19.040236 47.497913 111.1)", rows.get(1).get("ST_AsText(\"geo-location\")"));
         assertEquals(0, new BigDecimal("8.3").compareTo((BigDecimal) rows.get(1).get("azimuth")));
     }
 

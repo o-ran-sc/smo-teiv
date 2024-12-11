@@ -1837,7 +1837,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                "status": "BAD_REQUEST",
                "message": "Invalid query condition",
-               "details": "Unknown or unexpected query function"
+               "details": "Invalid query function"
             }''')
             bodyMatchers {
                 jsonPath('$.status', byEquality())
@@ -2006,52 +2006,6 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description 'SUCCESS - 200: Get entities of type AntennaCapability inside the specified Polygon of AntennaModule'
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                    {
-                        "o-ran-smo-teiv-ran:AntennaCapability": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1"
-                            }
-                        ]
-                    }
-                ],
-                "self": {
-                    "href": "/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
-                },
-                "first": {
-                    "href": "/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
-                },
-                "prev": {
-                    "href": "/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
-                },
-                "next": {
-                    "href": "/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
-                },
-                "last": {
-                    "href": "/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
-                },
-                "totalCount": 1
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(1)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:AntennaCapability[0].id', byEquality())
-            }
-        }
-    },
-    Contract.make {
         description "SUCCESS - 200: Get entities of type AntennaCapability by AntennaModule id"
         request {
             method GET()
@@ -2094,107 +2048,6 @@ import org.springframework.cloud.contract.spec.Contract
                     occurrence(1)
                 })
                 jsonPath('$.items[0].o-ran-smo-teiv-ran:AntennaCapability[0].id', byEquality())
-            }
-        }
-    },
-    Contract.make {
-        description 'SUCCESS - 200: Get entities of type NRCellDU 500 meters radius of AntennaModule'
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                    {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
-                            }
-                        ]
-                    }
-                ],
-                "self": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
-                },
-                "first": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
-                },
-                "prev": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
-                },
-                "next": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
-                },
-                "last": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
-                },
-                "totalCount": 1
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(1)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
-            }
-        }
-    },
-    //44
-    Contract.make {
-        description 'SUCCESS - 200: Get entities of type NRCellDU where AntennaModule antennaModelNumber is 5'
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                    {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
-                            }
-                        ]
-                    }
-                ],
-                "self": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']"
-                },
-                "first": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']"
-                },
-                "prev": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']"
-                },
-                "next": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']"
-                },
-                "last": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']"
-                },
-                "totalCount": 2
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(2)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
             }
         }
     },
@@ -2261,10 +2114,10 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description 'SUCCESS - 200: Get entities of type AntennaModule inside the specified Polygon of Sector'
+        description "SUCCESS - 200: Get topology entities of type EntityTypeA where used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'LongEntityType1'. One to One"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
         }
         response {
             status OK()
@@ -2274,222 +2127,70 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "o-ran-smo-teiv-equipment:AntennaModule": [
+                        "test-built-in-module:EntityTypeA": [
                             {
-                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-equipment:AntennaModule": [
-                            {
-                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=84A3E5D7C916F4B2390DC45F178BE6A9235FD80CB41972E3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-equipment:AntennaModule": [
-                            {
-                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7"
+                                "id": "EntityType1"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                    "href": "/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
                 },
                 "first": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                    "href": "/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
                 },
                 "prev": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                    "href": "/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
                 },
                 "next": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                    "href": "/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
                 },
                 "last": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
-                },
-                "totalCount": 3
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(3)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
-            }
-        }
-    },
-    Contract.make {
-        description 'SUCCESS - 200: Get entities of type AntennaModule inside the specified Polygon of Sector'
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                    {
-                        "o-ran-smo-teiv-equipment:AntennaModule": [
-                            {
-                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-equipment:AntennaModule": [
-                            {
-                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=84A3E5D7C916F4B2390DC45F178BE6A9235FD80CB41972E3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-equipment:AntennaModule": [
-                            {
-                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7"
-                            }
-                        ]
-                    }
-                ],
-                "self": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
-                },
-                "first": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
-                },
-                "prev": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
-                },
-                "next": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
-                },
-                "last": {
-                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
-                },
-                "totalCount": 3
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(3)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-equipment:AntennaModule[0].id', byEquality())
-            }
-        }
-    },
-    Contract.make {
-        description 'SUCCESS - 200: Get entities of type NRCellDU where Sector sectorId is 2'
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                     {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
-                            }
-                        ]
-                    },
-                    {
-                        "o-ran-smo-teiv-ran:NRCellDU": [
-                            {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3"
-                            }
-                        ]
-                    }
-                ],
-                "self": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
-                },
-                "first": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
-                },
-                "prev": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
-                },
-                "next": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
-                },
-                "last": {
-                    "href": "/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
-                },
-                "totalCount": 3
-            }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(3)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
-            }
-        }
-    },
-    Contract.make {
-        description 'SUCCESS - 200: Get entities of type Sector where NRCellDU cellLocalId is 3'
-        request {
-            method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/Sector/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
-        }
-        response {
-            status OK()
-            headers {
-                contentType('application/json')
-            }
-            body('''{
-                "items": [
-                     {
-                        "o-ran-smo-teiv-ran:Sector": [
-                            {
-                                "id": "Sector=2"
-                            }
-                        ]
-                    }
-                ],
-                "self": {
-                    "href": "/domains/RAN/entity-types/Sector/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
-                },
-                "first": {
-                    "href": "/domains/RAN/entity-types/Sector/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
-                },
-                "prev": {
-                    "href": "/domains/RAN/entity-types/Sector/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
-                },
-                "next": {
-                    "href": "/domains/RAN/entity-types/Sector/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
-                },
-                "last": {
-                    "href": "/domains/RAN/entity-types/Sector/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+                    "href": "/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
                 },
                 "totalCount": 1
             }''')
-            bodyMatchers {
-                jsonPath('$.items', byType {
-                    occurrence(1)
-                })
-                jsonPath('$.items[0].o-ran-smo-teiv-ran:Sector[0].id', byEquality())
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get topology entities of type EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters where used-by-entityTypeA id is 'EntityType1'. One to One"
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='EntityType1']"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
             }
+            body('''{
+                "items": [
+                    {
+                        "test-built-in-module:EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters": [
+                            {
+                                "id": "LongEntityType1"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='EntityType1']"
+                },
+                "first": {
+                    "href": "/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='EntityType1']"
+                },
+                "prev": {
+                    "href": "/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='EntityType1']"
+                },
+                "next": {
+                    "href": "/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='EntityType1']"
+                },
+                "last": {
+                    "href": "/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='EntityType1']"
+                },
+                "totalCount": 1
+            }''')
         }
     }
 ]

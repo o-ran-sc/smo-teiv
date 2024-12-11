@@ -25,7 +25,6 @@ import org.oran.smo.teiv.exposure.tiespath.resolver.ResolverDataType;
 import org.oran.smo.teiv.schema.DataType;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -45,13 +44,5 @@ public class ScopeObject {
 
     public static ScopeObjectBuilder builder(final String topologyObject) {
         return hiddenBuilder().topologyObject(topologyObject);
-    }
-
-    public static ScopeObject copy(final ScopeObject scopeObject) {
-        return builder(scopeObject.getTopologyObject()).topologyObjectType(scopeObject.getTopologyObjectType()).container(
-                scopeObject.getContainer()).innerContainer(new ArrayList<>(scopeObject.getInnerContainer())).leaf(
-                        scopeObject.getLeaf()).queryFunction(scopeObject.getQueryFunction()).parameter(scopeObject
-                                .getParameter()).dataType(scopeObject.getDataType()).resolverDataType(scopeObject
-                                        .getResolverDataType()).build();
     }
 }

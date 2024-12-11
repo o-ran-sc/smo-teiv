@@ -212,7 +212,7 @@ class CloudEventParserTest {
 
         // Validate that the int64 attribute represented as a json string is parsed into
         // a java Long.
-        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
+        validateEntity(parsedCloudEventData.getEntities().get(3), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
                 "nCI", 123L, "nRTAC", 32L), List.of("source1", "source2"));
 
         // Validate that a uint64 is parsed into a java Long. The value is greater than
@@ -222,10 +222,13 @@ class CloudEventParserTest {
         validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "Sector", "entityId_2", Map.of(
                 "sectorId", -8223372036854775809L), List.of("source1", "source2"));
 
+        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "Sector", "entityId_3", Map.of(
+                "sectorId", 5L, "azimuth", BigDecimal.valueOf(300.1)), List.of("source1", "source2"));
+
         // Validate that a decimal64 is parsed into a java BigDecimal. A java double
         // could store only a subset of the possible yang decimal64 values.
-        validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "Sector", "entityId_3", Map.of(
-                "sectorId", 5L, "azimuth", BigDecimal.valueOf(Long.MIN_VALUE, 6)), List.of("source1", "source2"));
+        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "OCUCPFunction", "entityId_4", Map
+                .of("gNBId", Long.MIN_VALUE), List.of("source1", "source2"));
 
         assertEquals(0, parsedCloudEventData.getRelationships().size());
     }
@@ -236,16 +239,16 @@ class CloudEventParserTest {
                 "src/test/resources/cloudeventdata/common/ce-64bit-numbers-as-json-numbers.json");
         final ParsedCloudEventData parsedCloudEventData = cloudEventParser.getCloudEventData(cloudEvent);
 
-        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
+        validateEntity(parsedCloudEventData.getEntities().get(3), "o-ran-smo-teiv-ran", "NRCellCU", "entityId_1", Map.of(
                 "nCI", 123L, "nRTAC", 32L), List.of("source1", "source2"));
         validateEntity(parsedCloudEventData.getEntities().get(0), "o-ran-smo-teiv-ran", "Sector", "entityId_2", Map.of(
                 "sectorId", -8223372036854775809L), List.of("source1", "source2"));
 
-        // The value in the json is not representable with a double with the same
-        // precision. So we lose the last 3 digits. That's why the RFC7951 recommends to
-        // encode decimal64 as json string.
         validateEntity(parsedCloudEventData.getEntities().get(1), "o-ran-smo-teiv-ran", "Sector", "entityId_3", Map.of(
-                "sectorId", 5L, "azimuth", new BigDecimal("-9223372036854.775")), List.of("source1", "source2"));
+                "sectorId", 5L, "azimuth", BigDecimal.valueOf(300.1)), List.of("source1", "source2"));
+
+        validateEntity(parsedCloudEventData.getEntities().get(2), "o-ran-smo-teiv-ran", "OCUCPFunction", "entityId_4", Map
+                .of("gNBId", Long.MIN_VALUE), List.of("source1", "source2"));
 
         assertEquals(0, parsedCloudEventData.getRelationships().size());
     }

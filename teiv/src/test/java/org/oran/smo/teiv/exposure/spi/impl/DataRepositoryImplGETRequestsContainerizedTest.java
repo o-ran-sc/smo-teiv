@@ -96,7 +96,7 @@ class DataRepositoryImplGETRequestsContainerizedTest {
 
         Module schema = Module.builder().name(moduleName).namespace("new-namespace").domain("NEW_DOMAIN").content(
                 "yang content {} \n\n \t\t\t;").ownerAppId("APP").revision("2024-07-15").status(ModuleStatus.IN_USAGE)
-                .build();
+                .revision("2024-10-04").build();
         modelRepository.createConsumerDataModule(schema, List.of(), Map.of());
         schemaByName = modelRepository.getConsumerModuleByName(moduleName);
         Assertions.assertTrue(schemaByName.isPresent());

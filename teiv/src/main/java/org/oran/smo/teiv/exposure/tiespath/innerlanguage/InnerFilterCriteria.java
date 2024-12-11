@@ -43,13 +43,11 @@ import org.jooq.Table;
 import lombok.Builder;
 import lombok.Data;
 import org.oran.smo.teiv.exception.TiesException;
-import org.oran.smo.teiv.schema.BidiDbNameMapper;
 import org.oran.smo.teiv.schema.DataType;
 import org.oran.smo.teiv.schema.Persistable;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -151,25 +149,6 @@ public class InnerFilterCriteria {
 
         return Pair.of(field(idColumn).as(hashAlias(getFullyQualifiedNameWithColumnName(persistable.getFullyQualifiedName(),
                 ID_COLUMN_NAME))), select);
-    }
-
-    public RelationType getRelationTypeFromTarget(TargetObject targetObject) {
-        switch (targetObject.getTopologyObjectType()) {
-            case ENTITY -> {
-                List<Table> tables = new ArrayList<>(getTables());
-                String associationTable = tables.get(tables.size() - 1).getName().replace("ties_data.", "").replace("\"",
-                        "");
-                String targetTable = tables.get(0).getName().replace("ties_data.", "").replace("\"", "");
-                String associationEntity = BidiDbNameMapper.getModelledName(associationTable).split("_")[1];
-                String targetEntity = BidiDbNameMapper.getModelledName(targetTable).split("_")[1];
-                return SchemaRegistry.getRelationTypeBetweenEntities(targetEntity, associationEntity);
-            }
-            case RELATION -> {
-                return SchemaRegistry.getRelationTypes().stream().filter(entityType -> entityType.getName().equals(
-                        targetObject.getTopologyObject())).findFirst().orElse(null);
-            }
-            default -> throw TiesException.unParsedTopologyObjectType(targetObject.getTopologyObject());
-        }
     }
 
     public Table getTableFromTarget(TargetObject targetObject) {

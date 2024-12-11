@@ -42,7 +42,6 @@ import java.util.Optional;
 import static org.oran.smo.teiv.exposure.tiespath.resolver.ResolverUtil.getContainerType;
 import static org.oran.smo.teiv.exposure.tiespath.resolver.ResolverUtil.getTopologyObject;
 import static org.oran.smo.teiv.exposure.tiespath.resolver.ResolverUtil.isComplexAttribute;
-import static org.oran.smo.teiv.exposure.tiespath.resolver.ResolverUtil.isContainingAssociation;
 import static org.oran.smo.teiv.utils.TiesConstants.ATTRIBUTES;
 import static org.oran.smo.teiv.utils.TiesConstants.WILDCARD;
 
@@ -183,48 +182,25 @@ public class ScopeFilterListener extends tiesPathBaseListener {
                 .queryFunction(queryFunction);
 
         Optional.ofNullable(getContainerType(this.containerNames)).ifPresentOrElse(scopeObjectBuilder::container, () -> {
-            boolean isContainingAssociation = isContainingAssociation(containerNames);
-            if (!isComplexAttribute(containerNames) && !isContainingAssociation) {
-                handleSimple(scopeObjectBuilder, topologyObject, leafName, containerNames);
-            } else if (isContainingAssociation) {
-                handleAssociation(scopeObjectBuilder, topologyObject, containerNames);
+            if (!isComplexAttribute(containerNames)) {
+                final String container = this.containerNames.get(containerNames.size() - 1);
+                if (topologyObject.equals(container)) {
+                    Optional.ofNullable(getContainerType(List.of(leafName))).ifPresentOrElse(
+                            containerType -> scopeObjectBuilder.container(containerType).leaf(null), () -> {
+                                throw TiesPathException.grammarError(String.format(
+                                        "%s is not a valid leaf for topology object: %s", leafName, rootObject));
+                            });
+                } else {
+                    scopeObjectBuilder.topologyObject(Objects.equals(topologyObject, WILDCARD) ? null : topologyObject)
+                            .innerContainer(new ArrayList<>(Arrays.asList(container)));
+                }
             } else {
-                handleComplex(scopeObjectBuilder, topologyObject, containerNames);
+                scopeObjectBuilder.topologyObject(topologyObject.equals(WILDCARD) ? null : topologyObject).container(
+                        ContainerType.ATTRIBUTES).innerContainer(Collections.unmodifiableList(containerNames.subList(
+                                containerNames.indexOf(ATTRIBUTES) + 1, containerNames.size())));
             }
         });
         return scopeObjectBuilder;
-    }
-
-    private void handleSimple(final ScopeObject.ScopeObjectBuilder scopeObjectBuilder, final String topologyObject,
-            final String leafName, final List<String> containerNames) {
-        final String container = this.containerNames.get(containerNames.size() - 1);
-        if (topologyObject.equals(container)) {
-            Optional.ofNullable(getContainerType(List.of(leafName))).ifPresentOrElse(containerType -> scopeObjectBuilder
-                    .container(containerType).leaf(null), () -> {
-                        throw TiesPathException.grammarError(String.format("%s is not a valid leaf for topology object: %s",
-                                leafName, rootObject));
-                    });
-        } else {
-            scopeObjectBuilder.topologyObject(Objects.equals(topologyObject, WILDCARD) ? null : topologyObject)
-                    .innerContainer(new ArrayList<>(Arrays.asList(container)));
-        }
-    }
-
-    private void handleAssociation(final ScopeObject.ScopeObjectBuilder scopeObjectBuilder, final String topologyObject,
-            final List<String> containerNames) {
-        containerNames.remove(ATTRIBUTES);
-        if (containerNames.size() > 1) {
-            scopeObjectBuilder.container(ContainerType.ASSOCIATION);
-        }
-        scopeObjectBuilder.topologyObject(topologyObject.equals(WILDCARD) ? null : topologyObject).innerContainer(
-                Collections.unmodifiableList(containerNames));
-    }
-
-    private void handleComplex(final ScopeObject.ScopeObjectBuilder scopeObjectBuilder, final String topologyObject,
-            final List<String> containerNames) {
-        scopeObjectBuilder.topologyObject(topologyObject.equals(WILDCARD) ? null : topologyObject).container(
-                ContainerType.ATTRIBUTES).innerContainer(Collections.unmodifiableList(containerNames.subList(containerNames
-                        .indexOf(ATTRIBUTES) + 1, containerNames.size())));
     }
 
     private void addScopeLogicalBlock(ScopeObject.ScopeObjectBuilder scopeObjectBuilder) {
