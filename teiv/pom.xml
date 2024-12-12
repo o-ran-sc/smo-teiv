@@ -28,11 +28,11 @@
     <parent>
         <groupId>org.oran.smo</groupId>
         <artifactId>topology-exposure-inventory</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
     <groupId>org.oran.smo.teiv</groupId>
     <artifactId>topology-exposure-inventory-jar</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -664,7 +664,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <argument>-jar</argument>
-                                <argument>${project.parent.basedir}/pgsql-schema-generator/target/pgsql-schema-generator-1.1.0.jar</argument>
+                                <argument>${project.parent.basedir}/pgsql-schema-generator/target/pgsql-schema-generator-1.2.0.jar</argument>
                                 <argument>--yang-model.external.source=${project.basedir}/src/main/resources/models</argument>
                                 <argument>--schema.data.output=src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data.sql</argument>
                                 <argument>--schema.model.output=src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model.sql</argument>
