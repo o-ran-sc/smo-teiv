@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53a6c3fd_40d4dc2a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-12T18:06:50Z",
+      "side": 1,
+      "message": "Please keep the previous file too. \nCopy rather than rename.",
+      "revId": "942a5a12662895054beaee753a269ea94e8a1e22",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
