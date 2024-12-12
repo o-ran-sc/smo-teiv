@@ -1,10 +1,10 @@
 ---
 distribution_type: container
-container_release_tag: 0.0.1
+container_release_tag: 0.0.2
 container_pull_registry: nexus3.o-ran-sc.org:10004
 container_push_registry: nexus3.o-ran-sc.org:10002
 project: smo-teiv
-ref: 98f7fc82008e2af50ac9e975b6d5e62e80fa8fcd
+ref: 817fb590e336ceab3b56ad48704209b5cee97d13
 containers:
     - name: smo-teiv-ingestion
-      version: 0.0.1
+      version: 0.0.2
