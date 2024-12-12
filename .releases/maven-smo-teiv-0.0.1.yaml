@@ -1,5 +1,0 @@
----
-distribution_type: 'maven'
-version: '0.0.1'
-project: 'smo-teiv'
-log_dir: 'smo-teiv-maven-stage-master/4'
