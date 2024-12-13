@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1eb2177_2e3e8f08",
+        "filename": ".releases/maven-smo-teiv-0.0.2.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-13T12:17:42Z",
+      "side": 1,
+      "message": "0.1.0 I think",
+      "range": {
+        "startLine": 3,
+        "startChar": 6,
+        "endLine": 3,
+        "endChar": 16
+      },
+      "revId": "cde379302a96ab3c5fad67c5bcbcf7189d071b95",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4ae5737_dbcc6e55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-13T12:17:42Z",
+      "side": 1,
+      "message": "Wrong version number - should be 0.1.0\n\nhttps://nexus.o-ran-sc.org/service/local/repo_groups/staging/content/org/oran/smo/topology-exposure-inventory/0.1.0/topology-exposure-inventory-0.1.0.pom\n\nhttps://nexus.o-ran-sc.org/service/local/repo_groups/staging/content/org/oran/smo/teiv/topology-exposure-inventory-jar/0.1.0/topology-exposure-inventory-jar-0.1.0.pom\n\u0026\nhttps://nexus.o-ran-sc.org/service/local/repo_groups/staging/content/org/oran/smo/teiv/topology-exposure-inventory-jar/0.1.0/topology-exposure-inventory-jar-0.1.0.jar\n\n(\n  And psql-schema-generator jar/pom v1.1.0 will be released too\n  https://nexus.o-ran-sc.org/service/local/repo_groups/staging/content/org/oran/smo/teiv/pgsqlgenerator/pgsql-schema-generator/1.1.0/pgsql-schema-generator-1.1.0.pom\n   \u0026\n  https://nexus.o-ran-sc.org/service/local/repo_groups/staging/content/org/oran/smo/teiv/pgsqlgenerator/pgsql-schema-generator/1.1.0/pgsql-schema-generator-1.1.0.jar\n)",
+      "revId": "cde379302a96ab3c5fad67c5bcbcf7189d071b95",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
