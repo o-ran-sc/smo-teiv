@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96ef18b2_76375a5a",
+        "filename": ".releases/container-release-smo-teiv-ingestion-0.0.2.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2024-12-13T12:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39ea84ea_357aec4d",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "cec37fb0d1ec38ff2b3cd277cacf36cf5b2aba6e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d12ae796_69f6f19c",
@@ -47,6 +71,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8735aa71_de4ceb7d",
+        "filename": ".releases/container-release-smo-teiv-ingestion-0.0.2.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2024-12-13T12:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d12ae796_69f6f19c",
+      "range": {
+        "startLine": 10,
+        "startChar": 14,
+        "endLine": 10,
+        "endChar": 20
+      },
+      "revId": "cec37fb0d1ec38ff2b3cd277cacf36cf5b2aba6e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ddeea7cb_ee70005e",
@@ -60,6 +108,24 @@
       "writtenOn": "2024-12-13T12:10:51Z",
       "side": 1,
       "message": "See comments for exposure image. Same here.",
+      "revId": "cec37fb0d1ec38ff2b3cd277cacf36cf5b2aba6e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd37cf25_37f726ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2024-12-13T12:27:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ddeea7cb_ee70005e",
       "revId": "cec37fb0d1ec38ff2b3cd277cacf36cf5b2aba6e",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
