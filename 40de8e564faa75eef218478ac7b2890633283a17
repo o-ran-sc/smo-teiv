@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68206eac_e3626919",
+        "filename": ".releases/container-release-smo-teiv-exposure-0.0.1.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-13T12:09:40Z",
+      "side": 1,
+      "message": "I think you need to revert this file to be _exact_ same as before. (or just unstage/remove this file from the commit). Otherwise the release job will think this file has changed and try to re-release. But re-release is not possible - so will fail.",
+      "range": {
+        "startLine": 10,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 17
+      },
+      "revId": "40de8e564faa75eef218478ac7b2890633283a17",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc0c4619_2f80c159",
+        "filename": ".releases/container-release-smo-teiv-exposure-0.0.2.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-13T12:09:40Z",
+      "side": 1,
+      "message": "0.1.0",
+      "range": {
+        "startLine": 3,
+        "startChar": 23,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "40de8e564faa75eef218478ac7b2890633283a17",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f4a4a77_788a6783",
+        "filename": ".releases/container-release-smo-teiv-exposure-0.0.2.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-13T12:09:40Z",
+      "side": 1,
+      "message": "0.1.0",
+      "range": {
+        "startLine": 10,
+        "startChar": 14,
+        "endLine": 10,
+        "endChar": 20
+      },
+      "revId": "40de8e564faa75eef218478ac7b2890633283a17",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9953e0e_b7b59c23",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-13T12:09:40Z",
+      "side": 1,
+      "message": "Wrong version number i think \n\nhttps://nexus3.o-ran-sc.org/#browse/browse:docker.staging:v2%2Fo-ran-sc%2Fsmo-teiv-exposure%2Ftags%2F0.1.0\n\nhttps://nexus3.o-ran-sc.org/#browse/browse:docker.staging:v2%2Fo-ran-sc%2Fsmo-teiv-ingestion%2Ftags%2F0.1.0",
+      "revId": "40de8e564faa75eef218478ac7b2890633283a17",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
