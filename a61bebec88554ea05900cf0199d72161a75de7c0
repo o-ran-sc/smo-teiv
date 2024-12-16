@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "a61bebec88554ea05900cf0199d72161a75de7c0",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2580a9d_e9e2b8dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-16T10:39:18Z",
+      "side": 1,
+      "message": "https://jenkins.o-ran-sc.org/view/smo-teiv/job/smo-teiv-maven-verify-master-mvn36-openjdk17/97/ \nhttps://jenkins.o-ran-sc.org/job/smo-teiv-maven-docker-verify-master-mvn36-openjdk17/102/",
+      "revId": "a61bebec88554ea05900cf0199d72161a75de7c0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
