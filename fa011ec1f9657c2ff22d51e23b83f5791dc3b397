@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6faf675c_85e77439",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-12-16T10:44:40Z",
+      "side": 1,
+      "message": "https://jenkins.o-ran-sc.org/view/smo-teiv/job/smo-teiv-maven-docker-verify-k-release-mvn36-openjdk17/2/\nhttps://jenkins.o-ran-sc.org/job/smo-teiv-maven-verify-k-release-mvn36-openjdk17/2/",
+      "revId": "fa011ec1f9657c2ff22d51e23b83f5791dc3b397",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
