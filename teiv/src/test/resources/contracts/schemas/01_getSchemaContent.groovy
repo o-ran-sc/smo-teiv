@@ -96,7 +96,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "            \";\n" +
                     "\n" +
                     "        uses or-teiv-types:Top_Grp_Type;\n" +
-                    "        uses or-teiv-types:Origin_Entity_Mapping_Grp;\n" +
+                    "        uses or-teiv-types:Origin_Relationship_Mapping_Grp;\n" +
                     "        key id;\n" +
                     "\n" +
                     "        leaf-list managed-oduFunction {\n" +
@@ -124,7 +124,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "            \";\n" +
                     "\n" +
                     "        uses or-teiv-types:Top_Grp_Type;\n" +
-                    "        uses or-teiv-types:Origin_Entity_Mapping_Grp;\n" +
+                    "        uses or-teiv-types:Origin_Relationship_Mapping_Grp;\n" +
                     "        key id;\n" +
                     "\n" +
                     "        leaf-list managed-ocucpFunction {\n" +
@@ -152,7 +152,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "            \";\n" +
                     "\n" +
                     "        uses or-teiv-types:Top_Grp_Type;\n" +
-                    "        uses or-teiv-types:Origin_Entity_Mapping_Grp;\n" +
+                    "        uses or-teiv-types:Origin_Relationship_Mapping_Grp;\n" +
                     "        key id;\n" +
                     "\n" +
                     "        leaf-list managed-ocuupFunction {\n" +
@@ -180,7 +180,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "            \";\n" +
                     "\n" +
                     "        uses or-teiv-types:Top_Grp_Type;\n" +
-                    "        uses or-teiv-types:Origin_Entity_Mapping_Grp;\n" +
+                    "        uses or-teiv-types:Origin_Relationship_Mapping_Grp;\n" +
                     "        key id;\n" +
                     "\n" +
                     "        leaf-list managed-oruFunction {\n" +
@@ -208,7 +208,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "            \";\n" +
                     "\n" +
                     "        uses or-teiv-types:Top_Grp_Type;\n" +
-                    "        uses or-teiv-types:Origin_Entity_Mapping_Grp;\n" +
+                    "        uses or-teiv-types:Origin_Relationship_Mapping_Grp;\n" +
                     "        key id;\n" +
                     "\n" +
                     "        leaf-list managed-nearRTRICFunction {\n" +

@@ -462,7 +462,7 @@ module o-ran-smo-teiv-ran {
             ";
 
         uses or-teiv-types:Top_Grp_Type;
-        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list provided-nrCellDu {
@@ -490,7 +490,7 @@ module o-ran-smo-teiv-ran {
             ";
 
         uses or-teiv-types:Top_Grp_Type;
-        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list provided-nrSectorCarrier {
@@ -518,7 +518,7 @@ module o-ran-smo-teiv-ran {
             ";
 
         uses or-teiv-types:Top_Grp_Type;
-        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list provided-nrCellCu {
@@ -546,7 +546,7 @@ module o-ran-smo-teiv-ran {
             ";
 
         uses or-teiv-types:Top_Grp_Type;
-        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list used-nrSectorCarrier {
@@ -573,7 +573,7 @@ module o-ran-smo-teiv-ran {
             ";
 
         uses or-teiv-types:Top_Grp_Type;
-        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf used-antennaCapability {
@@ -600,7 +600,7 @@ module o-ran-smo-teiv-ran {
             ";
 
         uses or-teiv-types:Top_Grp_Type;
-        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
         key id;
 
         leaf-list grouped-nrCellDu {

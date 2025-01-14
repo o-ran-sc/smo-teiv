@@ -50,7 +50,8 @@ public abstract class YangModelLoader {
 
     private static final Set<String> MODULES_TO_IMPLEMENT = Set.of("o-ran-smo-teiv-common-yang-extensions",
             "o-ran-smo-teiv-common-yang-types", "o-ran-smo-teiv-equipment", "o-ran-smo-teiv-oam", "o-ran-smo-teiv-ran",
-            "o-ran-smo-teiv-rel-equipment-ran", "o-ran-smo-teiv-rel-oam-ran");
+            "o-ran-smo-teiv-rel-equipment-ran", "o-ran-smo-teiv-rel-oam-ran", "o-ran-smo-teiv-cloud",
+            "o-ran-smo-teiv-rel-cloud-ran");
 
     public static ParserExecutionContext createParserExecutionContext(List<StatementClassSupplier> extensions,
             List<CustomProcessor> customProcessors, Set<FindingFilterPredicate> filterPredicates) {
