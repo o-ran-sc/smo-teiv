@@ -64,6 +64,11 @@ public enum ParserFindingType {
      * There is a mismatch in conformance type between a module and its submodules.
      */
     P006_IMPLEMENT_IMPORT_MISMATCH,
+    /**
+     * Two or more modules are in the input with the same module name but different namespace;
+     * or the other way around. This is a serious issue.
+     */
+    P007_MODULE_NAMESPACE_MISMATCH,
 
     /**
      * Fail-fast. Denotes that during parsing some issues were found that are so severe that it
@@ -142,7 +147,7 @@ public enum ParserFindingType {
      */
     P037_UNRESOLVABLE_INCLUDE,
     /**
-     * Multiple revisions of a subnmodule are in the input. Not allowed.
+     * Multiple revisions of a submodule are in the input. Not allowed.
      */
     P038_AMBIGUOUS_INCLUDE,
     /**

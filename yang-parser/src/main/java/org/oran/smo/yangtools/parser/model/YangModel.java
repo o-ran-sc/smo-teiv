@@ -184,7 +184,7 @@ public class YangModel {
              */
             extractModuleIdentity(context, yangDomDocumentRoot);
             extractPrefixes(yangDomDocumentRoot);
-            extractNamespace(yangDomDocumentRoot, namespaceResolver);
+            extractNamespace(context, yangDomDocumentRoot, namespaceResolver);
 
             if (createTypeSafeStatementTree) {
                 /*
@@ -320,8 +320,8 @@ public class YangModel {
         }
     }
 
-    private void extractNamespace(final YangDomDocumentRoot docRoot, final ModuleAndNamespaceResolver namespaceResolver) {
-
+    private void extractNamespace(final ParserExecutionContext context, final YangDomDocumentRoot docRoot,
+            final ModuleAndNamespaceResolver namespaceResolver) {
         if (docRoot.getChildren().isEmpty()) {
             return;
         }
@@ -335,10 +335,31 @@ public class YangModel {
             if (namespaceChildren.size() == 1) {
                 final YangDomElement namespaceDomElement = namespaceChildren.get(0);
                 if (namespaceDomElement.getValue() != null) {
-                    namespaceResolver.recordModuleMapping(this.moduleIdentity.getModuleName(), namespaceDomElement
-                            .getValue());
-                    namespaceResolver.recordNamespaceMapping(namespaceDomElement.getValue(), this.moduleIdentity
-                            .getModuleName());
+                    final String moduleName = this.moduleIdentity.getModuleName();
+                    final String namespace = namespaceDomElement.getValue();
+
+                    /*
+                    * If the module already exists in the resolver (this is the case when multiple revisions of the
+                    * same module are in the input, with only one of these being conformance IMPLEMENT), then the
+                    * namespaces must match, so we check for that - same the other way around. If they don't match
+                    * we will issue a finding here - this is a serious issue.
+                    */
+                    final String alreadyMappedModuleName = namespaceResolver.getModuleForNamespace(namespace);
+                    final String alreadyMappedNamespace = namespaceResolver.getNamespaceForModule(moduleName);
+
+                    if (alreadyMappedModuleName != null && !alreadyMappedModuleName.equals(moduleName)) {
+                        context.addFinding(new Finding(this, ParserFindingType.P007_MODULE_NAMESPACE_MISMATCH,
+                                "Same namespace '" + namespace + "' is used by multiple different modules."));
+                    } else if (alreadyMappedNamespace != null && !alreadyMappedNamespace.equals(namespace)) {
+                        context.addFinding(new Finding(this, ParserFindingType.P007_MODULE_NAMESPACE_MISMATCH,
+                                "Module '" + moduleName + "' is multiple times in the input, with different namespaces."));
+                    } else {
+                        /*
+                        * All good.
+                        */
+                        namespaceResolver.recordModuleMapping(moduleName, namespace);
+                        namespaceResolver.recordNamespaceMapping(namespace, moduleName);
+                    }
                 }
             }
         }

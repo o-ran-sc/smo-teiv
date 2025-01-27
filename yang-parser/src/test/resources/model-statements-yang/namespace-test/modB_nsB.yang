@@ -1,0 +1,7 @@
+module modB {
+
+    namespace "nsB";
+
+    prefix "this";
+    revision "2024-09-26";
+}

@@ -642,7 +642,7 @@ import org.springframework.cloud.contract.spec.Contract
                     p('module o-ran-smo-teiv-ran { ' +
                     '  ' +
                     '  yang-version 1.1; ' +
-                    '  namespace "urn:o-ran-smo-teiv-ran"; ' +
+                    '  namespace "urn:o-ran:smo-teiv-ran"; ' +
                     '  prefix module; ' +
                     '   ' +
                     '    import o-ran-smo-teiv-common-yang-types { prefix model; } ' +

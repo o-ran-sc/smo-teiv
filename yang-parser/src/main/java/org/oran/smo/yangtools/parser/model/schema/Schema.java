@@ -209,6 +209,7 @@ public class Schema {
             .toString(), ParserFindingType.P001_BASIC_FILE_READ_ERROR.toString(), ParserFindingType.P003_DUPLICATE_INPUT
                     .toString(), ParserFindingType.P004_SAME_MODULE_DUPLICATE_IMPLEMENTS.toString(),
             ParserFindingType.P005_NO_IMPLEMENTS.toString(), ParserFindingType.P006_IMPLEMENT_IMPORT_MISMATCH.toString(),
+            ParserFindingType.P007_MODULE_NAMESPACE_MISMATCH.toString(),
             ParserFindingType.P013_INVALID_SYNTAX_AT_DOCUMENT_ROOT.toString(),
             ParserFindingType.P014_INVALID_SYNTAX_AT_DOCUMENT_END.toString(), ParserFindingType.P031_PREFIX_NOT_UNIQUE
                     .toString(), ParserFindingType.P032_MISSING_REVISION.toString(), ParserFindingType.P035_AMBIGUOUS_IMPORT
