@@ -1,6 +1,6 @@
 # TEIV docker-compose
 
-The all the files in this directory should have everything you need to run TEIV with the default sql schemas or with
+All the files in this directory should have everything you need to run TEIV with the default sql schemas or with
 your own custom schemas generated from you own YANG files.
 
 The docker-compose.yml file in its default state is set up to run TEIV with the default sql schemas generated from the
@@ -28,6 +28,10 @@ may start and run:
 - **dbpostgresql** - stores TEIV's data
 - **pgsql-schema-generator** - an optional service that allows the user to supply their own YANG files to create their
   own SQL schemas
+
+**NB:** There can be an issue where topology-ingestion-inventory and topology-exposure-inventory try to connect to
+dbpostgresql before dbpostgresql is accepting connections as reported at https://lf-o-ran-sc.atlassian.net/browse/SMO-173.
+To fix this uncomment the "command" block under topology-exposure-inventory and topology-ingestion-inventory
 
 ## Running with default sql schemas
 

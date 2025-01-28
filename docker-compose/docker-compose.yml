@@ -56,7 +56,7 @@ services:
       - topology-ingestion-inventory
       - kafka
     restart: "no"
-    entrypoint: [ "/bin/bash", "-c", "sleep 30 && bash /cloudEventProducer.sh" ]
+    entrypoint: [ "/bin/bash", "-c", "sleep 45 && bash /cloudEventProducer.sh" ]
 
   dbpostgresql:
     container_name: dbpostgresql
@@ -93,6 +93,8 @@ services:
 #      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     depends_on:
       - dbpostgresql
+#    Uncomment the following line if topology-exposure-inventory is trying to connect to dbpostgresql before it is ready
+#    command: ["/bin/sh", "-c", "sleep 30 && java -jar topology-exposure-inventory-app.jar"]
     deploy:
       resources:
         reservations:
@@ -107,6 +109,8 @@ services:
     image: o-ran-sc/smo-teiv-ingestion:latest
     depends_on:
       - dbpostgresql
+#    Uncomment the following line if topology-ingestion-inventory is trying to connect to dbpostgresql before it is ready
+#    command: ["/bin/sh", "-c", "sleep 30 && java -jar topology-exposure-inventory-app.jar"]
     deploy:
       resources:
         reservations:
