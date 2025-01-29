@@ -1,0 +1,166 @@
+module o-ran-smo-teiv-common-yang-types {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-common-yang-types";
+    prefix or-teiv-types;
+
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
+
+    import _3gpp-common-yang-types { prefix types3gpp; }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+    "Topology and Inventory common types model
+
+    This model contains re-usable data types that topology and inventory models
+    will frequently use as part of types and relationships.
+
+    Copyright (C) 2024 Ericsson
+    Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+
+    Licensed under the Apache License, Version 2.0 (the \"License\");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an \"AS IS\" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    SPDX-License-Identifier: Apache-2.0";
+
+    revision "2024-10-04" {
+        description "Added Origin_Entity_Mapping_Grp and Origin_Relationship_Mapping_Grp
+        for sourceIds and reliabilityIndicator to metadata.";
+        or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    grouping Top_Grp_Type {
+        description "Grouping containing the key attribute common to all types.
+            All types MUST use this grouping.";
+
+        leaf id {
+            type string;
+            description "Unique identifier of topology entities. Represents the
+                Entity Instance Identifier.";
+        }
+    }
+
+    container decorators {
+        description
+            "This container serves as extension point for applications wishing
+            to define their own decorators. This is done via augmentations. They
+            can only be defined in name value pair.
+
+            This is a consumer data and can be attached to Topology Entity or
+            Topology Relation instance, outside of the declared Topology Entity
+            or Topology Relationship's attributes. This cannot be instantiated,
+            and it MUST NOT be augmented or deviated in any way, unless stated
+            otherwise.";
+    }
+
+    leaf-list classifiers {
+        description
+            "Consumer defined tags to topology entities and relationships.
+
+            This is a consumer data and can be attached to Topology Entity or
+            Topology Relation instance, outside of the declared Topology Entity
+            or Topology Relationship's attributes. This cannot be instantiated,
+            and it MUST NOT be augmented or deviated in any way, unless stated
+            otherwise.";
+
+        type identityref { base classifier; }
+    }
+
+    grouping Origin_Entity_Mapping_Grp {
+        description "Grouping to identify sourceIds on a topology entity.";
+
+        leaf-list sourceIds {
+
+            description
+                "An ordered list of identities that represent the set of native
+                source identifiers for participating entities.
+
+                This must be attached to the Topology Entity instance, outside of the
+                declared Topology Entity's attributes. This is exposed to the
+                consumers and can only be set by the responsible adapter. This
+                cannot be instantiated, and it MUST NOT be augmented or deviated
+                in any way, unless stated otherwise.";
+
+            type sourceId;
+            ordered-by user;
+            min-elements 1;
+        }
+    }
+
+    grouping Origin_Relationship_Mapping_Grp {
+        description "Grouping to identify sourceIds on a topology relationship.";
+
+        leaf-list sourceIds {
+
+            description
+                "An ordered list of identities that represent the set of native
+                source identifiers for participating entities in the relationship.
+
+                This must be attached to the Topology Relation instance, outside of the
+                declared Topology Relationship's attributes. This is exposed to the
+                consumers and can only be set by the responsible adapter. This
+                cannot be instantiated, and it MUST NOT be augmented or deviated in
+                any way, unless stated otherwise.";
+
+            type sourceId;
+            ordered-by user;
+            min-elements 2;
+        }
+    }
+
+    container metadata {
+        description
+            "This container serves as an extension point to define metadata. They
+            can only be defined in name value pairs.
+
+            This must be attached to the Topology Entity or Topology Relation instance,
+            outside of the declared Topology Entity or Topology Relationship's
+            attributes. This is exposed to the consumers and can only be set by
+            the responsible adapter. This cannot be instantiated, and it MUST NOT be
+            augmented or deviated in any way, unless stated otherwise.";
+
+        leaf reliabilityIndicator {
+            type enumeration {
+                enum OK {
+                    description "The data is in alignment with the source of truth,
+                    as far as Topology Exposure Handling is aware.";
+                    value 0;
+                }
+                enum RESTORED {
+                    description "The data was restored from backup and the responsible
+                    adapters are checking to ensure the data is current.";
+                    value 1;
+                }
+                enum ADVISED {
+                    description "Entity implicitly created by Topology Exposure Handling and
+                    potentially not aligned with the source of truth.";
+                    value 2;
+                }
+            }
+        }
+    }
+
+    identity classifier {
+        description "The classifier is used as a base to provide all classifiers
+        with identity. ";
+    }
+
+    typedef sourceId {
+        description "An identity that represents a native identifier of a topology entity.";
+        type string;
+    }
+}
