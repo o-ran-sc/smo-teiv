@@ -1,0 +1,618 @@
+module o-ran-smo-teiv-ran {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-ran";
+    prefix or-teiv-ran;
+
+    import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }
+
+    import _3gpp-common-yang-types { prefix types3gpp; }
+
+    import ietf-geo-location {
+        prefix geo;
+        reference "RFC 9179: A YANG Grouping for Geographic Locations";
+    }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+        "RAN Logical topology model.
+
+        This model contains the topology entities and relations in the
+        RAN Logical domain, which represents the functional capability
+        of the deployed RAN that are relevant to rApps use cases.
+
+        Copyright (C) 2024 Ericsson
+        Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+
+        Licensed under the Apache License, Version 2.0 (the \"License\");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an \"AS IS\" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+
+        SPDX-License-Identifier: Apache-2.0";
+
+    revision "2024-10-08" {
+        description "Added range for azimuth attribute of Sector.";
+        or-teiv-yext:label 0.6.0;
+    }
+
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology object.";
+        or-teiv-yext:label 0.5.0;
+    }
+
+    revision "2024-07-15" {
+        description "This revision aligns O-RAN Work Group 10 Stage 2 Specification (O-RAN.WG10.TE&IV-CIMI.0-R004.v02.00)";
+        or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain RAN;
+
+    list ORUFunction {
+        description "O-RAN Radio Unit (O-RU).
+
+        A logical node hosting Low-PHY layer and RF processing based on a
+        lower layer functional split.  This is similar to 3GPP’s “TRP” or
+        “RRH” but more specific in including the Low-PHY layer (FFT/iFFT,
+        PRACH extraction). The O-RU terminates the Open Fronthaul interface
+        (also known as LLS interface) as well as Low-PHY functions of the
+        radio interface towards the UE. This is deployed as a PNF. The O-RU
+        terminates the Open Fronthaul M-Plane interface towards the O-DU
+        and SMO.
+
+        Note: In Topology, you can create, read, update, and delete
+        the O-RU object.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf oruId {
+                description "Unique identifier for the O-RU within a ORUFunction";
+                type int64;
+            }
+        }
+    }
+
+    list NearRTRICFunction {
+        description "Near-Real-Time RAN Intelligent Controller (Near-RT RIC).
+
+        An O-RAN Network Function (NF) that enables near-real-time control
+        and optimization of RAN elements and resources via fine-grained
+        data collection and actions over E2 interface. It may include
+        AI/ML (Artificial Intelligence / Machine Learning) workflow
+        including model training, inference, and updates.
+
+        Note: In Topology, you can create, read, update, and delete
+        the Near-RT RIC object.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf nearRtRicId {
+                description "Unique identifier for the Near-RT RIC within a NearRTRICFunction";
+                type int64;
+            }
+
+            container pLMNId {
+                description "PLMN identifier to be used as part of global RAN
+                node identity";
+                uses types3gpp:PLMNId;
+            }
+        }
+    }
+
+    list ODUFunction {
+        description "O-RAN Distributed Unit (O-DU).
+
+        The O-DU is an O-RAN NF in the O-RAN Architecture. An O-DU, combined
+        with one or more O-RU(s) connected to it, supports and is fully
+        compatible with the functions of a gNB-DU as defined by 3GPP TS 38.401.
+
+        The following is true for a O-DU:
+        Is connected to the O-CU-CP through the F1-C interface. Is
+        connected to the O-CU-UP through the F1-U interface. One O-DU is
+        connected to only one O-CU-CP. One O-DU can be connected to
+        multiple O-CU-UPs under the control of the same O-CU-CP.
+
+        Note: A gNB may consist of a O-CU-CP, multiple O-CU-UPs and
+        multiple O-DUs. O-DU is a concrete class that extends the NG-RAN
+        node object. In Topology, you can create, read, update, and delete
+        the gNB-DU object.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            container dUpLMNId {
+                description "PLMN identifier used as part of PM Events data";
+                uses types3gpp:PLMNId;
+            }
+
+            leaf gNBDUId {
+                description "Unique identifier for the DU within a gNodeB";
+                type int64;
+            }
+
+            leaf gNBId {
+                description "Identity of gNodeB within a PLMN";
+                type int64;
+            }
+
+            leaf gNBIdLength {
+                description "Length of gNBId bit string representation";
+                type int32;
+            }
+        }
+    }
+
+    list OCUCPFunction {
+        description "O-RAN Centralized Unit Control Plane (O-CU-CP)
+
+        This is a logical node hosting the Radio Resource Control (RRC) and
+        the control plane part of the Packet Data Convergence Protocol
+        (PDCP). The O-CU-CP terminates the E1 interface connected with
+        the O-CU-UP and the F1-C interface connected with the O-RAN
+        Distributed Unit (O-DU).
+
+        The following is true for a O-CU-CP:
+        Is connected to the O-DU through the F1-C interface. Is connected
+        to the O-CU-UP through the E1 interface. Only one O-CU-CP is
+        connected to one O-DU. Only one O-CU-CP is connected to one
+        O-CU-UP. One O-DU can be connected to multiple O-CU-UPs under
+        the control of the same O-CU-CP. One O-CU-UP can be connected to
+        multiple DUs under the control of the same O-CU-CP.
+
+        Note: A gNB may consist of a O-CU-CP, multiple O-CU-UPs and
+        multiple O-DUs. An O-CU-CP is a concrete class that extends the
+        NG-RAN node object. In Topology, you can create, read, update, and
+        delete the O-CU-CP object.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf gNBCUName {
+                description "Name of gNodeB-CU";
+                type string;
+            }
+
+            leaf gNBId {
+                description "Identity of gNodeB within a PLMN";
+                type int64;
+            }
+
+            leaf gNBIdLength {
+                description "Length of gNBId bit string representation";
+                type int32;
+            }
+
+            container pLMNId {
+                description "PLMN identifier to be used as part of global RAN
+                node identity";
+                uses types3gpp:PLMNId;
+            }
+        }
+    }
+
+    list OCUUPFunction {
+        description "O-RAN Centralized Unit User Plane (O-CU-UP)
+
+        An O-CU-UP is a logical node hosting the User Plane part of the
+        Packet Data Convergence Protocol (PDCP) and the Service Data
+        Adaptation Protocol (SDAP). The O-CU-UP terminates the E1 interface
+        connected with the O-CU-CP and the F1-U interface connected with
+        the O-RAN Distributed Unit (O-DU).
+
+        The following is true for a O-CU-UP:
+        Is connected to the O-DU through the F1-U interface. Is connected
+        to the O-CU-CP through the E1 interface. One O-CU-UP is
+        connected to only one O-CU-CP. One O-DU can be connected to
+        multiple O-CU-UPs under the control of the same O-CU-CP. One
+        O-CU-UP can be connected to multiple DUs under the control of the
+        same O-CU-CP.
+
+        Note: A gNB may consist of an O-CU-CP, multiple O-CU-UPs and
+        multiple O-DUs. An O-CU-UP is a concrete class that extends the
+        NG-RAN node object. In Topology, you can create, read, update, and
+        delete the O-CU-UP object.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf gNBId {
+                description "Identity of gNodeB within a PLMN";
+                type int64;
+            }
+
+            leaf gNBIdLength {
+                description "Length of gNBId bit string representation";
+                type int32;
+            }
+
+            list pLMNIdList {
+                description "List of PLMN identifier to be used as part of global RAN node identity";
+                uses types3gpp:PLMNId;
+            }
+        }
+    }
+
+    list NRCellCU {
+        description "Represents an NR Cell in gNodeB-CU.
+
+        5G NR is a new radio access technology (RAT) developed by 3GPP for
+        the 5G (fifth generation) mobile network. It is designed to be the
+        global standard for the air interface of 5G networks.
+
+        5G NR has synchronization signal that is known as Primary
+        Synchronization Signal (PSS) and Secondary Synchronization
+        Signal (SSS). These signals are specific to NR physical layer and
+        provide the following information required by UE for downlink
+        synchronization: PSS provides Radio Frame Boundary (Position of 1st
+        Symbol in a Radio frame) SSS provides Subframe Boundary (Position of
+        1st Symbol in a Subframe) Physical Layer Cell ID (PCI) information
+        using both PSS and SSS.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf cellLocalId {
+                description "Used together with gNodeB identifier to identify NR
+                cell in PLMN. Used together with gNBId to form NCI.";
+                type int32;
+            }
+
+            container plmnId {
+                description "PLMN ID for NR CGI. If empty,
+                GNBCUCPFunction::pLMNId is used for PLMN ID in NR CGI";
+                uses types3gpp:PLMNId;
+            }
+
+            leaf nCI {
+                description "NR Cell Identity";
+                type int64;
+            }
+
+            leaf nRTAC {
+                description "NR Tracking Area Code (TAC)";
+                type int32;
+            }
+        }
+    }
+
+    list NRCellDU {
+        description "Represents an NR Cell in gNodeB-DU.
+
+        5G NR is a new radio access technology (RAT) developed by 3GPP for
+        the 5G (fifth generation) mobile network. It is designed to be the
+        global standard for the air interface of 5G networks.
+
+        5G NR has synchronization signal that is known as Primary
+        Synchronization signal (PSS) and Secondary Synchronization signal
+        (SSS). These signals are specific to NR physical layer and provide
+        the following information required by UE for downlink
+        synchronization: PSS provides Radio Frame Boundary (Position of 1st
+        Symbol in a Radio frame) SSS provides Subframe Boundary (Position of
+        1st Symbol in a Subframe) Physical Layer Cell ID (PCI) information
+        using both PSS and SSS.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf cellLocalId {
+                description "Used together with gNodeB identifier to identify NR
+                cell in PLMN. Used together with gNBId to form NCI.";
+                type int32;
+            }
+
+            leaf nCI {
+                description "NR Cell Identity.";
+                type int64;
+            }
+
+            leaf nRPCI {
+                description "The Physical Cell Identity (PCI) of the NR cell.";
+                type int32;
+            }
+
+            leaf nRTAC {
+                description "NR Tracking Area Code (TAC).";
+                type int32;
+            }
+        }
+    }
+
+    list NRSectorCarrier {
+        description "The NR Sector Carrier object provides the attributes for
+        defining the logical characteristics of a carrier (cell) in a
+        sector. A sector is a coverage area associated with a base station
+        having its own antennas, radio ports, and control channels. The
+        concept of sectors was developed to improve co-channel interference
+        in cellular systems, and most wireless systems use three sector
+        cells.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf arfcnDL {
+                description "NR Absolute Radio Frequency Channel Number
+                (NR-ARFCN) for downlink";
+                type int32;
+            }
+
+            leaf arfcnUL {
+                description "NR Absolute Radio frequency Channel Number
+                (NR-ARFCN) for uplink.";
+                type int32;
+            }
+
+            leaf frequencyDL {
+                description "RF Reference Frequency of downlink channel";
+                type int32;
+            }
+
+            leaf frequencyUL {
+                description "RF Reference Frequency of uplink channel";
+                type int32;
+            }
+
+            leaf bSChannelBwDL {
+                description "BS Channel bandwidth in MHz for downlink.";
+                type int32;
+            }
+        }
+    }
+
+    list AntennaCapability {
+        description "This MO serves as a mapping between the cell and the RBS
+        equipment used to provide coverage in a certain geographical area.
+        The MO also controls the maximum output power of the sector.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf-list eUtranFqBands {
+                description "List of LTE frequency bands that associated
+                hardware supports";
+                type string;
+            }
+
+            leaf-list geranFqBands {
+                description "List of GERAN frequency bands that associated
+                hardware supports";
+                type string;
+            }
+
+            leaf-list nRFqBands {
+                description "List of NR frequency bands associated hardware
+                supports";
+                type string;
+            }
+        }
+    }
+
+    list Sector {
+        description "A group of co-located Cells that have a shared
+        coverage area.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf sectorId {
+                description "Universally unique ID generated by the sector's
+                discovery mechanism.";
+                type uint64;
+            }
+
+            uses geo:geo-location;
+
+            leaf azimuth {
+                description "Average value of the azimuths of the cells
+                comprising the sector, determined during sector discovery.";
+                type decimal64{
+                    fraction-digits 1;
+                    range "0..360";
+                }
+                units "decimal degrees";
+            }
+        }
+    }
+
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_PROVIDES_NRCELLDU { // 1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ODUFunction type.
+            The bSide of this relationship is an instance of the NRCellDU type.
+            The ODUFunction represents the DU component of a gNB that provides the NRCellDU.
+            A ODUFunction instance can provide many NRCellDUs.
+            An NRCellDU instance must be provided by an ODUFunction.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list provided-nrCellDu {
+            description "O-DU Function provides NR Cell-DU.";
+            or-teiv-yext:aSide ODUFunction;
+            type instance-identifier;
+        }
+
+        leaf provided-by-oduFunction {
+            description "NR Cell-DU provided by O-DU Function.";
+            or-teiv-yext:bSide NRCellDU;
+            type instance-identifier;
+            mandatory true;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTION_PROVIDES_NRSECTORCARRIER { // 1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the ODUFunction type.
+            The bSide of this relationship is an instance of the NRSectorCarrier type.
+            The ODUFunction represents the DU component of a gNB that provides the NRSectorCarrier.
+            A ODUFunction instance can provide many NRSectorCarriers.
+            An NRSectorCarrier instance must be provided by an ODUFunction.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list provided-nrSectorCarrier {
+            description "O-DU Function provides NR Sector Carrier.";
+            or-teiv-yext:aSide ODUFunction;
+            type instance-identifier;
+        }
+
+        leaf provided-by-oduFunction {
+            description "NR Sector Carrier provided by O-DU Function.";
+            or-teiv-yext:bSide NRSectorCarrier;
+            type instance-identifier;
+            mandatory true;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship OCUCPFUNCTION_PROVIDES_NRCELLCU { // 1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the OCUCPFunction type.
+            The bSide of this relationship is an instance of the NRCellCU type.
+            The OCUCPFunction represents the CU-CP component of a gNB that provides the NRCellCU.
+            A OCUCPFunction instance can provide many NRCellCU.
+            An NRCellCU instance must be provided by an OCUCPFunction.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list provided-nrCellCu {
+            description "O-CU-CP Function provides NR Cell-CU.";
+            or-teiv-yext:aSide OCUCPFunction;
+            type instance-identifier;
+        }
+
+        leaf provided-by-ocucpFunction {
+            description "NR Cell-CU provided by O-CU-CP Function.";
+            or-teiv-yext:bSide NRCellCU;
+            type instance-identifier;
+            mandatory true;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship NRCELLDU_USES_NRSECTORCARRIER { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the NRCellDU type.
+            The bSide of this relationship is an instance of the NRSectorCarrier type.
+            The NRCellDU represents the cell that uses the NRSectorCarrier.
+            An NRCellDU instance can use many NRSectorCarriers.
+            An NRSectorCarrier instance can only be used by one NRCellDU.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list used-nrSectorCarrier {
+            description "NR Cell-DU uses NR Sector Carrier.";
+            or-teiv-yext:aSide NRCellDU;
+            type instance-identifier;
+        }
+
+        leaf used-by-nrCellDu {
+            description "NR Sector Carrier used by NR Cell-DU.";
+            or-teiv-yext:bSide NRSectorCarrier;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship NRSECTORCARRIER_USES_ANTENNACAPABILITY { // 0..n to 0..1
+
+        description
+            "The aSide of this relationship is an instance of the NRSectorCarrier type.
+            The bSide of this relationship is an instance of the AntennaCapability type.
+            The NRSectorCarrier represents the carrier that uses the AntennaCapability.
+            An NRSectorCarrier instance can use only one AntennaCapability.
+            An AntennaCapability instance can be used by many NRSectorCarriers.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf used-antennaCapability {
+            description "NR Sector Carrier uses Antenna Capability.";
+            or-teiv-yext:aSide NRSectorCarrier;
+            type instance-identifier;
+        }
+
+        leaf-list used-by-nrSectorCarrier {
+            description "Antenna Capability used by NR Sector Carrier.";
+            or-teiv-yext:bSide AntennaCapability;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship SECTOR_GROUPS_NRCELLDU { // 0..1 to 0..n
+
+        description
+            "The aSide of this relationship is an instance of the Sector type.
+            The bSide of this relationship is an instance of the NRCellDU type.
+            The Sector represents the geographical area that groups the NRCellDUs.
+            A Sector instance can group many NRCellDUs.
+            An NRCellDU instance can only be grouped by one Sector.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list grouped-nrCellDu {
+            description "Sector groups NR Cell-DU.";
+            or-teiv-yext:aSide Sector;
+            type instance-identifier;
+        }
+
+        leaf grouped-by-sector {
+            description "NR Cell-DU grouped by Sector.";
+            or-teiv-yext:bSide NRCellDU;
+            type instance-identifier;
+        }
+    }
+}

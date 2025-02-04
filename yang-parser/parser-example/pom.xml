@@ -25,16 +25,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.oran.smo</groupId>
-        <artifactId>topology-exposure-inventory</artifactId>
+        <artifactId>yang-parser</artifactId>
         <version>0.2.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.oran.smo</groupId>
-    <artifactId>yang-parser</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <groupId>org.oran.smo.yangtools.parser.simple.example</groupId>
+    <artifactId>parser-example</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>yang-parser-example</name>
 
     <licenses>
         <license>
@@ -43,15 +44,29 @@
         </license>
     </licenses>
 
-    <modules>
-        <module>yang-parser-jar</module>
-        <module>parser-example</module>
-    </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${version.spotless-plugin}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.oran.smo.yangtools.parser</groupId>
+            <artifactId>yang-parser-jar</artifactId>
+            <version>${version.yang-parser-jar}</version>
+        </dependency>
+    </dependencies>
 
 </project>

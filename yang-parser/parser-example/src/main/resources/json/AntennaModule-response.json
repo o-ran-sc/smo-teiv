@@ -1,0 +1,68 @@
+{
+    "items": [
+        {
+            "o-ran-smo-teiv-equipment:AntennaModule": [
+                {
+                    "attributes": {
+                        "mechanicalAntennaTilt": 10,
+                        "mechanicalAntennaBearing": 50,
+                        "positionWithinSector": "Unknown",
+                        "geo-location": "POINT Z (-73.007696 41.73297 3000)",
+                        "verticalBeamWidth": null,
+                        "totalTilt": 14,
+                        "antennaModelNumber": "1",
+                        "azimuth": null,
+                        "antennaBeamWidth": [
+                            35,
+                            23,
+                            21
+                        ],
+                        "electricalAntennaTilt": 2,
+                        "horizontalBeamWidth": null
+                    },
+                    "id": "urn:oran:smo:teiv:AntennaModule=1"
+                }
+            ]
+        },
+        {
+            "o-ran-smo-teiv-equipment:AntennaModule": [
+                {
+                    "attributes": {
+                        "mechanicalAntennaTilt": 12,
+                        "mechanicalAntennaBearing": 45,
+                        "positionWithinSector": "Unknown",
+                        "geo-location": "POINT Z (-71.096454 43.75443 2500)",
+                        "verticalBeamWidth": null,
+                        "totalTilt": 15,
+                        "antennaModelNumber": "2",
+                        "azimuth": null,
+                        "antennaBeamWidth": [
+                            45,
+                            32,
+                            21
+                        ],
+                        "electricalAntennaTilt": 1,
+                        "horizontalBeamWidth": null
+                    },
+                    "id": "urn:oran:smo:teiv:AntennaModule=2"
+                }
+            ]
+        }
+    ],
+    "self": {
+        "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes"
+    },
+    "first": {
+        "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes"
+    },
+    "prev": {
+        "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes"
+    },
+    "next": {
+        "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes"
+    },
+    "last": {
+        "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes"
+    },
+    "totalCount": 2
+}

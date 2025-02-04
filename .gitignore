@@ -24,10 +24,10 @@ target
 **/.java-version
 **/.openapi-generator
 .openapi-generator-ignore
-yang-parser/src/main/resources/modules/*.yang
-yang-parser/src/test/resources/_orig-modules/ietf*.yang
-yang-parser/src/test/resources/_orig-modules/_3gpp*.yang
-yang-parser/src/test/resources/_orig-modules/iana*.yang
+yang-parser/yang-parser-jar/src/main/resources/modules/*.yang
+yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf*.yang
+yang-parser/yang-parser-jar/src/test/resources/_orig-modules/_3gpp*.yang
+yang-parser/yang-parser-jar/src/test/resources/_orig-modules/iana*.yang
 pgsql-schema-generator/src/test/resources/generate-defaults/import/*.yang
 teiv/src/main/resources/models/import/*.yang
 teiv/src/main/resources/v1/README.md
