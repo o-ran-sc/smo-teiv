@@ -29,7 +29,7 @@ import org.oran.smo.yangtools.parser.data.dom.YangDataDomNode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
+import static org.oran.smo.teiv.utils.TeivConstants.SOURCE_IDS;
 
 @NoArgsConstructor
 @AllArgsConstructor

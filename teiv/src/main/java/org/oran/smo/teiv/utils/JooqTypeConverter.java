@@ -35,7 +35,7 @@ import lombok.experimental.UtilityClass;
 
 import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.exception.InvalidFieldInYangDataException;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.utils.schema.Geography;
 
 @UtilityClass
@@ -50,7 +50,7 @@ public class JooqTypeConverter {
         } catch (JsonProcessingException e) {
             String message = "Exception during converting jsonb to list";
             log.error(message, e);
-            throw TiesException.serverException(message, null, e);
+            throw TeivException.serverException(message, null, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class JooqTypeConverter {
         } catch (JsonProcessingException e) {
             String message = "Exception during converting jsonb to map";
             log.error(message, e);
-            throw TiesException.serverException(message, null, e);
+            throw TeivException.serverException(message, null, e);
         }
     }
 

@@ -75,7 +75,7 @@ public class ModelSchemaGenerator extends SchemaGenerator {
             }
             this.schema = newGeneratedModelFile;
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.prepareBaselineException("ties.model", exception);
+            throw PgSchemaGeneratorException.prepareBaselineException("teiv.model", exception);
         }
     }
 
@@ -88,23 +88,23 @@ public class ModelSchemaGenerator extends SchemaGenerator {
             // Check for NBCs
             backwardCompatibilityChecker.checkForNBCChangesInModel(relFromBaselineSql, relationships);
         }
-        StringBuilder tiesModelSql = new StringBuilder();
+        StringBuilder teivModelSql = new StringBuilder();
 
         List<HashInfoEntity> hashInfoList = new ArrayList<>(hashInfoDataGenerator.getHashInfoRowsList().stream().toList());
         hashInfoList.sort(Comparator.comparing(HashInfoEntity::getName));
 
-        tiesModelSql.append(prepareCopyStatement(hashInfoList));
-        tiesModelSql.append(prepareCopyStatement(modules));
-        tiesModelSql.append(prepareCopyStatement(entities));
-        tiesModelSql.append(prepareCopyStatement(relationships));
-        tiesModelSql.append(";\n").append("\nCOMMIT;");
-        this.sqlStatements = tiesModelSql.toString();
+        teivModelSql.append(prepareCopyStatement(hashInfoList));
+        teivModelSql.append(prepareCopyStatement(modules));
+        teivModelSql.append(prepareCopyStatement(entities));
+        teivModelSql.append(prepareCopyStatement(relationships));
+        teivModelSql.append(";\n").append("\nCOMMIT;");
+        this.sqlStatements = teivModelSql.toString();
     }
 
     private StringBuilder prepareCopyStatement(List<? extends Table> table) {
         StringBuilder copyStatement = new StringBuilder();
         if (!table.isEmpty()) {
-            copyStatement.append("COPY ties_model.").append(table.get(0).getTableName()).append(table.get(0)
+            copyStatement.append("COPY teiv_model.").append(table.get(0).getTableName()).append(table.get(0)
                     .getColumnsForCopyStatement()).append(" FROM stdin;\n");
             table.forEach(table1 -> copyStatement.append(table1.getRecordForCopyStatement()));
             copyStatement.append("\\.\n\n");

@@ -72,7 +72,7 @@ public class SchemaParser {
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.trim();
-                    if (line.startsWith("COPY ties_model.relationship_info") && !line.startsWith("\\.")) {
+                    if (line.startsWith("COPY teiv_model.relationship_info") && !line.startsWith("\\.")) {
                         line = br.readLine();
                         List<String> relData = Arrays.asList(line.replace("\"", "").split("\\s+"));
                         identifiedRelationships.add(Relationship.builder().name(relData.get(0)).aSideAssociationName(relData
@@ -85,7 +85,7 @@ public class SchemaParser {
                     }
                 }
             } catch (IOException exception) {
-                throw PgSchemaGeneratorException.readBaselineException("ties.data", exception);
+                throw PgSchemaGeneratorException.readBaselineException("teiv.data", exception);
             }
         }
         return identifiedRelationships;
@@ -109,14 +109,14 @@ public class SchemaParser {
                         extractDefaultValueFromBaseline(line, identifiedTables);
                     } else if ((line.contains("CREATE TABLE") || line.contains("ALTER TABLE")) && !line.startsWith("'")) {
                         extractTableColumns(line, identifiedTables, br);
-                    } else if (line.contains("SELECT") && line.contains("ties_data.create_constraint_if_not_exists")) {
+                    } else if (line.contains("SELECT") && line.contains("teiv_data.create_constraint_if_not_exists")) {
                         extractConstraints(identifiedTables, br);
                     } else if (line.startsWith("CREATE INDEX IF NOT EXISTS")) {
                         extractIndex(line, identifiedTables);
                     }
                 }
             } catch (IOException exception) {
-                throw PgSchemaGeneratorException.readBaselineException("ties.data", exception);
+                throw PgSchemaGeneratorException.readBaselineException("teiv.data", exception);
             }
         }
         return identifiedTables;
@@ -151,9 +151,9 @@ public class SchemaParser {
                                         .tableName(tableToAddConstraintTo).columnToAddConstraintTo(columnToAddForeignKeyTo)
                                         .build());
                             } else if (alterStatement.contains("FOREIGN KEY")) {
-                                String substringFromLastTiesData = alterStatement.substring(StringUtils.lastIndexOf(
-                                        alterStatement, "ties_data.\""));
-                                String referenceTable = StringUtils.substringBetween(substringFromLastTiesData, "\"", "\"");
+                                String substringFromLastTeivData = alterStatement.substring(StringUtils.lastIndexOf(
+                                        alterStatement, "teiv_data.\""));
+                                String referenceTable = StringUtils.substringBetween(substringFromLastTeivData, "\"", "\"");
                                 String referenceTableColumn = alterStatement.substring(StringUtils.lastIndexOf(
                                         alterStatement, "(") + 1, StringUtils.lastIndexOf(alterStatement, ")")).replace(
                                                 "\"", "").trim();

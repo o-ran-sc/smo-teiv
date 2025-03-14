@@ -21,7 +21,7 @@
 
 BEGIN;
 
-COPY ties_model.hash_info("name", "hashedValue", "type") FROM stdin;
+COPY teiv_model.hash_info("name", "hashedValue", "type") FROM stdin;
 FK_TestEntityB_REL_FK_used-by-testEntityA	FK_TestEntityB_REL_FK_used-by-testEntityA	CONSTRAINT
 UNIQUE_TestEntityB_REL_ID_TESTENTITYA_USES_TESTENTITYB	UNIQUE_TestEntityB_REL_ID_TESTENTITYA_USES_TESTENTITYB	CONSTRAINT
 PK_TESTENTITYA_PROVIDES_TESTENTITYB_id	PK_TESTENTITYA_PROVIDES_TESTENTITYB_id	CONSTRAINT
@@ -44,12 +44,12 @@ PK_TESTENTITYA_GROUPS_TESTENTITYB_id	PK_TESTENTITYA_GROUPS_TESTENTITYB_id	CONSTR
 REL_CD_decorators_TESTENTITYA_USES_TESTENTITYB	REL_CD_decorators_TESTENTITYA_USES_TESTENTITYB	COLUMN
 \.
 
-COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName") FROM stdin;
+COPY teiv_model.entity_info("storedAt", "name", "moduleReferenceName") FROM stdin;
 o-ran-smo-teiv-ran_TestEntityB	TestEntityB	o-ran-smo-teiv-ran
 o-ran-smo-teiv-ran_TestEntityA	TestEntityA	o-ran-smo-teiv-ran
 \.
 
-COPY ties_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;
+COPY teiv_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;
 TESTENTITYA_PROVIDES_TESTENTITYB	provided-testEntityB	TestEntityA	o-ran-smo-teiv-ran	0	2	provided-by-testEntityA	TestEntityB	o-ran-smo-teiv-ran	0	3	BI_DIRECTIONAL	false	RELATION	o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB	o-ran-smo-teiv-ran
 TESTENTITYA_USES_TESTENTITYB	used-TestEntityB	TestEntityA	o-ran-smo-teiv-ran	0	1	used-by-testEntityA	TestEntityB	o-ran-smo-teiv-ran	0	2	BI_DIRECTIONAL	false	B_SIDE	o-ran-smo-teiv-ran_TestEntityB	o-ran-smo-teiv-ran
 TESTENTITYA_GROUPS_TESTENTITYB	grouped-testEntityB	TestEntityA	o-ran-smo-teiv-ran	0	2	grouped-by-testEntityA	TestEntityB	o-ran-smo-teiv-ran	0	9223372036854775807	BI_DIRECTIONAL	false	RELATION	o-ran-smo-teiv-ran_TESTENTITYA_GROUPS_TESTENTITYB	o-ran-smo-teiv-ran

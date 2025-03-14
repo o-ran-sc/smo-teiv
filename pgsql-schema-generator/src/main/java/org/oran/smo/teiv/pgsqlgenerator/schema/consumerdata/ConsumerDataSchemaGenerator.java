@@ -62,7 +62,7 @@ public class ConsumerDataSchemaGenerator extends SchemaGenerator {
             FileHelper.copyResourceToFile(skeletonResource, destinationPath.toFile());
             this.schema = destinationPath.toFile();
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.prepareBaselineException("ties.consumer-data", exception);
+            throw PgSchemaGeneratorException.prepareBaselineException("teiv.consumer-data", exception);
         }
     }
 

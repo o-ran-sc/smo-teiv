@@ -21,9 +21,9 @@
 package org.oran.smo.teiv.schema;
 
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getModelledName;
-import static org.oran.smo.teiv.utils.TiesConstants.TEIV_DOMAIN;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DOMAIN;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_MODEL;
 import static org.jooq.impl.DSL.field;
 
 import java.io.IOException;
@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.spi.Module;
 
 @Slf4j
@@ -60,7 +60,7 @@ public class PostgresSchemaLoader extends SchemaLoader {
     @Override
     protected void loadBidiDbNameMapper() {
         log.debug("Start loading bidirectional DB name mapper");
-        SelectJoinStep<Record> records = readWriteDataDslContext.select().from(String.format(TIES_MODEL, "hash_info"));
+        SelectJoinStep<Record> records = readWriteDataDslContext.select().from(String.format(TEIV_MODEL, "hash_info"));
         Map<String, String> hash = new HashMap<>();
         Map<String, String> reverseHash = new HashMap<>();
         records.forEach(entry -> {
@@ -75,7 +75,7 @@ public class PostgresSchemaLoader extends SchemaLoader {
     public void loadModules() throws SchemaLoaderException {
         log.debug("Start loading modules");
         SelectConditionStep<Record> moduleRecords = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
-                TIES_MODEL, "module_reference")).where(field("name").isNotNull()));
+                TEIV_MODEL, "module_reference")).where(field("name").isNotNull()));
         Map<String, Module> moduleMap = new HashMap<>();
         for (Record moduleRecord : moduleRecords) {
             JSONB includedModules = (JSONB) moduleRecord.get("includedModules");
@@ -105,10 +105,10 @@ public class PostgresSchemaLoader extends SchemaLoader {
         final String columnName = "column_name";
         SelectConditionStep<Record3<Object, Object, Object>> tableDetails = runMethodSafe(() -> readWriteDataDslContext
                 .select(field(tableName), field(columnName), field("udt_name")).from("information_schema.columns").where(
-                        field("table_schema").equal(TIES_DATA_SCHEMA)));
+                        field("table_schema").equal(TEIV_DATA_SCHEMA)));
 
         SelectJoinStep<Record> entityInfoRecords = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
-                TIES_MODEL, "entity_info")));
+                TEIV_MODEL, "entity_info")));
 
         for (Record entityInfoRecord : entityInfoRecords) {
             String name = (String) entityInfoRecord.get("name");
@@ -145,7 +145,7 @@ public class PostgresSchemaLoader extends SchemaLoader {
         log.debug("Start loading relations");
         List<RelationType> relationTypes = new ArrayList<>();
         SelectJoinStep<Record> relationInfoResult = runMethodSafe(() -> readWriteDataDslContext.select().from(String.format(
-                TIES_MODEL, "relationship_info")));
+                TEIV_MODEL, "relationship_info")));
         for (Record entry : relationInfoResult) {
             //build associations
             Association aSideAssociation = Association.builder().name(((String) entry.get("aSideAssociationName")))
@@ -184,11 +184,11 @@ public class PostgresSchemaLoader extends SchemaLoader {
     private <T> T runMethodSafe(Supplier<T> supp) {
         try {
             return supp.get();
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             throw ex;
         } catch (Exception ex) {
             log.error("Sql exception during query execution", ex);
-            throw TiesException.serverSQLException();
+            throw TeivException.serverSQLException();
         }
     }
 }

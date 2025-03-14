@@ -47,9 +47,9 @@ class YangParserTest {
     }
 
     @Test
-    void testReturnAllTiesSchemas() {
+    void testReturnAllTeivSchemas() {
         //when
-        List<OranTeivSchema> OranTeivSchemasMetaDataList = YangParser.returnAllTiesSchemas(yangParser.extractYangData());
+        List<OranTeivSchema> OranTeivSchemasMetaDataList = YangParser.returnAllTeivSchemas(yangParser.extractYangData());
         //then
         Assertions.assertEquals(10, OranTeivSchemasMetaDataList.size());
     }

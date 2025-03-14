@@ -48,7 +48,7 @@ import org.oran.smo.teiv.ingestion.validation.IngestionOperationValidatorFactory
 import org.oran.smo.teiv.listener.audit.ExecutionStatus;
 import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
 import org.oran.smo.teiv.service.RelationshipMergeValidator;
-import org.oran.smo.teiv.service.TiesDbOperations;
+import org.oran.smo.teiv.service.TeivDbOperations;
 
 import io.cloudevents.CloudEvent;
 
@@ -56,7 +56,8 @@ import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.schema.MockSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
-import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.service.TeivDbService;
+import org.oran.smo.teiv.service.TeivMetadataResolver;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
@@ -74,12 +75,12 @@ class MergeTopologyProcessorTest {
     private CustomMetrics metrics;
 
     @Mock
-    private TiesDbService tiesDbService;
+    private TeivDbService teivDbService;
 
     @Mock
     private IngestionAuditLogger auditLogger;
 
-    private TiesDbOperations tiesDbOperations;
+    private TeivDbOperations teivDbOperations;
 
     @BeforeAll
     static void setUpAll() throws SchemaLoaderException {
@@ -90,9 +91,9 @@ class MergeTopologyProcessorTest {
 
     @BeforeEach
     void setUp() {
-        tiesDbOperations = new TiesDbOperations(tiesDbService, new IngestionOperationValidatorFactory(),
-                new RelationshipMergeValidator());
-        mergeTopologyProcessor = new MergeTopologyProcessor(cloudEventParser, metrics, tiesDbOperations, auditLogger);
+        teivDbOperations = new TeivDbOperations(teivDbService, new IngestionOperationValidatorFactory(),
+                new RelationshipMergeValidator(), new TeivMetadataResolver());
+        mergeTopologyProcessor = new MergeTopologyProcessor(cloudEventParser, metrics, teivDbOperations, auditLogger);
     }
 
     @Test
@@ -105,10 +106,10 @@ class MergeTopologyProcessorTest {
         ParsedCloudEventData parsedData = new ParsedCloudEventData(List.of(entity), List.of());
         when(cloudEventParser.getCloudEventData(any())).thenReturn(parsedData);
 
-        doThrow(new RuntimeException("Discard event by expected test behavior")).when(tiesDbService).execute(anyList());
+        doThrow(new RuntimeException("Discard event by expected test behavior")).when(teivDbService).execute(anyList());
         Assertions.assertDoesNotThrow(() -> mergeTopologyProcessor.process(event, anyString()));
 
-        verify(tiesDbService, times(1)).execute(anyList());
+        verify(teivDbService, times(1)).execute(anyList());
 
         verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
                 anyString());
@@ -125,7 +126,7 @@ class MergeTopologyProcessorTest {
         when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(parsedData);
 
         mergeTopologyProcessor.process(event, anyString());
-        verifyNoInteractions(tiesDbService);
+        verifyNoInteractions(teivDbService);
 
         verify(metrics, times(1)).incrementNumSuccessfullyParsedMergeCloudEvents();
         verify(metrics, times(1)).incrementNumUnsuccessfullyPersistedMergeCloudEvents();
@@ -148,7 +149,7 @@ class MergeTopologyProcessorTest {
         when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(parsedData);
 
         mergeTopologyProcessor.process(event, anyString());
-        verifyNoInteractions(tiesDbService);
+        verifyNoInteractions(teivDbService);
 
         verify(metrics, times(1)).incrementNumSuccessfullyParsedMergeCloudEvents();
         verify(metrics, times(1)).incrementNumUnsuccessfullyPersistedMergeCloudEvents();
@@ -166,7 +167,7 @@ class MergeTopologyProcessorTest {
         when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(null);
 
         mergeTopologyProcessor.process(event, anyString());
-        verifyNoInteractions(tiesDbService);
+        verifyNoInteractions(teivDbService);
         verify(metrics, times(1)).incrementNumUnsuccessfullyParsedMergeCloudEvents();
         verifyNoMoreInteractions(metrics);
 

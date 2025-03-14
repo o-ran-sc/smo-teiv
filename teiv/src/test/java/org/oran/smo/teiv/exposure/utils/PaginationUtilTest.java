@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import org.oran.smo.teiv.api.model.OranTeivHref;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 
 class PaginationUtilTest {
     private static final RequestDetails requestDetails = RequestDetails.builder().basePath("/test").queryParam("q1", "val2")
@@ -46,7 +46,7 @@ class PaginationUtilTest {
         assertEquals(0, limit3);
 
         //offset is greater than totalCount
-        TiesException exception = assertThrows(TiesException.class, () -> PaginationUtil.getViableLimit(15, 5, 10));
+        TeivException exception = assertThrows(TeivException.class, () -> PaginationUtil.getViableLimit(15, 5, 10));
         assertEquals("Offset cannot be larger than 9", exception.getDetails());
     }
 

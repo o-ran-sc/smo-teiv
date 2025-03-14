@@ -36,8 +36,7 @@ import static org.oran.smo.teiv.schema.DataType.DECIMAL;
 import static org.oran.smo.teiv.schema.DataType.GEOGRAPHIC;
 import static org.oran.smo.teiv.schema.DataType.INTEGER;
 import static org.oran.smo.teiv.schema.DataType.PRIMITIVE;
-import static org.oran.smo.teiv.schema.DataType.TIMESTAMPTZ;
-import static org.oran.smo.teiv.utils.TiesConstants.TEIV_DOMAIN;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DOMAIN;
 
 public class MockSchemaLoader extends SchemaLoader {
 
@@ -150,7 +149,7 @@ public class MockSchemaLoader extends SchemaLoader {
                     "src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model.sql"));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("COPY ties_model." + tableName)) {
+                if (line.startsWith("COPY teiv_model." + tableName)) {
                     while (!(line = reader.readLine()).startsWith("\\.")) {
                         List<String> l = List.of(line.split("\t"));
                         modelInfo.add(l);
@@ -171,7 +170,7 @@ public class MockSchemaLoader extends SchemaLoader {
                     "src/test/resources/pgsqlschema/00_init-oran-smo-teiv-data.sql"));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("CREATE TABLE IF NOT EXISTS ties_data.\"" + tableName + "\"")) {
+                if (line.startsWith("CREATE TABLE IF NOT EXISTS teiv_data.\"" + tableName + "\"")) {
                     while (!(line = reader.readLine()).startsWith(");")) {
                         List<String> l = List.of(line.trim().replace("\t\t\t", "\t").replaceAll("[\",]", "").split("\t"));
                         String fieldName = l.get(0);
@@ -179,7 +178,7 @@ public class MockSchemaLoader extends SchemaLoader {
                         extractFieldName(dataFields, fieldName, dataType);
                     }
                 }
-                if (line.startsWith("ALTER TABLE ties_data.\"" + tableName + "\" ADD COLUMN IF NOT EXISTS")) {
+                if (line.startsWith("ALTER TABLE teiv_data.\"" + tableName + "\" ADD COLUMN IF NOT EXISTS")) {
                     String[] str = line.trim().split("\\s+");
                     String fieldName = str[str.length - 2].replaceAll("\"", "");
                     String dataType = str[str.length - 1].replace(";", "");
@@ -201,7 +200,6 @@ public class MockSchemaLoader extends SchemaLoader {
             case "DECIMAL" -> dataFields.put(fieldName, DECIMAL);
             case "jsonb" -> dataFields.put(fieldName, CONTAINER);
             case "geography" -> dataFields.put(fieldName, GEOGRAPHIC);
-            case "TIMESTAMPTZ" -> dataFields.put(fieldName, TIMESTAMPTZ);
             case "BYTEA" -> dataFields.put(fieldName, BYTEA);
         }
     }

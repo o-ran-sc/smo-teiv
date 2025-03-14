@@ -34,7 +34,7 @@ import org.oran.smo.teiv.schema.Persistable;
 import org.oran.smo.teiv.service.models.OperationResult;
 import org.oran.smo.teiv.utils.JooqTypeConverter;
 
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
 
 @Slf4j
 public abstract class ClassifiersOperation extends ConsumerDataOperation<List<String>> {

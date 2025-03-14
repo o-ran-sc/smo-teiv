@@ -271,7 +271,7 @@ See the following 'Topology status and descriptions' table for more information.
 +-------------+-----------------------------------------------------------------------------------+
 | not-present | Entity or relationship IDs that do not exist in your topology.                    |
 +-------------+-----------------------------------------------------------------------------------+
-| invalid     | Entity or relationship IDs of a topology type that does not match the TIES model. |
+| invalid     | Entity or relationship IDs of a topology type that does not match the TEIV model. |
 +-------------+-----------------------------------------------------------------------------------+
 
 

@@ -20,7 +20,7 @@
  */
 package org.oran.smo.teiv.ingestion.validation;
 
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
 import static org.jooq.impl.DSL.table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,7 +65,7 @@ import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.RelationshipDataLocation;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.schema.SchemaRegistry;
-import org.oran.smo.teiv.service.TiesDbOperations;
+import org.oran.smo.teiv.service.TeivDbOperations;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 import org.oran.smo.teiv.service.cloudevent.data.Relationship;
@@ -81,7 +81,7 @@ class IngestionOperationValidatorTest {
     private static TestPostgresqlContainer postgresqlContainer = TestPostgresqlContainer.getInstance();
 
     @Autowired
-    private TiesDbOperations tiesDbOperations;
+    private TeivDbOperations teivDbOperations;
 
     @SpyBean
     private IngestionOperationValidatorFactory validatorFactory;
@@ -103,7 +103,7 @@ class IngestionOperationValidatorTest {
         registry.add("spring.datasource.write.password", () -> postgresqlContainer.getPassword());
     }
 
-    private TiesDbServiceForValidation spiedDbServiceForValidation;
+    private TeivDbServiceForValidation spiedDbServiceForValidation;
 
     @BeforeAll
     static void beforeAll() {
@@ -116,14 +116,14 @@ class IngestionOperationValidatorTest {
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(writeDataDslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
         when(validatorFactory.createValidator(any())).thenAnswer(i -> {
-            spiedDbServiceForValidation = spy(new TiesDbServiceForValidation((DSLContext) i.getArguments()[0]));
+            spiedDbServiceForValidation = spy(new TeivDbServiceForValidation((DSLContext) i.getArguments()[0]));
             return new IngestionOperationValidator(spiedDbServiceForValidation);
         });
     }
 
     @BeforeEach
     public void deleteAll() {
-        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA), writeDataDslContext);
+        TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA), writeDataDslContext);
         if (spiedDbServiceForValidation != null) {
             reset(spiedDbServiceForValidation);
         }
@@ -142,24 +142,24 @@ class IngestionOperationValidatorTest {
                         .of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the NRCellDU_1 entity would be connected to 2 ManagedElement instances
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
-        assertEmptyTable("ties_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
+        assertEmptyTable("teiv_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
+        assertEmptyTable("teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
 
         //Remove the extra relationship that caused the cardinality violation. Successfully insert the others.
         Relationship redundantRelationship = relationships.remove(1);
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
-        assertEquals(entities.size() + relationships.size(), tiesDbOperations.executeEntityAndRelationshipMergeOperations(
+        assertEquals(entities.size() + relationships.size(), teivDbOperations.executeEntityAndRelationshipMergeOperations(
                 parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"", "NRCellDU_1");
+                "teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"", "NRCellDU_1");
 
         //Try to insert an extra relationship. It's expected to fail, because the NRCellDU_1 entity already has the maximum number of relationships.
         ParsedCloudEventData parsedCloudEventData3 = new ParsedCloudEventData(List.of(), List.of(redundantRelationship));
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData3, "testSource"));
     }
 
@@ -176,31 +176,31 @@ class IngestionOperationValidatorTest {
                 "TestEntityB_3", List.of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityA_1 entity would be connected to 3 TestEntityB instances
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
 
         //Remove the extra relationship that caused the cardinality violation. Successfully insert the others.
         Relationship redundantRelationship = relationships.remove(2);
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
-        assertEquals(entities.size() + relationships.size(), tiesDbOperations.executeEntityAndRelationshipMergeOperations(
+        assertEquals(entities.size() + relationships.size(), teivDbOperations.executeEntityAndRelationshipMergeOperations(
                 parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation, times(2)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
         verify(spiedDbServiceForValidation, times(2)).executeValidationQuery(any(), any(), any(), any(Long.class));
         verifyNoMoreInteractions(spiedDbServiceForValidation);
 
         //Try to insert an extra relationship. It's expected to fail, because the CloudNativeSystem_1 entity already has the maximum number of relationships.
         ParsedCloudEventData parsedCloudEventData3 = new ParsedCloudEventData(List.of(), List.of(redundantRelationship));
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData3, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
     }
 
     @Test
@@ -218,17 +218,17 @@ class IngestionOperationValidatorTest {
                 "TestEntityA_1", "TestEntityB_4", List.of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityA_1 entity would be connected to 4 TestEntityB instances
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"", "TestEntityA_1");
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB\"");
 
         //Test the other side's cardinality as well
         relationships = new ArrayList<>();
@@ -241,13 +241,13 @@ class IngestionOperationValidatorTest {
 
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityB_1 entity would be connected to 3 TestEntityA instances
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData2, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB\"");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TESTENTITYA_PROVIDES_TESTENTITYB\"");
     }
 
     @Test
@@ -263,15 +263,15 @@ class IngestionOperationValidatorTest {
                 "TestEntityB_1", List.of()));
         ParsedCloudEventData parsedCloudEventData = new ParsedCloudEventData(entities, relationships);
         //It's expected to fail, because the TestEntityB_1 entity would be connected to 3 TestEntityB instances
-        assertThrows(MaximumCardinalityViolationException.class, () -> tiesDbOperations
+        assertThrows(MaximumCardinalityViolationException.class, () -> teivDbOperations
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
-        assertEmptyTable("ties_data.\"o-ran-smo-teiv-ran_TESTENTITYA_GROUPS_TESTENTITYB\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityA\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"");
+        assertEmptyTable("teiv_data.\"o-ran-smo-teiv-ran_TESTENTITYA_GROUPS_TESTENTITYB\"");
 
         //Test the other side's cardinality
         entities.add(new Entity("o-ran-smo-teiv-ran", "TestEntityB", "TestEntityB_2", Map.of(), List.of()));
@@ -284,14 +284,14 @@ class IngestionOperationValidatorTest {
         relationships.add(new Relationship("o-ran-smo-teiv-ran", "TESTENTITYA_GROUPS_TESTENTITYB", "rel_3", "TestEntityA_1",
                 "TestEntityB_3", List.of()));
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
-        assertEquals(entities.size() + relationships.size(), tiesDbOperations.executeEntityAndRelationshipMergeOperations(
+        assertEquals(entities.size() + relationships.size(), teivDbOperations.executeEntityAndRelationshipMergeOperations(
                 parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_1");
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_2");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_2");
         verify(spiedDbServiceForValidation, times(1)).acquireEntityInstanceExclusiveLock(
-                "ties_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_3");
+                "teiv_data.\"o-ran-smo-teiv-ran_TestEntityB\"", "TestEntityB_3");
         verify(spiedDbServiceForValidation, times(3)).executeValidationQuery(any(), any(), any(), any(Long.class));
         verifyNoMoreInteractions(spiedDbServiceForValidation);
     }
@@ -334,7 +334,7 @@ class IngestionOperationValidatorTest {
 
     @Test
     void testMaxCardinalityIsLong() {
-        assertFalse(new TiesDbServiceForValidation(null).executeValidationQuery("", "", "", Long.MAX_VALUE));
+        assertFalse(new TeivDbServiceForValidation(null).executeValidationQuery("", "", "", Long.MAX_VALUE));
     }
 
     void assertEmptyTable(String tableName) {

@@ -45,7 +45,7 @@ import org.oran.smo.yangtools.parser.model.statements.StatementModuleAndName;
 import org.oran.smo.yangtools.parser.util.NamespaceModuleIdentifier;
 
 import static org.oran.smo.teiv.utils.CloudEventUtil.hasInvalidCharacter;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
 
 @Slf4j
 public class Entity extends ModuleObject {

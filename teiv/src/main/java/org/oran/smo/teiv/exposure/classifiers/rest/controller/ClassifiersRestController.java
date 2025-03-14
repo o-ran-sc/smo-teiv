@@ -33,11 +33,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.api.ClassifiersApi;
 import org.oran.smo.teiv.api.model.OranTeivClassifier;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.audit.AuditMapper;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.classifiers.api.ClassifiersService;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(TiesConstants.REQUEST_MAPPING)
+@RequestMapping(TeivConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("exposure")
 public class ClassifiersRestController implements ClassifiersApi {
@@ -61,13 +61,13 @@ public class ClassifiersRestController implements ClassifiersApi {
     private int limit;
 
     @Override
-    @Timed("ties_exposure_http_update_classifiers_seconds")
+    @Timed("teiv_exposure_http_update_classifiers_seconds")
     public ResponseEntity<Void> updateClassifier(final String accept, final String contentType,
             final OranTeivClassifier oranTeivClassifier) {
         return runWithFailCheck(() -> {
             if (Optional.ofNullable(oranTeivClassifier.getEntityIds()).orElseGet(Collections::emptyList).size() + Optional
                     .ofNullable(oranTeivClassifier.getRelationshipIds()).orElseGet(Collections::emptyList).size() > limit) {
-                throw TiesException.clientException("Limit exceeded",
+                throw TeivException.clientException("Limit exceeded",
                         "Number of entities and relationships exceeded the limit");
             }
             runSafeMethod(() -> classifiersService.update(oranTeivClassifier), status -> loggerHandler.logAudit(log,
@@ -91,7 +91,7 @@ public class ClassifiersRestController implements ClassifiersApi {
         try {
             runnable.run();
             logAudit.accept(HttpStatus.NO_CONTENT);
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             logAudit.accept(ex.getStatus());
             log.error("Exception during service call", ex);
             throw ex;

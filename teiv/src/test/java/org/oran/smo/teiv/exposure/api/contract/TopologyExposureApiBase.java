@@ -44,9 +44,9 @@ import org.oran.smo.teiv.schema.SchemaLoaderException;
 
 import java.util.List;
 
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_MODEL_SCHEMA;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -62,7 +62,7 @@ public abstract class TopologyExposureApiBase extends TopologyApiBase {
         String url = postgresSQLContainer.getJdbcUrl();
         DataSource ds = DataSourceBuilder.create().url(url).username("test").password("test").build();
         DSLContext dslContext = DSL.using(ds, SQLDialect.POSTGRES);
-        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA, TIES_MODEL_SCHEMA),
+        TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA, TEIV_CONSUMER_DATA_SCHEMA, TEIV_MODEL_SCHEMA),
                 dslContext);
         TestPostgresqlContainer.loadModels();
         TestPostgresqlContainer.loadSampleData();

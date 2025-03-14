@@ -119,124 +119,124 @@ public class CustomMetrics {
 
         this.meterRegistry = meterRegistry;
 
-        numReceivedCloudEventCreate = Counter.builder("ties_ingestion_event_topology_create_total").register(meterRegistry);
+        numReceivedCloudEventCreate = Counter.builder("teiv_ingestion_event_topology_create_total").register(meterRegistry);
 
-        numReceivedCloudEventMerge = Counter.builder("ties_ingestion_event_topology_merge_total").register(meterRegistry);
+        numReceivedCloudEventMerge = Counter.builder("teiv_ingestion_event_topology_merge_total").register(meterRegistry);
 
-        numReceivedCloudEventDelete = Counter.builder("ties_ingestion_event_topology_delete_total").register(meterRegistry);
+        numReceivedCloudEventDelete = Counter.builder("teiv_ingestion_event_topology_delete_total").register(meterRegistry);
 
         numReceivedCloudEventSourceEntityDelete = Counter.builder(
-                "ties_ingestion_event_topology_source_entity_delete_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_total").register(meterRegistry);
 
-        numReceivedCloudEventNotSupported = Counter.builder("ties_ingestion_event_topology_not_supported_total").register(
+        numReceivedCloudEventNotSupported = Counter.builder("teiv_ingestion_event_topology_not_supported_total").register(
                 meterRegistry);
 
-        numSuccessfullyParsedMergeCloudEvents = Counter.builder("ties_ingestion_event_topology_merge_parse_success_total")
+        numSuccessfullyParsedMergeCloudEvents = Counter.builder("teiv_ingestion_event_topology_merge_parse_success_total")
                 .register(meterRegistry);
 
-        numSuccessfullyParsedCreateCloudEvents = Counter.builder("ties_ingestion_event_topology_create_parse_success_total")
+        numSuccessfullyParsedCreateCloudEvents = Counter.builder("teiv_ingestion_event_topology_create_parse_success_total")
                 .register(meterRegistry);
 
-        numSuccessfullyParsedDeleteCloudEvents = Counter.builder("ties_ingestion_event_topology_delete_parse_success_total")
+        numSuccessfullyParsedDeleteCloudEvents = Counter.builder("teiv_ingestion_event_topology_delete_parse_success_total")
                 .register(meterRegistry);
 
         numSuccessfullyParsedSourceEntityDeleteCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_source_entity_delete_parse_success_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_parse_success_total").register(meterRegistry);
 
-        numUnsuccessfullyParsedMergeCloudEvents = Counter.builder("ties_ingestion_event_topology_merge_parse_fail_total")
+        numUnsuccessfullyParsedMergeCloudEvents = Counter.builder("teiv_ingestion_event_topology_merge_parse_fail_total")
                 .register(meterRegistry);
 
-        numUnsuccessfullyParsedCreateCloudEvents = Counter.builder("ties_ingestion_event_topology_create_parse_fail_total")
+        numUnsuccessfullyParsedCreateCloudEvents = Counter.builder("teiv_ingestion_event_topology_create_parse_fail_total")
                 .register(meterRegistry);
 
-        numUnsuccessfullyParsedDeleteCloudEvents = Counter.builder("ties_ingestion_event_topology_delete_parse_fail_total")
+        numUnsuccessfullyParsedDeleteCloudEvents = Counter.builder("teiv_ingestion_event_topology_delete_parse_fail_total")
                 .register(meterRegistry);
 
         numUnsuccessfullyParsedSourceEntityDeleteCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_source_entity_delete_parse_fail_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_parse_fail_total").register(meterRegistry);
 
         numSuccessfullyPersistedMergeCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_merge_persist_success_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_merge_persist_success_total").register(meterRegistry);
 
         numSuccessfullyPersistedCreateCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_create_persist_success_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_create_persist_success_total").register(meterRegistry);
 
         numSuccessfullyPersistedDeleteCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_delete_persist_success_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_delete_persist_success_total").register(meterRegistry);
 
         numSuccessfullyPersistedSourceEntityDeleteCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_source_entity_delete_persist_success_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_persist_success_total").register(meterRegistry);
 
         numUnsuccessfullyPersistedMergeCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_merge_persist_fail_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_merge_persist_fail_total").register(meterRegistry);
 
         numUnsuccessfullyPersistedCreateCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_create_persist_fail_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_create_persist_fail_total").register(meterRegistry);
 
         numUnsuccessfullyPersistedDeleteCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_delete_persist_fail_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_delete_persist_fail_total").register(meterRegistry);
 
         numUnsuccessfullyPersistedSourceEntityDeleteCloudEvents = Counter.builder(
-                "ties_ingestion_event_topology_source_entity_delete_persist_fail_total").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_persist_fail_total").register(meterRegistry);
 
         numUnsuccessfullyExposedRelationshipsByEntityId = Counter.builder(
-                "ties_exposure_http_get_relationships_by_entity_id_fail_total").register(meterRegistry);
+                "teiv_exposure_http_get_relationships_by_entity_id_fail_total").register(meterRegistry);
 
-        numUnsuccessfullyExposedEntityById = Counter.builder("ties_exposure_http_get_entity_by_id_fail_total").register(
+        numUnsuccessfullyExposedEntityById = Counter.builder("teiv_exposure_http_get_entity_by_id_fail_total").register(
                 meterRegistry);
 
-        numUnsuccessfullyExposedEntitiesByType = Counter.builder("ties_exposure_http_get_entities_by_type_fail_total")
+        numUnsuccessfullyExposedEntitiesByType = Counter.builder("teiv_exposure_http_get_entities_by_type_fail_total")
                 .register(meterRegistry);
 
-        numUnsuccessfullyExposedEntitiesByDomain = Counter.builder("ties_exposure_http_get_entities_by_domain_fail_total")
+        numUnsuccessfullyExposedEntitiesByDomain = Counter.builder("teiv_exposure_http_get_entities_by_domain_fail_total")
                 .register(meterRegistry);
 
-        numUnsuccessfullyExposedRelationshipById = Counter.builder("ties_exposure_http_get_relationship_by_id_fail_total")
+        numUnsuccessfullyExposedRelationshipById = Counter.builder("teiv_exposure_http_get_relationship_by_id_fail_total")
                 .register(meterRegistry);
 
         numUnsuccessfullyExposedRelationshipsByType = Counter.builder(
-                "ties_exposure_http_get_relationships_by_type_fail_total").register(meterRegistry);
+                "teiv_exposure_http_get_relationships_by_type_fail_total").register(meterRegistry);
 
-        numUnsuccessfullyExposedRelationshipTypes = Counter.builder("ties_exposure_http_get_relationship_types_fail_total")
+        numUnsuccessfullyExposedRelationshipTypes = Counter.builder("teiv_exposure_http_get_relationship_types_fail_total")
                 .register(meterRegistry);
 
-        numUnsuccessfullyExposedEntityTypes = Counter.builder("ties_exposure_http_get_entity_types_fail_total").register(
+        numUnsuccessfullyExposedEntityTypes = Counter.builder("teiv_exposure_http_get_entity_types_fail_total").register(
                 meterRegistry);
 
-        numUnsuccessfullyExposedDomainTypes = Counter.builder("ties_exposure_http_get_domain_types_fail_total").register(
+        numUnsuccessfullyExposedDomainTypes = Counter.builder("teiv_exposure_http_get_domain_types_fail_total").register(
                 meterRegistry);
 
-        numUnsuccessfullyUpdatedClassifiers = Counter.builder("ties_exposure_http_update_classifiers_fail_total").register(
+        numUnsuccessfullyUpdatedClassifiers = Counter.builder("teiv_exposure_http_update_classifiers_fail_total").register(
                 meterRegistry);
 
-        numUnsuccessfullyUpdatedDecorators = Counter.builder("ties_exposure_http_update_decorators_fail_total").register(
+        numUnsuccessfullyUpdatedDecorators = Counter.builder("teiv_exposure_http_update_decorators_fail_total").register(
                 meterRegistry);
 
-        cloudEventMergePersistTime = Timer.builder("ties_ingestion_event_topology_merge_persist_seconds").register(
+        cloudEventMergePersistTime = Timer.builder("teiv_ingestion_event_topology_merge_persist_seconds").register(
                 meterRegistry);
 
-        cloudEventCreatePersistTime = Timer.builder("ties_ingestion_event_topology_create_persist_seconds").register(
+        cloudEventCreatePersistTime = Timer.builder("teiv_ingestion_event_topology_create_persist_seconds").register(
                 meterRegistry);
 
-        cloudEventDeletePersistTime = Timer.builder("ties_ingestion_event_topology_delete_persist_seconds").register(
+        cloudEventDeletePersistTime = Timer.builder("teiv_ingestion_event_topology_delete_persist_seconds").register(
                 meterRegistry);
 
         cloudEventSourceEntityDeletePersistTime = Timer.builder(
-                "ties_ingestion_event_topology_source_entity_delete_persist_seconds").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_persist_seconds").register(meterRegistry);
 
-        cloudEventMergeParseTime = Timer.builder("ties_ingestion_event_topology_merge_parse_seconds").register(
+        cloudEventMergeParseTime = Timer.builder("teiv_ingestion_event_topology_merge_parse_seconds").register(
                 meterRegistry);
 
-        cloudEventCreateParseTime = Timer.builder("ties_ingestion_event_topology_create_parse_seconds").register(
+        cloudEventCreateParseTime = Timer.builder("teiv_ingestion_event_topology_create_parse_seconds").register(
                 meterRegistry);
 
-        cloudEventDeleteParseTime = Timer.builder("ties_ingestion_event_topology_delete_parse_seconds").register(
+        cloudEventDeleteParseTime = Timer.builder("teiv_ingestion_event_topology_delete_parse_seconds").register(
                 meterRegistry);
 
         cloudEventSourceEntityDeleteParseTime = Timer.builder(
-                "ties_ingestion_event_topology_source_entity_delete_parse_seconds").register(meterRegistry);
+                "teiv_ingestion_event_topology_source_entity_delete_parse_seconds").register(meterRegistry);
 
-        numIgnoredAttributes = Counter.builder("ties_ingestion_event_ignored_attributes_total").register(meterRegistry);
+        numIgnoredAttributes = Counter.builder("teiv_ingestion_event_ignored_attributes_total").register(meterRegistry);
     }
 
     /**

@@ -38,12 +38,12 @@ import org.oran.smo.teiv.pgsqlgenerator.UniqueConstraint;
 
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.CREATE;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER_TABLE_TEIV_DATA_S_ADD_CONSTRAINT_S;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.DEFAULT;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.GEOGRAPHY;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.GEO_LOCATION;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.ID;
-import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER_TABLE_TIES_DATA_S;
+import static org.oran.smo.teiv.pgsqlgenerator.Constants.ALTER_TABLE_TEIV_DATA_S;
 import static org.oran.smo.teiv.pgsqlgenerator.Constants.INDEX;
 
 @Slf4j
@@ -100,7 +100,7 @@ public class DataSchemaHelper {
      */
     private StringBuilder generateCreateTableStatements(List<Column> newColumns, String tableName) {
 
-        StringBuilder storeTableSchema = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS ties_data.\"%s\" (%n",
+        StringBuilder storeTableSchema = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS teiv_data.\"%s\" (%n",
                 tableName));
         StringBuilder storeColumns = new StringBuilder();
         StringBuilder storeDefaultValues = new StringBuilder();
@@ -133,7 +133,7 @@ public class DataSchemaHelper {
      */
     private StringBuilder generateDefaultValueStatements(Column newColumn, String tableName) {
         return new StringBuilder(String.format(
-                "ALTER TABLE ONLY ties_data.\"%s\" ALTER COLUMN \"%s\" SET DEFAULT '%s';%n%n", tableName, newColumn
+                "ALTER TABLE ONLY teiv_data.\"%s\" ALTER COLUMN \"%s\" SET DEFAULT '%s';%n%n", tableName, newColumn
                         .getName(), newColumn.getDefaultValue()));
     }
 
@@ -162,7 +162,7 @@ public class DataSchemaHelper {
 
     private String generateConstraintStatement(PostgresConstraint postgresConstraint) {
         String constraintSql = generateConstraintSql(postgresConstraint);
-        return String.format("SELECT ties_data.create_constraint_if_not_exists(%n\t'%s',%n '%s',%n '%s;'%n);%n%n",
+        return String.format("SELECT teiv_data.create_constraint_if_not_exists(%n\t'%s',%n '%s',%n '%s;'%n);%n%n",
                 postgresConstraint.getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), constraintSql);
     }
 
@@ -175,21 +175,21 @@ public class DataSchemaHelper {
 
     private String generateConstraintSql(PostgresConstraint postgresConstraint) {
         if (postgresConstraint instanceof PrimaryKeyConstraint) {
-            return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "PRIMARY KEY (\"%s\")", postgresConstraint
+            return String.format(ALTER_TABLE_TEIV_DATA_S_ADD_CONSTRAINT_S + "PRIMARY KEY (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint
                             .getColumnToAddConstraintTo());
         } else if (postgresConstraint instanceof ForeignKeyConstraint fkConstraint) {
             return String.format(
-                    ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "FOREIGN KEY (\"%s\") REFERENCES ties_data.\"%s\" (\"%s\")",
+                    ALTER_TABLE_TEIV_DATA_S_ADD_CONSTRAINT_S + "FOREIGN KEY (\"%s\") REFERENCES teiv_data.\"%s\" (\"%s\")",
                     fkConstraint.getTableToAddConstraintTo(), fkConstraint.getConstraintName(), fkConstraint
                             .getColumnToAddConstraintTo(), fkConstraint.getReferencedTable(), fkConstraint
                                     .getReferencedColumn());
         } else if (postgresConstraint instanceof UniqueConstraint) {
-            return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "UNIQUE (\"%s\")", postgresConstraint
+            return String.format(ALTER_TABLE_TEIV_DATA_S_ADD_CONSTRAINT_S + "UNIQUE (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint
                             .getColumnToAddConstraintTo());
         } else if (postgresConstraint instanceof NotNullConstraint) {
-            return String.format(ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S + "NOT NULL (\"%s\")", postgresConstraint
+            return String.format(ALTER_TABLE_TEIV_DATA_S_ADD_CONSTRAINT_S + "NOT NULL (\"%s\")", postgresConstraint
                     .getTableToAddConstraintTo(), postgresConstraint.getConstraintName(), postgresConstraint
                             .getColumnToAddConstraintTo());
         } else {
@@ -255,7 +255,7 @@ public class DataSchemaHelper {
      * Generate ALTER sql statements for attributes who have no constraints, default value or enums defined.
      */
     private StringBuilder generateAlterTableStatements(Column newColumn, String tableName) {
-        return new StringBuilder(String.format(ALTER_TABLE_TIES_DATA_S + "ADD COLUMN IF NOT EXISTS \"%s\" %s;%n%n",
+        return new StringBuilder(String.format(ALTER_TABLE_TEIV_DATA_S + "ADD COLUMN IF NOT EXISTS \"%s\" %s;%n%n",
                 tableName, newColumn.getName(), newColumn.getDataType()));
     }
 

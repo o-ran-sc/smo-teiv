@@ -53,7 +53,7 @@ public class PgSchemaGeneratorException extends RuntimeException {
     }
 
     public static PgSchemaGeneratorException assignModuleRefException(final String relationshipName, Exception ex) {
-        return new PgSchemaGeneratorException(String.format("ties.model : Unable to assign module reference to - %s",
+        return new PgSchemaGeneratorException(String.format("teiv.model : Unable to assign module reference to - %s",
                 relationshipName), ex);
     }
 

@@ -26,6 +26,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class IngestionOperationValidatorFactory {
     public IngestionOperationValidator createValidator(DSLContext dslContext) {
-        return new IngestionOperationValidator(new TiesDbServiceForValidation(dslContext));
+        return new IngestionOperationValidator(new TeivDbServiceForValidation(dslContext));
     }
 }

@@ -174,7 +174,7 @@ class SchemaParserTest {
         Files.copy(mockSqlFile.toPath(), testSqlFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         // Add to copy
-        String sampleLine = "ALTER TABLE ONLY ties_data.\"Namespace\" ALTER COLUMN \"name\" SET DEFAULT 'hello-to-the-world';\n\n";
+        String sampleLine = "ALTER TABLE ONLY teiv_data.\"Namespace\" ALTER COLUMN \"name\" SET DEFAULT 'hello-to-the-world';\n\n";
 
         // When
         TestHelper.appendToFile(testSqlFileForProcessorTest, sampleLine);
@@ -222,7 +222,7 @@ class SchemaParserTest {
         Files.copy(mockSqlFile.toPath(), testSqlFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         // Add to copy
-        String sampleLine = "ALTER TABLE ties_data.\"Namespace\" ADD COLUMN IF NOT EXISTS \"namespaceId\" DECIMAL;";
+        String sampleLine = "ALTER TABLE teiv_data.\"Namespace\" ADD COLUMN IF NOT EXISTS \"namespaceId\" DECIMAL;";
 
         // When
         TestHelper.appendToFile(testSqlFileForProcessorTest, sampleLine);

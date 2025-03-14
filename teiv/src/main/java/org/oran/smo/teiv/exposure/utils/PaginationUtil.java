@@ -22,7 +22,7 @@ package org.oran.smo.teiv.exposure.utils;
 
 import lombok.experimental.UtilityClass;
 import org.oran.smo.teiv.api.model.OranTeivHref;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 
 /**
  * Generates the pagination link as href.
@@ -35,7 +35,7 @@ public class PaginationUtil {
      */
     public static void validateOffset(int offset, int totalCount) {
         if (totalCount > 0 && totalCount <= offset) {
-            throw TiesException.invalidValueException("Offset", totalCount - 1, true);
+            throw TeivException.invalidValueException("Offset", totalCount - 1, true);
         }
     }
 
@@ -46,7 +46,7 @@ public class PaginationUtil {
      *     - offset from the request
      * @param totalCount
      *     - total count of the records
-     * @throws TiesException
+     * @throws TeivException
      *     - if offset is greater than totalCount
      */
     public static int getViableLimit(final int offset, final int limit, final int totalCount) {

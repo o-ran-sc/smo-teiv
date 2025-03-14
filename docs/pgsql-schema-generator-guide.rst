@@ -322,7 +322,7 @@ Sample entries:
 | moduleReferenceName                      | TEXT NOT NULL    | A reference to an associated module     |
 +------------------------------------------+------------------+-----------------------------------------+
 | | FOREIGN KEY ("moduleReferenceName")    | FOREIGN KEY      | Foreign key constraint                  |
-| | REFERENCES ties_model.module_reference |                  |                                         |
+| | REFERENCES teiv_model.module_reference |                  |                                         |
 | | ("name") ON DELETE CASCADE             |                  |                                         |
 +------------------------------------------+------------------+-----------------------------------------+
 
@@ -362,16 +362,16 @@ Sample entries:
 | moduleReferenceName                      | TEXT PRIMARY KEY | The name of the module reference associated with the relationship |
 +------------------------------------------+------------------+-------------------------------------------------------------------+
 | | FOREIGN KEY ("aSideModule") REFERENCES | FOREIGN KEY      | Foreign key constraint                                            |
-| | ties_model.module_reference ("name")   |                  |                                                                   |
+| | teiv_model.module_reference ("name")   |                  |                                                                   |
 | | ON DELETE CASCADE                      |                  |                                                                   |
 +------------------------------------------+------------------+-------------------------------------------------------------------+
 | | FOREIGN KEY ("bSideModule") REFERENCES | FOREIGN KEY      | Foreign key constraint                                            |
-| | ties_model.module_reference ("name")   |                  |                                                                   |
+| | teiv_model.module_reference ("name")   |                  |                                                                   |
 | | ON DELETE CASCADE |                    |                  |                                                                   |
 +------------------------------------------+------------------+-------------------------------------------------------------------+
 | | FOREIGN KEY ("moduleReferenceName")    |FOREIGN KEY       | Foreign key constraint                                            |
 | | REFERENCES                             |                  |                                                                   |
-| | ties_model.module_reference ("name")   |                  |                                                                   |
+| | teiv_model.module_reference ("name")   |                  |                                                                   |
 | | ON DELETE CASCADE                      |                  |                                                                   |
 +------------------------------------------+------------------+-------------------------------------------------------------------+
 
@@ -434,7 +434,7 @@ The SQL entries for consumer data include
 |                                                  |                  | | belongs to.                     |
 +--------------------------------------------------+------------------+-----------------------------------+
 | | FOREIGN KEY ("moduleReferenceName") REFERENCES | FOREIGN KEY      | Foreign key constraint            |
-| | ties_consumer_data.module_reference ("name")   |                  |                                   |
+| | teiv_consumer_data.module_reference ("name")   |                  |                                   |
 | | ON DELETE CASCADE                              |                  |                                   |
 +--------------------------------------------------+------------------+-----------------------------------+
 
@@ -450,7 +450,7 @@ The SQL entries for consumer data include
 |                                                  |                  | | belongs to.                     |
 +--------------------------------------------------+------------------+-----------------------------------+
 | | FOREIGN KEY ("moduleReferenceName") REFERENCES | FOREIGN KEY      | Foreign key constraint            |
-| | ties_consumer_data.module_reference ("name")   |                  |                                   |
+| | teiv_consumer_data.module_reference ("name")   |                  |                                   |
 | | ON DELETE CASCADE                              |                  |                                   |
 +--------------------------------------------------+------------------+-----------------------------------+
 
@@ -470,7 +470,7 @@ Skeleton Data and Model SQL Files
 
   .. code-block:: sql
 
-    CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
+    CREATE OR REPLACE FUNCTION teiv_data.create_constraint_if_not_exists (
     t_name TEXT, c_name TEXT, constraint_sql TEXT
     )
     RETURNS void AS
@@ -485,10 +485,10 @@ Skeleton Data and Model SQL Files
 
   .. code-block:: sql
 
-    SELECT ties_data.create_constraint_if_not_exists(
+    SELECT teiv_data.create_constraint_if_not_exists(
         'CloudNativeApplication',
     'PK_CloudNativeApplication_id',
-    'ALTER TABLE ties_data."CloudNativeApplication" ADD CONSTRAINT "PK_CloudNativeApplication_id" PRIMARY KEY ("id");'
+    'ALTER TABLE teiv_data."CloudNativeApplication" ADD CONSTRAINT "PK_CloudNativeApplication_id" PRIMARY KEY ("id");'
     );
 
 - "01_init-oran-smo-teiv-model.sql "src/main/resources/scripts/01_init-oran-smo-teiv-model.sql"

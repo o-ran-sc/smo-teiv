@@ -28,9 +28,9 @@ import org.jooq.Field;
 import org.jooq.JSONB;
 
 import static org.jooq.impl.DSL.field;
-import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
+import static org.oran.smo.teiv.exposure.teivpath.refiner.AliasMapper.hashAlias;
 import static org.oran.smo.teiv.utils.PersistableUtil.getFullyQualifiedNameWithColumnName;
-import static org.oran.smo.teiv.utils.TiesConstants.*;
+import static org.oran.smo.teiv.utils.TeivConstants.*;
 
 public interface Persistable {
 
@@ -83,6 +83,8 @@ public interface Persistable {
                 hashAlias(getFullyQualifiedNameWithColumnName(fullyQuelifiedName, CLASSIFIERS))));
         result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getDecoratorsColumnName()), JSONB.class).as(
                 hashAlias(getFullyQualifiedNameWithColumnName(fullyQuelifiedName, DECORATORS))));
+        result.add(field(getTableName() + "." + String.format(QUOTED_STRING, getMetadataColumnName()), JSONB.class).as(
+                hashAlias(getFullyQualifiedNameWithColumnName(fullyQuelifiedName, METADATA))));
         return result;
     }
 
@@ -126,11 +128,4 @@ public interface Persistable {
      * @return category as a String
      */
     String getCategory();
-
-    /**
-     * Gets updatedTime column Name as String
-     *
-     * @return the String value of updated_time column
-     */
-    String getUpdatedTimeColumnName();
 }

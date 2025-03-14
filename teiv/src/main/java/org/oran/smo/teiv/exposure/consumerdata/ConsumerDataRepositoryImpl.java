@@ -21,10 +21,10 @@
 package org.oran.smo.teiv.exposure.consumerdata;
 
 import static org.jooq.impl.DSL.field;
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
-import static org.oran.smo.teiv.utils.TiesConstants.MODULE_REFERENCE;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
+import static org.oran.smo.teiv.utils.TeivConstants.MODULE_REFERENCE;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +40,9 @@ import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Record2;
 import org.jooq.SelectConditionStep;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.schema.YangDataTypes;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -56,9 +56,9 @@ public class ConsumerDataRepositoryImpl implements ConsumerDataRepository {
     public Set<String> loadClassifiers() {
         final Field<Object> classifierName = field("classifiers.name").as("classifierName");
         SelectConditionStep<Record1<Object>> availableClassifiers = runMethodSafe(() -> readDataDslContext.select(
-                classifierName).from(String.format(TIES_CONSUMER_DATA, CLASSIFIERS)).join(String.format(TIES_CONSUMER_DATA,
-                        MODULE_REFERENCE)).on(field("\"moduleReferenceName\"").eq(field(String.format(TIES_CONSUMER_DATA,
-                                MODULE_REFERENCE) + ".name"))).where(field("status").like(TiesConstants.IN_USAGE)));
+                classifierName).from(String.format(TEIV_CONSUMER_DATA, CLASSIFIERS)).join(String.format(TEIV_CONSUMER_DATA,
+                        MODULE_REFERENCE)).on(field("\"moduleReferenceName\"").eq(field(String.format(TEIV_CONSUMER_DATA,
+                                MODULE_REFERENCE) + ".name"))).where(field("status").like(TeivConstants.IN_USAGE)));
         Set<String> result = new HashSet<>();
         for (Record record : availableClassifiers) {
             result.add((String) record.get("classifierName"));
@@ -71,10 +71,10 @@ public class ConsumerDataRepositoryImpl implements ConsumerDataRepository {
         final Field<Object> decoratorName = field("decorators.name").as("decoratorName");
         final Field<Object> dataType = field("decorators.\"dataType\"").as("dataType");
         SelectConditionStep<Record2<Object, Object>> availableDecorators = runMethodSafe(() -> readDataDslContext.select(
-                decoratorName, dataType).from(String.format(TIES_CONSUMER_DATA, DECORATORS)).join(String.format(
-                        TIES_CONSUMER_DATA, MODULE_REFERENCE)).on(field("\"moduleReferenceName\"").eq(field(String.format(
-                                TIES_CONSUMER_DATA, MODULE_REFERENCE) + ".name"))).where(field("status").like(
-                                        TiesConstants.IN_USAGE)));
+                decoratorName, dataType).from(String.format(TEIV_CONSUMER_DATA, DECORATORS)).join(String.format(
+                        TEIV_CONSUMER_DATA, MODULE_REFERENCE)).on(field("\"moduleReferenceName\"").eq(field(String.format(
+                                TEIV_CONSUMER_DATA, MODULE_REFERENCE) + ".name"))).where(field("status").like(
+                                        TeivConstants.IN_USAGE)));
         Map<String, YangDataTypes> result = new HashMap<>();
         for (Record record : availableDecorators) {
             result.put((String) record.get("decoratorName"), YangDataTypes.fromYangDataType("" + record.get("dataType")));
@@ -85,11 +85,11 @@ public class ConsumerDataRepositoryImpl implements ConsumerDataRepository {
     protected <T> T runMethodSafe(Supplier<T> supp) {
         try {
             return supp.get();
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             throw ex;
         } catch (Exception ex) {
             log.error("Sql exception during query execution", ex);
-            throw TiesException.serverSQLException();
+            throw TeivException.serverSQLException();
         }
     }
 

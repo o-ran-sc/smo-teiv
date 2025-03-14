@@ -107,7 +107,7 @@ public class TestHelper {
                 }
             }
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.readBaselineException("ties.data", exception);
+            throw PgSchemaGeneratorException.readBaselineException("teiv.data", exception);
         }
         return lines;
     }

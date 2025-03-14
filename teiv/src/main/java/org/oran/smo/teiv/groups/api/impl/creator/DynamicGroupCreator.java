@@ -20,8 +20,13 @@
  */
 package org.oran.smo.teiv.groups.api.impl.creator;
 
+import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.MEMBERS_HREF_TEMPLATE;
+import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.RESOURCE_NOT_FOUND;
 import static org.oran.smo.teiv.groups.rest.controller.GroupsUtil.generateMembersHref;
 
+import org.oran.smo.teiv.exception.TeivException;
+import org.oran.smo.teiv.exposure.utils.RequestDetails;
+import org.oran.smo.teiv.groups.api.impl.resolver.CriteriaResolverRegistry;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +52,7 @@ import org.oran.smo.teiv.utils.JooqTypeConverter;
 public class DynamicGroupCreator implements GroupCreator {
     private final ObjectMapper objectMapper;
     private final GroupsRepository groupsRepository;
+    private final CriteriaResolverRegistry criteriaResolverRegistry;
 
     @Override
     public OranTeivGroupByIdResponse create(final OranTeivCreateGroupPayload createGroupPayload) {
@@ -59,7 +65,7 @@ public class DynamicGroupCreator implements GroupCreator {
             log.warn("Error while serializing the criteria for the dynamic group: {}", dynamicGroup, e);
             throw GroupsException.criteriaSerializationException(e.getMessage());
         }
-
+        validateGroup(dynamicGroup);
         final String groupId = GroupCreator.generateGroupId();
         final DynamicGroupRecord groupRecord = DynamicGroupRecord.builder().id(groupId).groupName(dynamicGroup.getName())
                 .groupType(dynamicGroup.getType()).criteria(JooqTypeConverter.toJsonb(criteriaString)).build();
@@ -69,5 +75,18 @@ public class DynamicGroupCreator implements GroupCreator {
         return OranTeivDynamicGroupByIdResponse.builder().id(groupId).name(dynamicGroup.getName()).type(
                 OranTeivDynamicEnum.DYNAMIC).members(generateMembersHref(groupId)).criteria(dynamicGroup.getCriteria())
                 .build();
+    }
+
+    private void validateGroup(OranTeivDynamic dynamicGroup) {
+        try {
+            criteriaResolverRegistry.getResolver(dynamicGroup.getCriteria().getQueryType()).resolveByCriteria(dynamicGroup
+                    .getCriteria(), RequestDetails.builder().basePath(String.format(MEMBERS_HREF_TEMPLATE, "tempGroup"))
+                            .limit(1).build());
+        } catch (TeivException ex) {
+            if (!(dynamicGroup.getCriteria().getQueryType().equals("getRelationshipsForEntityId") && ex
+                    .getLocalizedMessage().equals(RESOURCE_NOT_FOUND))) {
+                throw ex;
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangModelException;
 import org.oran.smo.yangtools.parser.data.YangData;
 import org.oran.smo.yangtools.parser.findings.FindingSeverity;
@@ -57,9 +57,9 @@ import org.oran.smo.teiv.api.model.OranTeivSchema;
 import org.oran.smo.teiv.api.model.OranTeivHref;
 import org.springframework.web.multipart.MultipartFile;
 
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.INVALID_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.SEMICOLON_SEPARATION;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.INVALID_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.SEMICOLON_SEPARATION;
 
 @Service
 @Slf4j
@@ -162,7 +162,7 @@ public class YangParser {
      *
      * @return OranTeivSchemasMetaData
      */
-    public static List<OranTeivSchema> returnAllTiesSchemas(YangDeviceModel yangDeviceModel) {
+    public static List<OranTeivSchema> returnAllTeivSchemas(YangDeviceModel yangDeviceModel) {
         List<OranTeivSchema> OranTeivSchemasMetaData = new ArrayList<>();
         for (final YangModel yangModel : yangDeviceModel.getModuleRegistry().getAllYangModels()) {
             OranTeivSchema schemasMetaData = new OranTeivSchema();
@@ -244,7 +244,7 @@ public class YangParser {
                                 .getChildren().get(0).getValue().equals(formattedName)).toList();
 
                 if (domElement.isEmpty()) {
-                    throw TiesException.invalidSchema("Invalid classifier " + element.getValue());
+                    throw TeivException.invalidSchema("Invalid classifier " + element.getValue());
                 } else {
                     result.add(element.getValue());
                 }
@@ -266,7 +266,7 @@ public class YangParser {
                     case "string" -> "TEXT";
                     case "boolean" -> "BOOLEAN";
                     case "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64" -> "INT";
-                    default -> throw TiesException.invalidFileInput("Invalid data type");
+                    default -> throw TeivException.invalidFileInput("Invalid data type");
                 }));
             }
         });
@@ -279,9 +279,9 @@ public class YangParser {
         for (Finding finding : findingsManager.getAllFindings()) {
             if (severityCalculator.calculateSeverity(finding.getFindingType()).equals(FindingSeverity.ERROR)) {
                 if (finding.getMessage().contains("exception") || finding.getFindingType().contains("UNSPECIFIED_ERROR")) {
-                    throw TiesException.invalidFileInput(INVALID_SCHEMA);
+                    throw TeivException.invalidFileInput(INVALID_SCHEMA);
                 } else {
-                    throw TiesException.invalidFileInput(finding.getMessage());
+                    throw TeivException.invalidFileInput(finding.getMessage());
                 }
             }
         }
