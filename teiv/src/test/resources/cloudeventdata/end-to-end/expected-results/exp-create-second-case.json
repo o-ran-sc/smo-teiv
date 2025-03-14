@@ -2,11 +2,21 @@
     "o-ran-smo-teiv-equipment_AntennaModule": [
         {
             "id": "AntennaModule_3",
-            "positionWithinSector": "center"
+            "positionWithinSector": "center",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "AntennaModule_4",
-            "positionWithinSector": "center2"
+            "positionWithinSector": "center2",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "o-ran-smo-teiv-ran_AntennaCapability": [
@@ -21,7 +31,12 @@
                 "attribute_2": "2"
             },
             "eUtranFqBands": null,
-            "nRFqBands": null
+            "nRFqBands": null,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "AntennaCapability_4",
@@ -34,19 +49,34 @@
                 "attribute_2": "2"
             },
             "eUtranFqBands": null,
-            "nRFqBands": null
+            "nRFqBands": null,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "CFC235E0404703D1E4454647DF8AAE2C193DB402": [
         {
             "id": "relation_3",
             "aSide_AntennaModule": "AntennaModule_3",
-            "bSide_AntennaCapability": "AntennaCapability_3"
+            "bSide_AntennaCapability": "AntennaCapability_3",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "relation_4",
             "aSide_AntennaModule": "AntennaModule_4",
-            "bSide_AntennaCapability": "AntennaCapability_4"
+            "bSide_AntennaCapability": "AntennaCapability_4",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ]
 }

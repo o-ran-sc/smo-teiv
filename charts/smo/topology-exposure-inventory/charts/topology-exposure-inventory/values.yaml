@@ -57,7 +57,7 @@ application:
         validate-group-membership: "false"
         group:
           readiness:
-            include: "readinessState,${HEALTH_CHECK_INDICATOR:tiesExposure}"
+            include: "readinessState,${HEALTH_CHECK_INDICATOR:teivExposure}"
     endpoints:
       web:
         exposure:

@@ -19,7 +19,7 @@
 -- ============LICENSE_END=========================================================
 --
 
-CREATE OR REPLACE FUNCTION ties_data.create_enum_type(
+CREATE OR REPLACE FUNCTION teiv_data.create_enum_type(
     schema_name TEXT, type_name TEXT, enum_values TEXT[]
 ) RETURNS VOID AS $$
 BEGIN
@@ -29,21 +29,21 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-SELECT ties_data.create_enum_type('ties_data', 'Reliability', ARRAY['OK', 'RESTORED', 'ADVISED']);
+SELECT teiv_data.create_enum_type('teiv_data', 'Reliability', ARRAY['OK', 'RESTORED', 'ADVISED']);
 
-CREATE TABLE IF NOT EXISTS ties_data."responsible_adapter" (
+CREATE TABLE IF NOT EXISTS teiv_data."responsible_adapter" (
 	"id"			TEXT,
 	"hashed_id"			BYTEA
 );
 
-SELECT ties_data.create_constraint_if_not_exists(
+SELECT teiv_data.create_constraint_if_not_exists(
 	'responsible_adapter',
  'PK_responsible_adapter_id',
- 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "PK_responsible_adapter_id" PRIMARY KEY ("id");'
+ 'ALTER TABLE teiv_data."responsible_adapter" ADD CONSTRAINT "PK_responsible_adapter_id" PRIMARY KEY ("id");'
 );
 
-SELECT ties_data.create_constraint_if_not_exists(
+SELECT teiv_data.create_constraint_if_not_exists(
 	'responsible_adapter',
  'UNIQUE_responsible_adapter_hashed_id',
- 'ALTER TABLE ties_data."responsible_adapter" ADD CONSTRAINT "UNIQUE_responsible_adapter_hashed_id" UNIQUE ("hashed_id");'
+ 'ALTER TABLE teiv_data."responsible_adapter" ADD CONSTRAINT "UNIQUE_responsible_adapter_hashed_id" UNIQUE ("hashed_id");'
 );

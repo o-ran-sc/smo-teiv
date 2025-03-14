@@ -20,7 +20,7 @@
  */
 package org.oran.smo.teiv.ingestion.validation;
 
-import static org.oran.smo.teiv.utils.TiesConstants.INFINITE_MAXIMUM_CARDINALITY;
+import static org.oran.smo.teiv.utils.TeivConstants.INFINITE_MAXIMUM_CARDINALITY;
 import java.util.List;
 
 import org.oran.smo.teiv.schema.RelationType;
@@ -47,7 +47,7 @@ public class IngestionOperationValidator {
         INFINITE_INFINITE
     }
 
-    private final TiesDbServiceForValidation tiesDbServiceForValidation;
+    private final TeivDbServiceForValidation teivDbServiceForValidation;
 
     public void validate(ParsedCloudEventData parsedCloudEventData) throws MaximumCardinalityViolationException {
         validateRelationshipMaximumCardinality(parsedCloudEventData.getRelationships());
@@ -172,8 +172,8 @@ public class IngestionOperationValidator {
 
     private boolean executeValidationQuery(String tableName, String foreignKeyColumnName, String foreignKeyValue,
             String tableReferencedFromForeignKeyColumn, long maxOccurrence) {
-        tiesDbServiceForValidation.acquireEntityInstanceExclusiveLock(tableReferencedFromForeignKeyColumn, foreignKeyValue);
-        return tiesDbServiceForValidation.executeValidationQuery(tableName, foreignKeyColumnName, foreignKeyValue,
+        teivDbServiceForValidation.acquireEntityInstanceExclusiveLock(tableReferencedFromForeignKeyColumn, foreignKeyValue);
+        return teivDbServiceForValidation.executeValidationQuery(tableName, foreignKeyColumnName, foreignKeyValue,
                 maxOccurrence);
     }
 

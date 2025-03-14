@@ -2,75 +2,111 @@
     "o-ran-smo-teiv-ran_NRCellDU": [
         {
             "id": "myReliabilityCell_1",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_2",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_3",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_4",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_5",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_6",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": null,
             "nCI": null,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_7",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_8",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "2025-01-08T10:40:36.46156500Z",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         },
         {
             "id": "myReliabilityCell_9",
+            "metadata": {
+                "lastModified": "<AFTER TEST START TIME>",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "reliabilityIndicator": "OK"
+            },
             "cellLocalId": 51,
             "nCI": 61,
             "nRPCI": 701,
-            "nRTAC": 401,
-            "RI_nRTAC": "OK"
+            "nRTAC": 401
         }
     ]
 }

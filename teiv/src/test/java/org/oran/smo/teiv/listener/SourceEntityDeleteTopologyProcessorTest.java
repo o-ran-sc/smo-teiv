@@ -65,8 +65,8 @@ import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.schema.BidiDbNameMapper;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
-import org.oran.smo.teiv.service.TiesDbOperations;
-import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.service.TeivDbOperations;
+import org.oran.smo.teiv.service.TeivDbService;
 
 @ExtendWith(MockitoExtension.class)
 class SourceEntityDeleteTopologyProcessorTest {
@@ -80,10 +80,10 @@ class SourceEntityDeleteTopologyProcessorTest {
     private CustomMetrics metrics;
 
     @Mock
-    private TiesDbService tiesDbService;
+    private TeivDbService teivDbService;
 
     @Mock
-    private TiesDbOperations tiesDbOperations;
+    private TeivDbOperations teivDbOperations;
 
     @Mock
     private IngestionAuditLogger auditLogger;
@@ -92,8 +92,8 @@ class SourceEntityDeleteTopologyProcessorTest {
 
     @BeforeEach
     void setUp() {
-        sourceEntityDeleteTopologyProcessor = new SourceEntityDeleteTopologyProcessor(tiesDbService, new ObjectMapper(),
-                metrics, tiesDbOperations, auditLogger);
+        sourceEntityDeleteTopologyProcessor = new SourceEntityDeleteTopologyProcessor(teivDbService, new ObjectMapper(),
+                metrics, teivDbOperations, auditLogger);
     }
 
     @Test
@@ -105,7 +105,7 @@ class SourceEntityDeleteTopologyProcessorTest {
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
             // then
             mockedSchemaRegistry.verifyNoInteractions();
-            verifyNoInteractions(tiesDbService);
+            verifyNoInteractions(teivDbService);
             verify(metrics, times(1)).incrementNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents();
             verifyNoMoreInteractions(metrics);
 
@@ -124,7 +124,7 @@ class SourceEntityDeleteTopologyProcessorTest {
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
             // then
             mockedSchemaRegistry.verifyNoInteractions();
-            verifyNoInteractions(tiesDbService);
+            verifyNoInteractions(teivDbService);
             verify(metrics, times(1)).incrementNumReceivedCloudEventNotSupported();
             verifyNoMoreInteractions(metrics);
 
@@ -141,12 +141,12 @@ class SourceEntityDeleteTopologyProcessorTest {
             CloudEvent event = CloudEventTestUtil.getCloudEvent(EVENT_TYPE, "{\"type\":\"cmHandle\",\"value\":\"abc\"}");
 
             mockedSchemaRegistry.when(SchemaRegistry::getEntityTypes).thenReturn(List.of(entityType));
-            doThrow(new RuntimeException()).when(tiesDbService).execute(anyList());
+            doThrow(new RuntimeException()).when(teivDbService).execute(anyList());
             // when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
             // then
             mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypes, times(1));
-            verify(tiesDbService, times(1)).execute(anyList());
+            verify(teivDbService, times(1)).execute(anyList());
 
             verify(metrics, times(1)).incrementNumSuccessfullyParsedSourceEntityDeleteCloudEvents();
             verify(metrics, times(1)).incrementNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents();
@@ -175,9 +175,9 @@ class SourceEntityDeleteTopologyProcessorTest {
             OperationResult mockOperationResult = mock(OperationResult.class);
             EntityType gnbduFunction = EntityType.builder().name("GNBDUFunction").build();
             when(SchemaRegistry.getEntityTypes()).thenReturn(List.of(gnbduFunction));
-            when(tiesDbOperations.selectByCmHandleFormSourceIds(any(), anyString(), anyString())).thenReturn(List.of(
+            when(teivDbOperations.selectByCmHandleFormSourceIds(any(), anyString(), anyString())).thenReturn(List.of(
                     "result1"));
-            when(tiesDbOperations.deleteEntity(any(), any(), anyString())).thenReturn(List.of(mockOperationResult));
+            when(teivDbOperations.deleteEntity(any(), any(), anyString())).thenReturn(List.of(mockOperationResult));
             doAnswer(new Answer<Void>() {
                 @Override
                 public Void answer(InvocationOnMock invocation) {
@@ -187,14 +187,14 @@ class SourceEntityDeleteTopologyProcessorTest {
                     });
                     return null;
                 }
-            }).when(tiesDbService).execute(anyList());
+            }).when(teivDbService).execute(anyList());
             // when
             assertDoesNotThrow(() -> sourceEntityDeleteTopologyProcessor.process(event, "messageKey"));
             // then
             mockedSchemaRegistry.verify(SchemaRegistry::getEntityTypes, times(1));
-            verify(tiesDbService, atLeastOnce()).execute(anyList());
-            verify(tiesDbOperations, atLeastOnce()).selectByCmHandleFormSourceIds(any(), anyString(), anyString());
-            verify(tiesDbOperations, atLeastOnce()).deleteEntity(any(), any(), anyString());
+            verify(teivDbService, atLeastOnce()).execute(anyList());
+            verify(teivDbOperations, atLeastOnce()).selectByCmHandleFormSourceIds(any(), anyString(), anyString());
+            verify(teivDbOperations, atLeastOnce()).deleteEntity(any(), any(), anyString());
 
             verify(metrics, times(1)).incrementNumSuccessfullyParsedSourceEntityDeleteCloudEvents();
             verify(metrics, times(1)).incrementNumSuccessfullyPersistedSourceEntityDeleteCloudEvents();

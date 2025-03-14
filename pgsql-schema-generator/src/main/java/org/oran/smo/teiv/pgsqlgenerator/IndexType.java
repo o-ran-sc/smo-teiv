@@ -26,9 +26,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum IndexType {
-    GIN("CREATE INDEX IF NOT EXISTS \"%s\" ON ties_data.\"%s\" USING GIN (\"%s\");"),
+    GIN("CREATE INDEX IF NOT EXISTS \"%s\" ON teiv_data.\"%s\" USING GIN (\"%s\");"),
     GIN_TRGM_OPS_ON_LIST_AS_JSONB(
-            "CREATE INDEX IF NOT EXISTS \"%s\" ON ties_data.\"%s\" USING GIN ((\"%s\"::TEXT) gin_trgm_ops);");
+            "CREATE INDEX IF NOT EXISTS \"%s\" ON teiv_data.\"%s\" USING GIN ((\"%s\"::TEXT) gin_trgm_ops);");
 
     private final String createIndexStmt;
 }

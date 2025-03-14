@@ -67,5 +67,10 @@ class GeographyTest {
 
         assertThrows(IOException.class, () -> new Geography("{\"longitude\": 19.040236 \"height\": 19.040236}"));
         assertThrows(IOException.class, () -> new Geography("{\"latitude\": 47.497913 \"height\": 19.040236}"));
+
+        assertThrows(IOException.class, () -> new Geography(
+                "{\"longitude\": 180.040236 \"latitude\": 47.497913 \"height\": 19.040236}"));
+        assertThrows(IOException.class, () -> new Geography(
+                "{\"longitude\": 19.040236 \"latitude\": -147.497913 \"height\": 19.040236}"));
     }
 }

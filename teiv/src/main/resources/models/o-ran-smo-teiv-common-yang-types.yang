@@ -3,6 +3,8 @@ module o-ran-smo-teiv-common-yang-types {
     namespace "urn:o-ran:smo-teiv-common-yang-types";
     prefix or-teiv-types;
 
+    import ietf-yang-types { prefix yang; }
+
     import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
 
     import _3gpp-common-yang-types { prefix types3gpp; }
@@ -31,6 +33,11 @@ module o-ran-smo-teiv-common-yang-types {
     limitations under the License.
 
     SPDX-License-Identifier: Apache-2.0";
+
+    revision "2025-01-17" {
+        description "Added firstDiscovered and lastModified to metadata container";
+        or-teiv-yext:label 0.5.0;
+    }
 
     revision "2024-10-04" {
         description "Added Origin_Entity_Mapping_Grp and Origin_Relationship_Mapping_Grp
@@ -130,14 +137,15 @@ module o-ran-smo-teiv-common-yang-types {
             This must be attached to the Topology Entity or Topology Relation instance,
             outside of the declared Topology Entity or Topology Relationship's
             attributes. This is exposed to the consumers and can only be set by
-            the responsible adapter. This cannot be instantiated, and it MUST NOT be
-            augmented or deviated in any way, unless stated otherwise.";
+            Topology and Inventory Exposure Handling and Discovery and Reconciliation Adapter.
+            This cannot be instantiated, and it MUST NOT be augmented or deviated in any way,
+            unless stated otherwise.";
 
         leaf reliabilityIndicator {
             type enumeration {
                 enum OK {
                     description "The data is in alignment with the source of truth,
-                    as far as Topology Exposure Handling is aware.";
+                    as far as Topology and Inventory Exposure Handling is aware.";
                     value 0;
                 }
                 enum RESTORED {
@@ -146,11 +154,22 @@ module o-ran-smo-teiv-common-yang-types {
                     value 1;
                 }
                 enum ADVISED {
-                    description "Entity implicitly created by Topology Exposure Handling and
-                    potentially not aligned with the source of truth.";
+                    description "Entity implicitly created by Topology and Inventory Exposure
+                    Handling and potentially not aligned with the source of truth.";
                     value 2;
                 }
             }
+        }
+        leaf firstDiscovered {
+            type yang:date-and-time;
+            description "Timestamp indicating when an instance of Topology Entity or Relation
+            was first represented in Topology and Inventory Exposure Handling via discovery.";
+        }
+
+        leaf lastModified {
+            type yang:date-and-time;
+            description "Timestamp indicating when an instance of Topology Entity or Relation
+            was last updated (excluding classifiers and decorators).";
         }
     }
 

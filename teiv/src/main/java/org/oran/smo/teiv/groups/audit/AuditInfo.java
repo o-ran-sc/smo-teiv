@@ -35,6 +35,7 @@ public class AuditInfo {
     private final ExecutionStatus status;
     private final GroupOperation operation;
     private final OranTeivCreateGroupPayload createGroupPayload;
+    private final String createGroupPayloadString;
     private final String groupId;
     private final String groupName;
     private final List<Object> providedMembers;
@@ -50,7 +51,10 @@ public class AuditInfo {
 
     private String generateFailureMessage() {
         return switch (operation) {
-            case CREATE -> String.format("%s - Create %s, %s", status, generateCreateGroupMsg(), exceptionMessage);
+            case CREATE -> String.format("%s - Create group %s, %s", status,
+                    createGroupPayloadString != null && !createGroupPayloadString.isEmpty() ?
+                            createGroupPayloadString :
+                            generateCreateGroupMsg(), exceptionMessage);
             case DELETE -> String.format("%s - Delete group %s, %s", status, groupId, exceptionMessage);
             case UPDATE_NAME -> String.format("%s - Update name %s for group %s, %s", status, groupName, groupId,
                     exceptionMessage);
@@ -64,7 +68,7 @@ public class AuditInfo {
     private String generateSuccessMessage() {
         StringBuilder str = new StringBuilder(String.format("%s - ", status));
         switch (operation) {
-            case CREATE -> str.append(generateCreateGroupMsg()).append(String.format(" with id %s", this.groupId));
+            case CREATE -> str.append(String.format("Create group %s with id %s", generateCreateGroupMsg(), this.groupId));
             case DELETE -> str.append(String.format("Delete group %s", groupId));
             case UPDATE_NAME -> str.append(String.format("Update name %s for group %s", groupName, groupId));
             case MERGE_PROVIDED_MEMBERS -> str.append(String.format("Merge provided members %s for group %s",
@@ -77,10 +81,10 @@ public class AuditInfo {
 
     private String generateCreateGroupMsg() {
         if (createGroupPayload instanceof OranTeivDynamic payload) {
-            return String.format("Create group type=dynamic, name=%s, criteria=%s", payload.getName(), payload
+            return String.format("type=%s, name=%s, criteria=%s", payload.getType(), payload.getName(), payload
                     .getCriteria());
         } else if (createGroupPayload instanceof OranTeivStatic payload) {
-            return String.format("Create group type=static, name=%s, providedMembers=%s", payload.getName(), payload
+            return String.format("type=%s, name=%s, providedMembers=%s", payload.getType(), payload.getName(), payload
                     .getProvidedMembers());
         }
         return null;

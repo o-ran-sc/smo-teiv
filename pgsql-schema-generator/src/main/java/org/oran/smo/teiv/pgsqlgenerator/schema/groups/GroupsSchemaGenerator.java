@@ -62,7 +62,7 @@ public class GroupsSchemaGenerator extends SchemaGenerator {
             FileHelper.copyResourceToFile(skeletonResource, destinationPath.toFile());
             this.schema = destinationPath.toFile();
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.prepareBaselineException("ties.group", exception);
+            throw PgSchemaGeneratorException.prepareBaselineException("teiv.group", exception);
         }
     }
 

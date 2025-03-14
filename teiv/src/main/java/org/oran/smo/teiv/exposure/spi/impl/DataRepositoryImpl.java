@@ -24,9 +24,10 @@ import static org.jooq.impl.DSL.falseCondition;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.val;
-import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
+import static org.jooq.impl.DSL.name;
+import static org.oran.smo.teiv.utils.TeivConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,20 +42,21 @@ import org.jooq.Result;
 import org.jooq.SelectConditionStep;
 import org.jooq.SelectOrderByStep;
 import org.jooq.impl.DSL;
+import org.oran.smo.teiv.schema.Persistable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.spi.DataRepository;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.FilterCriteria;
-import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
-import org.oran.smo.teiv.exposure.tiespath.refiner.PathToJooqRefinement;
+import org.oran.smo.teiv.exposure.teivpath.innerlanguage.FilterCriteria;
+import org.oran.smo.teiv.exposure.teivpath.refiner.BasePathRefinement;
+import org.oran.smo.teiv.exposure.teivpath.refiner.PathToJooqRefinement;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
-import org.oran.smo.teiv.utils.query.exception.TiesPathException;
+import org.oran.smo.teiv.utils.query.exception.TeivPathException;
 
 @Slf4j
 @Service
@@ -91,7 +93,7 @@ public class DataRepositoryImpl implements DataRepository {
     @Override
     public Set<String> getClassifiersForSchema(final String schemaName) {
         SelectConditionStep<Record> availableClassifiers = runMethodSafe(() -> readDataDslContext.select().from(String
-                .format(TIES_CONSUMER_DATA, "classifiers")).where(field("\"moduleReferenceName\"").eq(schemaName)));
+                .format(TEIV_CONSUMER_DATA, "classifiers")).where(field("\"moduleReferenceName\"").eq(schemaName)));
         Set<String> result = new HashSet<>();
         for (Record record : availableClassifiers) {
             result.add((String) record.get("name"));
@@ -102,7 +104,7 @@ public class DataRepositoryImpl implements DataRepository {
     @Override
     public Set<String> getDecoratorsForSchema(final String schemaName) {
         SelectConditionStep<Record> availableDecorators = runMethodSafe(() -> readDataDslContext.select().from(String
-                .format(TIES_CONSUMER_DATA, "decorators")).where(field("\"moduleReferenceName\"").like(schemaName)));
+                .format(TEIV_CONSUMER_DATA, "decorators")).where(field("\"moduleReferenceName\"").like(schemaName)));
         Set<String> result = new HashSet<>();
         for (Record record : availableDecorators) {
             result.add((String) record.get("name"));
@@ -172,17 +174,23 @@ public class DataRepositoryImpl implements DataRepository {
                 .fetchInto(String.class));
     }
 
+    @Override
+    public boolean isTopologyExist(final Persistable type, final String id) {
+        return runMethodSafe(() -> readDataDslContext.fetchExists(readDataDslContext.selectFrom(table(type.getTableName()))
+                .where(field(name(type.getIdColumnName())).eq(id))));
+    }
+
     protected <T> T runMethodSafe(Supplier<T> supp) {
         try {
             return supp.get();
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             throw ex;
-        } catch (TiesPathException ex) {
+        } catch (TeivPathException ex) {
             log.error("Exception during query construction", ex);
             throw ex;
         } catch (Exception ex) {
             log.error("Sql exception during query execution", ex);
-            throw TiesException.serverSQLException();
+            throw TeivException.serverSQLException();
         }
     }
 

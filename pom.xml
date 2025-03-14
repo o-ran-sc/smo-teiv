@@ -3,7 +3,7 @@
 <!--
   ============LICENSE_START=======================================================
   Copyright (C) 2024 Ericsson
-  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+  Modifications Copyright (C) 2025 OpenInfra Foundation Europe
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.4.2</version>
         <relativePath />
     </parent>
     <groupId>org.oran.smo</groupId>
@@ -99,6 +99,7 @@
             JaCoCo plugin. Industry standard is 0.8 or 80% which allows at least 80%
             of the code to be covered by the test cases. -->
         <jacoco-maven-plugin.coveredratio.minimum>0.8</jacoco-maven-plugin.coveredratio.minimum>
+        <version.snakeyaml>2.3</version.snakeyaml>
     </properties>
     <build>
         <pluginManagement>
@@ -110,9 +111,10 @@
                     <configuration>
                         <licenseSets>
                             <licenseSet>
-                                <header>${maven.multiModuleProjectDirectory}/license/copyright-2024.txt</header>
+                                <header>${maven.multiModuleProjectDirectory}/license/copyright-2025.txt</header>
                                 <validHeaders>
                                     <validHeader>${maven.multiModuleProjectDirectory}/license/copyright-2024.txt</validHeader>
+                                    <validHeader>${maven.multiModuleProjectDirectory}/license/copyright-2025.txt</validHeader>
                                 </validHeaders>
                                 <excludes>
                                     <exclude>**/*.html</exclude>

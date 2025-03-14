@@ -44,7 +44,7 @@ import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
 import org.jooq.exception.DataAccessException;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.consumerdata.model.ConsumerData;
 import org.oran.smo.teiv.exposure.consumerdata.model.PersistableIdMap;
 import org.oran.smo.teiv.schema.Persistable;
@@ -107,7 +107,7 @@ public abstract class ConsumerDataOperation<C> {
 
         if (!entityCheckResult.idsNotFound().isEmpty() || !relationshipCheckResult.idsNotFound().isEmpty()) {
 
-            throw TiesException.resourceNotFoundException(entityCheckResult.idsNotFound(), relationshipCheckResult
+            throw TeivException.resourceNotFoundException(entityCheckResult.idsNotFound(), relationshipCheckResult
                     .idsNotFound());
         }
 
@@ -154,7 +154,7 @@ public abstract class ConsumerDataOperation<C> {
             return supplier.get();
         } catch (DataAccessException ex) {
             log.error("Sql exception during query execution", ex);
-            throw TiesException.serverSQLException();
+            throw TeivException.serverSQLException();
         }
     }
 }

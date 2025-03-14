@@ -20,20 +20,18 @@
  */
 package org.oran.smo.teiv.schema;
 
-import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
+import static org.oran.smo.teiv.exposure.teivpath.refiner.AliasMapper.hashAlias;
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getDbName;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.RELATION;
 import static org.jooq.impl.DSL.field;
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
-import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
-import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.METADATA;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.REL_PREFIX;
-import static org.oran.smo.teiv.utils.TiesConstants.RESP_PREFIX;
-import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.CONSUMER_DATA_PREFIX;
+import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
+import static org.oran.smo.teiv.utils.TeivConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TeivConstants.METADATA;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.SOURCE_IDS;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA;
 import org.oran.smo.teiv.exposure.spi.Module;
 
 import java.util.List;
@@ -54,10 +52,6 @@ public class RelationType implements Persistable {
     private static final String REL_CLASSIFIERS_COL_PREFIX = "REL_CD_classifiers_%s";
     private static final String REL_DECORATORS_COL_PREFIX = "REL_CD_decorators_%s";
     private static final String REL_METADATA_COL_PREFIX = "REL_metadata_%s";
-    private static final String REL_UPDATETIME_COL_PREFIX = "REL_updated_time_%s";
-    private static final String RESPONSIBLE_ADAPTER_ID_COL = RESP_PREFIX + ID_COLUMN_NAME;
-    private static final String REL_RESPONSIBLE_ADAPTER_ID_COL_PREFIX = REL_PREFIX + RESP_PREFIX + ID_COLUMN_NAME + "_%s";
-    public static final String UPDATED_TIME = "updated_time";
 
     String name;
     Association aSideAssociation;
@@ -72,7 +66,7 @@ public class RelationType implements Persistable {
 
     @Override
     public String getTableName() {
-        return String.format(TIES_DATA, getDbName(this.tableName));
+        return String.format(TEIV_DATA, getDbName(this.tableName));
     }
 
     @Override
@@ -107,19 +101,6 @@ public class RelationType implements Persistable {
         result.add(field(getTableName() + "." + String.format(QUOTED_STRING, bSideColumnName())).as(hashAlias(
                 getFullyQualifiedName() + ".bSide")));
         return result;
-    }
-
-    /**
-     * Gets the responsible adapter ID column name as String, for the given DB name.
-     *
-     * @return the responsible adapter column as String
-     */
-    public String getResponsibleAdapterIdColumnName() {
-        if (relationshipStorageLocation.equals(RELATION)) {
-            return getDbName(RESPONSIBLE_ADAPTER_ID_COL);
-        } else {
-            return getDbName(String.format(REL_RESPONSIBLE_ADAPTER_ID_COL_PREFIX, name));
-        }
     }
 
     /**
@@ -235,14 +216,5 @@ public class RelationType implements Persistable {
     @Override
     public String getCategory() {
         return "relationship";
-    }
-
-    @Override
-    public String getUpdatedTimeColumnName() {
-        if (relationshipStorageLocation.equals(RELATION)) {
-            return getDbName(UPDATED_TIME);
-        } else {
-            return getDbName(String.format(REL_UPDATETIME_COL_PREFIX, name));
-        }
     }
 }

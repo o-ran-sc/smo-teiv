@@ -51,8 +51,8 @@ public class Geography {
      *     A json that conforms to the "RFC 9179: A YANG Grouping for
      *     Geographic Location" standard.
      * @throws IOException
-     *     when the json doesn't contain both "latitude" and
-     *     "longitude" fields.
+     *     when the json doesn't contain both "latitude" and "longitude" fields
+     *     or the range of latitude is not [-90,90] or the range of longitude is not [-180,180].
      */
     public Geography(final String json) throws IOException {
         JsonNode rootNode = objectMapper.readTree(json);
@@ -60,7 +60,7 @@ public class Geography {
         JsonNode latitudeNode = findNode(rootNode, "latitude");
         JsonNode longitudeNode = findNode(rootNode, "longitude");
 
-        if (isValidNumber(latitudeNode) && isValidNumber(longitudeNode)) {
+        if (isValidLatitude(latitudeNode) && isValidLongitude(longitudeNode)) {
             latitude = latitudeNode.asDouble();
             longitude = longitudeNode.asDouble();
             JsonNode heightNode = findNode(rootNode, "height");
@@ -68,12 +68,21 @@ public class Geography {
                 height = heightNode.asDouble();
             }
         } else {
-            throw new IOException("Cannot find latitude, longitude fields in json: " + json);
+            throw new IOException(
+                    "The range of latitude should be [-90,90] and the range of longitude should be [-180,180]: " + json);
         }
     }
 
     private boolean isValidNumber(JsonNode node) {
         return node != null && node.isNumber();
+    }
+
+    private boolean isValidLatitude(JsonNode node) {
+        return isValidNumber(node) && node.asDouble() >= -90 && node.asDouble() <= 90;
+    }
+
+    private boolean isValidLongitude(JsonNode node) {
+        return isValidNumber(node) && node.asDouble() >= -180 && node.asDouble() <= 180;
     }
 
     private JsonNode findNode(final JsonNode node, final String fieldName) {

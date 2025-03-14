@@ -22,7 +22,7 @@ package org.oran.smo.teiv.service;
 
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.service.cloudevent.data.Relationship;
-import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TeivConstants.ID_COLUMN_NAME;
 
 import org.springframework.stereotype.Component;
 import org.jooq.Record;

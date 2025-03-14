@@ -24,16 +24,16 @@ import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.noCondition;
 import static org.jooq.impl.DSL.table;
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
-import static org.oran.smo.teiv.utils.TiesConstants.IN_USAGE;
-import static org.oran.smo.teiv.utils.TiesConstants.MODULE_REFERENCE_NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.SCHEMA_ALREADY_EXISTS;
-import static org.oran.smo.teiv.utils.TiesConstants.SEMICOLON_SEPARATION;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL;
-import static org.oran.smo.teiv.utils.TiesConstants.MODULE_REFERENCE;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
+import static org.oran.smo.teiv.utils.TeivConstants.IN_USAGE;
+import static org.oran.smo.teiv.utils.TeivConstants.MODULE_REFERENCE_NAME;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.SCHEMA_ALREADY_EXISTS;
+import static org.oran.smo.teiv.utils.TeivConstants.SEMICOLON_SEPARATION;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_MODEL;
+import static org.oran.smo.teiv.utils.TeivConstants.MODULE_REFERENCE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
 import org.oran.smo.teiv.exposure.spi.Module;
 import org.oran.smo.teiv.exposure.spi.ModuleStatus;
@@ -84,7 +84,7 @@ public class ModelRepositoryImpl implements ModelRepository {
     @Override
     public Optional<Module> getConsumerModuleByName(final String name) {
         final Record moduleRecord = runMethodSafe(() -> readDataDslContext.select().from(table(String.format(
-                TIES_CONSUMER_DATA, MODULE_REFERENCE))).where(field("name").eq(name)).and(field(STATUS).eq(
+                TEIV_CONSUMER_DATA, MODULE_REFERENCE))).where(field("name").eq(name)).and(field(STATUS).eq(
                         ModuleStatus.IN_USAGE.name())).fetchAny());
         return Optional.ofNullable(moduleRecord).map(module -> Module.builder().name((String) module.get(NAME)).namespace(
                 (String) module.get("namespace")).revision((String) module.get(REVISION)).ownerAppId((String) module.get(
@@ -95,8 +95,8 @@ public class ModelRepositoryImpl implements ModelRepository {
     public List<Module> getModules() {
         return runMethodSafe(() -> {
             final List<Module> modules = new ArrayList<>();
-            final List<Module> modulesFromModelSchema = getModulesBySchema(TIES_MODEL);
-            final List<Module> modulesFromConsumerDataSchema = getModulesBySchema(TIES_CONSUMER_DATA);
+            final List<Module> modulesFromModelSchema = getModulesBySchema(TEIV_MODEL);
+            final List<Module> modulesFromConsumerDataSchema = getModulesBySchema(TEIV_CONSUMER_DATA);
             modules.addAll(modulesFromModelSchema);
             modules.addAll(modulesFromConsumerDataSchema);
             return modules;
@@ -106,7 +106,7 @@ public class ModelRepositoryImpl implements ModelRepository {
     @Override
     public List<Module> getDeletingModulesOnStartup() {
         return runMethodSafe(() -> {
-            Select<Record> moduleRecords = readDataDslContext.select().from(table(String.format(TIES_CONSUMER_DATA,
+            Select<Record> moduleRecords = readDataDslContext.select().from(table(String.format(TEIV_CONSUMER_DATA,
                     MODULE_REFERENCE))).where(field(STATUS).eq(ModuleStatus.DELETING.name()));
             Function<Record, Module> buildModuleFunction;
             buildModuleFunction = buildConsumerModules();
@@ -117,16 +117,16 @@ public class ModelRepositoryImpl implements ModelRepository {
     @Override
     public String getModuleContentByName(final String name) {
         return runMethodSafe(() -> {
-            String content = getModuleContentByNameFromSchema(TIES_MODEL, name);
+            String content = getModuleContentByNameFromSchema(TEIV_MODEL, name);
             if (content == null || content.equals("")) {
-                content = getModuleContentByNameFromSchema(TIES_CONSUMER_DATA, name);
+                content = getModuleContentByNameFromSchema(TEIV_CONSUMER_DATA, name);
             }
             return content;
         });
     }
 
     private void createModule(DSLContext transactionalDSL, Module module) {
-        createModuleWithDuplicateCheck(() -> transactionalDSL.insertInto(table(String.format(TIES_CONSUMER_DATA,
+        createModuleWithDuplicateCheck(() -> transactionalDSL.insertInto(table(String.format(TEIV_CONSUMER_DATA,
                 MODULE_REFERENCE))).set(field(NAME), module.getName()).set(field("content"), module.getContent()).set(field(
                         "\"ownerAppId\""), module.getOwnerAppId()).set(field(STATUS), module.getStatus().name()).set(field(
                                 REVISION), module.getRevision()).execute(), module.getName());
@@ -134,13 +134,13 @@ public class ModelRepositoryImpl implements ModelRepository {
 
     @Override
     public void updateModuleStatus(String name, ModuleStatus status) {
-        runMethodSafe(() -> writeDataDslContext.update(table(String.format(TIES_CONSUMER_DATA, MODULE_REFERENCE))).set(
+        runMethodSafe(() -> writeDataDslContext.update(table(String.format(TEIV_CONSUMER_DATA, MODULE_REFERENCE))).set(
                 field(STATUS), status.name()).where(field("name").eq(name)).execute());
     }
 
     @Override
     public void deleteModuleByName(String name) {
-        runMethodSafe(() -> writeDataDslContext.deleteFrom(table(String.format(TIES_CONSUMER_DATA, MODULE_REFERENCE)))
+        runMethodSafe(() -> writeDataDslContext.deleteFrom(table(String.format(TEIV_CONSUMER_DATA, MODULE_REFERENCE)))
                 .where(field("name").eq(name)).execute());
     }
 
@@ -149,7 +149,7 @@ public class ModelRepositoryImpl implements ModelRepository {
                 .where(noCondition());
         Function<Record, Module> buildModuleFunction;
 
-        if (schemaName.equals(TIES_CONSUMER_DATA)) {
+        if (schemaName.equals(TEIV_CONSUMER_DATA)) {
             moduleRecords = moduleRecords.$where((field(STATUS).eq(IN_USAGE)));
             buildModuleFunction = buildConsumerModules();
         } else {
@@ -216,7 +216,7 @@ public class ModelRepositoryImpl implements ModelRepository {
 
     private void insertValues(final DSLContext transactionalDSL, final String tableName, final List<String> columns,
             final Consumer<InsertValuesStepN<?>> consumer) {
-        InsertValuesStepN<?> executable = transactionalDSL.insertInto(table(String.format(TIES_CONSUMER_DATA, tableName)))
+        InsertValuesStepN<?> executable = transactionalDSL.insertInto(table(String.format(TEIV_CONSUMER_DATA, tableName)))
                 .columns(columns.stream().map(column -> field(column, String.class)).toList());
 
         consumer.accept(executable);
@@ -229,7 +229,7 @@ public class ModelRepositoryImpl implements ModelRepository {
             return supp.get();
         } catch (Exception ex) {
             log.warn("Exception occurred during query execution.", ex);
-            throw TiesException.serverSQLException();
+            throw TeivException.serverSQLException();
         }
     }
 
@@ -240,20 +240,20 @@ public class ModelRepositoryImpl implements ModelRepository {
         } catch (IntegrityConstraintViolationException icve) {
             if (isModuleInDeletingState(moduleName)) {
                 log.warn("Module in deleting state", icve);
-                throw TiesException.schemaInDeletingState(moduleName);
+                throw TeivException.schemaInDeletingState(moduleName);
             } else {
                 log.warn("Module already exists", icve);
-                throw TiesException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
+                throw TeivException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
             }
         } catch (Exception ex) {
             log.warn("Exception occurred during query execution.", ex);
-            throw TiesException.serverSQLException();
+            throw TeivException.serverSQLException();
         }
     }
 
     private boolean isModuleInDeletingState(String moduleName) {
         final SelectConditionStep<Record1<Integer>> query = readDataDslContext.selectOne().from(String.format(
-                TIES_CONSUMER_DATA, MODULE_REFERENCE)).where(field(name(NAME)).eq(moduleName).and(field(STATUS).eq(
+                TEIV_CONSUMER_DATA, MODULE_REFERENCE)).where(field(name(NAME)).eq(moduleName).and(field(STATUS).eq(
                         ModuleStatus.DELETING.name())));
         return query.fetchAny() != null;
     }

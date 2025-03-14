@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.consumerdata.model.Classifiers;
 import org.oran.smo.teiv.exposure.consumerdata.model.Decorators;
 import org.oran.smo.teiv.schema.ConsumerDataCache;
@@ -48,7 +48,7 @@ public class ConsumerDataValidator {
         final List<String> problems = checkAvailability(classifiers);
 
         if (!problems.isEmpty()) {
-            throw TiesException.invalidClassifiersException(problems);
+            throw TeivException.invalidClassifiersException(problems);
         }
     }
 
@@ -67,7 +67,7 @@ public class ConsumerDataValidator {
         final Map<String, String> problems = checkAvailability(decorators);
 
         if (!problems.isEmpty()) {
-            throw TiesException.invalidDecoratorsException(problems);
+            throw TeivException.invalidDecoratorsException(problems);
         }
     }
 

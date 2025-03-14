@@ -39,7 +39,11 @@ import org.oran.smo.teiv.api.model.OranTeivStaticGroupByIdResponse;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.groups.audit.AuditInfo;
 import org.oran.smo.teiv.groups.audit.ExecutionStatus;
+import org.oran.smo.teiv.groups.utils.GroupCreationRequestFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -62,11 +66,11 @@ import org.oran.smo.teiv.api.model.OranTeivUpdateGroupNamePayload;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.groups.GroupsCustomMetrics;
 import org.oran.smo.teiv.groups.api.GroupsService;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 
 @Slf4j
 @RestController
-@RequestMapping(TiesConstants.REQUEST_MAPPING)
+@RequestMapping(TeivConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("groups")
 public class GroupsController implements GroupsApi {
@@ -76,7 +80,7 @@ public class GroupsController implements GroupsApi {
     private final HttpServletRequest context;
 
     @Override
-    @Timed("ties_groups_http_create_group_seconds")
+    @Timed("teiv_groups_http_create_group_seconds")
     public ResponseEntity<OranTeivGroupByIdResponse> createGroup(final String accept, final String contentType,
             final OranTeivCreateGroupPayload createGroupPayload) {
         return runWithFailCheck(() -> {
@@ -104,7 +108,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    @Timed("ties_groups_http_get_all_groups_seconds")
+    @Timed("teiv_groups_http_get_all_groups_seconds")
     public ResponseEntity<OranTeivGroupsResponse> getAllGroups(final String accept, final Integer offset,
             final Integer limit, final String name) {
         return runWithFailCheck(() -> {
@@ -115,7 +119,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    @Timed("ties_groups_http_delete_group_seconds")
+    @Timed("teiv_groups_http_delete_group_seconds")
     public ResponseEntity<Void> deleteGroup(final String groupId) {
         return runWithFailCheck(() -> {
             runWithAuditLogs(() -> groupsService.deleteGroup(groupId), response -> loggerHandler.logAudit(log, AuditInfo
@@ -126,7 +130,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    @Timed("ties_groups_http_update_group_name_seconds")
+    @Timed("teiv_groups_http_update_group_name_seconds")
     public ResponseEntity<Void> updateGroupName(final String contentType, final String groupId,
             final OranTeivUpdateGroupNamePayload groupNameUpdatePayload) {
         return runWithFailCheck(() -> {
@@ -139,7 +143,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    @Timed("ties_groups_http_get_members_seconds")
+    @Timed("teiv_groups_http_get_members_seconds")
     public ResponseEntity<OranTeivMembersResponse> getMembers(final String accept, final String groupId,
             final Integer offset, final Integer limit) {
         return runWithFailCheck(() -> {
@@ -150,7 +154,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    @Timed("ties_groups_http_get_provided_members_seconds")
+    @Timed("teiv_groups_http_get_provided_members_seconds")
     public ResponseEntity<OranTeivMembersResponse> getProvidedMembers(final String accept, final String groupId,
             final String status, final Integer offset, final Integer limit) {
         return runWithFailCheck(() -> {
@@ -162,14 +166,14 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    @Timed("ties_groups_http_get_group_by_id_seconds")
+    @Timed("teiv_groups_http_get_group_by_id_seconds")
     public ResponseEntity<OranTeivGroupByIdResponse> getGroupById(final String accept, final String groupId) {
         return runWithFailCheck(() -> ResponseEntity.ok(groupsService.getGroupById(groupId)),
                 customMetrics::incrementHttpGetGroupByIdFailedCount);
     }
 
     @Override
-    @Timed("ties_groups_http_update_provided_members_seconds")
+    @Timed("teiv_groups_http_update_provided_members_seconds")
     public ResponseEntity<Void> updateProvidedMembers(final String accept, final String contentType, final String groupId,
             final OranTeivUpdateProvidedMembersPayload updateProvidedMembersPayload) {
         return runWithFailCheck(() -> {
@@ -217,5 +221,14 @@ public class GroupsController implements GroupsApi {
             }
             throw ex;
         }
+    }
+
+    @Bean
+    public FilterRegistrationBean<GroupCreationRequestFilter> loggingFilter() {
+        FilterRegistrationBean<GroupCreationRequestFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new GroupCreationRequestFilter(loggerHandler));
+        registrationBean.addUrlPatterns("/groups");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 }

@@ -42,7 +42,7 @@ public class BidiDbNameMapper {
      * @return the mapped DB name
      */
     public static String getDbName(String name) {
-        if (!nameMap.containsKey(name)) {
+        if (nameMap == null || !nameMap.containsKey(name)) {
             return name;
         }
         return nameMap.get(name);

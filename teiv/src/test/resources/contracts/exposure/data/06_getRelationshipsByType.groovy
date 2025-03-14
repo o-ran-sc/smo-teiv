@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -299,10 +299,10 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
+        description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
+            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
         }
         response {
             status OK()
@@ -314,37 +314,37 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "test-built-in-module:ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS": [
                             {
-                                "bSide": "LongEntityType2",
-                                "aSide": "LongEntityType1",
-                                "id": "Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
+                                "bSide": "urn:LongEntityType2",
+                                "aSide": "urn:LongEntityType1",
+                                "id": "urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
                 },
                 "first": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
                 },
                 "prev": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
                 },
                 "next": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
                 },
                 "last": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType1']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
                 },
                 "totalCount": 1
             }''')
         }
     },
     Contract.make {
-        description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
+        description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
+            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
         }
         response {
             status OK()
@@ -356,27 +356,27 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "test-built-in-module:ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS": [
                             {
-                                "bSide": "LongEntityType2",
-                                "aSide": "LongEntityType1",
-                                "id": "Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
+                                "bSide": "urn:LongEntityType2",
+                                "aSide": "urn:LongEntityType1",
+                                "id": "urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
                 },
                 "first": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
                 },
                 "prev": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
                 },
                 "next": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
                 },
                 "last": {
-                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='LongEntityType2']"
+                    "href": "/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
                 },
                 "totalCount": 1
             }''')
@@ -399,7 +399,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "o-ran-smo-teiv-ran:SECTOR_GROUPS_NRCELLDU": [
                       {
                         "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1",
-                        "aSide": "Sector=2",
+                        "aSide": "urn:Sector=2",
                         "id": "urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=4BBE73F685A98EF799968ACFE76F376D795F4CC3B56A6B867642048CDF4C1B8E323430EA7C6C38E4031FB891158763CC5459A8704E1A9FBFBD53CE8AD23BF463"
                       }
                     ]
@@ -449,7 +449,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "o-ran-smo-teiv-ran:SECTOR_GROUPS_NRCELLDU": [
                       {
                         "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1",
-                        "aSide": "Sector=2",
+                        "aSide": "urn:Sector=2",
                         "id": "urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=4BBE73F685A98EF799968ACFE76F376D795F4CC3B56A6B867642048CDF4C1B8E323430EA7C6C38E4031FB891158763CC5459A8704E1A9FBFBD53CE8AD23BF463"
                       }
                     ]
@@ -498,18 +498,18 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "test-built-in-module:ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS": [
                             {
-                                "bSide": "LongEntityType2",
-                                "aSide": "LongEntityType1",
-                                "id": "Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
+                                "bSide": "urn:LongEntityType2",
+                                "aSide": "urn:LongEntityType1",
+                                "id": "urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2"
                             }
                         ]
                     },
                     {
                         "test-built-in-module:ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS": [
                             {
-                                "bSide": "LongEntityType3",
-                                "aSide": "LongEntityType2",
-                                "id": "Rel_OneToOne_SameEntity_LongEntityType2_LongEntityType3"
+                                "bSide": "urn:LongEntityType3",
+                                "aSide": "urn:LongEntityType2",
+                                "id": "urn:Rel_OneToOne_SameEntity_LongEntityType2_LongEntityType3"
                             }
                         ]
                     }

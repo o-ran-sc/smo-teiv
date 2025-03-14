@@ -80,14 +80,14 @@ import org.oran.smo.teiv.groups.spi.StaticGroupRecord;
 public class GroupsRepositoryImpl implements GroupsRepository {
     @Value("${groups.static.provided-members-ids.max-limit}")
     private int maxLimit;
-    private static final String TIES_GROUPS = "ties_groups.%s";
-    private static final Table<Record> GROUPS_TABLE = table(String.format(TIES_GROUPS, "groups"));
+    private static final String TEIV_GROUPS = "teiv_groups.%s";
+    private static final Table<Record> GROUPS_TABLE = table(String.format(TEIV_GROUPS, "groups"));
     private static final Field<String> GROUP_ID = field(name("id"), String.class);
     private static final Field<String> GROUP_NAME = field(name("name"), String.class);
     private static final Field<String> GROUP_TYPE = field(name("type"), String.class);
-    private static final Table<Record> DYNAMIC_GROUPS_TABLE = table(String.format(TIES_GROUPS, "dynamic_groups"));
+    private static final Table<Record> DYNAMIC_GROUPS_TABLE = table(String.format(TEIV_GROUPS, "dynamic_groups"));
     private static final Field<JSONB> CRITERIA = field(name("criteria"), JSONB.class);
-    private static final Table<Record> STATIC_GROUPS_TABLE = table(String.format(TIES_GROUPS, "static_groups"));
+    private static final Table<Record> STATIC_GROUPS_TABLE = table(String.format(TEIV_GROUPS, "static_groups"));
     private static final Field<String> TOPOLOGY_TYPE = field(name("topology_type"), String.class);
     private static final Field<String[]> PROVIDED_MEMBERS_IDS = field(name("provided_members_ids"), String[].class);
 
@@ -259,7 +259,7 @@ public class GroupsRepositoryImpl implements GroupsRepository {
         if (deletedRows == 0) {
             log.warn("Group with ID: {} doesn't exist when trying to delete the group.", groupId);
             throw new GroupNotFoundException(
-                    "Group with ID: " + groupId + "doesn't exist when tyring to delete the group.");
+                    "Group with ID: " + groupId + "doesn't exist when trying to delete the group.");
         }
     }
 
@@ -270,7 +270,7 @@ public class GroupsRepositoryImpl implements GroupsRepository {
         if (result.isEmpty()) {
             log.warn("Group with ID: {} doesn't exist when trying to get the provided members.", groupId);
             throw new GroupNotFoundException(
-                    "Group with ID: " + groupId + "doesn't exist when tyring to get the provided members.");
+                    "Group with ID: " + groupId + "doesn't exist when trying to get the provided members.");
         }
         final Map<String, List<String>> groupedProvidedMembers = new HashMap<>();
         result.forEach(staticGroupRecord -> groupedProvidedMembers.put(staticGroupRecord.get(TOPOLOGY_TYPE), List.of(

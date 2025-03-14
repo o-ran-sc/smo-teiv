@@ -20,21 +20,28 @@
  */
 package org.oran.smo.teiv.groups;
 
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_MODEL_SCHEMA;
 
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import org.springframework.context.ApplicationContext;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.oran.smo.teiv.exposure.audit.LoggerHandler;
+import org.oran.smo.teiv.groups.utils.GroupCreationRequestFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,23 +50,42 @@ import org.oran.smo.teiv.db.TestPostgresqlContainer;
 import org.oran.smo.teiv.TopologyApiBase;
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles({ "test", "groups" })
 public abstract class TopologyGroupsApiBase extends TopologyApiBase {
-    public static final String TIES_GROUPS = "ties_groups";
+    public static final String TEIV_GROUPS = "teiv_groups";
+
+    @Autowired
+    private ApplicationContext context;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private LoggerHandler loggerHandler;
 
     @BeforeAll
     public static void beforeAll() throws UnsupportedOperationException, SchemaLoaderException {
         String url = postgresSQLContainer.getJdbcUrl();
         DataSource ds = DataSourceBuilder.create().url(url).username("test").password("test").build();
         DSLContext dslContext = DSL.using(ds, SQLDialect.POSTGRES);
-        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA, TIES_MODEL_SCHEMA,
-                TIES_GROUPS), dslContext);
+        TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA, TEIV_CONSUMER_DATA_SCHEMA, TEIV_MODEL_SCHEMA,
+                TEIV_GROUPS), dslContext);
         TestPostgresqlContainer.loadModels();
         TestPostgresqlContainer.loadSampleGroupsData();
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
+    }
+
+    @BeforeEach
+    public void setup() {
+        GroupCreationRequestFilter groupCreationRequestFilter = new GroupCreationRequestFilter(loggerHandler);
+        mockMvc = MockMvcBuilders.webAppContextSetup((WebApplicationContext) context).addFilter(groupCreationRequestFilter,
+                "/topology-inventory/v1alpha11/groups").build();
+
+        RestAssuredMockMvc.mockMvc(mockMvc);
     }
 }

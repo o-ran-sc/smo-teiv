@@ -21,21 +21,21 @@
 
 BEGIN;
 
-DROP SCHEMA IF EXISTS ties_model cascade;
-CREATE SCHEMA IF NOT EXISTS ties_model;
-ALTER SCHEMA ties_model OWNER TO :pguser;
+DROP SCHEMA IF EXISTS teiv_model cascade;
+CREATE SCHEMA IF NOT EXISTS teiv_model;
+ALTER SCHEMA teiv_model OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 SET ROLE :pguser;
 
-CREATE TABLE IF NOT EXISTS ties_model.hash_info (
+CREATE TABLE IF NOT EXISTS teiv_model.hash_info (
     "name"        TEXT PRIMARY KEY,
     "hashedValue" VARCHAR(63) NOT NULL,
     "type"        VARCHAR(511)
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.module_reference (
+CREATE TABLE IF NOT EXISTS teiv_model.module_reference (
     "name"            TEXT PRIMARY KEY,
     "namespace"       TEXT,
     "domain"          TEXT,
@@ -44,15 +44,15 @@ CREATE TABLE IF NOT EXISTS ties_model.module_reference (
     "content"         TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.entity_info (
+CREATE TABLE IF NOT EXISTS teiv_model.entity_info (
     "storedAt"            TEXT PRIMARY KEY,
     "name"                TEXT NOT NULL,
     "moduleReferenceName" TEXT NOT NULL,
     "attributeNames"      jsonb DEFAULT '[]'::jsonb,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
+    FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
+CREATE TABLE IF NOT EXISTS teiv_model.relationship_info (
     "name"                     TEXT NOT NULL,
     "aSideAssociationName"     TEXT NOT NULL,
     "aSideMOType"              TEXT NOT NULL,
@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
     "connectSameEntity"        BOOLEAN NOT NULL,
     "moduleReferenceName"      TEXT NOT NULL,
     PRIMARY KEY ("name", "moduleReferenceName"),
-    FOREIGN KEY ("aSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE,
-    FOREIGN KEY ("bSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
+    FOREIGN KEY ("aSideModule") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE,
+    FOREIGN KEY ("bSideModule") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE,
+    FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE
 );
 

@@ -11,12 +11,22 @@
         {
             "id": "ManagedElement_21",
             "REL_FK_used-nrCellDu": "NRCellDU_21",
-            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_11"
+            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_11",
+            "REL_metadata_C9E09FBCCBA1F6A3252B71B869B269EF28AACDFB": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "ManagedElement_41",
             "REL_FK_used-nrCellDu": "NRCellDU_31",
-            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_12"
+            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_12",
+            "REL_metadata_C9E09FBCCBA1F6A3252B71B869B269EF28AACDFB": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ]
 }

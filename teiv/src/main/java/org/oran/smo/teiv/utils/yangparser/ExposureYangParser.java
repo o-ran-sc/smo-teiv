@@ -20,8 +20,8 @@
  */
 package org.oran.smo.teiv.utils.yangparser;
 
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.SEMICOLON_SEPARATION;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.SEMICOLON_SEPARATION;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import org.oran.smo.yangtools.parser.input.ByteArrayYangInput;
 import org.oran.smo.yangtools.parser.model.ConformanceType;
 import org.oran.smo.yangtools.parser.model.YangModel;
 import org.oran.smo.yangtools.parser.model.yangdom.YangDomElement;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangParsingException;
 import org.oran.smo.teiv.exception.YangSchemaException;
 
@@ -102,7 +102,7 @@ public class ExposureYangParser extends YangModelLoader {
                                 .getChildren().get(0).getValue().equals(formattedName)).toList();
 
                 if (domElement.isEmpty()) {
-                    throw TiesException.invalidSchema("Invalid classifier " + element.getValue());
+                    throw TeivException.invalidSchema("Invalid classifier " + element.getValue());
                 } else {
                     classifier = element.getValue();
                 }
@@ -110,7 +110,7 @@ public class ExposureYangParser extends YangModelLoader {
                 classifier = element.getValue();
             }
             if (result.contains(classifier)) {
-                throw TiesException.duplicateEntryForClassifiers(classifier);
+                throw TeivException.duplicateEntryForClassifiers(classifier);
             } else {
                 result.add(classifier);
             }
@@ -127,10 +127,10 @@ public class ExposureYangParser extends YangModelLoader {
                         case "string" -> "TEXT";
                         case "boolean" -> "BOOLEAN";
                         case "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64" -> "INT";
-                        default -> throw TiesException.invalidFileInput("Invalid data type");
+                        default -> throw TeivException.invalidFileInput("Invalid data type");
                     };
                     if (resultMap.putIfAbsent(key, value) != null) {
-                        throw TiesException.duplicateEntryForDecorators(key);
+                        throw TeivException.duplicateEntryForDecorators(key);
                     }
                 });
         return resultMap;

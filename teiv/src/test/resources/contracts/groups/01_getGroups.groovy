@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,9 +78,9 @@ import org.springframework.cloud.contract.spec.Contract
                         "href": "/groups?offset=2&limit=2"
                     },
                     "last": {
-                        "href": "/groups?offset=28&limit=2"
+                        "href": "/groups?offset=32&limit=2"
                     },
-                    "totalCount": 29
+                    "totalCount": 33
                 }''')
             bodyMatchers {
                 jsonPath('$.items', byType {

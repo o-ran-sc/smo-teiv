@@ -20,12 +20,12 @@
  */
 package org.oran.smo.teiv.exposure.spi.mapper;
 
-import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.getOriginalAlias;
-import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.PROPERTY_A_SIDE;
-import static org.oran.smo.teiv.utils.TiesConstants.PROPERTY_B_SIDE;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
+import static org.oran.smo.teiv.exposure.teivpath.refiner.AliasMapper.getOriginalAlias;
+import static org.oran.smo.teiv.utils.TeivConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TeivConstants.PROPERTY_A_SIDE;
+import static org.oran.smo.teiv.utils.TeivConstants.PROPERTY_B_SIDE;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.SOURCE_IDS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import org.jooq.exception.DataTypeException;
 
 import org.oran.smo.teiv.schema.RelationType;
 import lombok.extern.slf4j.Slf4j;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 
 @Slf4j
 public abstract class ResponseMapper {
@@ -126,7 +126,7 @@ public abstract class ResponseMapper {
             }
         }
         if (!attributes.isEmpty()) {
-            data.put(TiesConstants.ATTRIBUTES, attributes);
+            data.put(TeivConstants.ATTRIBUTES, attributes);
         }
         item.put(managedObject, List.of(data));
         return item;

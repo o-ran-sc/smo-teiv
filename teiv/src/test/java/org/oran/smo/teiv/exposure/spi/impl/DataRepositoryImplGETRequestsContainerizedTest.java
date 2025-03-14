@@ -20,14 +20,14 @@
  */
 package org.oran.smo.teiv.exposure.spi.impl;
 
-import static org.oran.smo.teiv.utils.TiesConstants.MODULE_REFERENCE;
+import static org.oran.smo.teiv.utils.TeivConstants.MODULE_REFERENCE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_MODEL;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_MODEL;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +46,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oran.smo.teiv.schema.EntityType;
+import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Configuration;
@@ -54,7 +56,7 @@ import org.oran.smo.teiv.db.TestPostgresqlContainer;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
 import org.oran.smo.teiv.exposure.spi.Module;
 import org.oran.smo.teiv.exposure.spi.ModuleStatus;
-import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
+import org.oran.smo.teiv.exposure.teivpath.refiner.BasePathRefinement;
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.schema.SchemaRegistry;
@@ -83,7 +85,7 @@ class DataRepositoryImplGETRequestsContainerizedTest {
 
     @BeforeEach
     public void deleteAll() {
-        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA), writeDataDslContext);
+        TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA, TEIV_CONSUMER_DATA_SCHEMA), writeDataDslContext);
         TestPostgresqlContainer.loadSampleData();
     }
 
@@ -101,13 +103,13 @@ class DataRepositoryImplGETRequestsContainerizedTest {
         schemaByName = modelRepository.getConsumerModuleByName(moduleName);
         Assertions.assertTrue(schemaByName.isPresent());
 
-        modelRepository.doesModuleExists(TIES_MODEL, moduleName);
-        modelRepository.doesModuleExists(TIES_CONSUMER_DATA, moduleName);
+        modelRepository.doesModuleExists(TEIV_MODEL, moduleName);
+        modelRepository.doesModuleExists(TEIV_CONSUMER_DATA, moduleName);
 
         modelRepository.updateModuleStatus(moduleName, ModuleStatus.DELETING);
 
         final @NotNull Record1<Object> status = readDataDslContext.select(field("status")).from(table(String.format(
-                TIES_CONSUMER_DATA, MODULE_REFERENCE))).where(field("name").eq(moduleName)).fetchAny();
+                TEIV_CONSUMER_DATA, MODULE_REFERENCE))).where(field("name").eq(moduleName)).fetchAny();
 
         Assertions.assertEquals(ModuleStatus.DELETING.name(), status.get("status"));
 
@@ -174,6 +176,42 @@ class DataRepositoryImplGETRequestsContainerizedTest {
                 "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRSectorCarrier=1"),
                 underTest.getEntityIdsForClassifierDeletion(SchemaRegistry.getEntityTypeByModuleAndName(
                         "o-ran-smo-teiv-ran", "NRSectorCarrier"), Set.of("ocucp-ocuup-model:Weekend")));
+    }
+
+    @Test
+    void isTopologyExist_entityTest() throws SchemaRegistryException {
+        EntityType entityType = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "NRCellDU").get(0);
+        String entityId = "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91";
+        Assertions.assertTrue(underTest.isTopologyExist(entityType, entityId),
+                "That's strange, the result should have been true as this id in DB dataset: " + entityId);
+        String nonExistentEntityId = "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=911";
+        Assertions.assertFalse(underTest.isTopologyExist(entityType, nonExistentEntityId),
+                "Result should have been false as the entity id is not in DB data set: " + nonExistentEntityId);
+    }
+
+    @Test
+    void isTopologyExist_relationshipTest() throws SchemaRegistryException {
+        RelationType relationType = SchemaRegistry.getRelationTypeByDomainAndName("RAN",
+                "NRSECTORCARRIER_USES_ANTENNACAPABILITY").get(0);
+        String aSideRelationshipId = "urn:o-ran:smo:teiv:sha512:NRSECTORCARRIER_USES_ANTENNACAPABILITY=11EDFC31E2BE240D3CB15DB1A3FA3B78C828524BC8FCA3365A615129A61A627C21DA8EBF6DD788CDBDEC668344D1F79A371749083D6AE04DDDD57CB4FA8C3ECB";
+        Assertions.assertTrue(underTest.isTopologyExist(relationType, aSideRelationshipId),
+                "That's strange, the result should have been true as this id in DB dataset: " + aSideRelationshipId);
+
+        relationType = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION")
+                .get(0);
+        String bSideRelationshipId = "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A";
+        Assertions.assertTrue(underTest.isTopologyExist(relationType, bSideRelationshipId),
+                "That's strange, the result should have been true as this id in DB dataset: " + bSideRelationshipId);
+
+        relationType = SchemaRegistry.getRelationTypeByDomainAndName("REL_EQUIPMENT_RAN",
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY").get(0);
+        String manyToManyRelationshipId = "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65";
+        Assertions.assertTrue(underTest.isTopologyExist(relationType, manyToManyRelationshipId),
+                "That's strange, the result should have been true as this id in DB dataset: " + manyToManyRelationshipId);
+
+        String nonExistentRelationshipId = "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A";
+        Assertions.assertFalse(underTest.isTopologyExist(relationType, nonExistentRelationshipId),
+                "Result should have been false as the relationship id is not in DB data set: " + nonExistentRelationshipId);
     }
 
 }

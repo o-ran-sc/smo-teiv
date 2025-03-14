@@ -62,9 +62,9 @@ public abstract class SchemaGenerator {
                 outputStream.write(strToBytes);
             } catch (IOException exception) {
                 if (schema.getName().endsWith("data.sql")) {
-                    throw PgSchemaGeneratorException.writeGeneratedSchemaException("ties.data", exception);
+                    throw PgSchemaGeneratorException.writeGeneratedSchemaException("teiv.data", exception);
                 } else {
-                    throw PgSchemaGeneratorException.writeGeneratedSchemaException("ties.model", exception);
+                    throw PgSchemaGeneratorException.writeGeneratedSchemaException("teiv.model", exception);
                 }
             }
         } else {

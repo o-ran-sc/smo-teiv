@@ -21,12 +21,15 @@
 package org.oran.smo.teiv.groups.spi;
 
 import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.GROUP_ID_PREFIX;
+import static org.oran.smo.teiv.utils.TeivConstants.URN_PREFIX;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.oran.smo.teiv.schema.SchemaRegistry;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
@@ -63,12 +66,13 @@ public class StaticGroupMemberProcessor {
             validateListItem(providedMember);
             final Map.Entry<String, JsonNode> topologyEntry = providedMember.fields().next();
             final String topologyType = topologyEntry.getKey();
+            validateTopologyType(topologyType);
             for (JsonNode topologyIdObject : topologyEntry.getValue()) {
                 validateListItem(topologyIdObject);
                 final Map.Entry<String, JsonNode> topologyIdEntry = topologyIdObject.fields().next();
                 if (topologyIdEntry.getKey().equals("id") && topologyIdEntry.getValue().isTextual()) {
                     final String id = topologyIdEntry.getValue().asText();
-                    groupIdCheck(id);
+                    validateTopologyId(id);
                     groupedProvidedMembers.computeIfAbsent(topologyType, v -> new ArrayList<>()).add(id);
                 } else {
                     throw GroupsException.invalidProvidedMembers(String.format("Invalid key/value present in %s.",
@@ -78,6 +82,23 @@ public class StaticGroupMemberProcessor {
         }
         validateProvidedMembersSize(groupedProvidedMembers);
         return groupedProvidedMembers;
+    }
+
+    private void validateTopologyType(String topologyType) {
+        final String[] parts = topologyType.split(":");
+        if (parts.length != 2) {
+            throw GroupsException.invalidProvidedMembers(
+                    "Topology type must be in the format 'moduleName:topologyTypeName'. Provided: " + topologyType);
+        }
+        final String moduleName = parts[0];
+        final String topologyTypeName = parts[1];
+        try {
+            SchemaRegistry.getTopologyTypeByModuleAndTopologyName(moduleName, topologyTypeName);
+        } catch (SchemaRegistryException ex) {
+            String errorMessage = String.format("Invalid topology type '%s', not found in the model", topologyType);
+            log.warn(errorMessage, ex);
+            throw GroupsException.invalidProvidedMembers(String.format(errorMessage, topologyType));
+        }
     }
 
     private void validateListItem(final JsonNode jsonNode) {
@@ -90,10 +111,13 @@ public class StaticGroupMemberProcessor {
         }
     }
 
-    private void groupIdCheck(final String id) {
+    private void validateTopologyId(final String id) {
         if (id.startsWith(GROUP_ID_PREFIX)) {
             throw GroupsException.invalidProvidedMembers(String.format(
                     "Nested topology groups is not supported. Provided members contain topology group id: %s", id));
+        } else if (!id.startsWith(URN_PREFIX)) {
+            throw GroupsException.invalidProvidedMembers(String.format(
+                    "Topology id %s is not in supported format. Provided members id should start with %s", id, URN_PREFIX));
         }
     }
 

@@ -71,8 +71,8 @@
                         "aSide": "AntennaModule_1",
                         "bSide": "AntennaCapability_1",
                         "sourceIds": [
-                            "source12",
-                            "source22"
+                            "source1",
+                            "source2"
                         ]
                     },
                     {
@@ -80,8 +80,8 @@
                         "aSide": "AntennaModule_2",
                         "bSide": "AntennaCapability_2",
                         "sourceIds": [
-                            "source12",
-                            "source22"
+                            "source1",
+                            "source2"
                         ]
                     }
                 ]

@@ -20,16 +20,16 @@
  */
 package org.oran.smo.teiv.schema;
 
-import static org.oran.smo.teiv.exposure.tiespath.refiner.AliasMapper.hashAlias;
+import static org.oran.smo.teiv.exposure.teivpath.refiner.AliasMapper.hashAlias;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.A_SIDE;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.B_SIDE;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.RELATION;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_MODULE;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.TEIV_DOMAIN;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DOMAIN;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA;
 import static org.jooq.impl.DSL.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,11 +42,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jooq.JSONB;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.spi.Module;
 
 class SchemaRegistryTest {
@@ -87,7 +88,7 @@ class SchemaRegistryTest {
         assertEquals(expectedDomain, oamToRanModule.getDomain());
         assertEquals(expectedIncludedModules, oamToRanModule.getIncludedModuleNames());
 
-        assertThrows(TiesException.class, () -> SchemaRegistry.getModuleByName("invalid-module"));
+        assertThrows(TeivException.class, () -> SchemaRegistry.getModuleByName("invalid-module"));
     }
 
     @Test
@@ -115,7 +116,7 @@ class SchemaRegistryTest {
 
     @Test
     void testGetModuleByDomainThrowsUnknownDomainException() {
-        assertThrows(TiesException.class, () -> SchemaRegistry.getModuleByDomain("throwError"));
+        assertThrows(TeivException.class, () -> SchemaRegistry.getModuleByDomain("throwError"));
     }
 
     //Entities
@@ -166,7 +167,7 @@ class SchemaRegistryTest {
         //given
         EntityType oduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals("ties_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFunction.getTableName());
+        assertEquals("teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\"", oduFunction.getTableName());
     }
 
     @Test
@@ -188,17 +189,20 @@ class SchemaRegistryTest {
     @Test
     void testGetFieldsForEntity() throws SchemaRegistryException {
         //given
-        EntityType oduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
+        EntityType OduFunction = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ODUFunction");
         //then
-        assertEquals(Set.of(field("gNBDUId").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"), field("gNBId").as(
-                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), field("gNBIdLength").as(
-                        "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), field("id").as(
-                                "o-ran-smo-teiv-ran:ODUFunction.id"), field("CD_sourceIds").as(
-                                        "o-ran-smo-teiv-ran:ODUFunction.sourceIds"), field("CD_classifiers").as(
-                                                "o-ran-smo-teiv-ran:ODUFunction.classifiers"), field("CD_decorators").as(
-                                                        "o-ran-smo-teiv-ran:ODUFunction.decorators"), field("dUpLMNId").as(
-                                                                "o-ran-smo-teiv-ran:ODUFunction.attr.dUpLMNId")),
-                new HashSet<>(oduFunction.getAllFieldsWithId()));
+        assertEquals(Set.of(field("dUpLMNId", JSONB.class).as("o-ran-smo-teiv-ran:ODUFunction.attr.dUpLMNId"), field(
+                "gNBDUId").as("o-ran-smo-teiv-ran:ODUFunction.attr.gNBDUId"), field("gNBId").as(
+                        "o-ran-smo-teiv-ran:ODUFunction.attr.gNBId"), field("gNBIdLength").as(
+                                "o-ran-smo-teiv-ran:ODUFunction.attr.gNBIdLength"), field("id").as(
+                                        "o-ran-smo-teiv-ran:ODUFunction.id"), field("CD_sourceIds").as(
+                                                "o-ran-smo-teiv-ran:ODUFunction.sourceIds"), field("CD_classifiers").as(
+                                                        "o-ran-smo-teiv-ran:ODUFunction.classifiers"), field(
+                                                                "CD_decorators").as(
+                                                                        "o-ran-smo-teiv-ran:ODUFunction.decorators"), field(
+                                                                                "metadata").as(
+                                                                                        "o-ran-smo-teiv-ran:ODUFunction.metadata")),
+                new HashSet<>(OduFunction.getAllFieldsWithId()));
     }
 
     @Test
@@ -325,9 +329,9 @@ class SchemaRegistryTest {
     @Test
     void testGetTableNameForRelation() throws SchemaRegistryException {
         //given
-        String expectedManyToMany = "ties_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"";
-        String expectedOneToMany = "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\"";
-        String expectedManyToOne = "ties_data.\"o-ran-smo-teiv-equipment_AntennaModule\"";
+        String expectedManyToMany = "teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"";
+        String expectedOneToMany = "teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\"";
+        String expectedManyToOne = "teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\"";
         //when
         RelationType manyToMany = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
@@ -434,24 +438,27 @@ class SchemaRegistryTest {
         RelationType antennamoduleServesAntennacapability = SchemaRegistry.getRelationTypeByModuleAndName(
                 "o-ran-smo-teiv-rel-equipment-ran", "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         //then
-        assertEquals(Set.of(field(String.format(TIES_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String
+        assertEquals(Set.of(field(String.format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String
                 .format(QUOTED_STRING, "aSide_AntennaModule")).as(hashAlias(
                         "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.aSide")), field(String
-                                .format(TIES_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
+                                .format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
                                         QUOTED_STRING, "bSide_AntennaCapability")).as(hashAlias(
                                                 "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.bSide")),
-                field(String.format(TIES_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
+                field(String.format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
                         QUOTED_STRING, "id")).as(hashAlias(
                                 "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.id")), field(String
-                                        .format(TIES_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String
+                                        .format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String
                                                 .format(QUOTED_STRING, "CD_sourceIds")).as(hashAlias(
                                                         "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.sourceIds")),
-                field(String.format(TIES_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
+                field(String.format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
                         QUOTED_STRING, "CD_decorators")).as(hashAlias(
                                 "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.decorators")),
-                field(String.format(TIES_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
+                field(String.format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
                         QUOTED_STRING, "CD_classifiers")).as(hashAlias(
-                                "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.classifiers"))),
+                                "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.classifiers")),
+                field(String.format(TEIV_DATA, "CFC235E0404703D1E4454647DF8AAE2C193DB402") + "." + String.format(
+                        QUOTED_STRING, "metadata")).as(hashAlias(
+                                "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_ANTENNACAPABILITY.metadata"))),
                 new HashSet<>(antennamoduleServesAntennacapability.getAllFieldsWithId()));
     }
 
@@ -473,7 +480,7 @@ class SchemaRegistryTest {
 
     @Test
     void getAttributeColumnsWithFilterTest() throws SchemaRegistryException {
-        Assertions.assertEquals(Map.of(field("ties_data.\"AntennaModule\".\"geo-location\"").as(
+        Assertions.assertEquals(Map.of(field("teiv_data.\"AntennaModule\".\"geo-location\"").as(
                 "o-ran-smo-teiv-equipment:AntennaModule.attr.geo-location"), DataType.GEOGRAPHIC), SchemaRegistry
                         .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment", "AntennaModule")
                         .getSpecificAttributeColumns(List.of("geo-location")));

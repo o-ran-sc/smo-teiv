@@ -27,4 +27,5 @@ public class GroupsConstants {
     public static final String MEMBERS_HREF_TEMPLATE = "/groups/%s/members";
     public static final String PROVIDED_MEMBERS_HREF_TEMPLATE = "/groups/%s/provided-members";
     public static final String GROUP_ID_PREFIX = "urn:o-ran:smo:teiv:group=";
+    public static final String RESOURCE_NOT_FOUND = "Resource Not Found";
 }

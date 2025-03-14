@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.api.model.OranTeivHref;
 import org.oran.smo.teiv.api.model.OranTeivSchema;
 import org.oran.smo.teiv.api.model.OranTeivSchemaList;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangModelException;
 import org.oran.smo.teiv.exposure.model.api.ModelService;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
@@ -52,9 +52,9 @@ import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
 import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
 import static org.oran.smo.teiv.exposure.utils.PaginationUtil.prevHref;
 import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
-import static org.oran.smo.teiv.utils.TiesConstants.INVALID_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
+import static org.oran.smo.teiv.utils.TeivConstants.INVALID_SCHEMA;
 
 @Slf4j
 @Service
@@ -89,7 +89,7 @@ public class ModelServiceImpl implements ModelService {
         Map<String, String> decorators = (Map<String, String>) result.get(DECORATORS);
         if (classifiers.isEmpty() && decorators.isEmpty()) {
             log.warn("No classifiers and decorators found in module {} ", moduleName);
-            throw TiesException.invalidFileInput(INVALID_SCHEMA);
+            throw TeivException.invalidFileInput(INVALID_SCHEMA);
         }
         modelRepository.createConsumerDataModule(Module.builder().name(moduleName).content(content).revision(revision)
                 .ownerAppId("APP").status(ModuleStatus.IN_USAGE).build(), classifiers, decorators);
@@ -122,7 +122,7 @@ public class ModelServiceImpl implements ModelService {
         return Optional.ofNullable(modelRepository.getModuleContentByName(name)).map(content -> new String(Base64
                 .getDecoder().decode(content), StandardCharsets.UTF_8)).orElseGet(() -> {
                     log.warn("No schema found with name: {}", name);
-                    throw TiesException.invalidSchema(name);
+                    throw TeivException.invalidSchema(name);
                 });
     }
 
@@ -134,7 +134,7 @@ public class ModelServiceImpl implements ModelService {
             schemaCleanUpService.cleanUpModule(name);
         }, () -> {
             log.warn("No module found with name: {}", name);
-            throw TiesException.invalidSchema(name);
+            throw TeivException.invalidSchema(name);
         });
     }
 
