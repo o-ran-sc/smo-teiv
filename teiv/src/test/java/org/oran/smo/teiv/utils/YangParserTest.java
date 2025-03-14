@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ class YangParserTest {
     }
 
     @Test
-    void testReturnAllTiesSchemas() {
+    void testReturnAllTeivSchemas() {
         //when
-        List<OranTeivSchema> OranTeivSchemasMetaDataList = YangParser.returnAllTiesSchemas(yangParser.extractYangData());
+        List<OranTeivSchema> OranTeivSchemasMetaDataList = YangParser.returnAllTeivSchemas(yangParser.extractYangData());
         //then
         Assertions.assertEquals(10, OranTeivSchemasMetaDataList.size());
     }

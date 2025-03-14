@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,11 +49,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
@@ -67,17 +65,15 @@ import org.oran.smo.teiv.exception.UnsatisfiedExternalDependencyException;
 import org.oran.smo.teiv.service.kafka.KafkaFactory;
 import org.oran.smo.teiv.startup.SchemaHandler;
 import lombok.Getter;
-import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles({ "test", "ingestion" })
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestExecutionListeners(listeners = KafkaTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 @EmbeddedKafka
 @ExtendWith(OutputCaptureExtension.class)
-public class DependentServiceAvailabilityKafkaTest {
-
+class DependentServiceAvailabilityKafkaTest {
     @Value("${spring.embedded.kafka.brokers}")
     @Getter
     private String embeddedKafkaServer;
@@ -94,7 +90,7 @@ public class DependentServiceAvailabilityKafkaTest {
     @Autowired
     private DependentServiceAvailabilityKafka dependentServiceAvailabilityKafka;
 
-    @MockBean
+    @MockitoBean
     private SchemaHandler schemaHandler;
 
     @BeforeEach
@@ -135,10 +131,10 @@ public class DependentServiceAvailabilityKafkaTest {
         final NewTopic newTopic = new NewTopic("test_topic", 1, (short) 1);
         mockedAdminClient.createTopics(List.of(newTopic));
 
-        ListTopicsResult topicListresult = Mockito.spy(mockedAdminClient.listTopics());
-        KafkaFuture<Set<String>> kafkaFutures = Mockito.spy(topicListresult.names());
-        doReturn(topicListresult).when(spiedAdminClient).listTopics();
-        doReturn(kafkaFutures).when(topicListresult).names();
+        ListTopicsResult topicListResult = Mockito.spy(mockedAdminClient.listTopics());
+        KafkaFuture<Set<String>> kafkaFutures = Mockito.spy(topicListResult.names());
+        doReturn(topicListResult).when(spiedAdminClient).listTopics();
+        doReturn(kafkaFutures).when(topicListResult).names();
         doThrow(InterruptedException.class).when(kafkaFutures).get();
 
         MockedStatic<Admin> mockedStaticAdminClient = Mockito.mockStatic(Admin.class);
@@ -151,7 +147,9 @@ public class DependentServiceAvailabilityKafkaTest {
         assertThrows(UnsatisfiedExternalDependencyException.class,
                 spiedDependentServiceAvailabilityKafka::isServiceAvailable);
 
-        Mockito.reset(spiedAdminClient, topicListresult, kafkaFutures, spiedDependentServiceAvailabilityKafka);
+        Mockito.reset(spiedAdminClient, topicListResult, kafkaFutures, spiedDependentServiceAvailabilityKafka);
         mockedStaticAdminClient.close();
+        mockedAdminClient.close();
+        spiedAdminClient.close();
     }
 }

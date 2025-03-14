@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,19 +42,19 @@ public class GroupsCustomMetrics {
     private final Counter httpUpdateProvidedMembersFailedCount;
 
     public GroupsCustomMetrics(final MeterRegistry meterRegistry) {
-        httpCreateGroupFailedCount = Counter.builder("ties_groups_http_create_group_fail_total").register(meterRegistry);
-        this.httpGetAllGroupsFailedCount = Counter.builder("ties_groups_http_get_all_groups_fail_total").register(
+        httpCreateGroupFailedCount = Counter.builder("teiv_groups_http_create_group_fail_total").register(meterRegistry);
+        this.httpGetAllGroupsFailedCount = Counter.builder("teiv_groups_http_get_all_groups_fail_total").register(
                 meterRegistry);
-        this.httpGetGroupByIdFailedCount = Counter.builder("ties_groups_http_get_group_by_id_fail_total").register(
+        this.httpGetGroupByIdFailedCount = Counter.builder("teiv_groups_http_get_group_by_id_fail_total").register(
                 meterRegistry);
-        this.httpDeleteGroupFailedCount = Counter.builder("ties_groups_http_delete_group_fail_total").register(
+        this.httpDeleteGroupFailedCount = Counter.builder("teiv_groups_http_delete_group_fail_total").register(
                 meterRegistry);
-        this.httpUpdateGroupNameFailedCount = Counter.builder("ties_groups_http_update_group_name_fail_total").register(
+        this.httpUpdateGroupNameFailedCount = Counter.builder("teiv_groups_http_update_group_name_fail_total").register(
                 meterRegistry);
-        this.httpGetMembersFailedCount = Counter.builder("ties_groups_http_get_members_fail_total").register(meterRegistry);
-        this.httpGetProvidedMembersFailedCount = Counter.builder("ties_groups_http_get_provided_members_fail_total")
+        this.httpGetMembersFailedCount = Counter.builder("teiv_groups_http_get_members_fail_total").register(meterRegistry);
+        this.httpGetProvidedMembersFailedCount = Counter.builder("teiv_groups_http_get_provided_members_fail_total")
                 .register(meterRegistry);
-        this.httpUpdateProvidedMembersFailedCount = Counter.builder("ties_groups_http_update_provided_members_fail_total")
+        this.httpUpdateProvidedMembersFailedCount = Counter.builder("teiv_groups_http_update_provided_members_fail_total")
                 .register(meterRegistry);
     }
 

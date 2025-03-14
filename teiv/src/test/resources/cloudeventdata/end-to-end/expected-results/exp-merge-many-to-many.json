@@ -1,0 +1,65 @@
+{
+    "o-ran-smo-teiv-equipment_AntennaModule": [
+        {
+            "id": "AntennaModule_1",
+            "positionWithinSector": "left",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        },
+        {
+            "id": "AntennaModule_2",
+            "positionWithinSector": "left2",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        }
+    ],
+    "o-ran-smo-teiv-ran_AntennaCapability": [
+        {
+            "id": "AntennaCapability_1",
+            "geranFqBands": {
+                "attribute_1": "2",
+                "attribute_2": "3"
+            },
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        },
+        {
+            "id": "AntennaCapability_2",
+            "geranFqBands": {
+                "attribute_1": "23",
+                "attribute_2": "23"
+            }
+        }
+    ],
+    "CFC235E0404703D1E4454647DF8AAE2C193DB402": [
+        {
+            "id": "relation_1",
+            "aSide_AntennaModule": "AntennaModule_1",
+            "bSide_AntennaCapability": "AntennaCapability_1",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        },
+        {
+            "id": "relation_2",
+            "aSide_AntennaModule": "AntennaModule_2",
+            "bSide_AntennaCapability": "AntennaCapability_2",
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,10 +60,10 @@ class RelationshipMapperTest {
     @Test
     void testCreateProperties() {
         Record record = DSL.using(SQLDialect.POSTGRES).newRecord(field(
-                "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU\""), field(
-                        "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_provided-by-gnbduFunction\""), field(
-                                "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"id\""), field(
-                                        "ties_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_sourceIds_GNBDUFUNCTION_PROVIDES_NRCELLDU\""))
+                "teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_ID_GNBDUFUNCTION_PROVIDES_NRCELLDU\""), field(
+                        "teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_provided-by-gnbduFunction\""), field(
+                                "teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"id\""), field(
+                                        "teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_CD_sourceIds_GNBDUFUNCTION_PROVIDES_NRCELLDU\""))
                 .values("urn:base64:R05CRFVGdW5jdGlvbjo2QTBENUFBMjhGNzcwQzk5NDFCNzRFQkU1NzYxMUFFMTpQUk9WSURFUzpOUkNlbGxEVTowMDAxNjFCMDE0QzMyMDEwNkE5RDZCMTQxN0Y4RUIwQQ==",
                         "6A0D5AA28F770C9941B74EBE57611AE1", "000161B014C320106A9D6B1417F8EB0A", List.of("sid1", "sid2"));
 

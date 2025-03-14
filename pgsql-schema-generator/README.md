@@ -1,3 +1,25 @@
+<!--
+  ============LICENSE_START=======================================================
+  Copyright (C) 2024 Ericsson
+  Modifications Copyright (C) 2025 OpenInfra Foundation Europe
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  SPDX-License-Identifier: Apache-2.0
+  ============LICENSE_END=========================================================
+-->
+
+
 # PG SQL Schema Generator
 
 *PG SQL Schema Generator* provides the capability of generating a PostgresSQL schema from the YANG models. This schema
@@ -277,7 +299,7 @@ populate entity_info table.
   | storedAt                                                                                              | TEXT PRIMARY KEY | Un-hashed table name where entity type instances are stored |
   | name                                                                                                  | TEXT NOT NULL    | The entity type name                                        |
   | moduleReferenceName                                                                                   | TEXT NOT NULL    | A reference to an associated module                         |
-  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                      |
+  | FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                      |
 
  **relationship_info:** When it comes to relationship info generation module reference names
   are assigned to relationships. For each relationship the max cardinality is taken and then
@@ -301,9 +323,9 @@ populate entity_info table.
   | storedAt                                                                                              | TEXT NOT NULL    | The un-hashed table name where relation instance information is stored |
   | connectSameEntity                                                                                     | BOOLEAN NOT NULL | Indicates whether the relationship connects the same entity            |
   | moduleReferenceName                                                                                   | TEXT PRIMARY KEY | The name of the module reference associated with the relationship      |
-  | FOREIGN KEY ("aSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE         | FOREIGN KEY      | Foreign key constraint                                                 |
-  | FOREIGN KEY ("bSideModule") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE         | FOREIGN KEY      | Foreign key constraint                                                 |
-  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                 |
+  | FOREIGN KEY ("aSideModule") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE         | FOREIGN KEY      | Foreign key constraint                                                 |
+  | FOREIGN KEY ("bSideModule") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE         | FOREIGN KEY      | Foreign key constraint                                                 |
+  | FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                 |
 
 Along with this it ensures that the structure for the model schema SQL file starts with
 the correct structure by importing the baseline schema information.
@@ -383,7 +405,7 @@ The SQL entries for consumer data include
   | name                                                                                                          | TEXT PRIMARY KEY | The key of the decorator.                                                        |
   | dataType                                                                                                      | VARCHAR(511)     | The data type of the decorator, needed for parsing.                              |
   | moduleReferenceName                                                                                           | TEXT             | References the corresponding consumer module reference the decorator belongs to. |
-  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                           |
+  | FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_consumer_data.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                           |
 
 - **classifiers:** There will be the ability for client applications to apply user-defined keywords/tags (classifiers) to
   topology entities and relationships.
@@ -393,7 +415,7 @@ The SQL entries for consumer data include
   |---------------------------------------------------------------------------------------------------------------|------------------|-----------------------------------------------------------------------------------|
   | name                                                                                                          | TEXT PRIMARY KEY | The actual classifier.                                                            |
   | moduleReferenceName                                                                                           | TEXT             | References the corresponding consumer module reference the classifier belongs to. |
-  | FOREIGN KEY ("moduleReferenceName") REFERENCES ties_consumer_data.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                            |
+  | FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_consumer_data.module_reference ("name") ON DELETE CASCADE | FOREIGN KEY      | Foreign key constraint                                                            |
 
 ##### How to use classifiers and decorators
 1. Create a schema with the /schemas endpoint using Yang Module. After a successful schema creation, the topology objects are ready to be classified.
@@ -410,7 +432,7 @@ The SQL entries for consumer data include
 - Create constant if it doesn't exist
 
   ```text
-  CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
+  CREATE OR REPLACE FUNCTION teiv_data.create_constraint_if_not_exists (
   t_name TEXT, c_name TEXT, constraint_sql TEXT
   )
   RETURNS void AS
@@ -425,10 +447,10 @@ The SQL entries for consumer data include
 
   Example:
   ```text
-  SELECT ties_data.create_constraint_if_not_exists(
+  SELECT teiv_data.create_constraint_if_not_exists(
       'CloudNativeApplication',
   'PK_CloudNativeApplication_id',
-  'ALTER TABLE ties_data."CloudNativeApplication" ADD CONSTRAINT "PK_CloudNativeApplication_id" PRIMARY KEY ("id");'
+  'ALTER TABLE teiv_data."CloudNativeApplication" ADD CONSTRAINT "PK_CloudNativeApplication_id" PRIMARY KEY ("id");'
   );
   ```
 - [01_init-oran-smo-teiv-model.sql](src/main/resources/scripts/01_init-oran-smo-teiv-model.sql)

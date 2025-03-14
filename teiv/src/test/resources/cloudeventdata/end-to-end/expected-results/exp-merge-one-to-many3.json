@@ -1,0 +1,69 @@
+{
+    "o-ran-smo-teiv-ran_NRCellDU": [
+        {
+            "id": "NRCellDU_1",
+            "cellLocalId": 4589,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
+            "REL_FK_provided-by-oduFunction": "ODU_1",
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_7",
+            "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        },
+        {
+            "id": "NRCellDU_2",
+            "cellLocalId": 45891,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
+            "REL_FK_provided-by-oduFunction": "ODU_1",
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_8",
+            "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        },
+        {
+            "id": "NRCellDU_3",
+            "cellLocalId": 964,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
+            "REL_FK_provided-by-oduFunction": "ODU_1",
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_9",
+            "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        }
+    ],
+    "o-ran-smo-teiv-ran_ODUFunction": [
+        {
+            "id": "ODU_1",
+            "dUpLMNId": {
+                "mcc": "777",
+                "mnc": "888"
+            },
+            "gNBDUId": 44,
+            "gNBId": 4321,
+            "gNBIdLength": 9,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<BEFORE TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        }
+    ]
+}

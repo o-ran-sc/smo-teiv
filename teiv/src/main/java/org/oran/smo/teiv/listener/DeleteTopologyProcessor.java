@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.RelationshipDataLocation;
 import org.oran.smo.teiv.schema.SchemaRegistry;
-import org.oran.smo.teiv.service.TiesDbOperations;
-import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.service.TeivDbOperations;
+import org.oran.smo.teiv.service.TeivDbService;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 import org.oran.smo.teiv.service.models.OperationResult;
@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import static org.oran.smo.teiv.utils.TiesConstants.CLOUD_EVENT_WITH_TYPE_DELETE;
+import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_DELETE;
 
 @Component
 @Slf4j
@@ -54,8 +54,8 @@ import static org.oran.smo.teiv.utils.TiesConstants.CLOUD_EVENT_WITH_TYPE_DELETE
 public class DeleteTopologyProcessor implements TopologyProcessor {
 
     private final CloudEventParser cloudEventParser;
-    private final TiesDbService tiesDbService;
-    private final TiesDbOperations tiesDbOperations;
+    private final TeivDbService teivDbService;
+    private final TeivDbOperations teivDbOperations;
     private final CustomMetrics customMetrics;
     private final IngestionAuditLogger auditLogger;
 
@@ -84,24 +84,24 @@ public class DeleteTopologyProcessor implements TopologyProcessor {
         parsedCloudEventData.getEntities().forEach(entity -> {
             EntityType entityType = SchemaRegistry.getEntityTypeByName(entity.getType());
             dbOperations.add(dslContext -> operationResults
-                .addAll(tiesDbOperations.deleteEntity(dslContext, entityType, entity.getId())));
+                .addAll(teivDbOperations.deleteEntity(dslContext, entityType, entity.getId())));
         });
 
         parsedCloudEventData.getRelationships().forEach(relationship -> {
             RelationType relationType = SchemaRegistry.getRelationTypeByName(relationship.getType());
             if (Objects.requireNonNull(relationType)
                 .getRelationshipStorageLocation() == RelationshipDataLocation.RELATION) {
-                dbOperations.add(dslContext -> tiesDbOperations.deleteManyToManyRelationByRelationId(dslContext,
+                dbOperations.add(dslContext -> teivDbOperations.deleteManyToManyRelationByRelationId(dslContext,
                     relationType, relationship.getId()).ifPresent(operationResults::add));
             } else {
                 dbOperations
-                    .add(dslContext -> tiesDbOperations.deleteRelationFromEntityTableByRelationId(dslContext,
+                    .add(dslContext -> teivDbOperations.deleteRelationFromEntityTableByRelationId(dslContext,
                         relationship.getId(), relationType).ifPresent(operationResults::add));
             }
         });
 
         try {
-            tiesDbService.execute(dbOperations);
+            teivDbService.execute(dbOperations);
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                 CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());

@@ -3,7 +3,7 @@
 <!--
   ============LICENSE_START=======================================================
   Copyright (C) 2024 Ericsson
-  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.4.2</version>
         <relativePath />
     </parent>
     <groupId>org.oran.smo</groupId>
@@ -99,54 +99,50 @@
             JaCoCo plugin. Industry standard is 0.8 or 80% which allows at least 80%
             of the code to be covered by the test cases. -->
         <jacoco-maven-plugin.coveredratio.minimum>0.8</jacoco-maven-plugin.coveredratio.minimum>
+        <version.snakeyaml>2.3</version.snakeyaml>
     </properties>
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.mycila</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>${version.license-maven-plugin}</version>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.15</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
-                        <licenseSets>
-                            <licenseSet>
-                                <header>${maven.multiModuleProjectDirectory}/license/copyright-2024.txt</header>
-                                <validHeaders>
-                                    <validHeader>${maven.multiModuleProjectDirectory}/license/copyright-2024.txt</validHeader>
-                                </validHeaders>
-                                <excludes>
-                                    <exclude>**/*.html</exclude>
-                                    <exclude>**/*.tpl</exclude>
-                                    <exclude>**/*.tgz</exclude>
-                                    <exclude>**/VERSION*</exclude>
-                                    <exclude>license/copyright*</exclude>
-                                    <exclude>**/*.txt</exclude>
-                                    <exclude>**/*.config</exclude>
-                                    <exclude>**/*.yang</exclude>
-                                    <exclude>settings.xml</exclude>
-                                    <exclude>**/*.openapi-generator-ignore</exclude>
-                                    <exclude>**/src/main/resources/v1/.openapi-generator/*</exclude>
-                                    <exclude>generated/*</exclude>
-                                    <exclude>generated*/</exclude>
-                                    <exclude>dependencies/*</exclude>
-                                    <exclude>dependencies*/</exclude>
-                                    <exclude>teiv/src/main/resources/v1/**/*.html</exclude>
-                                    <exclude>teiv/src/main/resources/v1/topology-exposure-inventory-openapi.json</exclude>
-                                    <exclude>pgsql-schema-generator/src/main/resources/scripts/custom-sql-script.sql</exclude>
-                                    <exclude>pgsql-schema-generator/src/test/resources/baseline-schema/custom-sql-script.sql</exclude>
-                                </excludes>
-                            </licenseSet>
-                        </licenseSets>
-                        <headerDefinitions>
-                            <headerDefinition>${maven.multiModuleProjectDirectory}/license/javaHeaderDefinition.xml</headerDefinition>
-                            <headerDefinition>${maven.multiModuleProjectDirectory}/license/xmlHeaderDefinition.xml</headerDefinition>
-                        </headerDefinitions>
-                        <mapping>
-                            <java>JAVADOC_STYLE</java>
-                            <groovy>JAVADOC_STYLE</groovy>
-                            <g4>JAVADOC_STYLE</g4>
-                            <xml>XML_STYLE</xml>
-                        </mapping>
+                        <excludes>
+                            <exclude>**/*.html</exclude>
+                            <exclude>**/*.tpl</exclude>
+                            <exclude>**/*.tgz</exclude>
+                            <exclude>**/VERSION*</exclude>
+                            <exclude>license/copyright*</exclude>
+                            <exclude>**/*.txt</exclude>
+                            <exclude>**/*.config</exclude>
+                            <exclude>**/*.yang</exclude>
+                            <exclude>settings.xml</exclude>
+                            <exclude>**/*.openapi-generator-ignore</exclude>
+                            <exclude>**/src/main/resources/v1/.openapi-generator/*</exclude>
+                            <exclude>generated/*</exclude>
+                            <exclude>generated*/</exclude>
+                            <exclude>dependencies/*</exclude>
+                            <exclude>dependencies*/</exclude>
+                            <exclude>src/main/resources/v1/html/**/*</exclude>
+                            <exclude>src/main/resources/v1/README.md</exclude>
+                            <exclude>src/main/resources/v1/topology-exposure-inventory-openapi.json</exclude>
+                            <exclude>src/test/resources/basics/file-based-resolver-test/folder2/file5</exclude>
+                            <exclude>src/test/resources/META-INF/MANIFEST.MF</exclude>
+                            <exclude>pgsql-schema-generator/src/main/resources/scripts/custom-sql-script.sql</exclude>
+                            <exclude>pgsql-schema-generator/src/test/resources/baseline-schema/custom-sql-script.sql</exclude>
+                            <exclude>.tox/**</exclude>
+                            <exclude>docs/_build/**</exclude>
+                            <exclude>**/*.helmignore</exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -213,20 +209,17 @@
                         <trimTrailingWhitespace />
                         <removeUnusedImports />
                         <endWithNewline />
-                        <licenseHeader>
-                            <file>${maven.multiModuleProjectDirectory}/CopyrightSample.txt</file>
-                        </licenseHeader>
                     </java>
                     <groovy>
                         <includes>
                             <include>**/*.groovy</include>
                         </includes>
+                        <excludes>
+                            <exclude>target/**/*.groovy</exclude>
+                        </excludes>
                         <greclipse>
                             <file>${maven.multiModuleProjectDirectory}/code_conventions.xml</file>
                         </greclipse>
-                        <licenseHeader>
-                            <file>${maven.multiModuleProjectDirectory}/CopyrightSample.txt</file>
-                        </licenseHeader>
                         <endWithNewline />
                     </groovy>
                 </configuration>

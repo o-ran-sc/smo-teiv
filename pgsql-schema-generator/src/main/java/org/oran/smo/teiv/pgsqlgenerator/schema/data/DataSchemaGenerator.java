@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class DataSchemaGenerator extends SchemaGenerator {
             }
             this.schema = newDataSchema;
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.prepareBaselineException("ties.data", exception);
+            throw PgSchemaGeneratorException.prepareBaselineException("teiv.data", exception);
         }
     }
 
@@ -112,7 +112,7 @@ public class DataSchemaGenerator extends SchemaGenerator {
             List<Table> tablesFromSkeleton = SchemaParser.extractDataFromBaseline(tmpSkeletonFile.getAbsolutePath());
             tablesForNbcCheck.addAll(tablesFromSkeleton);
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.prepareBaselineException("ties.data", exception);
+            throw PgSchemaGeneratorException.prepareBaselineException("teiv.data", exception);
         }
         // Get tables from baseline sql
         List<Table> tablesFromBaselineSql = isGreenFieldInstallation ?
@@ -147,14 +147,14 @@ public class DataSchemaGenerator extends SchemaGenerator {
                 });
             }
         } catch (IOException exception) {
-            throw PgSchemaGeneratorException.readCustomSqlFileException("ties.data", exception);
+            throw PgSchemaGeneratorException.readCustomSqlFileException("teiv.data", exception);
         }
         return customSqlQueries;
     }
 
     private StringBuilder generateAnalyzeTableStatement(List<Table> tablesFromModelSvc) {
         StringBuilder analyzeTableStmt = new StringBuilder();
-        tablesFromModelSvc.forEach(table -> analyzeTableStmt.append(String.format("ANALYZE ties_data.\"%s\";%n%n", table
+        tablesFromModelSvc.forEach(table -> analyzeTableStmt.append(String.format("ANALYZE teiv_data.\"%s\";%n%n", table
                 .getName())));
         return analyzeTableStmt;
     }

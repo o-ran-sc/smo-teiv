@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.schema.MockSchemaLoader;
 
@@ -42,26 +42,26 @@ class RequestValidatorTest {
     @Test
     void testValidateDomain() {
         Assertions.assertDoesNotThrow(() -> requestValidator.validateDomain("RAN"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateDomain("RAN_WRONG"));
+        Assertions.assertThrowsExactly(TeivException.class, () -> requestValidator.validateDomain("RAN_WRONG"));
     }
 
     @Test
     void testValidateEntityType() {
         Assertions.assertDoesNotThrow(() -> requestValidator.validateEntityType("ODUFunction"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateEntityType("InvalidEntity"));
+        Assertions.assertThrowsExactly(TeivException.class, () -> requestValidator.validateEntityType("InvalidEntity"));
     }
 
     @Test
     void testValidateEntityTypeInDomain() {
         Assertions.assertDoesNotThrow(() -> requestValidator.validateEntityTypeInDomain("OCUUPFunction", "RAN"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateEntityTypeInDomain(
+        Assertions.assertThrowsExactly(TeivException.class, () -> requestValidator.validateEntityTypeInDomain(
                 "ODU_FUNCTION", "EQUIPMENT"));
     }
 
     @Test
     void testValidateRelationshipType() {
         Assertions.assertDoesNotThrow(() -> requestValidator.validateRelationshipType("ANTENNAMODULE_INSTALLED_AT_SITE"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateRelationshipType(
+        Assertions.assertThrowsExactly(TeivException.class, () -> requestValidator.validateRelationshipType(
                 "ANTENNAMODULE_INSTALLED_ON_SITE"));
     }
 
@@ -69,7 +69,7 @@ class RequestValidatorTest {
     void testValidateRelationshipTypeInDomain() {
         Assertions.assertDoesNotThrow(() -> requestValidator.validateRelationshipTypeInDomain(
                 "ANTENNAMODULE_INSTALLED_AT_SITE", "EQUIPMENT"));
-        Assertions.assertThrowsExactly(TiesException.class, () -> requestValidator.validateRelationshipTypeInDomain(
+        Assertions.assertThrowsExactly(TeivException.class, () -> requestValidator.validateRelationshipTypeInDomain(
                 "ANTENNAMODULE_INSTALLED_AT_SITE", "RAN"));
     }
 

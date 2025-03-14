@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
  */
 package org.oran.smo.teiv.utils.yangparser;
 
-import static org.oran.smo.teiv.utils.TiesConstants.INVALID_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.SCHEMA_ALREADY_EXISTS;
+import static org.oran.smo.teiv.utils.TeivConstants.INVALID_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.SCHEMA_ALREADY_EXISTS;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +33,7 @@ import org.oran.smo.yangtools.parser.findings.FindingSeverity;
 import org.oran.smo.yangtools.parser.findings.FindingSeverityCalculator;
 import org.oran.smo.yangtools.parser.findings.FindingsManager;
 import org.oran.smo.teiv.CustomMetrics;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangValidationException;
 
 @Slf4j
@@ -92,11 +92,11 @@ class YangFindingsManager {
         for (Finding finding : findingsManager.getAllFindings()) {
             if (isErrorFinding(severityCalculator, finding)) {
                 if (isInvalidSchemaFinding(finding)) {
-                    throw TiesException.invalidFileInput(INVALID_SCHEMA);
+                    throw TeivException.invalidFileInput(INVALID_SCHEMA);
                 } else if (finding.getFindingType().contains("P044_SAME_MODULE_IMPLEMENTS_AND_IMPORTS")) {
-                    throw TiesException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
+                    throw TeivException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
                 } else {
-                    throw TiesException.invalidFileInput(finding.getMessage());
+                    throw TeivException.invalidFileInput(finding.getMessage());
                 }
             }
         }

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -207,12 +207,12 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "INTERNAL_SERVER_ERROR",
                 "message": "Criteria deserialization exception",
-                "details": "Could not resolve subtype of [simple type, class org.oran.smo.teiv.api.model.OranTeivCriteria]: missing type id property 'queryType'\\n at [Source: (String)\\"{\\"criteria\\":{\\"targetFilter\\":\\"\\\\/sourceIds\\",\\"domain\\":\\"RAN\\",\\"entityTypeName\\":\\"ODUFunction\\",\\"queryType\\":\\"getEntitiesByType\\"}}\\"; line: 1, column: 121]"
+                "details": "Could not resolve subtype of [simple type, class org.oran.smo.teiv.api.model.OranTeivCriteria]: missing type id property 'queryType'\\n"
             }''')
             bodyMatchers {
                 jsonPath('$.status', byEquality())
                 jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.details', byRegex("Could not resolve subtype of \\[simple type, class org\\.oran\\.smo\\.teiv\\.api\\.model\\.OranTeivCriteria\\]: missing type id property 'queryType'[\\s\\S]*"))
             }
         }
     },

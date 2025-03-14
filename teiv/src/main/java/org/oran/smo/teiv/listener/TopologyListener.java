@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.errors.RecordTooLargeException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.log.LogAccessor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -49,17 +50,22 @@ public class TopologyListener {
     public void processEvents(List<ConsumerRecord<String, CloudEvent>> events) {
         log.info("Processing events: {}", events.size());
         for (ConsumerRecord<String, CloudEvent> rec : events) {
-            if (rec.value() == null) {
-                metrics.incrementNumReceivedCloudEventNotSupported();
-                Optional<DeserializationException> deserializationException = Optional.ofNullable(SerializationUtils
-                        .getExceptionFromHeader(rec, SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, this.logger));
-                deserializationException.ifPresent(exception -> {
-                    logger.error(exception.getCause().getLocalizedMessage());
-                    logger.error(exception, "Record at offset " + rec.offset() + " could not be deserialized");
-                });
-            } else {
-                String messageKey = rec.key();
-                topologyProcessorRegistry.getProcessor(rec.value()).process(rec.value(), messageKey);
+            try {
+                if (rec.value() == null) {
+                    metrics.incrementNumReceivedCloudEventNotSupported();
+                    Optional<DeserializationException> deserializationException = Optional.ofNullable(SerializationUtils
+                            .getExceptionFromHeader(rec, SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER,
+                                    this.logger));
+                    deserializationException.ifPresent(exception -> {
+                        logger.error(exception.getCause().getLocalizedMessage());
+                        logger.error(exception, "Record at offset " + rec.offset() + " could not be deserialized");
+                    });
+                } else {
+                    String messageKey = rec.key();
+                    topologyProcessorRegistry.getProcessor(rec.value()).process(rec.value(), messageKey);
+                }
+            } catch (RecordTooLargeException exception) {
+                logger.warn("Ingestion message is too large to be processed:" + exception.getMessage());
             }
         }
     }

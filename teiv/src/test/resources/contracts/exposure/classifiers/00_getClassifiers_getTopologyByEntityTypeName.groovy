@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -318,6 +318,156 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].classifiers[0]', byEquality())
                 jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].classifiers[1]', byEquality())
                 jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].classifiers[2]', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
+        request {
+            method GET()
+            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:ODUFunction": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19",
+                                "attributes": {
+                                    "gNBId" : 19
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+                },
+                "first": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+                },
+                "next": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+                },
+                "last": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+                },
+                "totalCount": 1
+                }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(1)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].attributes.gNBId', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
+        request {
+            method GET()
+            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:ODUFunction": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19",
+                                "attributes": {
+                                    "gNBId" : 19
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+                },
+                "first": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+                },
+                "next": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+                },
+                "last": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+                },
+                "totalCount": 1
+                }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(1)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].attributes.gNBId', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
+        request {
+            method GET()
+            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:ODUFunction": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19",
+                                "attributes": {
+                                    "gNBId" : 19
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+                },
+                "first": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+                },
+                "next": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+                },
+                "last": {
+                    "href": "/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+                },
+                "totalCount": 1
+                }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(1)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].attributes.gNBId', byEquality())
             }
         }
     }

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
  */
 package org.oran.smo.teiv.utils;
 
-import static org.oran.smo.teiv.utils.TiesConstants.CLASSIFIERS;
-import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
+import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
+import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
@@ -41,7 +41,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangException;
 import org.oran.smo.teiv.schema.MockSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoader;
@@ -111,7 +111,7 @@ class ExposureYangParserTest {
         MultipartFile wrongClassifiersFile = new MockMultipartFile("file", "file.yang", MediaType.MULTIPART_FORM_DATA_VALUE,
                 ("module module-rapp-module1 {\n" + " \n" + "\tyang-version 1.1;\n" + "\tnamespace \"urn:module-rapp-model\";\n" + "\tprefix testModule;\n" + "\t\n" + "    import o-ran-smo-teiv-common-yang-types { prefix model; }\n" + "\timport o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }\n" + "\t\n" + "\trevision \"2024-05-08\" {\n" + "\t\tdescription\n" + "\t\t\"Initial revision.\";\n" + "\t\tor-teiv-yext:label 0.3.0;\n" + "\t}\n" + "\t\n" + "\taugment /model:decorators {\n" + "        leaf test1 {\n" + "            type string;\n" + "        }\n" + "\t\tleaf test2 {\n" + "            type boolean;\n" + "        }\n" + "\t\tleaf test3 {\n" + "            type uint32;\n" + "        }\n" + "    }\n" + "\t\n" + "\tidentity geo-classifier {\n" + "\t\tbase geo-classifier;\n" + "\t}\n" + " \n" + "    identity urban {\n" + "        base geo-classifier;\n" + "    }\n" + "\t\n" + "\tidentity rural {\n" + "        base geo-classifier;\n" + "    }\n" + "\n" + "}")
                         .getBytes());
-        assertThrows(TiesException.class, () -> ExposureYangParser.validateSchemasYang(wrongClassifiersFile));
+        assertThrows(TeivException.class, () -> ExposureYangParser.validateSchemasYang(wrongClassifiersFile));
     }
 
     @Test
@@ -119,6 +119,6 @@ class ExposureYangParserTest {
         MultipartFile wrongDecoratorsFile = new MockMultipartFile("file", "file.yang", MediaType.MULTIPART_FORM_DATA_VALUE,
                 ("module module-rapp-module1 {\n" + " \n" + "\tyang-version 1.1;\n" + "\tnamespace \"urn:module-rapp-model\";\n" + "\tprefix testModule;\n" + "\t\n" + "    import o-ran-smo-teiv-common-yang-types { prefix model; }\n" + "\timport o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }\n" + "\t\n" + "\trevision \"2024-05-08\" {\n" + "\t\tdescription\n" + "\t\t\"Initial revision.\";\n" + "\t\tor-teiv-yext:label 0.3.0;\n" + "\t}\n" + "\t\n" + "\taugment /model:decorators {\n" + "        leaf test1 {\n" + "            type test;\n" + "        }\n" + "\t\tleaf test2 {\n" + "            type boolean;\n" + "        }\n" + "\t\tleaf test3 {\n" + "            type uint32;\n" + "        }\n" + "    }\n" + "\t\n" + "\tidentity geo-classifier {\n" + "\t\tbase geo-classifier;\n" + "\t}\n" + " \n" + "    identity urban {\n" + "        base geo-classifier;\n" + "    }\n" + "\t\n" + "\tidentity rural {\n" + "        base geo-classifier;\n" + "    }\n" + "\n" + "}")
                         .getBytes());
-        assertThrows(TiesException.class, () -> ExposureYangParser.validateSchemasYang(wrongDecoratorsFile));
+        assertThrows(TeivException.class, () -> ExposureYangParser.validateSchemasYang(wrongDecoratorsFile));
     }
 }

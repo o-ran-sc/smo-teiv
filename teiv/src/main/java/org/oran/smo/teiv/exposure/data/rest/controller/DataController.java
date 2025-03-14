@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.exposure.utils.RequestValidator;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +49,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Slf4j
 @RestController
-@RequestMapping(TiesConstants.REQUEST_MAPPING)
+@RequestMapping(TeivConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("exposure")
 public class DataController implements EntitiesAndRelationshipsApi {
@@ -61,7 +61,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
     private final CustomMetrics customMetrics;
 
     @Override
-    @Timed("ties_exposure_http_get_domain_types_seconds")
+    @Timed("teiv_exposure_http_get_domain_types_seconds")
     public ResponseEntity<OranTeivDomains> getAllDomains(@NotNull String accept, @Min(0) @Valid final Integer offset,
             @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> new ResponseEntity<>(dataService.getDomainTypes(RequestDetails.builder().offset(
@@ -70,7 +70,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_entity_types_seconds")
+    @Timed("teiv_exposure_http_get_entity_types_seconds")
     public ResponseEntity<OranTeivEntityTypes> getTopologyEntityTypes(@NotNull String accept, String domain,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> {
@@ -81,7 +81,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_relationship_types_seconds")
+    @Timed("teiv_exposure_http_get_relationship_types_seconds")
     public ResponseEntity<OranTeivRelationshipTypes> getTopologyRelationshipTypes(@NotNull String accept, String domain,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> {
@@ -93,7 +93,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_relationships_by_type_seconds")
+    @Timed("teiv_exposure_http_get_relationships_by_type_seconds")
     public ResponseEntity<OranTeivRelationshipsResponseMessage> getRelationshipsByType(@NotNull String accept,
             String domain, String relationshipType, @Valid String targetFilter, @Valid String scopeFilter,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
@@ -109,19 +109,20 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_entity_by_id_seconds")
+    @Timed("teiv_exposure_http_get_entity_by_id_seconds")
     public ResponseEntity<Object> getTopologyById(@NotNull final String accept, final String domain,
             final String entityType, final String id) {
         return runWithFailCheck(() -> {
             requestValidator.validateDomain(domain);
             requestValidator.validateEntityType(entityType);
             requestValidator.validateEntityTypeInDomain(entityType, domain);
+            requestValidator.validateTopologyID(id);
             return new ResponseEntity<>(dataService.getEntityById(entityType, id), HttpStatus.OK);
         }, customMetrics::incrementNumUnsuccessfullyExposedEntityById);
     }
 
     @Override
-    @Timed("ties_exposure_http_get_entities_by_type_seconds")
+    @Timed("teiv_exposure_http_get_entities_by_type_seconds")
     public ResponseEntity<OranTeivEntitiesResponseMessage> getTopologyByEntityTypeName(@NotNull final String accept,
             final String domain, final String entityType, @Valid final String targetFilter, @Valid final String scopeFilter,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
@@ -137,7 +138,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_entities_by_domain_seconds")
+    @Timed("teiv_exposure_http_get_entities_by_domain_seconds")
     public ResponseEntity<OranTeivEntitiesResponseMessage> getEntitiesByDomain(@NotNull final String accept,
             final String domain, @Valid final String targetFilter, @Valid final String scopeFilter,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
@@ -150,7 +151,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_relationships_by_entity_id_seconds")
+    @Timed("teiv_exposure_http_get_relationships_by_entity_id_seconds")
     public ResponseEntity<OranTeivRelationshipsResponseMessage> getAllRelationshipsForEntityId(@NotNull final String accept,
             final String domain, final String entityType, final String id, @Valid final String targetFilter,
             @Valid final String scopeFilter, @Min(0) @Valid final Integer offset,
@@ -159,6 +160,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
             requestValidator.validateDomain(domain);
             requestValidator.validateEntityType(entityType);
             requestValidator.validateEntityTypeInDomain(entityType, domain);
+            requestValidator.validateTopologyID(id);
             return ResponseEntity.ok(dataService.getAllRelationshipsForObjectId(domain, entityType, id, targetFilter,
                     scopeFilter, RequestDetails.builder().offset(offset).limit(limit).basePath(String.format(
                             "/domains/%s/entity-types/%s/entities/%s/relationships", domain, entityType, id)).queryParam(
@@ -167,13 +169,14 @@ public class DataController implements EntitiesAndRelationshipsApi {
     }
 
     @Override
-    @Timed("ties_exposure_http_get_relationship_by_id_seconds")
+    @Timed("teiv_exposure_http_get_relationship_by_id_seconds")
     public ResponseEntity<Object> getRelationshipById(final String accept, final String domain,
             final String relationshipType, final String id) {
         return runWithFailCheck(() -> {
             requestValidator.validateDomain(domain);
             requestValidator.validateRelationshipType(relationshipType);
             requestValidator.validateRelationshipTypeInDomain(relationshipType, domain);
+            requestValidator.validateTopologyID(id);
             return ResponseEntity.ok(dataService.getRelationshipById(relationshipType, id));
         }, customMetrics::incrementNumUnsuccessfullyExposedRelationshipById);
     }

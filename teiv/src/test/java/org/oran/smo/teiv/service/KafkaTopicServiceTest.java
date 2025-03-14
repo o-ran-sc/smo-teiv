@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,7 +50,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.oran.smo.teiv.startup.SchemaHandler;
-import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,13 +62,11 @@ import org.springframework.test.context.ActiveProfiles;
 import lombok.Getter;
 
 import org.oran.smo.teiv.service.kafka.KafkaTopicService;
-import org.springframework.test.context.TestExecutionListeners;
 
 @Slf4j
 @EmbeddedKafka
 @ActiveProfiles({ "test", "ingestion" })
 @SpringBootTest
-@TestExecutionListeners(listeners = KafkaTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class KafkaTopicServiceTest {
     @Value("${spring.embedded.kafka.brokers}")
     @Getter
@@ -98,6 +95,8 @@ class KafkaTopicServiceTest {
             adminClient.deleteTopics(listTopicsResult.names().get());
         } catch (InterruptedException | ExecutionException e) {
             log.info("Error deleting topics", e.getMessage());
+        } finally {
+            adminClient.close();
         }
     }
 
@@ -135,7 +134,6 @@ class KafkaTopicServiceTest {
     @Test
     @DirtiesContext(methodMode = MethodMode.BEFORE_METHOD)
     void test_isTopicCreated_ExecutionException() throws Exception {
-
         Node controller = new Node(0, "localhost", 8121);
         List<Node> brokers = Arrays.asList(controller, new Node(1, "localhost", 8122), new Node(2, "localhost", 8123));
         Admin mockedAdminClient = new MockAdminClient(brokers, controller);
@@ -159,6 +157,8 @@ class KafkaTopicServiceTest {
 
         Mockito.reset(spiedAdminClient, topicListResult, kafkaFutures, spiedTopicService);
         mockedStaticAdminClient.close();
+        mockedAdminClient.close();
+        spiedAdminClient.close();
 
     }
 }

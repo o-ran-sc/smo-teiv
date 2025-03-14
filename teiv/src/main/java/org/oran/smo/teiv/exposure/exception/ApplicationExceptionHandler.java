@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 package org.oran.smo.teiv.exposure.exception;
 
 import org.oran.smo.teiv.api.model.OranTeivErrorMessage;
-import org.oran.smo.teiv.exception.TiesException;
-import org.oran.smo.teiv.utils.query.exception.TiesPathException;
+import org.oran.smo.teiv.exception.TeivException;
+import org.oran.smo.teiv.utils.query.exception.TeivPathException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,8 +43,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseBody
-    @ExceptionHandler(TiesException.class)
-    public ResponseEntity<OranTeivErrorMessage> handleTiesException(final TiesException exception) {
+    @ExceptionHandler(TeivException.class)
+    public ResponseEntity<OranTeivErrorMessage> handleTeivException(final TeivException exception) {
         if (exception.getException() != null) {
             log.error(exception.getMessage(), exception.getException());
         }
@@ -53,8 +53,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ResponseBody
-    @ExceptionHandler(TiesPathException.class)
-    public ResponseEntity<Object> handleTiesPathException(final TiesPathException exception) {
+    @ExceptionHandler(TeivPathException.class)
+    public ResponseEntity<Object> handleTeivPathException(final TeivPathException exception) {
         if (exception.getResponse() != null) {
             return new ResponseEntity<>(exception.getResponse(), HttpStatus.OK);
         } else {

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,23 +49,18 @@ public class Constants {
     public static final String ALTER = "ALTER";
     public static final String DEFAULT = "DEFAULT";
     public static final String INDEX = "INDEX";
-    public static final String ALTER_TABLE_TIES_DATA_S = "ALTER TABLE ties_data.\"%s\" ";
-    public static final String ALTER_TABLE_TIES_DATA_S_ADD_CONSTRAINT_S = ALTER_TABLE_TIES_DATA_S + "ADD CONSTRAINT \"%s\" ";
+    public static final String ALTER_TABLE_TEIV_DATA_S = "ALTER TABLE teiv_data.\"%s\" ";
+    public static final String ALTER_TABLE_TEIV_DATA_S_ADD_CONSTRAINT_S = ALTER_TABLE_TEIV_DATA_S + "ADD CONSTRAINT \"%s\" ";
     public static final String CLASSIFIERS = "classifiers";
     public static final String DECORATORS = "decorators";
     public static final String A_SIDE = "A_SIDE";
     public static final String B_SIDE = "B_SIDE";
     public static final String RELATION = "RELATION";
-    public static final String GEO_LOCATION = "geo-location";
+    public static final String GEO_LOCATION = "__geo-location";
     public static final String GEOGRAPHY = "geography";
     public static final String METADATA = "metadata";
-    public static final String UPDATED_TIME = "updated_time";
-    public static final String TIMESTAMPTZ = "TIMESTAMPTZ";
     public static final String REL_PREFIX = "REL_";
-    public static final String RESP_PREFIX = "RESP_";
     public static final String BYTEA = "BYTEA";
     public static final String REL_METADATA_PREFIX = "REL_" + METADATA + "_";
     public static final String HASHED_ID = "hashed_id";
-    public static final String REL_UPDATETIME_PREFIX = "REL_" + UPDATED_TIME + "_";
-    public static final String REL_RESP_PREFIX = REL_PREFIX + RESP_PREFIX + ID + "_";
 }

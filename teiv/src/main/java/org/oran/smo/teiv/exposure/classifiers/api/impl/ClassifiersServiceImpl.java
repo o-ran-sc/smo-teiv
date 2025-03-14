@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,12 +22,13 @@ package org.oran.smo.teiv.exposure.classifiers.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.api.model.OranTeivClassifier;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.classifiers.api.ClassifiersService;
 import org.oran.smo.teiv.exposure.consumerdata.ConsumerDataOperationRegistry;
 import org.oran.smo.teiv.exposure.consumerdata.model.Classifiers;
 import org.oran.smo.teiv.exposure.consumerdata.operation.ClassifiersOperation;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
+import org.oran.smo.teiv.exposure.utils.RequestValidator;
 import org.oran.smo.teiv.schema.ConsumerDataCache;
 import org.oran.smo.teiv.service.models.OperationResult;
 import org.springframework.context.annotation.Profile;
@@ -41,7 +42,7 @@ import java.util.List;
 
 import java.util.function.Consumer;
 
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA;
 
 @Slf4j
 @Service
@@ -52,6 +53,8 @@ public class ClassifiersServiceImpl implements ClassifiersService {
     private final ModelRepository modelRepository;
     private final ConsumerDataCache consumerDataCache;
     private final ConsumerDataOperationRegistry consumerDataOperationRegistry;
+
+    private final RequestValidator requestValidator;
 
     @Override
     public void update(final OranTeivClassifier oranTeivClassifier) {
@@ -87,11 +90,12 @@ public class ClassifiersServiceImpl implements ClassifiersService {
 
     private void validateMerge(final Classifiers classifiers) {
         log.debug(String.format("Validating merging %s", classifiers));
-
+        classifiers.entityIds().forEach(requestValidator::validateTopologyID);
+        classifiers.relationshipIds().forEach(requestValidator::validateTopologyID);
         final List<String> problems = checkAvailability(classifiers);
 
         if (!problems.isEmpty()) {
-            throw TiesException.invalidClassifiersException(problems);
+            throw TeivException.invalidClassifiersException(problems);
         }
     }
 
@@ -100,8 +104,8 @@ public class ClassifiersServiceImpl implements ClassifiersService {
 
         for (String classifier : classifiers.data()) {
             final String schemaName = classifier.split(":")[0];
-            if (!modelRepository.doesModuleExists(TIES_CONSUMER_DATA, schemaName)) {
-                throw TiesException.invalidSchema(schemaName);
+            if (!modelRepository.doesModuleExists(TEIV_CONSUMER_DATA, schemaName)) {
+                throw TeivException.invalidSchema(schemaName);
             }
         }
     }
@@ -118,7 +122,7 @@ public class ClassifiersServiceImpl implements ClassifiersService {
     private void runMethodSafe(Consumer<Classifiers> consumer, Classifiers classifiers) {
         try {
             consumer.accept(classifiers);
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             log.error("Exception during validation", ex);
             throw ex;
         }

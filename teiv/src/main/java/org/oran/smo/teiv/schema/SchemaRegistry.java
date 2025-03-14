@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,8 +25,10 @@ import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_MODULE;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,8 +44,8 @@ import lombok.experimental.UtilityClass;
 
 import jakarta.annotation.Nullable;
 
-import org.oran.smo.teiv.utils.TiesConstants;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.utils.TeivConstants;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.spi.Module;
 
 @Slf4j
@@ -75,7 +77,7 @@ public class SchemaRegistry {
      * @return the {@link Module}
      */
     public static Module getModuleByName(String name) {
-        return Optional.ofNullable(moduleRegistry.get(name)).orElseThrow(() -> TiesException.unknownModule(name));
+        return Optional.ofNullable(moduleRegistry.get(name)).orElseThrow(() -> TeivException.unknownModule(name));
     }
 
     /**
@@ -87,7 +89,7 @@ public class SchemaRegistry {
      */
     public static Module getModuleByDomain(String domain) {
         return moduleRegistry.values().stream().filter(module -> module.getDomain() != null && module.getDomain().equals(
-                domain)).findFirst().orElseThrow(() -> TiesException.unknownDomain(domain, getDomains()));
+                domain)).findFirst().orElseThrow(() -> TeivException.unknownDomain(domain, getDomains()));
     }
 
     /**
@@ -155,7 +157,7 @@ public class SchemaRegistry {
 
     /**
      * Gets the {@link EntityType} by the given module name and the entity type name.
-     * Since TIES supports TEIV as top level domain on the exposure side, there is possibility to return more than one
+     * Since TEIV supports TEIV as top level domain on the exposure side, there is possibility to return more than one
      * EntityType for a given name
      * with domain as TIEV.
      *
@@ -350,13 +352,16 @@ public class SchemaRegistry {
     }
 
     public static List<String> getAssociationNamesByEntityName(final String entityName) {
-        return getRelationTypesByEntityName(entityName).stream().map(relationType -> {
+        List<String> associations = new ArrayList<>();
+        getRelationTypesByEntityName(entityName).stream().forEach(relationType -> {
             if (relationType.getASide().getName().equals(entityName)) {
-                return relationType.getASideAssociation().getName();
-            } else {
-                return relationType.getBSideAssociation().getName();
+                associations.add(relationType.getASideAssociation().getName());
             }
-        }).toList();
+            if (relationType.getBSide().getName().equals(entityName)) {
+                associations.add(relationType.getBSideAssociation().getName());
+            }
+        });
+        return associations;
     }
 
     /**
@@ -408,10 +413,10 @@ public class SchemaRegistry {
 
     public static String getReferenceColumnName(RelationType relationType) {
         if (relationType.getRelationshipStorageLocation().equals(RelationshipDataLocation.A_SIDE)) {
-            return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TiesConstants.QUOTED_STRING,
+            return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TeivConstants.QUOTED_STRING,
                     relationType.bSideColumnName());
         } else if (relationType.getRelationshipStorageLocation().equals(RelationshipDataLocation.B_SIDE)) {
-            return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TiesConstants.QUOTED_STRING,
+            return Objects.requireNonNull(relationType).getTableName() + "." + String.format(TeivConstants.QUOTED_STRING,
                     relationType.aSideColumnName());
         }
         return Objects.requireNonNull(relationType).getTableName() + "." + relationType.getIdColumnName();
@@ -423,5 +428,31 @@ public class SchemaRegistry {
             return relationType.getASide();
         }
         return relationType.getBSide();
+    }
+
+    public static EntityType getAssociationSideEntity(String associationName) {
+        RelationType relationType = getRelationTypes().stream().filter(relation -> (relation.getASideAssociation().getName()
+                .equals(associationName) || relation.getBSideAssociation().getName().equals(associationName))).findFirst()
+                .orElseGet(() -> {
+                    log.warn("Unknown association name {}", associationName);
+                    return null;
+                });
+        return relationType.getASideAssociation().getName().equals(associationName) ?
+                relationType.getBSide() :
+                relationType.getASide();
+    }
+
+    public static Set<EntityType> getAllEntityForAssociation(String associationName) {
+        Set<EntityType> entities = new HashSet<>();
+
+        getRelationTypes().stream().forEach(relation -> {
+            if (relation.getASideAssociation().getName().equals(associationName) || relation.getBSideAssociation().getName()
+                    .equals(associationName)) {
+                entities.add(relation.getASide());
+                entities.add(relation.getBSide());
+            }
+        });
+        entities.remove(getAssociationSideEntity(associationName));
+        return entities;
     }
 }

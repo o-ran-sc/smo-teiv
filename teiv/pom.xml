@@ -72,6 +72,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
+            <version>${version.snakeyaml}</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -158,6 +159,11 @@
             <version>${version.antlr}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.oran.smo.yangtools.parser</groupId>
             <artifactId>yang-parser-jar</artifactId>
             <version>${version.yang-parser-jar}</version>
@@ -238,7 +244,7 @@
                 <version>${version.asciidoctor-maven-plugin}</version>
                 <configuration>
                     <sourceDirectory>${project.basedir}/target/generated-contract-docs</sourceDirectory>
-                    <outputDirectory>${project.basedir}/doc/contracts-ties</outputDirectory>
+                    <outputDirectory>${project.basedir}/doc/contracts-teiv</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -573,6 +579,18 @@
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <version>${version.license-maven-plugin}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.15</version>
                 <executions>
                     <execution>
                         <goals>

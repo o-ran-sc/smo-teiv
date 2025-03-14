@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
  */
 package org.oran.smo.teiv.schema;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import lombok.Value;
 
 import java.nio.charset.StandardCharsets;
@@ -28,14 +28,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static org.oran.smo.teiv.schema.BidiDbNameMapper.getDbName;
-import static org.oran.smo.teiv.utils.TiesConstants.ID_COLUMN_NAME;
-import static org.oran.smo.teiv.utils.TiesConstants.RESPONSIBLE_ADAPTER;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.ID_COLUMN_NAME;
+import static org.oran.smo.teiv.utils.TeivConstants.RESPONSIBLE_ADAPTER;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA;
 
 @Value
 public class ResponsibleAdapter {
 
-    private static final String RESPONSIBLE_ADAPTER_TABLE_NAME = String.format(TIES_DATA, getDbName(RESPONSIBLE_ADAPTER));
+    private static final String RESPONSIBLE_ADAPTER_TABLE_NAME = String.format(TEIV_DATA, getDbName(RESPONSIBLE_ADAPTER));
 
     String id;
     byte[] hashedId;
@@ -61,7 +61,7 @@ public class ResponsibleAdapter {
         try {
             return MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException exception) {
-            throw TiesException.serverException("Invalid Hashing algorithm", "Error while hashing alias", exception);
+            throw TeivException.serverException("Invalid Hashing algorithm", "Error while hashing alias", exception);
         }
     }
 

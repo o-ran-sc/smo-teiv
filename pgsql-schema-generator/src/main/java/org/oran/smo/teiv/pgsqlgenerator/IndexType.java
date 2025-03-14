@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum IndexType {
-    GIN("CREATE INDEX IF NOT EXISTS \"%s\" ON ties_data.\"%s\" USING GIN (\"%s\");"),
+    GIN("CREATE INDEX IF NOT EXISTS \"%s\" ON teiv_data.\"%s\" USING GIN (\"%s\");"),
     GIN_TRGM_OPS_ON_LIST_AS_JSONB(
-            "CREATE INDEX IF NOT EXISTS \"%s\" ON ties_data.\"%s\" USING GIN ((\"%s\"::TEXT) gin_trgm_ops);");
+            "CREATE INDEX IF NOT EXISTS \"%s\" ON teiv_data.\"%s\" USING GIN ((\"%s\"::TEXT) gin_trgm_ops);");
 
     private final String createIndexStmt;
 }

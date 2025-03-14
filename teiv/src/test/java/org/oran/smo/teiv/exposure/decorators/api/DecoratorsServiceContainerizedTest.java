@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,16 +24,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
-import static org.oran.smo.teiv.utils.TiesConstants.CONSUMER_DATA_PREFIX;
-import static org.oran.smo.teiv.utils.TiesConstants.DECORATORS;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
-import static org.oran.smo.teiv.utils.TiesConstants.REL_PREFIX;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
-import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_HOST;
-import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_PORT;
+import static org.oran.smo.teiv.utils.TeivConstants.CONSUMER_DATA_PREFIX;
+import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.REL_PREFIX;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
+import static org.oran.smo.teiv.utils.TeivTestConstants.SPRING_BOOT_SERVER_HOST;
+import static org.oran.smo.teiv.utils.TeivTestConstants.SPRING_BOOT_SERVER_PORT;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,8 +61,6 @@ import org.oran.smo.teiv.db.TestPostgresqlContainer;
 import org.oran.smo.teiv.startup.SchemaCleanUpHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -76,13 +74,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import org.oran.smo.teiv.api.model.OranTeivDecorator;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.startup.SchemaHandler;
 import org.oran.smo.teiv.utils.JooqTypeConverter;
 
-@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 @EmbeddedKafka
 @ActiveProfiles({ "test", "exposure" })
 @SpringBootTest(properties = { SPRING_BOOT_SERVER_HOST, SPRING_BOOT_SERVER_PORT, KAFKA_RETRY_INTERVAL_10_MS })
@@ -94,7 +91,7 @@ class DecoratorsServiceContainerizedTest {
 
     private KafkaConsumer<String, String> testConsumer;
 
-    private static final String TABLE_NAME = String.format(TIES_DATA, "o-ran-smo-teiv-ran_ODUFunction");
+    private static final String TABLE_NAME = String.format(TEIV_DATA, "o-ran-smo-teiv-ran_ODUFunction");
 
     private static final String ENTITY_ID = "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16";
     private static final String ENTITY_TYPE = "ODUFunction";
@@ -145,7 +142,7 @@ class DecoratorsServiceContainerizedTest {
 
     @BeforeEach
     public void setupEach() {
-        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA, TIES_CONSUMER_DATA_SCHEMA), writeDataDslContext);
+        TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA, TEIV_CONSUMER_DATA_SCHEMA), writeDataDslContext);
         TestPostgresqlContainer.loadSampleData();
         Supplier<String> brokers = this::getEmbeddedKafkaServer;
         testConsumer = createConsumerForTest(getEmbeddedKafkaServer());
@@ -213,7 +210,7 @@ class DecoratorsServiceContainerizedTest {
 
         assertThatThrownBy(() -> decoratorsService.update(OranTeivDecorator.builder().decorators(decoratorsToMerge)
                 .entityIds(List.of(ENTITY_ID)).relationshipIds(List.of(RELATIONSHIP_ID)).operation(
-                        OranTeivDecorator.OperationEnum.MERGE).build())).isInstanceOf(TiesException.class);
+                        OranTeivDecorator.OperationEnum.MERGE).build())).isInstanceOf(TeivException.class);
     }
 
     @Test
@@ -223,7 +220,7 @@ class DecoratorsServiceContainerizedTest {
 
         assertThatThrownBy(() -> decoratorsService.update(OranTeivDecorator.builder().decorators(decoratorsToMerge)
                 .entityIds(List.of(ENTITY_ID)).relationshipIds(List.of(RELATIONSHIP_ID)).operation(
-                        OranTeivDecorator.OperationEnum.MERGE).build())).isInstanceOf(TiesException.class);
+                        OranTeivDecorator.OperationEnum.MERGE).build())).isInstanceOf(TeivException.class);
     }
 
     @Test
@@ -293,7 +290,7 @@ class DecoratorsServiceContainerizedTest {
 
         assertThatThrownBy(() -> decoratorsService.update(OranTeivDecorator.builder().decorators(decoratorsToDelete)
                 .entityIds(List.of("WRONG_ID")).relationshipIds(Collections.emptyList()).operation(
-                        OranTeivDecorator.OperationEnum.DELETE).build())).isInstanceOf(TiesException.class);
+                        OranTeivDecorator.OperationEnum.DELETE).build())).isInstanceOf(TeivException.class);
     }
 
     @Test
@@ -314,7 +311,7 @@ class DecoratorsServiceContainerizedTest {
 
         assertThatThrownBy(() -> decoratorsService.update(OranTeivDecorator.builder().decorators(decoratorsToDelete)
                 .entityIds(Collections.emptyList()).relationshipIds(List.of("WRONG_ID")).operation(
-                        OranTeivDecorator.OperationEnum.DELETE).build())).isInstanceOf(TiesException.class);
+                        OranTeivDecorator.OperationEnum.DELETE).build())).isInstanceOf(TeivException.class);
     }
 
     @Test

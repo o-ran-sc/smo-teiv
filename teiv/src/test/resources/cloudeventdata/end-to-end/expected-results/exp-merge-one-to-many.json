@@ -6,20 +6,50 @@
             "nCI": 2,
             "nRPCI": null,
             "nRTAC": null,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
             "REL_FK_provided-by-oduFunction": "ODU_1",
-            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_7"
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_7",
+            "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "NRCellDU_2",
             "cellLocalId": 45891,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
             "REL_FK_provided-by-oduFunction": "ODU_1",
-            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_8"
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_8",
+            "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "NRCellDU_3",
             "cellLocalId": 469,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
             "REL_FK_provided-by-oduFunction": "ODU_1",
-            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_9"
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_9",
+            "REL_metadata_ODUFUNCTION_PROVIDES_NRCELLDU": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "o-ran-smo-teiv-ran_ODUFunction": [
@@ -31,7 +61,12 @@
             },
             "gNBDUId": 12,
             "gNBId": 1234,
-            "gNBIdLength": 4
+            "gNBIdLength": 4,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ]
 }

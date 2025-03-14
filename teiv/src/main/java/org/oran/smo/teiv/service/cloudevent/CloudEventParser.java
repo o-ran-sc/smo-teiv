@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import org.oran.smo.teiv.exception.YangParsingException;
 import org.oran.smo.teiv.exception.YangValidationException;
 import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.oran.smo.teiv.utils.CloudEventUtil;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import org.oran.smo.teiv.utils.yangparser.IngestionYangParser;
 import org.oran.smo.yangtools.parser.data.dom.YangDataDomNode;
 import org.oran.smo.yangtools.parser.data.instance.AbstractStructureInstance;
@@ -49,8 +49,8 @@ import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 import org.oran.smo.teiv.service.cloudevent.data.Relationship;
 
-import static org.oran.smo.teiv.utils.TiesConstants.ENTITIES;
-import static org.oran.smo.teiv.utils.TiesConstants.RELATIONSHIPS;
+import static org.oran.smo.teiv.utils.TeivConstants.ENTITIES;
+import static org.oran.smo.teiv.utils.TeivConstants.RELATIONSHIPS;
 
 @Slf4j
 @Component
@@ -66,7 +66,7 @@ public class CloudEventParser {
         try {
             JsonNode eventPayload = processEventPayload(cloudEvent);
             boolean areSidesMandatory = !cloudEvent.getType().split("\\.")[1].equals(
-                    TiesConstants.CLOUD_EVENT_WITH_TYPE_DELETE);
+                    TeivConstants.CLOUD_EVENT_WITH_TYPE_DELETE);
             List<Entity> entities = processEntities(eventPayload, areSidesMandatory);
             List<Relationship> relationships = processRelationships(eventPayload, areSidesMandatory);
             if (entities.isEmpty() && relationships.isEmpty()) {

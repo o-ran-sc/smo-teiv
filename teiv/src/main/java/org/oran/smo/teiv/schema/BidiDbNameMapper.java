@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class BidiDbNameMapper {
      * @return the mapped DB name
      */
     public static String getDbName(String name) {
-        if (!nameMap.containsKey(name)) {
+        if (nameMap == null || !nameMap.containsKey(name)) {
             return name;
         }
         return nameMap.get(name);

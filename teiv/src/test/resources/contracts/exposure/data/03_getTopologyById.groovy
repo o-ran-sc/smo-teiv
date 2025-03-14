@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,10 +86,10 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "ERROR - 400: Get topology for ODUFunction entity with non existing id 'non-existing-id'."
+        description "ERROR - 400: Get topology for ODUFunction entity with non existing id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/non-existing-id"
+            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999"
         }
         response {
             status NOT_FOUND()
@@ -99,7 +99,25 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",
-                "details": "The requested resource is not found. ID: non-existing-id"
+                "details": "The requested resource is not found. ID: urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Get topology for ODUFunction entity with  with no supported topology id - 3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9 ."
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Topology ID format not supported",
+                "details": "Topology ID : 3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9 is not in supported format. Topology ID should start with urn:"
             }''')
         }
     }

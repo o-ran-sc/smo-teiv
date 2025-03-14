@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -624,7 +624,7 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/json')
             }
             body('''{
-                            "items": [
+            "items": [
                     {
                         "o-ran-smo-teiv-ran:OCUCPFunction": [
                             {
@@ -704,7 +704,7 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/json')
             }
             body('''{
-                            "items": [
+            "items": [
                     {
                         "o-ran-smo-teiv-ran:OCUCPFunction": [
                             {
@@ -784,7 +784,7 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/json')
             }
             body('''{
-                                        "items": [
+            "items": [
                     {
                         "o-ran-smo-teiv-ran:NRCellDU": [
                             {
@@ -834,10 +834,10 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 200: Get entities in RAN domain with scopeFilter on 2 different entity types and combining the condition on complex attributes"
+        description 'SUCCESS - 200: Get entities in RAN domain with scopeFilter on 2 different entity types and combining the condition on complex attributes'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?scopeFilter=/NRCellDU/attributes[@nCI=1];/OCUCPFunction/attributes/pLMNId[@mcc='456' or @mnc='83']"
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?scopeFilter=/NRCellDU/attributes[@nCI=1];/ODUFunction/attributes/dUpLMNId[@mcc='456' or @mnc='83']"
         }
         response {
             status OK()
@@ -854,34 +854,34 @@ import org.springframework.cloud.contract.spec.Contract
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:OCUCPFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,OCUCPFunction=10"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10"
                             }
                         ]
                     },
                     {
-                        "o-ran-smo-teiv-ran:OCUCPFunction": [
+                        "o-ran-smo-teiv-ran:ODUFunction": [
                             {
-                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,OCUCPFunction=16"
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=16,ODUFunction=16"
                             }
                         ]
                     }
                 ],
                 "self": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/OCUCPFunction/attributes/pLMNId[@mcc='456' or @mnc='83']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/ODUFunction/attributes/dUpLMNId[@mcc='456' or @mnc='83']"
                 },
                 "first": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/OCUCPFunction/attributes/pLMNId[@mcc='456' or @mnc='83']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/ODUFunction/attributes/dUpLMNId[@mcc='456' or @mnc='83']"
                 },
                 "prev": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/OCUCPFunction/attributes/pLMNId[@mcc='456' or @mnc='83']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/ODUFunction/attributes/dUpLMNId[@mcc='456' or @mnc='83']"
                 },
                 "next": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/OCUCPFunction/attributes/pLMNId[@mcc='456' or @mnc='83']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/ODUFunction/attributes/dUpLMNId[@mcc='456' or @mnc='83']"
                 },
                 "last": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/OCUCPFunction/attributes/pLMNId[@mcc='456' or @mnc='83']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/NRCellDU/attributes[@nCI=1];/ODUFunction/attributes/dUpLMNId[@mcc='456' or @mnc='83']"
                 },
                 "totalCount": 3
             }''')
@@ -889,9 +889,9 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(3)
                 })
-                jsonPath('$.items[1].o-ran-smo-teiv-ran:OCUCPFunction[0].id', byEquality())
-                jsonPath('$.items[2].o-ran-smo-teiv-ran:OCUCPFunction[0].id', byEquality())
                 jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
             }
         }
     },
@@ -1007,6 +1007,8 @@ import org.springframework.cloud.contract.spec.Contract
                     "o-ran-smo-teiv-ran:ODUFunction": [
                         {
                             "metadata": {
+                                "lastModified":"2025-01-09T10:40:36.461565Z",
+                                "firstDiscovered":"2025-01-09T10:40:36.461565Z",
                                 "reliabilityIndicator": "OK"
                             },
                             "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
@@ -1036,6 +1038,9 @@ import org.springframework.cloud.contract.spec.Contract
                     occurrence(1)
                 })
                 jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].metadata.lastModified', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].metadata.firstDiscovered', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFunction[0].metadata.reliabilityIndicator', byEquality())
             }
         }
     },
@@ -1267,7 +1272,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get entities of domain RAN by Sector id"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='Sector=2']"
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
         }
         response {
             status OK()
@@ -1299,19 +1304,19 @@ import org.springframework.cloud.contract.spec.Contract
                     }
                 ],
                 "self": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='Sector=2']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
                 },
                 "first": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='Sector=2']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
                 },
                 "prev": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='Sector=2']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
                 },
                 "next": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='Sector=2']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
                 },
                 "last": {
-                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='Sector=2']"
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
                 },
                 "totalCount": 3
             }''')
@@ -1322,6 +1327,478 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
                 jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
                 jsonPath('$.items[2].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get entities of domain RAN by AntennaModule id"
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:AntennaCapability": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+                },
+                "totalCount": 2
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:AntennaCapability[0].id', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN inside the specified Polygon of AntennaModule'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:AntennaCapability": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+                },
+                "totalCount": 2
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[*].o-ran-smo-teiv-ran:NRCellDU[0].id', byType {
+                    minOccurrence(1)
+                })
+                jsonPath('$.items[*].o-ran-smo-teiv-ran:AntennaCapability[0].id', byType {
+                    minOccurrence(1)
+                })
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN within 500 meters radius of AntennaModule'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:AntennaCapability": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+                },
+                "totalCount": 2
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[*].o-ran-smo-teiv-ran:NRCellDU[0].id', byType {
+                    minOccurrence(1)
+                })
+                jsonPath('$.items[*].o-ran-smo-teiv-ran:AntennaCapability[0].id', byType {
+                    minOccurrence(1)
+                })
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN where AntennaModule electricalAntennaTilt is 11'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:AntennaCapability": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,NodeSupport=1,SectorEquipmentFunction=1"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:AntennaCapability": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+                },
+                "totalCount": 4
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(4)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:AntennaCapability[0].id', byEquality())
+                jsonPath('$.items[3].o-ran-smo-teiv-ran:AntennaCapability[0].id', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN inside the specified Polygon of Sector'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[coveredBy(@geo-location, 'POLYGON((60 18, 61 18, 61 20, 60 20, 60 18))')]"
+                },
+                "totalCount": 3
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(3)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN within 500 meters radius of Sector'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[withinMeters(@geo-location, 'POINT(60.4019881 18.9419888)', 500)]"
+                },
+                "totalCount": 3
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(3)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN where Sector sectorId is 2'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                     {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            {
+                                "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+                },
+                "totalCount": 3
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(3)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+                jsonPath('$.items[2].o-ran-smo-teiv-ran:NRCellDU[0].id', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of domain RAN where NRCellDU cellLocalId is 3'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                     {
+                        "o-ran-smo-teiv-ran:Sector": [
+                            {
+                                "id": "urn:Sector=2"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+                },
+                "first": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+                },
+                "next": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+                },
+                "last": {
+                    "href": "/domains/RAN/entities?offset=0&limit=500&scopeFilter=/grouped-nrCellDu/attributes[@cellLocalId=3]"
+                },
+                "totalCount": 1
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(1)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-ran:Sector[0].id', byEquality())
             }
         }
     }

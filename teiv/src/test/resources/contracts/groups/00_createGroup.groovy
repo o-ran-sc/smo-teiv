@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 201: Create a dynamic getRelationshipsForEntityId group"
+        description "SUCCESS - 201: Create a dynamic getRelationshipsForEntityId group where entity id doesnt exists in teiv"
         request {
             method POST()
             url("/topology-inventory/v1alpha11/groups")
@@ -127,7 +127,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "queryType": "getRelationshipsForEntityId",
                     "domain": "RAN",
                     "entityTypeName": "NRCellDU",
-                    "entityId": "NRCellDU-1"
+                    "entityId": "urn:NRCellDU-1"
                 }
             }''')
         }
@@ -144,7 +144,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "queryType": "getRelationshipsForEntityId",
                     "domain": "RAN",
                     "entityTypeName": "NRCellDU",
-                    "entityId": "NRCellDU-1"
+                    "entityId": "urn:NRCellDU-1"
                 },
                 "members": {
                     "href": "/groups/urn:o-ran:smo:teiv:group=bbeb1db4-88dc-47b3-aa07-fdad50145b16/members"
@@ -239,21 +239,21 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU": [
                             {
-                                "id": "urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=4E40BE000AFEA418"
+                                "id": "urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=EA8BF964B4888BFD1991D8E2ECDFA7723118D3829C1378ACBB5484F9ADE328957641013EDF2BEC80CB8E4E0A46CC2D85B960EF25ABF61CC8601095948E368624"
                             }
                         ]
                     },
                     {
                         "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU": [
                             {
-                                "id": "urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=9CD8DCA1FE61CE75"
+                                "id": "urn:o-ran:smo:teiv:sha512:ODUFUNCTION_PROVIDES_NRCELLDU=7EB5B959010A84E95BFA6CAA314120CC335007FCDB2947A53A6E19171BB8742965A874FB89B73CD21EB790E52C8E6DC129B35469BA3867DAC67F4DE72E60185E"
                             }
                         ]
                     },
                     {
                         "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_ODUFUNCTION": [
                             {
-                                "id": "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=9243B48F7D6A6C56"
+                                "id": "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=86084B5A80FAC7339117CEB91A4838FAC28C50AF00C9A13DF66FFA497356A8F440626A935B9621D4C833F0A6DE2722EDC9A312E506D80235A8C1BF54D8DFACC8"
                             }
                         ]
                     }
@@ -312,6 +312,37 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "ERROR - 400: Create a dynamic group with 'static' group type"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "dynamic-cell-filter-group",
+                "type": "static",
+                "criteria": {
+                    "queryType": "getRelationshipsByType",
+                    "domain": "RAN",
+                    "relationshipTypeName": "NRCELLDU_USES_NRSECTORCARRIER"
+                }
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid type specified",
+                "details": "A dynamic group cannot be created of type 'static'"
+            }''')
+        }
+    },
+    Contract.make {
         description "ERROR - 400: Create a dynamic group with invalid group type"
         request {
             method POST()
@@ -333,14 +364,12 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/problem+json')
+                contentType('application/json')
             }
             body('''{
-                "type": "about:blank",
-                "title": "Bad Request",
-                "status": 400,
-                "detail": "Failed to read request",
-                "instance": "/topology-inventory/v1alpha11/groups"
+                "status": "BAD_REQUEST",
+                "message": "Invalid type specified",
+                "details": "Invalid group type. Only 'static' or 'dynamic' types are allowed"
             }''')
         }
     },
@@ -366,14 +395,12 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/problem+json')
+                contentType('application/json')
             }
             body('''{
-                "type": "about:blank",
-                "title": "Bad Request",
-                "status": 400,
-                "detail": "Failed to read request",
-                "instance": "/topology-inventory/v1alpha11/groups"
+                "status": "BAD_REQUEST",
+                "message": "Invalid type specified",
+                "details": "Invalid query type. Only 'getRelationshipsForEntityId', 'getEntitiesByDomain', 'getEntitiesByType' & 'getRelationshipsByType' are supported."
             }''')
         }
     },
@@ -406,6 +433,104 @@ import org.springframework.cloud.contract.spec.Contract
                 "status": 400,
                 "detail": "Failed to read request",
                 "instance": "/topology-inventory/v1alpha11/groups"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Create a dynamic group with unsupported domain for getRelationshipsByType"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "dynamic-cell-filter-group",
+                "type": "dynamic",
+                "criteria": {
+                    "queryType": "getRelationshipsByType",
+                    "domain": "bla",
+                    "relationshipTypeName": "NRCELLDU_USES_NRSECTORCARRIER"
+                }
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Unknown domain",
+                "details": "Unknown domain: bla, known domains: [CLOUD, EQUIPMENT, OAM, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, TEIV, TEST]"
+            }''')
+        }
+    },
+    //10
+    Contract.make {
+        description "ERROR - 400: Create a dynamic group with invalid filter"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "dynamic-cell-filter-group",
+                "type": "dynamic",
+                "criteria": {
+                    "queryType": "getRelationshipsForEntityId",
+                    "domain": "TEIV",
+                    "entityTypeName": "NRCellDU",
+                    "entityId": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1",
+                    "targetFilter": "/NRCellDU/attributes(nCI)",
+                    "scopeFilter": "/NRCellDU/attributes[@cellLocalId=2]"
+                }
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid target filter, only relationship conditions can be provided",
+                "details": "NRCellDU is not a valid relation"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400:: Create a dynamic getRelationshipsForEntityId group where entity id does not start with urn:"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "dynamic-cell-filter-group",
+                "type": "dynamic",
+                "criteria": {
+                    "queryType": "getRelationshipsForEntityId",
+                    "domain": "RAN",
+                    "entityTypeName": "NRCellDU",
+                    "entityId": "NRCellDU-1"
+                }
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Topology ID format not supported",
+                "details": "Topology ID : NRCellDU-1 is not in supported format. Topology ID should start with urn:"
             }''')
         }
     },
@@ -531,6 +656,120 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "ERROR - 400: Create a static group with invalid module name for the entity type"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "static-cell-filter-group",
+                "type": "static",
+                "providedMembers": [
+                    {
+                        "o-ran-smo-teiv-ran:ManagedElement": [
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=1"
+                            },
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2"
+                            }
+                        ]
+                    }
+                ]
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid providedMembers",
+                "details": "Unable to parse the given providedMembers. Invalid topology type 'o-ran-smo-teiv-ran:ManagedElement', not found in the model"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Create a static group with wrong topology type format"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "static-cell-filter-group",
+                "type": "static",
+                "providedMembers": [
+                    {
+                        "o-ran-smo-teiv-oam:ManagedElement:bla": [
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=1"
+                            },
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2"
+                            }
+                        ]
+                    }
+                ]
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid providedMembers",
+                "details": "Unable to parse the given providedMembers. Topology type must be in the format 'moduleName:topologyTypeName'. Provided: o-ran-smo-teiv-oam:ManagedElement:bla"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Create a static group with wrong topology id where topology id doesnt start with urn:"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "static-cell-filter-group",
+                "type": "static",
+                "providedMembers": [
+                    {
+                        "o-ran-smo-teiv-oam:ManagedElement": [
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=1"
+                            },
+                            {
+                                "id": "3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2"
+                            }
+                        ]
+                    }
+                ]
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid providedMembers",
+                "details": "Unable to parse the given providedMembers. Topology id 3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2 is not in supported format. Provided members id should start with urn:"
+            }''')
+        }
+    },
+    Contract.make {
         description "ERROR - 400: Create a static group with invalid providedMembers(list contains empty object)"
         request {
             method POST()
@@ -559,6 +798,7 @@ import org.springframework.cloud.contract.spec.Contract
             }''')
         }
     },
+    //20
     Contract.make {
         description "ERROR - 400: Create a static group with invalid providedMembers(list contains empty object)"
         request {
@@ -855,10 +1095,78 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "ERROR - 400: Create a dynamic group with 'static' group type"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "static-cell-filter-group",
+                "type": "dynamic",
+                "providedMembers": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1",
+                            "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
+                        ]
+                    }
+                ]
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid type specified",
+                "details": "A static group cannot be created of type 'dynamic'"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Create a dynamic group with invalid group type"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups")
+            headers {
+                accept("application/json")
+                contentType("application/json")
+            }
+            body('''{
+                "name": "static-cell-filter-group",
+                "type": "invalidGroup",
+                "providedMembers": [
+                    {
+                        "o-ran-smo-teiv-ran:NRCellDU": [
+                            "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1",
+                            "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
+                        ]
+                    }
+                ]
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid type specified",
+                "details": "Invalid group type. Only 'static' or 'dynamic' types are allowed"
+            }''')
+        }
+    },
+    Contract.make {
         description "ERROR - 400: Invalid endpoint"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/ties-groups")
+            url("/topology-inventory/v1alpha11/teiv-groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -881,9 +1189,9 @@ import org.springframework.cloud.contract.spec.Contract
             }
             body('''{
                 "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1alpha11/ties-groups.",
+                "message": "No static resource topology-inventory/v1alpha11/teiv-groups.",
                 "details": null
             }''')
         }
-    }
+    } //30
 ]
