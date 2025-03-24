@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -527,6 +527,69 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "SUCCESS - 200: Get the members of a dynamic group when valid target filter & valid scope filter)"
+        request {
+            method GET()
+            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10")
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body ('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU": [
+                        {
+                            "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1",
+                            "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A",
+                            "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_NRCELLDU=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65",
+                            "sourceIds": [
+                                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+                                "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616",
+                                "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,NodeSupport=1,SectorEquipmentFunction=1",
+                                "urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616"
+                            ]
+                        }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10"
+                },
+                "first": {
+                    "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10"
+                },
+                "prev": {
+                    "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10"
+                },
+                "next": {
+                    "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10"
+                },
+                "last": {
+                    "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10"
+                },
+                "totalCount": 1
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(1)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].aSide', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].bSide', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].sourceIds[0]', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].sourceIds[1]', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].sourceIds[2]', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].sourceIds[3]', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULE_SERVES_NRCELLDU[0].sourceIds[4]', byEquality())
+            }
+        }
+    },
+    Contract.make {
         description "ERROR - 404: Get a static group by id that does not exists"
         request {
             method GET()
@@ -542,7 +605,7 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 404: Get the members of a dynamic group with getRelationshipsForEntityId queryType where entity id doesn't exists"
+        description "ERROR - 404: Get the members of a dynamic group with getRelationshipsForEntityId queryType where entity id doesn't exists"
         request {
             method GET()
             url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440004/members")
@@ -569,8 +632,8 @@ import org.springframework.cloud.contract.spec.Contract
             status BAD_REQUEST()
             body('''{
                 "status": "BAD_REQUEST",
-                "message": "Invalid data in scopeFilter",
-                "details": "Unable to resolve attributes"
+                "message": "Grammar error",
+                "details": "Invalid data in scopeFilter"
             }''')
         }
     },
@@ -586,6 +649,36 @@ import org.springframework.cloud.contract.spec.Contract
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",
                 "details": "The requested group is not found"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: No target filter exists & invalid scope filter"
+        request {
+            method GET()
+            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440218/members")
+        }
+        response {
+            status BAD_REQUEST()
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Filter Error",
+                "details": "TopologyObjects given in scopeFilter and targetFilter are not matching"
+            }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Invalid target filter & invalid scope filter"
+        request {
+            method GET()
+            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440220/members")
+        }
+        response {
+            status BAD_REQUEST()
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid target filter, only relationship conditions can be provided",
+                "details": "NRCellDU is not a valid relation"
             }''')
         }
     }

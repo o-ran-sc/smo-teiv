@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
  */
 package org.oran.smo.teiv.schema;
 
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
 
 import org.jooq.EnumType;
 import org.jooq.Schema;
@@ -39,7 +39,7 @@ public enum Reliability implements EnumType {
 
     @Override
     public Schema getSchema() {
-        return new SchemaImpl(TIES_DATA_SCHEMA);
+        return new SchemaImpl(TEIV_DATA_SCHEMA);
     }
 
     @Override

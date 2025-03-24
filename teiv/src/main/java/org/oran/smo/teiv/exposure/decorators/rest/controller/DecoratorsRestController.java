@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.api.DecoratorsApi;
 import org.oran.smo.teiv.api.model.OranTeivDecorator;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.audit.AuditMapper;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.decorators.api.DecoratorsService;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(TiesConstants.REQUEST_MAPPING)
+@RequestMapping(TeivConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("exposure")
 public class DecoratorsRestController implements DecoratorsApi {
@@ -61,13 +61,13 @@ public class DecoratorsRestController implements DecoratorsApi {
     private int limit;
 
     @Override
-    @Timed("ties_exposure_http_update_decorators_seconds")
+    @Timed("teiv_exposure_http_update_decorators_seconds")
     public ResponseEntity<Void> updateDecorator(final String accept, final String contentType,
             final OranTeivDecorator oranTeivDecorator) {
         return runWithFailCheck(() -> {
             if (Optional.ofNullable(oranTeivDecorator.getEntityIds()).orElseGet(Collections::emptyList).size() + Optional
                     .ofNullable(oranTeivDecorator.getRelationshipIds()).orElseGet(Collections::emptyList).size() > limit) {
-                throw TiesException.clientException("Limit exceeded",
+                throw TeivException.clientException("Limit exceeded",
                         "Number of entities and relationships exceeded the limit");
             }
             runSafeMethod(() -> decoratorsService.update(oranTeivDecorator), status -> loggerHandler.logAudit(log,
@@ -91,7 +91,7 @@ public class DecoratorsRestController implements DecoratorsApi {
         try {
             runnable.run();
             logAudit.accept(HttpStatus.NO_CONTENT);
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             logAudit.accept(ex.getStatus());
             log.error("Exception during service call", ex);
             throw ex;

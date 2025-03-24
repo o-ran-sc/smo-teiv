@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,14 +48,15 @@ import org.oran.smo.teiv.ingestion.validation.IngestionOperationValidatorFactory
 import org.oran.smo.teiv.listener.audit.ExecutionStatus;
 import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
 import org.oran.smo.teiv.service.RelationshipMergeValidator;
-import org.oran.smo.teiv.service.TiesDbOperations;
+import org.oran.smo.teiv.service.TeivDbOperations;
 
 import io.cloudevents.CloudEvent;
 
 import org.oran.smo.teiv.schema.MockSchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoader;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
-import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.service.TeivDbService;
+import org.oran.smo.teiv.service.TeivMetadataResolver;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
@@ -73,12 +74,12 @@ class DeleteTopologyProcessorTest {
     private CustomMetrics metrics;
 
     @Mock
-    private TiesDbService tiesDbService;
+    private TeivDbService teivDbService;
 
     @Mock
     private IngestionAuditLogger auditLogger;
 
-    private TiesDbOperations tiesDbOperations;
+    private TeivDbOperations teivDbOperations;
 
     @BeforeAll
     static void setUpAll() throws SchemaLoaderException {
@@ -89,9 +90,9 @@ class DeleteTopologyProcessorTest {
 
     @BeforeEach
     void setUp() {
-        tiesDbOperations = new TiesDbOperations(tiesDbService, new IngestionOperationValidatorFactory(),
-                new RelationshipMergeValidator());
-        deleteTopologyProcessor = new DeleteTopologyProcessor(cloudEventParser, tiesDbService, tiesDbOperations, metrics,
+        teivDbOperations = new TeivDbOperations(teivDbService, new IngestionOperationValidatorFactory(),
+                new RelationshipMergeValidator(), new TeivMetadataResolver());
+        deleteTopologyProcessor = new DeleteTopologyProcessor(cloudEventParser, teivDbService, teivDbOperations, metrics,
                 auditLogger);
     }
 
@@ -105,10 +106,10 @@ class DeleteTopologyProcessorTest {
         ParsedCloudEventData parsedData = new ParsedCloudEventData(List.of(entity), List.of());
         when(cloudEventParser.getCloudEventData(any())).thenReturn(parsedData);
 
-        doThrow(new RuntimeException("Discard event by expected test behavior")).when(tiesDbService).execute(anyList());
+        doThrow(new RuntimeException("Discard event by expected test behavior")).when(teivDbService).execute(anyList());
         Assertions.assertDoesNotThrow(() -> deleteTopologyProcessor.process(event, anyString()));
 
-        verify(tiesDbService, times(1)).execute(anyList());
+        verify(teivDbService, times(1)).execute(anyList());
 
         verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("delete"), any(CloudEvent.class), anyString(),
                 anyString());
@@ -120,7 +121,7 @@ class DeleteTopologyProcessorTest {
         when(cloudEventParser.getCloudEventData(ArgumentMatchers.any())).thenReturn(null);
 
         deleteTopologyProcessor.process(event, anyString());
-        verifyNoInteractions(tiesDbService);
+        verifyNoInteractions(teivDbService);
 
         verify(metrics, times(1)).incrementNumUnsuccessfullyParsedDeleteCloudEvents();
         verifyNoMoreInteractions(metrics);

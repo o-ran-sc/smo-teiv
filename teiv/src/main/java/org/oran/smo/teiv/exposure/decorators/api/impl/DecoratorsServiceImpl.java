@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ package org.oran.smo.teiv.exposure.decorators.api.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.api.model.OranTeivDecorator;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.consumerdata.ConsumerDataOperationRegistry;
 import org.oran.smo.teiv.exposure.consumerdata.model.Decorators;
 import org.oran.smo.teiv.exposure.consumerdata.operation.DecoratorsOperation;
 import org.oran.smo.teiv.exposure.decorators.api.DecoratorsService;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
+import org.oran.smo.teiv.exposure.utils.RequestValidator;
 import org.oran.smo.teiv.schema.ConsumerDataCache;
 import org.oran.smo.teiv.schema.YangDataTypes;
 import org.oran.smo.teiv.service.models.OperationResult;
@@ -41,7 +42,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_CONSUMER_DATA;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA;
 
 @Slf4j
 @Service
@@ -52,6 +53,7 @@ public class DecoratorsServiceImpl implements DecoratorsService {
     private final ModelRepository modelRepository;
     private final ConsumerDataCache consumerDataCache;
     private final ConsumerDataOperationRegistry consumerDataOperationRegistry;
+    private final RequestValidator requestValidator;
 
     @Override
     public void update(final OranTeivDecorator oranTeivDecorator) {
@@ -86,11 +88,12 @@ public class DecoratorsServiceImpl implements DecoratorsService {
 
     public void validateMerge(final Decorators decorators) {
         log.debug(String.format("Validating merging %s", decorators));
-
+        decorators.entityIds().forEach(requestValidator::validateTopologyID);
+        decorators.relationshipIds().forEach(requestValidator::validateTopologyID);
         final Map<String, String> problems = checkAvailability(decorators);
 
         if (!problems.isEmpty()) {
-            throw TiesException.invalidDecoratorsException(problems);
+            throw TeivException.invalidDecoratorsException(problems);
         }
     }
 
@@ -99,8 +102,8 @@ public class DecoratorsServiceImpl implements DecoratorsService {
 
         for (String decorator : decorators.data().keySet()) {
             final String schemaName = decorator.split(":")[0];
-            if (!modelRepository.doesModuleExists(TIES_CONSUMER_DATA, schemaName)) {
-                throw TiesException.invalidSchema(schemaName);
+            if (!modelRepository.doesModuleExists(TEIV_CONSUMER_DATA, schemaName)) {
+                throw TeivException.invalidSchema(schemaName);
             }
         }
     }
@@ -136,7 +139,7 @@ public class DecoratorsServiceImpl implements DecoratorsService {
     private void runMethodSafe(Consumer<Decorators> consumer, Decorators classifiers) {
         try {
             consumer.accept(classifiers);
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             log.error("Exception during validation", ex);
             throw ex;
         }

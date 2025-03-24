@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,20 +43,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.oran.smo.teiv.CustomMetrics;
-import org.oran.smo.teiv.service.TiesDbOperations;
-import org.oran.smo.teiv.service.TiesDbService;
+import org.oran.smo.teiv.service.TeivDbOperations;
+import org.oran.smo.teiv.service.TeivDbService;
 
-import static org.oran.smo.teiv.utils.TiesConstants.CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE;
+import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE;
 
 @Component
 @Slf4j
 @AllArgsConstructor
 @Profile("ingestion")
 public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
-    private final TiesDbService tiesDbService;
+    private final TeivDbService teivDbService;
     private final ObjectMapper objectMapper;
     private final CustomMetrics customMetrics;
-    private final TiesDbOperations tiesDbOperations;
+    private final TeivDbOperations teivDbOperations;
     private final IngestionAuditLogger auditLogger;
 
     @Override
@@ -94,15 +94,15 @@ public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
         try {
             List<Consumer<DSLContext>> dbOperations = new ArrayList<>();
             SchemaRegistry.getEntityTypes().forEach(entityType -> dbOperations.add(dslContext -> {
-                List<String> results = tiesDbOperations.selectByCmHandleFormSourceIds(dslContext, entityType.getTableName(),
+                List<String> results = teivDbOperations.selectByCmHandleFormSourceIds(dslContext, entityType.getTableName(),
                         sourceEntityDelete.value);
                 if (!results.isEmpty()) {
                     for (String result : results) {
-                        operationResults.addAll(tiesDbOperations.deleteEntity(dslContext, entityType, result));
+                        operationResults.addAll(teivDbOperations.deleteEntity(dslContext, entityType, result));
                     }
                 }
             }));
-            tiesDbService.execute(dbOperations);
+            teivDbService.execute(dbOperations);
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                     CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());

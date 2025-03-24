@@ -21,7 +21,7 @@
 
 BEGIN;
 
-COPY ties_groups."groups" ("id", "name", "type") FROM stdin;
+COPY teiv_groups."groups" ("id", "name", "type") FROM stdin;
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050	test-dynamic-group-for-rename	dynamic
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440051	test-static-group-for-rename	static
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000	test-dynamic-group-for-delete	dynamic
@@ -46,9 +46,13 @@ urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440213	test-group-no-data
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440214	test-group-with-max-provided-members-in-static-group	static
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440215	test-group-merge-all-provided-members-in-static-group	static
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440216	test-group-almost-max-provided-members-in-static-group	static
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217	test-group-goodtarget-goodscope-members-in-dynamic-group	dynamic
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440218	test-group-badtarget-goodscope-members-in-dynamic-group	dynamic
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440219	test-group-goodtarget-badscope-members-in-dynamic-group	dynamic
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440220	test-group-badtarget-badscope-members-in-dynamic-group	dynamic
 \.
 
-COPY ties_groups."dynamic_groups" ("id", "criteria") FROM stdin;
+COPY teiv_groups."dynamic_groups" ("id", "criteria") FROM stdin;
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000	{"queryType": "getEntitiesByDomain", "domain": "OAM"}
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050	{"queryType": "getEntitiesByDomain", "domain": "RAN"}
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440001	{"queryType": "getEntitiesByType", "domain": "RAN", "entityTypeName": "ODUFunction", "targetFilter": "/sourceIds"}
@@ -57,9 +61,13 @@ urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440003	{"queryType": "get
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440004	{"queryType": "getRelationshipsForEntityId", "domain": "RAN", "entityTypeName": "ODUFunction", "entityId": "urn:3gpp:dn:non-existing-odufunction"}
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440005	{"queryType": "getEntitiesByType", "domain": "RAN", "entityTypeName": "ODUFunction", "scopeFilter": "/attributes"}
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440100	{"criteria": {"queryType": "getEntitiesByType", "domain": "RAN", "entityTypeName": "ODUFunction", "targetFilter": "/sourceIds"}}
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217	{"queryType": "getRelationshipsForEntityId", "domain": "TEIV", "entityTypeName": "NRCellDU", "entityId": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1", "targetFilter": "/sourceIds", "scopeFilter": "/sourceIds[@item = 'urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616'];/sourceIds[@item = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1']"}
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440218	{"queryType": "getRelationshipsForEntityId", "domain": "TEIV", "entityTypeName": "NRCellDU", "entityId": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1", "scopeFilter": "/NRCellDU/attributes[@cellLocalId=2]"}
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440219	{"queryType": "getRelationshipsForEntityId", "domain": "TEIV", "entityTypeName": "NRCellDU", "entityId": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1", "targetFilter": "/NRCellDU/attributes(nCI)"}
+urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440220	{"queryType": "getRelationshipsForEntityId", "domain": "TEIV", "entityTypeName": "NRCellDU", "entityId": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1", "targetFilter": "/NRCellDU/attributes(nCI)", "scopeFilter": "/NRCellDU/attributes[@cellLocalId=2]"}
 \.
 
-COPY ties_groups."static_groups" ("id", "topology_type", "provided_members_ids") FROM stdin;
+COPY teiv_groups."static_groups" ("id", "topology_type", "provided_members_ids") FROM stdin;
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201	o-ran-smo-teiv-ran:NRCellDU	{"urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=92", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=500"}
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201	o-ran-smo-teiv-ran:ODUFunction	{"urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10"}
 urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201	o-ran-smo-teiv-oam:ManagedElement	{"urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14", "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=500"}

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -73,11 +73,11 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
             try {
                 loadModels();
                 container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/00_init-oran-smo-teiv-data.sql",
-                        "--set=pguser=\"test\";");
+                        "--set=pguser=test");
                 container.execInContainer("psql", "-U", "test", "-w", "-f",
-                        "/pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql", "--set=pguser=\"test\";");
+                        "/pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql", "--set=pguser=test");
                 container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/03_init-oran-smo-teiv-groups.sql",
-                        "--set=pguser=\"test\";");
+                        "--set=pguser=test");
             } catch (UnsupportedOperationException | IOException | InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -89,7 +89,7 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
         try {
             loadData();
             container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/consumer-data.sql",
-                    "--set=pguser=\"test\";");
+                    "--set=pguser=test");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -98,8 +98,7 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
     public static void loadSampleGroupsData() {
         try {
             loadSampleData();
-            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/groups.sql",
-                    "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/groups.sql", "--set=pguser=test");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -108,9 +107,9 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
     public static void loadIngestionTestData() {
         try {
             container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/ingestion-test-data.sql",
-                    "--set=pguser=\"test\";");
+                    "--set=pguser=test");
             container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/ingestion-test-model.sql",
-                    "--set=pguser=\"test\";");
+                    "--set=pguser=test");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -123,7 +122,8 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
 
     public static void loadData() {
         try {
-            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/data.sql", "--set=pguser=\"test\";");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/data.sql", "--set=pguser=test");
+            loadUpdateData();
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -132,8 +132,8 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
     public static void loadModels() {
         try {
             container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/01_init-oran-smo-teiv-model.sql",
-                    "--set=pguser=\"test\";");
-            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/model.sql", "--set=pguser=\"test\";");
+                    "--set=pguser=test");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/model.sql", "--set=pguser=test");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -142,11 +142,23 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
     public static void loadValidationTestData() {
         try {
             container.execInContainer("psql", "-U", "test", "-w", "-f",
-                    "/pgsqlschema/test-data-for-ingestion-validation.sql", "--set=pguser=\"test\";");
+                    "/pgsqlschema/test-data-for-ingestion-validation.sql", "--set=pguser=test");
             container.execInContainer("psql", "-U", "test", "-w", "-f",
-                    "/pgsqlschema/test-model-for-ingestion-validation.sql", "--set=pguser=\"test\";");
+                    "/pgsqlschema/test-model-for-ingestion-validation.sql", "--set=pguser=test");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public static void loadUpdateData() {
+        //        try {
+        //            container.execInContainer("psql", "-U", "test", "-w", "-f",
+        //                "/pgsqlschema/04_init-oran-smo-teiv-data-update.sql", "--set=pguser=\"test\"",
+        //                "--set=adapterId=namespace-oran-smo-ran-topology-adapter",
+        //                "--set=adapterHashedId=17a7ac8c7522bc5a27e5d095088ec1a9c8b2a7da", "--set=upgradeTime=" + OffsetDateTime
+        //                    .now(ZoneOffset.UTC));
+        //        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+        //            throw new RuntimeException(e.getMessage());
+        //        }
     }
 }

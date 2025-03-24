@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class IngestionOperationValidatorFactory {
     public IngestionOperationValidator createValidator(DSLContext dslContext) {
-        return new IngestionOperationValidator(new TiesDbServiceForValidation(dslContext));
+        return new IngestionOperationValidator(new TeivDbServiceForValidation(dslContext));
     }
 }

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "operation": "merge",
                 "providedMembers": [
                     {
-                        "o-ran-smo-teiv-ran:ManagedElement": [
+                        "o-ran-smo-teiv-oam:ManagedElement": [
                             {
                                 "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=1"
                             },
@@ -469,6 +469,43 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
+        description "ERROR - 400: Merge into provided members in an existing static topology group with invalid module name for the entity type"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440341/provided-members-operations")
+            headers {
+                contentType("application/json")
+            }
+
+            body('''{
+                "operation": "merge",
+                "providedMembers": [
+                    {
+                        "o-ran-smo-teiv-ran:ManagedElement": [
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=1"
+                            },
+                            {
+                                "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2"
+                            }
+                        ]
+                    }
+                ]
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid providedMembers",
+                "details": "Unable to parse the given providedMembers. Invalid topology type 'o-ran-smo-teiv-ran:ManagedElement', not found in the model"
+            }''')
+        }
+    },
+    Contract.make {
         description "ERROR - 404: Merge provided members into a non existing topology group"
         request {
             method POST()
@@ -627,7 +664,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "operation": "remove",
                 "providedMembers": [
                     {
-                        "o-ran-smo-teiv-ran:UnKnown": [
+                        "o-ran-smo-teiv-oam:ManagedElement": [
                             {
                                 "id": "urn:3gpp:dn:NRCellDU=1,ODUFunction=1, ManagedElement=1"
                             },
@@ -647,7 +684,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Provided members update exception",
-                "details": "The specified topology entity/relation: o-ran-smo-teiv-ran:UnKnown is not part of the group."
+                "details": "The specified topology entity/relation: o-ran-smo-teiv-oam:ManagedElement is not part of the group."
             }''')
             bodyMatchers {
                 jsonPath('$.status', byEquality())

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.springframework.cloud.contract.spec.Contract
                         "test-app-module:Weekend"
                  ],
                 "entityIds": [
-                    "WRONG_ENTITY_ID",
+                    "urn:WRONG_ENTITY_ID",
                     "urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A"
                 ],
                 "operation": "merge"
@@ -52,7 +52,78 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                     "status": "NOT_FOUND",
                     "message": "Resource Not Found",
-                    "details": "The requested resource with the following ids cannot be found. Entities: [WRONG_ENTITY_ID] Relationships: []"
+                    "details": "The requested resource with the following ids cannot be found. Entities: [urn:WRONG_ENTITY_ID] Relationships: []"
+                }''')
+            bodyMatchers {
+                jsonPath('$.status', byEquality())
+                jsonPath('$.message', byEquality())
+                jsonPath('$.details', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Merge classifiers  where entity id does not start with urn:"
+        request {
+            method POST()
+            url "/topology-inventory/v1alpha11/classifiers"
+            headers {
+                contentType("application/json")
+                accept('application/problem+json')
+            }
+            body('''{
+                "classifiers": [
+                        "test-app-module:Rural",
+                        "test-app-module:Weekend"
+                 ],
+                "entityIds": [
+                    "WRONG_ENTITY_ID",
+                    "urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A"
+                ],
+                "operation": "merge"
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Topology ID format not supported",
+                "details": "Topology ID : WRONG_ENTITY_ID is not in supported format. Topology ID should start with urn:"
+            }''')
+        }
+    },
+    Contract.make {
+        description "NOT FOUND - 404: Merge classifiers with wrong relationship ids."
+        request {
+            method POST()
+            url "/topology-inventory/v1alpha11/classifiers"
+            headers {
+                contentType("application/json")
+                accept('application/problem+json')
+            }
+            body('''{
+                "classifiers": [
+                    "test-app-module:Rural",
+                    "test-app-module:Weekend"
+                ],
+                "relationshipIds": [
+                    "urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_ANTENNAMODULE=44F4F4FC906E9A7525065E4565246F7469CBD11FC7752C61EA6D74776845900AFF472DCAACA1F66443490B6CE0DD9AC9A5E1467022118599F6B4C6EC63400512",
+                    "urn:WRONG_RELATIONSHIP_ID"
+                ],
+                "operation": "merge"
+            }''')
+        }
+        response {
+            status NOT_FOUND()
+            headers {
+                contentType('application/problem+json')
+            }
+            body('''{
+                    "status": "NOT_FOUND",
+                    "message": "Resource Not Found",
+                    "details": "The requested resource with the following ids cannot be found. Entities: [] Relationships: [urn:WRONG_RELATIONSHIP_ID]"
                 }''')
             bodyMatchers {
                 jsonPath('$.status', byEquality())
@@ -83,20 +154,15 @@ import org.springframework.cloud.contract.spec.Contract
             }''')
         }
         response {
-            status NOT_FOUND()
+            status BAD_REQUEST()
             headers {
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "NOT_FOUND",
-                    "message": "Resource Not Found",
-                    "details": "The requested resource with the following ids cannot be found. Entities: [] Relationships: [WRONG_RELATIONSHIP_ID]"
-                }''')
-            bodyMatchers {
-                jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
-            }
+                "status": "BAD_REQUEST",
+                "message": "Topology ID format not supported",
+                "details": "Topology ID : WRONG_RELATIONSHIP_ID is not in supported format. Topology ID should start with urn:"
+            }''')
         }
     },
     Contract.make {

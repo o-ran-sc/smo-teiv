@@ -36,8 +36,8 @@ module o-ran-smo-teiv-common-yang-types {
     }
   }
 
-  container ties-consumer-data {
-    description "This container defines the TIES consumer-data. Consumer-data may be attached to Topology Entity or
+  container teiv-consumer-data {
+    description "This container defines the TEIV consumer-data. Consumer-data may be attached to Topology Entity or
     Topology Relation instance, outside of the declared Topology Entity or Topology Relationship's attributes.
     This container cannot be instantiated, and it MUST NOT be augmented or deviated in any way, unless stated
     otherwise.";
@@ -49,7 +49,7 @@ module o-ran-smo-teiv-common-yang-types {
 
     leaf-list classifiers {
       description "Consumer defined tags to topology entities and relationships. The ability to apply classifier is
-      supported through TIES REST API";
+      supported through TEIV REST API";
       type identityref { base classifier; }
     }
 

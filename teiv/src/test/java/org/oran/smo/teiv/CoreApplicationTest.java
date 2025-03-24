@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.oran.smo.teiv.utils.TiesTestConstants.APPLICATION_JSON;
+import static org.oran.smo.teiv.utils.TeivTestConstants.APPLICATION_JSON;
 
 import java.util.Objects;
 
@@ -46,7 +46,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import org.oran.smo.teiv.startup.SchemaHandler;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import jakarta.validation.ConstraintViolationException;
 
 @ExtendWith(SpringExtension.class)
@@ -69,41 +69,41 @@ class CoreApplicationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_not_supported_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_parse_success_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_parse_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_parse_success_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_parse_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_parse_success_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_parse_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_persist_success_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_persist_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_persist_success_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_persist_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_persist_success_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_persist_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_parse_seconds"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_parse_seconds"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_parse_seconds"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_create_persist_seconds"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_merge_persist_seconds"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_ingestion_event_topology_delete_persist_seconds"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_not_supported_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_parse_success_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_parse_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_parse_success_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_parse_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_parse_success_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_parse_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_persist_success_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_persist_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_persist_success_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_persist_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_persist_success_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_persist_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_parse_seconds"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_parse_seconds"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_parse_seconds"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_create_persist_seconds"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_merge_persist_seconds"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_ingestion_event_topology_delete_persist_seconds"));
 
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_domain_types_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_entity_types_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationship_types_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_entity_by_id_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_entities_by_type_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_entities_by_domain_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationship_by_id_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationships_by_type_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_get_relationships_by_entity_id_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_domain_types_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_entity_types_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_relationship_types_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_entity_by_id_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_entities_by_type_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_entities_by_domain_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_relationship_by_id_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_relationships_by_type_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_get_relationships_by_entity_id_fail_total"));
 
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_update_classifiers_fail_total"));
-        Assertions.assertTrue(result.getResponse().getContentAsString().contains("ties_exposure_http_update_decorators_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_update_classifiers_fail_total"));
+        Assertions.assertTrue(result.getResponse().getContentAsString().contains("teiv_exposure_http_update_decorators_fail_total"));
         // spotless:on
     }
 
@@ -116,29 +116,29 @@ class CoreApplicationTest {
             "getTopologyEntityTypes:/domains/RAN_LOGICAL/entity-types",
             "getTopologyRelationshipTypes:/domains/RAN_LOGICAL/relationship-types" }, delimiter = ':')
     public void testPaginationRelatedEndpoints(String method, String url) throws Exception {
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("offset", "-1").accept(APPLICATION_JSON)).andExpect(
+        mvc.perform(get(TeivConstants.REQUEST_MAPPING + url).param("offset", "-1").accept(APPLICATION_JSON)).andExpect(
                 status().isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result
                         .getResolvedException()).getMessage(), method + ".offset: must be greater than or equal to 0"));
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "0").accept(APPLICATION_JSON)).andExpect(
+        mvc.perform(get(TeivConstants.REQUEST_MAPPING + url).param("limit", "0").accept(APPLICATION_JSON)).andExpect(
                 status().isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result
                         .getResolvedException()).getMessage(), method + ".limit: must be greater than or equal to 1"));
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "501").accept(APPLICATION_JSON)).andExpect(
+        mvc.perform(get(TeivConstants.REQUEST_MAPPING + url).param("limit", "501").accept(APPLICATION_JSON)).andExpect(
                 status().isBadRequest()).andExpect(result -> assertEquals(Objects.requireNonNull(result
                         .getResolvedException()).getMessage(), method + ".limit: must be less than or equal to 500"));
 
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("offset", "0").accept(APPLICATION_JSON)).andExpect(
+        mvc.perform(get(TeivConstants.REQUEST_MAPPING + url).param("offset", "0").accept(APPLICATION_JSON)).andExpect(
                 result -> {
                     if (result.getResponse().getStatus() != HttpStatus.OK.value())
                         assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result
                                 .getResolvedException()).getClass());
                 });
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "1").accept(APPLICATION_JSON)).andExpect(
+        mvc.perform(get(TeivConstants.REQUEST_MAPPING + url).param("limit", "1").accept(APPLICATION_JSON)).andExpect(
                 result -> {
                     if (result.getResponse().getStatus() != HttpStatus.OK.value())
                         assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result
                                 .getResolvedException()).getClass());
                 });
-        mvc.perform(get(TiesConstants.REQUEST_MAPPING + url).param("limit", "500").accept(APPLICATION_JSON)).andExpect(
+        mvc.perform(get(TeivConstants.REQUEST_MAPPING + url).param("limit", "500").accept(APPLICATION_JSON)).andExpect(
                 result -> {
                     if (result.getResponse().getStatus() != HttpStatus.OK.value())
                         assertNotEquals(ConstraintViolationException.class, Objects.requireNonNull(result

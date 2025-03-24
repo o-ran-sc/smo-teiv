@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import lombok.experimental.UtilityClass;
 
 import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.exception.InvalidFieldInYangDataException;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.utils.schema.Geography;
 
 @UtilityClass
@@ -50,7 +50,7 @@ public class JooqTypeConverter {
         } catch (JsonProcessingException e) {
             String message = "Exception during converting jsonb to list";
             log.error(message, e);
-            throw TiesException.serverException(message, null, e);
+            throw TeivException.serverException(message, null, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class JooqTypeConverter {
         } catch (JsonProcessingException e) {
             String message = "Exception during converting jsonb to map";
             log.error(message, e);
-            throw TiesException.serverException(message, null, e);
+            throw TeivException.serverException(message, null, e);
         }
     }
 

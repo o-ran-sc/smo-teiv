@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,4 +27,5 @@ public class GroupsConstants {
     public static final String MEMBERS_HREF_TEMPLATE = "/groups/%s/members";
     public static final String PROVIDED_MEMBERS_HREF_TEMPLATE = "/groups/%s/provided-members";
     public static final String GROUP_ID_PREFIX = "urn:o-ran:smo:teiv:group=";
+    public static final String RESOURCE_NOT_FOUND = "Resource Not Found";
 }

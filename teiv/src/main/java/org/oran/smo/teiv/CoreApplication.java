@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,12 +26,13 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
+import org.springframework.boot.http.client.HttpComponentsClientHttpRequestFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import org.oran.smo.teiv.service.JSONBSerializer;
@@ -60,17 +61,17 @@ public class CoreApplication {
     }
 
     /**
-     * Making a RestTemplate, using the RestTemplateBuilder, to use for consumption of RESTful
+     * Making a RestClient, using RestClient.Builder, to use for consumption of RESTful
      * interfaces.
      *
-     * @param restTemplateBuilder
-     *     RestTemplateBuilder instance
+     * @param restClientBuilder
+     *     WebClient.Builder instance
      *
-     * @return RestTemplate
+     * @return RestClient
      */
     @Bean
-    public RestTemplate restTemplate(final RestTemplateBuilder restTemplateBuilder) {
-        return restTemplateBuilder.build();
+    public RestClient restClient(final RestClient.Builder restClientBuilder) {
+        return restClientBuilder.build();
     }
 
     /**
@@ -100,6 +101,18 @@ public class CoreApplication {
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> builder.serializationInclusion(JsonInclude.Include.USE_DEFAULTS).serializers(
                 new JSONBSerializer());
+    }
+
+    /*
+     * Apache HTTP Components have changed defaults in the HttpClient
+     * relating to HTTP/1.1 TLS upgrades. This bean restores previous
+     * behavior, fixing issues with Istio.
+     * https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.4-Release-Notes
+     */
+    @Bean
+    public HttpComponentsClientHttpRequestFactoryBuilder httpComponentsClientHttpRequestFactoryBuilder() {
+        return ClientHttpRequestFactoryBuilder.httpComponents().withDefaultRequestConfigCustomizer(builder -> builder
+                .setProtocolUpgradeEnabled(false));
     }
 
 }

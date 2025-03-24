@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import static org.jooq.impl.DSL.notExists;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.val;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
 
 @Component
 @Profile("exposure")

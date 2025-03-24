@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,21 +24,24 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.oran.smo.teiv.utils.TiesConstants.TIES_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TiesTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
-import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_HOST;
-import static org.oran.smo.teiv.utils.TiesTestConstants.SPRING_BOOT_SERVER_PORT;
+import static org.oran.smo.teiv.utils.JooqTypeConverter.jsonbToMap;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
+import static org.oran.smo.teiv.utils.TeivTestConstants.SPRING_BOOT_SERVER_HOST;
+import static org.oran.smo.teiv.utils.TeivTestConstants.SPRING_BOOT_SERVER_PORT;
 
 import java.io.File;
 import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import io.cloudevents.CloudEvent;
@@ -52,12 +55,15 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.awaitility.Awaitility;
 import org.jooq.DSLContext;
+import org.jooq.JSONB;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
 import org.oran.smo.teiv.config.KafkaConfig;
@@ -70,6 +76,7 @@ import org.oran.smo.teiv.utils.EndToEndExpectedResults;
 import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
@@ -80,9 +87,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestExecutionListeners;
+import org.testcontainers.shaded.org.checkerframework.checker.nullness.qual.Nullable;
 
 @EmbeddedKafka
 @ActiveProfiles({ "test", "ingestion" })
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(properties = { SPRING_BOOT_SERVER_HOST, SPRING_BOOT_SERVER_PORT, KAFKA_RETRY_INTERVAL_10_MS,
         "kafka.topic.replicas:1", "kafka.topology-ingestion.consumer.concurrency:2", "data-catalog.enabled:true" })
 @TestExecutionListeners(listeners = KafkaTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
@@ -91,7 +100,12 @@ public class EndToEndDbTest {
 
     private AppInit appInit;
 
-    static Producer<String, CloudEvent> producer;
+    private DefaultKafkaProducerFactory<String, CloudEvent> factory;
+
+    private Producer<String, CloudEvent> producer;
+
+    @Autowired
+    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     private static final String TEST_EVENT_FOLDER = "src/test/resources/cloudeventdata/end-to-end/";
     private static final String EXPECTED_RESULTS_FOLDER = "src/test/resources/cloudeventdata/end-to-end/expected-results/";
@@ -130,6 +144,12 @@ public class EndToEndDbTest {
         registry.add("spring.datasource.write.password", () -> postgresqlContainer.getPassword());
     }
 
+    private static final String FIRST_DISCOVERED = "firstDiscovered";
+    private static final String LAST_MODIFIED = "lastModified";
+    private static final String RELIABILITY_INDICATOR = "reliabilityIndicator";
+
+    private OffsetDateTime testStartTime;
+
     @BeforeAll
     static void beforeAll() {
         TestPostgresqlContainer.loadData();
@@ -138,20 +158,29 @@ public class EndToEndDbTest {
 
     @BeforeEach
     void setupEach() {
-        TestPostgresqlContainer.truncateSchemas(List.of(TIES_DATA_SCHEMA), writeDataDslContext);
+        TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA), writeDataDslContext);
         appInit = new AppInit(dependentServiceAvailabilityKafka, kafkaTopicService, listenerStarter);
         appInit.startUpHandler();
-        producer = new DefaultKafkaProducerFactory<>(new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker)),
-                new StringSerializer(), new CloudEventSerializer()).createProducer();
+        factory = new DefaultKafkaProducerFactory<>(KafkaTestUtils.producerProps(embeddedKafkaBroker),
+                new StringSerializer(), new CloudEventSerializer());
+        producer = factory.createProducer();
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
     }
 
     @AfterEach
-    void tearDown() {
-        embeddedKafkaBroker.destroy();
+    void cleanupEach() {
+        factory.destroy();
     }
 
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    @AfterAll
+    void cleanupAll() {
+        kafkaListenerEndpointRegistry.stop();
+        Admin adminClient = Admin.create(kafkaAdmin.getConfigurationProperties());
+        adminClient.close();
+    }
+
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testEndToEndDb() {
         final String CREATE_ONE_TO_ONE_PATH = TEST_EVENT_FOLDER + "ce-create-one-to-one.json";
         final String CREATE_MANY_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-create-many-to-many.json";
@@ -159,6 +188,8 @@ public class EndToEndDbTest {
         final String CREATE_INFERRED_ENTITIES = TEST_EVENT_FOLDER + "ce-create-inferred.json";
         final String CREATE_GEOLOCATION_PATH = TEST_EVENT_FOLDER + "ce-create-geo-location.json";
         final String MERGE_ONE_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-merge-one-to-many.json";
+        final String MERGE_ONE_TO_MANY3_PATH = TEST_EVENT_FOLDER + "ce-merge-one-to-many3.json";
+        final String MERGE_MANY_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-merge-many-to-many.json";
         final String DELETE_MANY_TO_MANY_PATH = TEST_EVENT_FOLDER + "ce-delete-many-to-many.json";
         final String DELETE_ONE_TO_ONE_PATH = TEST_EVENT_FOLDER + "ce-delete-one-to-one.json";
         final String DELETE_CMHANDLE_PATH = TEST_EVENT_FOLDER + "ce-source-entity-delete-cm-handle.json";
@@ -169,19 +200,23 @@ public class EndToEndDbTest {
         final String EXP_CREATE_INFERRED_ENTITIES = EXPECTED_RESULTS_FOLDER + "exp-create-inferred.json";
         final String EXP_CREATE_GEOLOCATION_PATH = EXPECTED_RESULTS_FOLDER + "exp-create-geo-location.json";
         final String EXP_MERGE_ONE_TO_MANY_PATH = EXPECTED_RESULTS_FOLDER + "exp-merge-one-to-many.json";
+        final String EXP_MERGE_ONE_TO_MANY3_PATH = EXPECTED_RESULTS_FOLDER + "exp-merge-one-to-many3.json";
+        final String EXP_MERGE_MANY_TO_MANY_PATH = EXPECTED_RESULTS_FOLDER + "exp-merge-many-to-many.json";
         final String EXP_DELETE_ONE_TO_ONE_PATH = EXPECTED_RESULTS_FOLDER + "exp-delete-one-to-one.json";
         final String NOT_EXP_DELETE_ONE_TO_ONE_PATH = EXPECTED_RESULTS_FOLDER + "not-exp-delete-one-to-one.json";
         final String NOT_EXP_DELETE_MANY_TO_MANY_PATH = EXPECTED_RESULTS_FOLDER + "not-exp-delete-many-to-many.json";
         final String NOT_EXP_DELETE_CMHANDLE_PATH = EXPECTED_RESULTS_FOLDER + "not-exp-source-entity-delete-cm-handle.json";
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         validateReceivedCloudEventMetrics(0, 0, 0, 0);
         sendEventFromFile(CREATE_ONE_TO_ONE_PATH);
-        validateWithTimeout(20, () -> {
+        validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_ONE_TO_ONE_PATH);
             assertDbContainsExpectedValues(expected);
             validateReceivedCloudEventMetrics(1, 0, 0, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(CREATE_MANY_TO_MANY_PATH);
         validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_MANY_TO_MANY_PATH);
@@ -189,68 +224,94 @@ public class EndToEndDbTest {
             validateReceivedCloudEventMetrics(2, 0, 0, 0);
         });
 
-        sendEventFromFile(CREATE_GEOLOCATION_PATH);
-        validateWithTimeout(20, () -> {
-            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_GEOLOCATION_PATH);
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
+        //Sends the same entities and relationships as previous CE, but with different entity attributes. Relationships same.
+        sendEventFromFile(MERGE_MANY_TO_MANY_PATH);
+        validateWithTimeout(15, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_MERGE_MANY_TO_MANY_PATH);
             assertDbContainsExpectedValues(expected);
-            validateReceivedCloudEventMetrics(3, 0, 0, 0);
+            validateReceivedCloudEventMetrics(2, 1, 0, 0);
         });
 
-        sendEventFromFile(MERGE_ONE_TO_MANY_PATH);
-
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
+        sendEventFromFile(CREATE_GEOLOCATION_PATH);
         validateWithTimeout(15, () -> {
-            EndToEndExpectedResults expected = getExpectedResults(EXP_MERGE_ONE_TO_MANY_PATH);
+            EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_GEOLOCATION_PATH);
             assertDbContainsExpectedValues(expected);
             validateReceivedCloudEventMetrics(3, 1, 0, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
+        sendEventFromFile(MERGE_ONE_TO_MANY_PATH);//This sends new entities even though it's a merge event
+        validateWithTimeout(15, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_MERGE_ONE_TO_MANY_PATH);
+            assertDbContainsExpectedValues(expected);
+            validateReceivedCloudEventMetrics(3, 2, 0, 0);
+        });
+
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
+        //Sends the same entities and relationships as previous CE, but with different entity attributes. Relationships same.
+        sendEventFromFile(MERGE_ONE_TO_MANY3_PATH);
+        validateWithTimeout(15, () -> {
+            EndToEndExpectedResults expected = getExpectedResults(EXP_MERGE_ONE_TO_MANY3_PATH);
+            assertDbContainsExpectedValues(expected);
+            validateReceivedCloudEventMetrics(3, 3, 0, 0);
+        });
+
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(CREATE_SECOND_CASE_PATH);
         validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_SECOND_CASE_PATH);
             assertDbContainsExpectedValues(expected);
-            validateReceivedCloudEventMetrics(4, 1, 0, 0);
+            validateReceivedCloudEventMetrics(4, 3, 0, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(CREATE_INFERRED_ENTITIES);
-        validateWithTimeout(20, () -> {
+
+        validateWithTimeout(25, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_INFERRED_ENTITIES);
             assertDbContainsExpectedValues(expected);
-            validateReceivedCloudEventMetrics(5, 1, 0, 0);
+            validateReceivedCloudEventMetrics(5, 3, 0, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(CREATE_GEOLOCATION_PATH);
-        validateWithTimeout(20, () -> {
+        validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_GEOLOCATION_PATH);
             assertDbContainsExpectedValues(expected);
-            validateReceivedCloudEventMetrics(6, 1, 0, 0);
+            validateReceivedCloudEventMetrics(6, 3, 0, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(DELETE_MANY_TO_MANY_PATH);
         validateWithTimeout(15, () -> {
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_MANY_TO_MANY_PATH);
             assertDbNotContainsExpectedValues(notExpected);
-            validateReceivedCloudEventMetrics(6, 1, 1, 0);
+            validateReceivedCloudEventMetrics(6, 3, 1, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(DELETE_ONE_TO_ONE_PATH);
         validateWithTimeout(15, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_DELETE_ONE_TO_ONE_PATH);
             assertDbContainsExpectedValues(expected);
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_ONE_TO_ONE_PATH);
             assertDbNotContainsExpectedValues(notExpected);
-            validateReceivedCloudEventMetrics(6, 1, 2, 0);
+            validateReceivedCloudEventMetrics(6, 3, 2, 0);
         });
 
+        testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(DELETE_CMHANDLE_PATH);
         validateWithTimeout(15, () -> {
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_CMHANDLE_PATH);
-            assertDbContainsExpectedValues(notExpected);
-            validateReceivedCloudEventMetrics(6, 1, 2, 1);
+            assertDbNotContainsExpectedValues(notExpected);
+            validateReceivedCloudEventMetrics(6, 3, 2, 1);
         });
     }
 
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testTopologyIngestionConcurrentListeners() {
         final String COMMON_EVENT_FOLDER = "src/test/resources/cloudeventdata/common/";
 
@@ -281,7 +342,7 @@ public class EndToEndDbTest {
                 cloudEventsForPartition2, cloudEventsForPartition3);
 
         produceKafkaMessages(cloudEventPathLists, List.of(0, 1, 2, 3));
-        validateWithTimeout(10, () -> {
+        validateWithTimeout(20, () -> {
             assertEquals(2, assertDoesNotThrow(() -> getActiveConsumers(kafkaConfig.getTopologyIngestion().getGroupId())));
             validateReceivedCloudEventMetrics(15, 2, 5, 1);
             validatePersistedCloudEventMetrics(8, 2, 5, 1);
@@ -316,42 +377,127 @@ public class EndToEndDbTest {
         });
     }
 
-    private void assertDatabaseContainsValues(final String table, final Map<String, Object> attributes) {
-        Result<Record> results = TiesDbServiceContainerizedTest.selectAllRowsFromTable(writeDataDslContext,
-                "ties_data.\"" + table + "\"");
-        boolean containsExpectedData = results.stream().anyMatch(row -> attributes.entrySet().stream().allMatch(
-                expectedField -> {
-                    if (expectedField.getValue() != null) {
-                        if (row.get(expectedField.getKey()) == null) {
+    private void assertDatabaseContainsValues(final String table, final Map<String, Object> expectedFields) {
+        Result<Record> results = TeivDbServiceContainerizedTest.selectAllRowsFromTable(writeDataDslContext,
+                "teiv_data.\"" + table + "\"");
+        AtomicReference<String> debugInfo = new AtomicReference<>("");
+        AtomicReference<Record> targetRow = new AtomicReference<>();
+        boolean containsExpectedRow = results.stream().anyMatch(row -> {
+            if (Objects.equals(row.get("id"), expectedFields.get("id"))) {
+                targetRow.set(row);
+                return true;
+            }
+            return false;
+        });
+        assertTrue(containsExpectedRow, "Row not found with id = " + expectedFields.get("id"));
+        boolean containsExpectedData = expectedFields.entrySet().stream().allMatch(expectedField -> {
+            final String expectedFieldName = expectedField.getKey();
+            @Nullable Object actualFieldValue = targetRow.get().get(expectedFieldName);
+            if (expectedField.getValue() != null) {
+                if (actualFieldValue instanceof byte[]) {
+                    String hashString = bytesToHex((byte[]) Objects.requireNonNull(actualFieldValue));
+                    if (!Objects.equals(expectedField.getValue().toString(), hashString)) {
+                        debugInfo.set(expectedField.getKey() + " not as expected for " + targetRow.get().get("id"));
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                if (expectedField.getKey().contains("metadata")) {//Will be true for the metadata of the entity, and of each relation
+                    Map<String, Object> expectedMetadata = jsonbToMap((JSONB) expectedField.getValue());
+                    if (actualFieldValue == null) {
+                        debugInfo.set(expectedFieldName + " of " + expectedFields.get("id") + " is null");
+                        return false;
+                    }
+                    Map<String, Object> actualMetadata = jsonbToMap((JSONB) Objects.requireNonNull(actualFieldValue));
+                    if (expectedMetadata.containsKey(RELIABILITY_INDICATOR)) {
+                        if (!Objects.equals(expectedMetadata.get(RELIABILITY_INDICATOR), actualMetadata.get(
+                                RELIABILITY_INDICATOR))) {
+                            debugInfo.set(RELIABILITY_INDICATOR + " of " + expectedField.getKey() + " of " + targetRow.get()
+                                    .get("id") + " should be " + expectedMetadata.get(
+                                            RELIABILITY_INDICATOR) + " but it is " + actualMetadata.get(
+                                                    RELIABILITY_INDICATOR));
                             return false;
                         }
-                        if (row.get(expectedField.getKey()) instanceof byte[]) {
-                            String hashString = bytesToHex((byte[]) Objects.requireNonNull(row.get(expectedField
-                                    .getKey())));
-                            return Objects.equals(expectedField.getValue().toString(), hashString);
-                        }
-                        return Objects.equals(expectedField.getValue().toString(), row.get(expectedField.getKey())
-                                .toString());
                     }
-                    return row.get(expectedField.getKey()) == null;
+                    if (expectedMetadata.containsKey(FIRST_DISCOVERED)) {
+                        return validateMetadataTimestamp(FIRST_DISCOVERED, expectedField, actualMetadata, debugInfo,
+                                targetRow, expectedMetadata);
+                    }
+                    if (expectedMetadata.containsKey(LAST_MODIFIED)) {
+                        return validateMetadataTimestamp(LAST_MODIFIED, expectedField, actualMetadata, debugInfo, targetRow,
+                                expectedMetadata);
+                    }
+                    return true;
+                } else {
+                    if (actualFieldValue == null || !Objects.equals(expectedField.getValue().toString(), actualFieldValue
+                            .toString())) {
+                        debugInfo.set(targetRow.get().get("id") + " " + expectedField
+                                .getKey() + " should be " + expectedField.getValue() + " but it is " + actualFieldValue);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+            if (actualFieldValue != null) {
+                debugInfo.set(expectedFieldName + " should have been null.");
+            }
+            return actualFieldValue == null;
+        });
+        assertTrue(containsExpectedData, getAsserDbValuesFailureMessage(table, expectedFields, results, debugInfo.get()));
+    }
 
-                }));
-        assertTrue(containsExpectedData, getAsserDbValuesFailureMessage(table, attributes, results));
+    private boolean validateMetadataTimestamp(String timestampKeyToVerify, Map.Entry<String, Object> expectedField,
+            Map<String, Object> actualMetadata, AtomicReference<String> debugInfo, AtomicReference<Record> targetRow,
+            Map<String, Object> expectedMetadata) {
+        Object actualtimestampObject = actualMetadata.get(timestampKeyToVerify);
+        if (actualtimestampObject == null) {
+            debugInfo.set(targetRow.get().get("id") + ":\n" + timestampKeyToVerify + " should not be null");
+            return false;
+        }
+        OffsetDateTime actualTimestamp = OffsetDateTime.parse(actualtimestampObject.toString());
+        String expectedTimestamp = expectedMetadata.get(timestampKeyToVerify).toString();
+        if (expectedTimestamp.contains("AFTER TEST START TIME")) {
+            if (actualTimestamp.isBefore(testStartTime)) {
+                debugInfo.set(targetRow.get().get(
+                        "id") + ":\n" + timestampKeyToVerify + " " + actualTimestamp + " should be after " + testStartTime + " in " + expectedField
+                                .getKey());
+                return false;
+            }
+        } else if (expectedTimestamp.contains("BEFORE TEST START TIME")) {
+            if (actualTimestamp.isAfter(testStartTime)) {
+                debugInfo.set(targetRow.get().get(
+                        "id") + ": " + timestampKeyToVerify + " " + actualTimestamp + " should be before " + testStartTime + " in " + expectedField
+                                .getKey());
+                return false;
+            }
+        } else {
+            if (!actualTimestamp.isEqual(OffsetDateTime.parse("2025-01-08T10:40:36.46156500Z")) && !actualTimestamp.isEqual(
+                    OffsetDateTime.parse("2025-01-09T10:40:36.461565Z"))) {
+                debugInfo.set(targetRow.get().get(
+                        "id") + ": " + timestampKeyToVerify + " " + actualTimestamp + " should be " + "2025-01-08T10:40:36.46156500Z" + " in " + expectedField
+                                .getKey());
+                return false;
+            }
+        }
+        return true;
     }
 
     private String bytesToHex(byte[] hashBytes) {
         return Base64.getEncoder().encodeToString(hashBytes);
     }
 
-    private String getAsserDbValuesFailureMessage(String table, Map<String, Object> attributes, Result<Record> results) {
+    private String getAsserDbValuesFailureMessage(String table, Map<String, Object> attributes, Result<Record> results,
+            String extraInfo) {
         return String.format(
                 "Database table \"%s\" does not contain expected data, but it should.\nExpected row:\n" + attributes + "\nActual data (all rows):\n" + results
-                        .formatCSV(), table);
+                        .formatCSV() + "\n%s\n", table, extraInfo);
     }
 
     private void assertDatabaseDoesNotContainRecord(final String table, final String id) {
-        Result<Record> results = TiesDbServiceContainerizedTest.selectAllRowsFromTable(writeDataDslContext,
-                "ties_data.\"" + table + "\"");
+        Result<Record> results = TeivDbServiceContainerizedTest.selectAllRowsFromTable(writeDataDslContext,
+                "teiv_data.\"" + table + "\"");
         if (results.isNotEmpty()) {
             boolean containsRecord = results.stream().map(row -> row.get("id").toString()).anyMatch(id::equals);
             assertFalse(containsRecord, String.format("Database table \"%s\" contains record: \"%s\", but it should not.",

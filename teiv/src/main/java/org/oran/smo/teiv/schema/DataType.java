@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ public enum DataType {
     BIGINT,
     CONTAINER,
     GEOGRAPHIC,
-    TIMESTAMPTZ,
     BYTEA,
-    RELIABILITY;
+    RELIABILITY,
+    TIMESTAMPTZ;
 
     public static DataType fromDbDataType(final String dbDatatype) {
         return switch (dbDatatype.toUpperCase(Locale.US)) {
@@ -41,9 +41,9 @@ public enum DataType {
             case "BIGINT", "INT8" -> BIGINT;
             case "JSONB" -> CONTAINER;
             case "GEOGRAPHY" -> GEOGRAPHIC;
-            case "TIMESTAMPTZ" -> TIMESTAMPTZ;
             case "BYTEA" -> BYTEA;
             case "RELIABILITY" -> RELIABILITY;
+            case "TIMESTAMPTZ" -> TIMESTAMPTZ;
             default -> throw new IllegalStateException("Unexpected value: " + dbDatatype.toUpperCase(Locale.US));
         };
     }

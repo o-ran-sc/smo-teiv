@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ import java.util.Objects;
 
 import org.oran.smo.teiv.api.SchemasApi;
 import org.oran.smo.teiv.api.model.OranTeivSchemaList;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.model.api.ModelService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.exposure.utils.RequestValidator;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(TiesConstants.REQUEST_MAPPING)
+@RequestMapping(TeivConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("exposure")
 public class ModelController implements SchemasApi {
@@ -69,7 +69,7 @@ public class ModelController implements SchemasApi {
             final String schemaName = modelService.createModule(file);
             loggerHandler.logAudit(logger, String.format("Successful - Create schema %s", schemaName), context);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             loggerHandler.logAudit(logger, String.format("Failed - Create schema using provided file, %s", ex.getDetails()),
                     context);
             log.error("Exception during service call", ex);
@@ -102,7 +102,7 @@ public class ModelController implements SchemasApi {
             modelService.deleteConsumerModule(schemaName);
             loggerHandler.logAudit(logger, String.format("Successful - Delete schema %s", schemaName), context);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (TiesException ex) {
+        } catch (TeivException ex) {
             loggerHandler.logAudit(logger, String.format("Failed - Delete schema %s, %s", schemaName, ex.getDetails()),
                     context);
             log.error("Exception during service call", ex);

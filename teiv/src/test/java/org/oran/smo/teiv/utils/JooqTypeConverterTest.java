@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import org.oran.smo.teiv.exception.InvalidFieldInYangDataException;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.utils.schema.Geography;
 
 class JooqTypeConverterTest {
@@ -95,12 +95,12 @@ class JooqTypeConverterTest {
     @Test
     void testThrowExceptionJsonbToList() {
         final JSONB invalidJson = JSONB.valueOf("[\"one\", \"two]");
-        Assertions.assertThrowsExactly(TiesException.class, () -> JooqTypeConverter.jsonbToList(invalidJson));
+        Assertions.assertThrowsExactly(TeivException.class, () -> JooqTypeConverter.jsonbToList(invalidJson));
     }
 
     @Test
     void testThrowExceptionJsonbToMap() {
         final JSONB invalidJson = JSONB.valueOf("{\"key\": \"valu");
-        Assertions.assertThrowsExactly(TiesException.class, () -> JooqTypeConverter.jsonbToList(invalidJson));
+        Assertions.assertThrowsExactly(TeivException.class, () -> JooqTypeConverter.jsonbToList(invalidJson));
     }
 }

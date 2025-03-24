@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.oran.smo.yangtools.parser.data.dom.YangDataDomNode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.oran.smo.teiv.utils.TiesConstants.SOURCE_IDS;
+import static org.oran.smo.teiv.utils.TeivConstants.SOURCE_IDS;
 
 @NoArgsConstructor
 @AllArgsConstructor

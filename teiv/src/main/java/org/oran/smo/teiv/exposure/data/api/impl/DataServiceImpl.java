@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,19 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.oran.smo.teiv.exposure.tiespath.resolver.ScopeResolver;
+import org.oran.smo.teiv.exposure.teivpath.resolver.ScopeResolver;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.spi.DataRepository;
 import org.oran.smo.teiv.exposure.spi.mapper.EntityMapper;
 import org.oran.smo.teiv.exposure.spi.mapper.RelationshipMapper;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.AndLogicalBlock;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.FilterCriteria;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.InnerFilterCriteria;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.OrLogicalBlock;
-import org.oran.smo.teiv.exposure.tiespath.refiner.BasePathRefinement;
-import org.oran.smo.teiv.exposure.tiespath.resolver.TargetResolver;
+import org.oran.smo.teiv.exposure.teivpath.innerlanguage.AndLogicalBlock;
+import org.oran.smo.teiv.exposure.teivpath.innerlanguage.FilterCriteria;
+import org.oran.smo.teiv.exposure.teivpath.innerlanguage.InnerFilterCriteria;
+import org.oran.smo.teiv.exposure.teivpath.innerlanguage.OrLogicalBlock;
+import org.oran.smo.teiv.exposure.teivpath.refiner.BasePathRefinement;
+import org.oran.smo.teiv.exposure.teivpath.resolver.TargetResolver;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -130,7 +130,7 @@ public class DataServiceImpl implements DataService {
         final EntityType entityType = SchemaRegistry.getEntityTypeByName(entityName);
         final Result<Record> result = dataRepository.getEntityById(entityType, id);
         if (result.isEmpty()) {
-            throw TiesException.resourceNotFoundException(id);
+            throw TeivException.resourceNotFoundException(id);
         }
 
         return entityMapper.getItemsWithTotalCount(result).getLeft().get(0);
@@ -218,7 +218,7 @@ public class DataServiceImpl implements DataService {
         final RelationType relationType = SchemaRegistry.getRelationTypeByName(relationName);
         final Result<Record> result = dataRepository.getRelationshipById(id, relationType);
         if (result.isEmpty()) {
-            throw TiesException.resourceNotFoundException(id);
+            throw TeivException.resourceNotFoundException(id);
         }
 
         return relationshipMapper.getItemsWithTotalCount(result).getLeft().get(0);

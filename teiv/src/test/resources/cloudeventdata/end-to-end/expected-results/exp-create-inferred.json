@@ -7,7 +7,12 @@
             "id": "NRCellDU_51",
             "CD_sourceIds": [
                 "relation_one_to_one_missing_bSide"
-            ]
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "28C9A375E800E82308EBE7DA2932EF2C0AF13C38": [
@@ -27,6 +32,11 @@
             "CD_sourceIds": [
                 "relation_one_to_one_missing_aSide"
             ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
             "REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4": [
                 "source1",
                 "source2"
@@ -37,6 +47,11 @@
         {
             "id": "NRCellDU_4",
             "cellLocalId": 470,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
             "REL_FK_provided-by-oduFunction": "ODU_3",
             "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_one_to_many_aSide_missing",
             "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU": [
@@ -51,6 +66,11 @@
             "CD_sourceIds": [
                 "relation_one_to_many_bSide_missing"
             ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
             "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU": [
                 "source1",
                 "source2"
@@ -66,13 +86,23 @@
             },
             "gNBDUId": 13,
             "gNBId": 12345,
-            "gNBIdLength": 5
+            "gNBIdLength": 5,
+            "metadata": {
+                "reliabilityIndicator": "OK",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "ODU_3",
             "CD_sourceIds": [
                 "relation_one_to_many_aSide_missing"
-            ]
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "o-ran-smo-teiv-equipment_AntennaModule": [
@@ -84,13 +114,23 @@
             "id": "AntennaModule_123",
             "CD_sourceIds": [
                 "relation_many_to_many_aSide_missing"
-            ]
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "AntennaModule_11",
             "CD_sourceIds": [
                 "relation_many_to_many_both_sides_missing"
-            ]
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "o-ran-smo-teiv-ran_AntennaCapability": [
@@ -105,13 +145,23 @@
             "id": "AntennaCapability_123",
             "CD_sourceIds": [
                 "relation_many_to_many_bSide_missing"
-            ]
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         },
         {
             "id": "AntennaCapability_22",
             "CD_sourceIds": [
                 "relation_many_to_many_both_sides_missing"
-            ]
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
         }
     ],
     "CFC235E0404703D1E4454647DF8AAE2C193DB402": [

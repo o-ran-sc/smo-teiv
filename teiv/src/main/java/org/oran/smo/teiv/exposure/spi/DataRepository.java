@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,8 +25,9 @@ import java.util.Set;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import org.oran.smo.teiv.exposure.tiespath.innerlanguage.FilterCriteria;
+import org.oran.smo.teiv.exposure.teivpath.innerlanguage.FilterCriteria;
 import org.oran.smo.teiv.schema.EntityType;
+import org.oran.smo.teiv.schema.Persistable;
 import org.oran.smo.teiv.schema.RelationType;
 
 public interface DataRepository {
@@ -127,4 +128,15 @@ public interface DataRepository {
      * @return the entity ids for classifier deletion
      */
     List<String> getEntityIdsForClassifierDeletion(final EntityType entityType, final Set<String> classifiers);
+
+    /**
+     * Check if a topology object - entity or relationship - exists with given id and type.
+     *
+     * @param type
+     *     The topology type
+     * @param id
+     *     The id
+     * @return true if exists, false if it does not
+     */
+    boolean isTopologyExist(final Persistable type, final String id);
 }

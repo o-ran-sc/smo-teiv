@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.oran.smo.teiv.CustomMetrics;
 
 import org.oran.smo.teiv.listener.audit.ExecutionStatus;
 import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
+import org.oran.smo.teiv.service.models.OperationResult;
 import org.oran.smo.teiv.utils.CloudEventUtil;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -32,13 +33,16 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.oran.smo.teiv.exception.InvalidFieldInYangDataException;
-import org.oran.smo.teiv.service.TiesDbOperations;
+import org.oran.smo.teiv.service.TeivDbOperations;
 import org.oran.smo.teiv.service.cloudevent.CloudEventParser;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
 
 import org.springframework.util.StopWatch;
 
-import static org.oran.smo.teiv.utils.TiesConstants.CLOUD_EVENT_WITH_TYPE_MERGE;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_MERGE;
 
 @AllArgsConstructor
 @Component
@@ -49,7 +53,7 @@ public class MergeTopologyProcessor implements TopologyProcessor {
 
     private final CloudEventParser cloudEventParser;
     private final CustomMetrics customMetrics;
-    private final TiesDbOperations tiesDbOperations;
+    private final TeivDbOperations teivDbOperations;
     private final IngestionAuditLogger auditLogger;
 
     //spotless:off
@@ -70,9 +74,10 @@ public class MergeTopologyProcessor implements TopologyProcessor {
         customMetrics.incrementNumSuccessfullyParsedMergeCloudEvents();
 
         stopWatch.start();
+        List<OperationResult> operationResults = new ArrayList<>();
         final String sourceAdapter = String.valueOf(cloudEvent.getSource());
         try {
-            tiesDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData, sourceAdapter);
+            operationResults = teivDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData, sourceAdapter);
         } catch (InvalidFieldInYangDataException e) {
             log.error("Invalid field in yang data. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                 CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());

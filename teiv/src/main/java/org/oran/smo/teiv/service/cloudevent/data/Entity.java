@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ import org.oran.smo.yangtools.parser.model.statements.StatementModuleAndName;
 import org.oran.smo.yangtools.parser.util.NamespaceModuleIdentifier;
 
 import static org.oran.smo.teiv.utils.CloudEventUtil.hasInvalidCharacter;
-import static org.oran.smo.teiv.utils.TiesConstants.QUOTED_STRING;
+import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
 
 @Slf4j
 public class Entity extends ModuleObject {

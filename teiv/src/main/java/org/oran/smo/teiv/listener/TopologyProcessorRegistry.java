@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.oran.smo.teiv.CustomMetrics;
-import org.oran.smo.teiv.utils.TiesConstants;
+import org.oran.smo.teiv.utils.TeivConstants;
 
 @Component
 @Slf4j
@@ -45,22 +45,22 @@ public class TopologyProcessorRegistry {
     public TopologyProcessor getProcessor(CloudEvent event) {
         String cloudEventType = getCloudEventType(event);
         switch (cloudEventType) {
-            case TiesConstants.CLOUD_EVENT_WITH_TYPE_CREATE -> {
+            case TeivConstants.CLOUD_EVENT_WITH_TYPE_CREATE -> {
                 log.debug("Create CloudEvent received with id: {}", event.getId());
                 metrics.incrementNumReceivedCloudEventCreate();
                 return createTopologyProcessor;
             }
-            case TiesConstants.CLOUD_EVENT_WITH_TYPE_MERGE -> {
+            case TeivConstants.CLOUD_EVENT_WITH_TYPE_MERGE -> {
                 log.debug("Merge CloudEvent received with id: {}", event.getId());
                 metrics.incrementNumReceivedCloudEventMerge();
                 return mergeTopologyProcessor;
             }
-            case TiesConstants.CLOUD_EVENT_WITH_TYPE_DELETE -> {
+            case TeivConstants.CLOUD_EVENT_WITH_TYPE_DELETE -> {
                 log.debug("Delete CloudEvent received with id: {}", event.getId());
                 metrics.incrementNumReceivedCloudEventDelete();
                 return deleteTopologyProcessor;
             }
-            case TiesConstants.CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE -> {
+            case TeivConstants.CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE -> {
                 log.debug("Source Entity Delete CloudEvent received with id: {}", event.getId());
                 metrics.incrementNumReceivedCloudEventSourceEntityDelete();
                 return sourceEntityDeleteTopologyProcessor;

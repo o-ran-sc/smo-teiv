@@ -21,26 +21,26 @@
 
 BEGIN;
 
-DROP SCHEMA IF EXISTS ties_model cascade;
-CREATE SCHEMA IF NOT EXISTS ties_model;
-ALTER SCHEMA ties_model OWNER TO :pguser;
+DROP SCHEMA IF EXISTS teiv_model cascade;
+CREATE SCHEMA IF NOT EXISTS teiv_model;
+ALTER SCHEMA teiv_model OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 SET ROLE :'pguser';
 
-CREATE TABLE IF NOT EXISTS ties_model.execution_status (
+CREATE TABLE IF NOT EXISTS teiv_model.execution_status (
     "schema"                 VARCHAR(127) PRIMARY KEY,
     "status"          VARCHAR(127)
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.hash_info (
+CREATE TABLE IF NOT EXISTS teiv_model.hash_info (
     "name"                 VARCHAR(511) PRIMARY KEY,
     "hashedValue"          VARCHAR(511),
     "type"                 VARCHAR(511)
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.module_reference (
+CREATE TABLE IF NOT EXISTS teiv_model.module_reference (
     "name"                   VARCHAR(511) PRIMARY KEY,
     "namespace"              VARCHAR(511),
     "domain"             VARCHAR(511),
@@ -49,15 +49,15 @@ CREATE TABLE IF NOT EXISTS ties_model.module_reference (
     "content"               TEXT
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.entity_info (
+CREATE TABLE IF NOT EXISTS teiv_model.entity_info (
     "storedAt"            VARCHAR(511) PRIMARY KEY,
     "name"                VARCHAR(511) NOT NULL,
     "moduleReferenceName" VARCHAR(511) NOT NULL,
     "attributeNames"      jsonb DEFAULT '[]'::jsonb,
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
+    FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
+CREATE TABLE IF NOT EXISTS teiv_model.relationship_info (
     "name"                     VARCHAR(511) NOT NULL,
     "aSideAssociationName"     TEXT NOT NULL,
     "aSideMOType"              TEXT NOT NULL,
@@ -75,22 +75,22 @@ CREATE TABLE IF NOT EXISTS ties_model.relationship_info (
     "storedAt"                 VARCHAR(511) NOT NULL,
     "moduleReferenceName"      TEXT NOT NULL,
     PRIMARY KEY ("name", "moduleReferenceName"),
-    FOREIGN KEY ("moduleReferenceName") REFERENCES ties_model.module_reference ("name") ON DELETE CASCADE
+    FOREIGN KEY ("moduleReferenceName") REFERENCES teiv_model.module_reference ("name") ON DELETE CASCADE
 );
 
 -- Update model schema exec status
-INSERT INTO ties_model.execution_status("schema", "status") VALUES ('ties_model', 'success');
+INSERT INTO teiv_model.execution_status("schema", "status") VALUES ('teiv_model', 'success');
 
-COPY ties_model.hash_info("name", "hashedValue", "type") FROM stdin;
+COPY teiv_model.hash_info("name", "hashedValue", "type") FROM stdin;
 \.
 
-COPY ties_model.module_reference("name", "namespace", "domain", "includedModules", "revision", "content") FROM stdin;
+COPY teiv_model.module_reference("name", "namespace", "domain", "includedModules", "revision", "content") FROM stdin;
 \.
 
-COPY ties_model.entity_info("storedAt", "name", "moduleReferenceName", "attributeNames") FROM stdin;
+COPY teiv_model.entity_info("storedAt", "name", "moduleReferenceName", "attributeNames") FROM stdin;
 \.
 
-COPY ties_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;
+COPY teiv_model.relationship_info("name", "aSideAssociationName", "aSideMOType", "aSideModule", "aSideMinCardinality", "aSideMaxCardinality", "bSideAssociationName", "bSideMOType", "bSideModule", "bSideMinCardinality", "bSideMaxCardinality", "associationKind", "connectSameEntity", "relationshipDataLocation", "storedAt", "moduleReferenceName") FROM stdin;
 ENODEBFUNCTION_PROVIDES_LTESECTORCARRIER	provided-lteSectorCarrier	ENodeBFunction	o-ran-smo-teiv-ran	1	1	provided-by-enodebFunction	LTESectorCarrier	o-ran-smo-teiv-ran	0	100	BI_DIRECTIONAL	false	B_SIDE	o-ran-smo-teiv-ran:LTESectorCarrier	o-ran-smo-teiv-ran
 LTESECTORCARRIER_USES_ANTENNACAPABILITY	used-antennaCapability	LTESectorCarrier	o-ran-smo-teiv-ran	0	9223372036854775807	used-by-lteSectorCarrier	AntennaCapability	o-ran-smo-teiv-ran	0	1	BI_DIRECTIONAL	false	A_SIDE	o-ran-smo-teiv-ran:LTESectorCarrier	o-ran-smo-teiv-ran
 \.

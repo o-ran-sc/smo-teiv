@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,15 +46,15 @@ import org.oran.smo.yangtools.parser.testutils.YangTestCommon;
 
 public class OranSmoTeivExtensionsTest extends YangTestCommon {
 
-    protected static final String SMO_TIES_COMMON_YANG_EXT = "src/test/resources/_orig-modules/o-ran-smo-teiv-common-yang-extensions@2023-12-12.yang";
-    protected static final String SMO_TIES_COMMON_YANG_TYPES = "src/test/resources/_orig-modules/o-ran-smo-teiv-common-yang-types@2023-12-12.yang";
+    protected static final String SMO_TEIV_COMMON_YANG_EXT = "src/test/resources/_orig-modules/o-ran-smo-teiv-common-yang-extensions@2023-12-12.yang";
+    protected static final String SMO_TEIV_COMMON_YANG_TYPES = "src/test/resources/_orig-modules/o-ran-smo-teiv-common-yang-types@2023-12-12.yang";
 
     @Test
     public void test_oran_extensions() {
 
         parseAbsoluteImplementsYangModels(Arrays.asList(
-                "src/test/resources/model-statements-oran/oran-smo-teiv-extension-test.yang", SMO_TIES_COMMON_YANG_EXT,
-                SMO_TIES_COMMON_YANG_TYPES));
+                "src/test/resources/model-statements-oran/oran-smo-teiv-extension-test.yang", SMO_TEIV_COMMON_YANG_EXT,
+                SMO_TEIV_COMMON_YANG_TYPES));
 
         final YModule module = getModule("oran-smo-teiv-extension-test");
         assertTrue(module != null);

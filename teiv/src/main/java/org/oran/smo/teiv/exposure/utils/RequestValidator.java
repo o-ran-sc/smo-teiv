@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,12 +23,14 @@ package org.oran.smo.teiv.exposure.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import org.oran.smo.teiv.exception.TiesException;
+import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
+
+import static org.oran.smo.teiv.utils.TeivConstants.URN_PREFIX;
 
 @Service
 @RequiredArgsConstructor
@@ -37,32 +39,32 @@ public class RequestValidator {
 
     public void validateDomain(String domain) {
         if (!SchemaRegistry.getDomains().contains(domain)) {
-            throw TiesException.unknownDomain(domain, SchemaRegistry.getDomains());
+            throw TeivException.unknownDomain(domain, SchemaRegistry.getDomains());
         }
     }
 
     public void validateEntityType(String entityType) {
         if (!SchemaRegistry.getEntityNames().contains(entityType)) {
-            throw TiesException.unknownEntityType(entityType, SchemaRegistry.getEntityNames());
+            throw TeivException.unknownEntityType(entityType, SchemaRegistry.getEntityNames());
         }
     }
 
     public void validateEntityTypeInDomain(String entityType, String domain) {
         if (!SchemaRegistry.getEntityNamesByDomain(domain).contains(entityType)) {
-            throw TiesException.unknownEntityTypeInDomain(entityType, domain, SchemaRegistry.getEntityNamesByDomain(
+            throw TeivException.unknownEntityTypeInDomain(entityType, domain, SchemaRegistry.getEntityNamesByDomain(
                     domain));
         }
     }
 
     public void validateRelationshipType(String relationShipType) {
         if (!SchemaRegistry.getRelationNames().contains(relationShipType)) {
-            throw TiesException.unknownRelationshipType(relationShipType, SchemaRegistry.getRelationNames());
+            throw TeivException.unknownRelationshipType(relationShipType, SchemaRegistry.getRelationNames());
         }
     }
 
     public void validateRelationshipTypeInDomain(String relationshipType, String domain) {
         if (!SchemaRegistry.getRelationNamesByDomain(domain).contains(relationshipType)) {
-            throw TiesException.unknownRelationshipTypeInDomain(relationshipType, domain, SchemaRegistry
+            throw TeivException.unknownRelationshipTypeInDomain(relationshipType, domain, SchemaRegistry
                     .getRelationNamesByDomain(domain));
         }
     }
@@ -70,8 +72,14 @@ public class RequestValidator {
     public void validateYangFile(MultipartFile file) {
 
         if (!Objects.equals(file.getContentType(), "application/yang")) {
-            throw TiesException.invalidFileInput("Invalid file");
+            throw TeivException.invalidFileInput("Invalid file");
         }
 
+    }
+
+    public void validateTopologyID(String id) {
+        if (!id.startsWith(URN_PREFIX)) {
+            throw TeivException.invalidTopologyID(id);
+        }
     }
 }

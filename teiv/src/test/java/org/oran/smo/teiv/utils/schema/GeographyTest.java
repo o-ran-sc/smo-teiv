@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -67,5 +67,10 @@ class GeographyTest {
 
         assertThrows(IOException.class, () -> new Geography("{\"longitude\": 19.040236 \"height\": 19.040236}"));
         assertThrows(IOException.class, () -> new Geography("{\"latitude\": 47.497913 \"height\": 19.040236}"));
+
+        assertThrows(IOException.class, () -> new Geography(
+                "{\"longitude\": 180.040236 \"latitude\": 47.497913 \"height\": 19.040236}"));
+        assertThrows(IOException.class, () -> new Geography(
+                "{\"longitude\": 19.040236 \"latitude\": -147.497913 \"height\": 19.040236}"));
     }
 }

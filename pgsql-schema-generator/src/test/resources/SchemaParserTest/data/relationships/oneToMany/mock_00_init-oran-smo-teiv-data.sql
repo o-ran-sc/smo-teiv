@@ -29,65 +29,65 @@ GRANT USAGE ON SCHEMA topology to :pguser;
 GRANT SELECT ON ALL SEQUENCES IN SCHEMA topology TO :pguser;
 GRANT SELECT ON ALL TABLES IN SCHEMA topology TO :pguser;
 
-CREATE SCHEMA IF NOT EXISTS ties_data;
-ALTER SCHEMA ties_data OWNER TO :pguser;
+CREATE SCHEMA IF NOT EXISTS teiv_data;
+ALTER SCHEMA teiv_data OWNER TO :pguser;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 SET ROLE :'pguser';
 
 -- Function to create CONSTRAINT only if it does not exists
-CREATE OR REPLACE FUNCTION ties_data.create_constraint_if_not_exists (
+CREATE OR REPLACE FUNCTION teiv_data.create_constraint_if_not_exists (
 	t_name TEXT, c_name TEXT, constraint_sql TEXT
 )
 RETURNS void AS
 $$
 BEGIN
-	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'ties_data' AND table_name = t_name AND constraint_name = c_name) THEN
+	IF NOT EXISTS (SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'teiv_data' AND table_name = t_name AND constraint_name = c_name) THEN
 		EXECUTE constraint_sql;
 	END IF;
 END;
 $$ language 'plpgsql';
 
 -- Update data schema exec status
-INSERT INTO ties_model.entity_info("schema", "status") VALUES ('ties_data', 'success');
+INSERT INTO teiv_model.entity_info("schema", "status") VALUES ('teiv_data', 'success');
 
-CREATE TABLE IF NOT EXISTS ties_data."Sector" (
+CREATE TABLE IF NOT EXISTS teiv_data."Sector" (
 	"id"			 TEXT,
 	"azimuth"			DECIMAL,
 	"sectorId"			 jsonb,
 	"geo-location"			"geography"
 );
 
-CREATE TABLE IF NOT EXISTS ties_data."Namespace" (
+CREATE TABLE IF NOT EXISTS teiv_data."Namespace" (
 	"id"			 TEXT,
 	"name"			TEXT,
 	"REL_FK_serving-namespace"			TEXT,
 	"REL_ID_serviced-sector_serving-namespace"			TEXT
 );
 
-SELECT ties_data.create_constraint_if_not_exists(
+SELECT teiv_data.create_constraint_if_not_exists(
 	'Sector',
  'PK_Sector_id',
- 'ALTER TABLE ties_data."Sector" ADD CONSTRAINT "PK_Sector_id" PRIMARY KEY ("id");'
+ 'ALTER TABLE teiv_data."Sector" ADD CONSTRAINT "PK_Sector_id" PRIMARY KEY ("id");'
 );
 
-SELECT ties_data.create_constraint_if_not_exists(
+SELECT teiv_data.create_constraint_if_not_exists(
 	'Namespace',
  'PK_Namespace_id',
- 'ALTER TABLE ties_data."Namespace" ADD CONSTRAINT "PK_Sector_id" PRIMARY KEY ("id");'
+ 'ALTER TABLE teiv_data."Namespace" ADD CONSTRAINT "PK_Sector_id" PRIMARY KEY ("id");'
 );
 
-SELECT ties_data.create_constraint_if_not_exists(
+SELECT teiv_data.create_constraint_if_not_exists(
 	'Namespace',
  'FK_Namespace_REL_FK_serving-namespace',
- 'ALTER TABLE ties_data."Namespace" ADD CONSTRAINT "FK_Namespace_REL_FK_serving-namespace" FOREIGN KEY ("REL_FK_serving-namespace") REFERENCES ties_data."Sector" (id) ON DELETE CASCADE;'
+ 'ALTER TABLE teiv_data."Namespace" ADD CONSTRAINT "FK_Namespace_REL_FK_serving-namespace" FOREIGN KEY ("REL_FK_serving-namespace") REFERENCES teiv_data."Sector" (id) ON DELETE CASCADE;'
 );
 
-SELECT ties_data.create_constraint_if_not_exists(
+SELECT teiv_data.create_constraint_if_not_exists(
 	'Namespace',
  'UNIQUE_Namespace_REL_ID_serviced-sector_serving-namespace',
- 'ALTER TABLE ties_data."Namespace" ADD CONSTRAINT "UNIQUE_Namespace_REL_ID_serviced-sector_serving-namespace" UNIQUE ("REL_ID_serviced-sector_serving-namespace");'
+ 'ALTER TABLE teiv_data."Namespace" ADD CONSTRAINT "UNIQUE_Namespace_REL_ID_serviced-sector_serving-namespace" UNIQUE ("REL_ID_serviced-sector_serving-namespace");'
 );
 
 COMMIT;

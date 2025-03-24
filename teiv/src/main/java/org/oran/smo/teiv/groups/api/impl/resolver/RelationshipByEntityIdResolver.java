@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
  */
 package org.oran.smo.teiv.groups.api.impl.resolver;
 
+import org.oran.smo.teiv.exposure.utils.RequestValidator;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -39,12 +40,14 @@ import org.oran.smo.teiv.exposure.utils.RequestDetails;
 @Profile("groups")
 public class RelationshipByEntityIdResolver implements CriteriaResolver {
     private final DataService dataService;
+    private final RequestValidator requestValidator;
 
     @Override
     public OranTeivMembersResponse resolveByCriteria(final OranTeivCriteria criteria, final RequestDetails requestDetails) {
         log.debug("Resolve group with getRelationshipsByEntityId criteria: {}", criteria);
 
         OranTeivGetRelationshipsForEntityId relForEntityId = (OranTeivGetRelationshipsForEntityId) criteria;
+        requestValidator.validateTopologyID(relForEntityId.getEntityId());
         final OranTeivRelationshipsResponseMessage relationshipsByEntityId = this.dataService
                 .getAllRelationshipsForObjectId(relForEntityId.getDomain(), relForEntityId.getEntityTypeName(),
                         relForEntityId.getEntityId(), relForEntityId.getTargetFilter(), relForEntityId.getScopeFilter(),
