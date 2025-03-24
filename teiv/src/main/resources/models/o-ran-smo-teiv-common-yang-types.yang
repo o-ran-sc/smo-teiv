@@ -12,13 +12,13 @@ module o-ran-smo-teiv-common-yang-types {
     organization "ORAN";
     contact "The Authors";
     description
-    "Topology and Inventory common types model
+    "Topology and Inventory common types model.
 
     This model contains re-usable data types that topology and inventory models
     will frequently use as part of types and relationships.
 
     Copyright (C) 2024 Ericsson
-    Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+    Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
 
     Licensed under the Apache License, Version 2.0 (the \"License\");
     you may not use this file except in compliance with the License.
@@ -34,77 +34,48 @@ module o-ran-smo-teiv-common-yang-types {
 
     SPDX-License-Identifier: Apache-2.0";
 
-    revision "2025-01-17" {
-        description "Added firstDiscovered and lastModified to metadata container";
-        or-teiv-yext:label 0.5.0;
+    revision "2025-03-20" {
+        description "Proposed metadata, decorators and classifiers";
+        or-teiv-yext:label 1.1.1;
     }
 
-    revision "2024-10-04" {
-        description "Added Origin_Entity_Mapping_Grp and Origin_Relationship_Mapping_Grp
-        for sourceIds and reliabilityIndicator to metadata.";
-        or-teiv-yext:label 0.4.0;
+    revision "2025-02-24" {
+        description "Renamed Adapter Entity to Origin Entity. Added Geo-Information";
+        or-teiv-yext:label 1.1.0;
+        reference "O-RAN.WG10.TE&IV-DM.0-R004-v02.00";
     }
 
-    revision "2024-05-24" {
+    revision "2024-10-10" {
         description "Initial revision.";
-        or-teiv-yext:label 0.3.0;
+        or-teiv-yext:label 1.0.0;
+        reference "O-RAN.WG10.TE&IV-DM.0-R004-v01.00.00";
     }
 
     grouping Top_Grp_Type {
-        description "Grouping containing the key attribute common to all types.
-            All types MUST use this grouping.";
+        description "Grouping containing the key attribute common to all types. All types MUST use this grouping.";
 
         leaf id {
             type string;
-            description "Unique identifier of topology entities. Represents the
-                Entity Instance Identifier.";
+            description "Unique identifier of topology entities. Represents the Entity Instance Identifier.";
         }
-    }
-
-    container decorators {
-        description
-            "This container serves as extension point for applications wishing
-            to define their own decorators. This is done via augmentations. They
-            can only be defined in name value pair.
-
-            This is a consumer data and can be attached to Topology Entity or
-            Topology Relation instance, outside of the declared Topology Entity
-            or Topology Relationship's attributes. This cannot be instantiated,
-            and it MUST NOT be augmented or deviated in any way, unless stated
-            otherwise.";
-    }
-
-    leaf-list classifiers {
-        description
-            "Consumer defined tags to topology entities and relationships.
-
-            This is a consumer data and can be attached to Topology Entity or
-            Topology Relation instance, outside of the declared Topology Entity
-            or Topology Relationship's attributes. This cannot be instantiated,
-            and it MUST NOT be augmented or deviated in any way, unless stated
-            otherwise.";
-
-        type identityref { base classifier; }
     }
 
     grouping Origin_Entity_Mapping_Grp {
         description "Grouping to identify sourceIds on a topology entity.";
 
         leaf-list sourceIds {
-
+            type sourceId;
+            min-elements 1;
+            ordered-by user;
             description
                 "An ordered list of identities that represent the set of native
                 source identifiers for participating entities.
 
-                This must be attached to the Topology Entity instance, outside of the
+                This must be attached to Topology Entity instance, outside of the
                 declared Topology Entity's attributes. This is exposed to the
                 consumers and can only be set by the responsible adapter. This
                 cannot be instantiated, and it MUST NOT be augmented or deviated
                 in any way, unless stated otherwise.";
-
-            type sourceId;
-            ordered-by user;
-            min-elements 1;
         }
     }
 
@@ -112,7 +83,9 @@ module o-ran-smo-teiv-common-yang-types {
         description "Grouping to identify sourceIds on a topology relationship.";
 
         leaf-list sourceIds {
-
+            type sourceId;
+            min-elements 2;
+            ordered-by user;
             description
                 "An ordered list of identities that represent the set of native
                 source identifiers for participating entities in the relationship.
@@ -122,11 +95,12 @@ module o-ran-smo-teiv-common-yang-types {
                 consumers and can only be set by the responsible adapter. This
                 cannot be instantiated, and it MUST NOT be augmented or deviated in
                 any way, unless stated otherwise.";
-
-            type sourceId;
-            ordered-by user;
-            min-elements 2;
         }
+    }
+
+    typedef sourceId {
+        type string;
+        description "An identity that represents a native identifier of a topology entity.";
     }
 
     container metadata {
@@ -160,6 +134,7 @@ module o-ran-smo-teiv-common-yang-types {
                 }
             }
         }
+
         leaf firstDiscovered {
             type yang:date-and-time;
             description "Timestamp indicating when an instance of Topology Entity or Relation
@@ -173,13 +148,34 @@ module o-ran-smo-teiv-common-yang-types {
         }
     }
 
+    container decorators {
+        description
+            "This container serves as extension point for applications wishing
+            to define their own decorators. This is done via augmentations. They
+            can only be defined in name value pair.
+
+            This is a consumer data and can be attached to Topology Entity or
+            Topology Relation instance, outside of the declared Topology Entity
+            or Topology Relationship's attributes. This cannot be instantiated,
+            and it MUST NOT be augmented or deviated in any way, unless stated
+            otherwise.";
+    }
+
+    leaf-list classifiers {
+        description
+            "Consumer defined tags to topology entities and relationships.
+
+            This is a consumer data and can be attached to Topology Entity or
+            Topology Relation instance, outside of the declared Topology Entity
+            or Topology Relationship's attributes. This cannot be instantiated,
+            and it MUST NOT be augmented or deviated in any way, unless stated
+            otherwise.";
+
+        type identityref { base classifier; }
+    }
+
     identity classifier {
         description "The classifier is used as a base to provide all classifiers
         with identity. ";
-    }
-
-    typedef sourceId {
-        description "An identity that represents a native identifier of a topology entity.";
-        type string;
     }
 }

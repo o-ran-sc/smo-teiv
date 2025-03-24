@@ -637,9 +637,9 @@
 
                                 <resources id="3gpp-yang-downloads">
                                     <url
-                                        url="${source.3gpp.Rel17_SA97}_3gpp-common-yang-types.yang" />
+                                        url="${source.3gpp.Rel18_SA103}_3gpp-common-yang-types.yang" />
                                     <url
-                                        url="${source.3gpp.Rel17_SA97}_3gpp-common-yang-extensions.yang" />
+                                        url="${source.3gpp.Rel18_SA103}_3gpp-common-yang-extensions.yang" />
                                 </resources>
                                 <get dest="${src.models.import}" skipexisting="true">
                                     <resources refid="3gpp-yang-downloads" />

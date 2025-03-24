@@ -693,6 +693,7 @@ import org.springframework.cloud.contract.spec.Contract
             }''')
         }
     },
+    //10
     Contract.make {
         description "ERROR - 400: Invalid file type"
         request {

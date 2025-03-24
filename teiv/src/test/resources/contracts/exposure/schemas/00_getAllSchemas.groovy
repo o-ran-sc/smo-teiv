@@ -39,7 +39,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "_3gpp-common-yang-extensions",
                         "domain": "",
-                        "revision": "2019-06-23",
+                        "revision": "2023-09-18",
                         "content": {
                             "href": "/schemas/_3gpp-common-yang-extensions/content"
                         }
@@ -47,7 +47,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "_3gpp-common-yang-types",
                         "domain": "",
-                        "revision": "2022-07-26",
+                        "revision": "2023-11-06",
                         "content": {
                             "href": "/schemas/_3gpp-common-yang-types/content"
                         }
@@ -87,7 +87,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-common-yang-extensions",
                         "domain": "",
-                        "revision": "2024-05-24",
+                        "revision": "2025-02-14",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-common-yang-extensions/content"
                         }
@@ -95,7 +95,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-common-yang-types",
                         "domain": "",
-                        "revision": "2025-01-17",
+                        "revision": "2025-03-20",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-common-yang-types/content"
                         }
@@ -119,7 +119,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-10-08",
+                        "revision": "2025-03-20",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
                         }
@@ -337,7 +337,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "_3gpp-common-yang-extensions",
                         "domain": "",
-                        "revision": "2019-06-23",
+                        "revision": "2023-09-18",
                         "content": {
                             "href": "/schemas/_3gpp-common-yang-extensions/content"
                         }
@@ -435,7 +435,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
-                        "revision": "2024-10-08",
+                        "revision": "2025-03-20",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-ran/content"
                         }
