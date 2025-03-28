@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e3fc350_1b2f75e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-03-28T11:59:58Z",
+      "side": 1,
+      "message": "Please re-parent on https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/14280\n... Unfortunately will have some conflict - but shouldn\u0027t be too bad hopefully.\n\nOnce done, maybe we can merge this.",
+      "revId": "2421929048f851ea209ae6021c10886f3508a9c0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
