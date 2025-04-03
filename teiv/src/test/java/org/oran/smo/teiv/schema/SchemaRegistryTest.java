@@ -65,7 +65,8 @@ class SchemaRegistryTest {
                 "o-ran-smo-teiv-rel-oam-ran", "o-ran-smo-teiv-rel-equipment-ran", TEIV_DOMAIN,
                 "_3gpp-common-yang-extensions", "_3gpp-common-yang-types", "ietf-geo-location", "ietf-inet-types",
                 "ietf-yang-types", "o-ran-smo-teiv-common-yang-extensions", "o-ran-smo-teiv-common-yang-types",
-                "o-ran-smo-teiv-rel-oam-cloud", "o-ran-smo-teiv-cloud", "o-ran-smo-teiv-rel-cloud-ran");
+                "o-ran-smo-teiv-rel-oam-cloud", "o-ran-smo-teiv-cloud", "o-ran-smo-teiv-rel-cloud-ran",
+                "o-ran-smo-teiv-physical", "o-ran-smo-teiv-rel-physical-ran");
         //when
         Set<String> moduleNames = SchemaRegistry.getModuleRegistry().keySet();
         //then
@@ -95,7 +96,7 @@ class SchemaRegistryTest {
     void testGetAllDomainsIncludingRootDomain() {
         //given
         Set<String> expectedDomains = Set.of(TEIV_DOMAIN, "EQUIPMENT", "REL_EQUIPMENT_RAN", "OAM", "REL_OAM_RAN", "RAN",
-                "CLOUD", "REL_CLOUD_RAN", "REL_OAM_CLOUD");
+                "CLOUD", "REL_CLOUD_RAN", "REL_OAM_CLOUD", "PHYSICAL", "REL_PHYSICAL_RAN");
         //when
         Set<String> actualDomains = SchemaRegistry.getDomains();
         //then
@@ -154,7 +155,8 @@ class SchemaRegistryTest {
         //given
         List<String> expectedEntityName = List.of("AntennaCapability", "AntennaModule", "ORUFunction", "OCUCPFunction",
                 "OCUUPFunction", "ODUFunction", "ManagedElement", "NRCellCU", "CloudifiedNF", "NRCellDU", "NRSectorCarrier",
-                "Sector", "Site", "NearRTRICFunction", "NFDeployment", "OCloudNamespace", "NodeCluster", "OCloudSite");
+                "Sector", "Site", "NearRTRICFunction", "NFDeployment", "OCloudNamespace", "NodeCluster", "OCloudSite",
+                "PhysicalAppliance", "Site");
         //when
         List<String> actualEntityNames = SchemaRegistry.getEntityNames();
         //then
@@ -232,7 +234,9 @@ class SchemaRegistryTest {
                 "NFDEPLOYMENT_SERVES_OCUUPFUNCTION", "NFDEPLOYMENT_SERVES_NEARRTRICFUNCTION",
                 "NODECLUSTER_LOCATED_AT_OCLOUDSITE", "OCLOUDNAMESPACE_DEPLOYED_ON_NODECLUSTER",
                 "NFDEPLOYMENT_DEPLOYED_ON_OCLOUDNAMESPACE", "CLOUDIFIEDNF_COMPRISES_NFDEPLOYMENT",
-                "ANTENNAMODULE_SERVES_NRCELLDU");
+                "ANTENNAMODULE_SERVES_NRCELLDU", "PHYSICALAPPLIANCE_INSTALLEDAT_SITE",
+                "PHYSICALAPPLIANCE_SERVES_ODUFUNCTION", "PHYSICALAPPLIANCE_SERVES_OCUCPFUNCTION",
+                "PHYSICALAPPLIANCE_SERVES_OCUUPFUNCTION", "PHYSICALAPPLIANCE_SERVES_NEARRTRICFUNCTION");
         //when
         List<String> relationNames = SchemaRegistry.getRelationNames();
         //then

@@ -1,0 +1,110 @@
+module o-ran-smo-teiv-physical {
+  yang-version 1.1;
+  namespace "urn:o-ran:smo-teiv-physical";
+  prefix or-teiv-physical;
+
+  import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+
+  import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }
+
+  organization "O-RAN Alliance";
+
+  contact
+    "www.o-ran.org";
+
+  description
+    "Physical domain topology model.
+    This model contains the topology entities and relations in the
+    Physical domain.
+
+    Copyright 2025 the O-RAN Alliance.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the above disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the above disclaimer in the documentation
+    and/or other materials provided with the distribution.
+    * Neither the Members of the O-RAN Alliance nor the names of its
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.";
+
+  revision "2025-02-10" {
+    description "Initial revision.";
+      or-teiv-yext:label 1.0.0;
+      reference "O-RAN.WG10.TE&IV-DM.0-R004-v02.00";
+  }
+
+  or-teiv-yext:domain PHYSICAL;
+
+  list PhysicalAppliance {
+    uses or-teiv-types:Top_Grp_Type;
+    uses or-teiv-types:Origin_Entity_Mapping_Grp;
+    key id;
+
+    description "Represents the Physical Appliance in the Physical domain";
+
+    container attributes {
+      description "Container for Physical Appliance attributes";
+      leaf vendorName {
+        type string;
+        description "Name of the physical appliance vendor";
+      }
+
+      leaf modelName {
+        type string;
+        description "Name of the physical appliance model";
+      }
+    }
+  }
+
+  list Site {
+    uses or-teiv-types:Top_Grp_Type;
+    uses or-teiv-types:Origin_Entity_Mapping_Grp;
+    key id;
+    
+    description "Represents the Site in the Physical domain";
+    container siteLocation {
+        description "Representation of physical site location";
+        uses or-teiv-types:GeoInformation;
+    }
+    leaf siteName {
+      type string;
+      description "Human readable name of the physical site as identified by the mobile network operator";
+    }
+  }
+
+  or-teiv-yext:biDirectionalTopologyRelationship PHYSICALAPPLIANCE_INSTALLEDAT_SITE { // 1..n to 1..m
+    uses or-teiv-types:Top_Grp_Type;
+    uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+    key id;
+    description "The aSide of this relationship is an instance of the PhysicalAppliance type.
+    The bSide of this relationship is an instance of the Site type.";
+
+    leaf-list installing-site {
+        type instance-identifier;
+        description "Site installing PhysicalAppliance.";
+        or-teiv-yext:aSide PhysicalAppliance; 
+    }
+
+    leaf-list installed-physicalAppliance {
+        type instance-identifier;
+        description "PhysicalAppliance installed at Site.";
+        or-teiv-yext:bSide Site;  
+    }
+  }
+}

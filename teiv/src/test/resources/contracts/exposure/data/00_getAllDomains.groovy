@@ -64,6 +64,15 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "PHYSICAL",
+                        "entityTypes": {
+                            "href": "/domains/PHYSICAL/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/PHYSICAL/relationship-types"
+                        }
+                    },
+                    {
                         "name": "RAN",
                         "entityTypes": {
                             "href": "/domains/RAN/entity-types"
@@ -109,6 +118,15 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "REL_PHYSICAL_RAN",
+                        "entityTypes": {
+                            "href": "/domains/REL_PHYSICAL_RAN/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/REL_PHYSICAL_RAN/relationship-types"
+                        }
+                    },
+                    {
                         "name": "TEIV",
                         "entityTypes": {
                             "href": "/domains/TEIV/entity-types"
@@ -142,11 +160,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains?offset=0&limit=500"
                 },
-                "totalCount": 10
+                "totalCount": 12
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(10)
+                    occurrence(12)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entityTypes.href', byEquality())
@@ -178,6 +196,12 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[9].name', byEquality())
                 jsonPath('$.items[9].entityTypes.href', byEquality())
                 jsonPath('$.items[9].relationshipTypes.href', byEquality())
+                jsonPath('$.items[10].name', byEquality())
+                jsonPath('$.items[10].entityTypes.href', byEquality())
+                jsonPath('$.items[10].relationshipTypes.href', byEquality())
+                jsonPath('$.items[11].name', byEquality())
+                jsonPath('$.items[11].entityTypes.href', byEquality())
+                jsonPath('$.items[11].relationshipTypes.href', byEquality())
             }
         }
     },
@@ -204,21 +228,21 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "PHYSICAL",
+                        "entityTypes": {
+                            "href": "/domains/PHYSICAL/entity-types"
+                        },
+                        "relationshipTypes": {
+                            "href": "/domains/PHYSICAL/relationship-types"
+                        }
+                    },
+                    {
                         "name": "RAN",
                         "entityTypes": {
                             "href": "/domains/RAN/entity-types"
                         },
                         "relationshipTypes": {
                             "href": "/domains/RAN/relationship-types"
-                        }
-                    },
-                    {
-                        "name": "REL_CLOUD_RAN",
-                        "entityTypes": {
-                            "href": "/domains/REL_CLOUD_RAN/entity-types"
-                        },
-                        "relationshipTypes": {
-                            "href": "/domains/REL_CLOUD_RAN/relationship-types"
                         }
                     }
                 ],
@@ -235,9 +259,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/domains?offset=5&limit=3"
                 },
                 "last": {
-                    "href": "/domains?offset=8&limit=3"
+                    "href": "/domains?offset=11&limit=3"
                 },
-                "totalCount": 10
+                "totalCount": 12
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
@@ -269,7 +293,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid Value",
-                "details": "Offset cannot be larger than 9"
+                "details": "Offset cannot be larger than 11"
             }''')
         }
     }

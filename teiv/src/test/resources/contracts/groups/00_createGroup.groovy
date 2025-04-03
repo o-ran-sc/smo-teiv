@@ -463,7 +463,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown domain",
-                "details": "Unknown domain: bla, known domains: [CLOUD, EQUIPMENT, OAM, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, TEIV, TEST]"
+                "details": "Unknown domain: bla, known domains: [CLOUD, EQUIPMENT, OAM, PHYSICAL, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, REL_PHYSICAL_RAN, TEIV, TEST]"
             }''')
         }
     },

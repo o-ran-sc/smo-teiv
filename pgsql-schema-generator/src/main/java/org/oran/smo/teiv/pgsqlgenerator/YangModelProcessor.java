@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.oran.smo.yangtools.parser.model.ModuleIdentity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -345,8 +346,13 @@ public class YangModelProcessor {
                                     connectSameEntity = false;
                                 }
 
-                                String aSideModuleName = getSideModuleName(yangModels, aSideMoType);
-                                String bSideModuleName = getSideModuleName(yangModels, bSideMoType);
+                                String aSidePrefix = getPrefix(aSide.getValue());
+                                String aSideModuleName = getSideModuleName(yangModels, yangModel, yModule, aSideMoType,
+                                        aSidePrefix);
+
+                                String bSidePrefix = getPrefix(bSide.getValue());
+                                String bSideModuleName = getSideModuleName(yangModels, yangModel, yModule, bSideMoType,
+                                        bSidePrefix);
 
                                 String storedAt = "";
                                 switch (relDataLocation) {
@@ -382,6 +388,24 @@ public class YangModelProcessor {
                 children -> children.getChildren().stream()).filter(child -> child.getValue().equals(aSideMoType)).map(
                         child -> child.getParentElement().getValue()).findFirst().orElseThrow(
                                 () -> new NoSuchElementException("No module name found for type: " + aSideMoType));
+    }
+
+    private String getSideModuleName(List<YangModel> yangModels, YangModel yangModel, YModule yModule, String sideMoType,
+            String sidePrefix) {
+        if (sidePrefix.isEmpty()) {
+            return yModule.getModuleName();
+        } else {
+            ModuleIdentity moduleIdentity = yangModel.getPrefixResolver().getModuleForPrefix(sidePrefix);
+            if (moduleIdentity == null) {
+                return getSideModuleName(yangModels, sideMoType);
+            }
+            return moduleIdentity.getModuleName();
+        }
+    }
+
+    private String getPrefix(String side) {
+        String[] parts = side.split(":", 2);
+        return parts.length > 1 ? parts[0] : "";
     }
 
     private String getTableName(String moduleName, String name) {
