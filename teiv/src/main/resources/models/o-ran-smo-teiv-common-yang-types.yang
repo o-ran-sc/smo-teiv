@@ -103,6 +103,20 @@ module o-ran-smo-teiv-common-yang-types {
         description "An identity that represents a native identifier of a topology entity.";
     }
 
+    grouping GeoInformation {
+        description "A physical location with address and coordinates.";
+
+        leaf address {
+            type string;
+            description "Address of the physical location.";
+        }
+
+        container coordinate {
+            uses types3gpp:GeoCoordinateGrp;
+            description "Geographical coordinate containing Latitude, Longitude and Altitude. Reference: 3GPP TS 28.622";
+        }
+    }
+
     container metadata {
         description
             "This container serves as an extension point to define metadata. They

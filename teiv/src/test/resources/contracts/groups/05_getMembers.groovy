@@ -231,11 +231,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440002/members?offset=0&limit=500"
                 },
-                "totalCount": 7
+                "totalCount": 8
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(7)
+                    occurrence(8)
                 })
                 jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRSECTORCARRIER[0].id', byEquality())
                 jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRSECTORCARRIER[0].id', byEquality())

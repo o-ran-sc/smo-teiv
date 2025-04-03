@@ -493,6 +493,36 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "PHYSICALAPPLIANCE_INSTALLEDAT_SITE",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/PHYSICALAPPLIANCE_INSTALLEDAT_SITE/relationships"
+                        }
+                    },
+                    {
+                        "name": "PHYSICALAPPLIANCE_SERVES_NEARRTRICFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/PHYSICALAPPLIANCE_SERVES_NEARRTRICFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "PHYSICALAPPLIANCE_SERVES_OCUCPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/PHYSICALAPPLIANCE_SERVES_OCUCPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "PHYSICALAPPLIANCE_SERVES_OCUUPFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/PHYSICALAPPLIANCE_SERVES_OCUUPFUNCTION/relationships"
+                        }
+                    },
+                    {
+                        "name": "PHYSICALAPPLIANCE_SERVES_ODUFUNCTION",
+                        "relationships": {
+                            "href": "/domains/TEIV/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships"
+                        }
+                    },
+                    {
                         "name": "SECTOR_GROUPS_ANTENNAMODULE",
                         "relationships": {
                             "href": "/domains/TEIV/relationship-types/SECTOR_GROUPS_ANTENNAMODULE/relationships"
@@ -520,7 +550,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/relationship-types?offset=0&limit=500"
                 },
-                "totalCount": 30
+                "totalCount": 35
             }''')
         }
     },
@@ -538,7 +568,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown domain",
-                "details": "Unknown domain: INVALID, known domains: [CLOUD, EQUIPMENT, OAM, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, TEIV, TEST]"
+                "details": "Unknown domain: INVALID, known domains: [CLOUD, EQUIPMENT, OAM, PHYSICAL, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, REL_PHYSICAL_RAN, TEIV, TEST]"
             }''')
         }
     }

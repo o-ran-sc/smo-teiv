@@ -1,0 +1,28 @@
+<svg width="161px" height="131px"
+ viewBox="0.00 0.00 161.00 131.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 127.0)">
+<title>moduleName</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-127 157,-127 157,4 -4,4"/>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;physicalPhysicalAppliance -->
+<g id="node1" class="node">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;physicalPhysicalAppliance</title>
+<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="126,-123 0,-123 0,-87 126,-87 126,-123"/>
+<text text-anchor="middle" x="63" y="-101.3" font-family="Arial" font-size="14.00">PhysicalAppliance</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;physicalSite -->
+<g id="node2" class="node">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;physicalSite</title>
+<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="90,-36 36,-36 36,0 90,0 90,-36"/>
+<text text-anchor="middle" x="63" y="-14.3" font-family="Arial" font-size="14.00">Site</text>
+</g>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;physicalPhysicalAppliance&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;physicalSite -->
+<g id="edge1" class="edge">
+<title>o&#45;ran&#45;smo&#45;teiv&#45;physicalPhysicalAppliance&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;physicalSite</title>
+<path fill="none" stroke="#528b8b" d="M63,-86.8C63,-75.16 63,-59.55 63,-46.24"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="63,-36.18 67.5,-46.18 63,-41.18 63,-46.18 63,-46.18 63,-46.18 63,-41.18 58.5,-46.18 63,-36.18 63,-36.18"/>
+<text text-anchor="middle" x="108" y="-57.8" font-family="Arial" font-size="14.00">INSTALLEDAT</text>
+<text text-anchor="middle" x="52.5" y="-39.98" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="52.5" y="-75.6" font-family="Arial" font-size="14.00">0..*</text>
+</g>
+</g>
+</svg>

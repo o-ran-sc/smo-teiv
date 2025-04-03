@@ -88,15 +88,18 @@ public class RelationshipGraphGenerator {
                 .nodeAttrs().add(Shape.BOX, arialFont);
         for (Entity moduleEntity : moduleEntities) {
             Color fillColour = Color.rgba(helperFunctions.getNodeFillColour(moduleEntity.getModuleReferenceName())).fill();
-            MutableNode node = Factory.mutNode(moduleEntity.getEntityName()).attrs().add(Style.FILLED, fillColour);
+            MutableNode node = Factory.mutNode(moduleEntity.getModuleReferenceName() + moduleEntity.getEntityName()).attrs()
+                    .add(Style.FILLED, fillColour).add(Label.of(moduleEntity.getEntityName()));
             g.add(node);
         }
         for (Relationship moduleRelationship : moduleRelationships) {
-            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideMOType()).attrs().add(Style.FILLED, Color.rgba(
-                    helperFunctions.getNodeFillColour(moduleRelationship.getASideModule())).fill());
+            MutableNode nodeA = Factory.mutNode(moduleRelationship.getASideModule() + moduleRelationship.getASideMOType())
+                    .attrs().add(Label.of(moduleRelationship.getASideMOType())).add(Style.FILLED, Color.rgba(helperFunctions
+                            .getNodeFillColour(moduleRelationship.getASideModule())).fill());
             g.add(nodeA);
-            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideMOType()).attrs().add(Style.FILLED, Color.rgba(
-                    helperFunctions.getNodeFillColour(moduleRelationship.getBSideModule())).fill());
+            MutableNode nodeB = Factory.mutNode(moduleRelationship.getBSideModule() + moduleRelationship.getBSideMOType())
+                    .attrs().add(Label.of(moduleRelationship.getBSideMOType())).add(Style.FILLED, Color.rgba(helperFunctions
+                            .getNodeFillColour(moduleRelationship.getBSideModule())).fill());
             g.add(nodeB);
 
             String label = moduleRelationship.getName().split("_")[1];
