@@ -1633,7 +1633,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown entity type",
-                "details": "Entity type NRCellDU1 is not part of the model, known entity types: [AntennaCapability, AntennaModule, CloudifiedNF, EntityTypeA, EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters, ManagedElement, NFDeployment, NRCellCU, NRCellDU, NRSectorCarrier, NearRTRICFunction, NodeCluster, OCUCPFunction, OCUUPFunction, OCloudNamespace, OCloudSite, ODUFunction, ORUFunction, Sector, Site]"
+                "details": "Entity type NRCellDU1 is not part of the model, known entity types: [AntennaCapability, AntennaModule, CloudifiedNF, EntityTypeA, EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters, ManagedElement, NFDeployment, NRCellCU, NRCellDU, NRSectorCarrier, NearRTRICFunction, NodeCluster, OCUCPFunction, OCUUPFunction, OCloudNamespace, OCloudSite, ODUFunction, ORUFunction, PhysicalAppliance, Sector, Site, Site]"
             }''')
         }
     },
@@ -3714,5 +3714,67 @@ import org.springframework.cloud.contract.spec.Contract
                 "details": "Invalid data in scopeFilter"
             }''')
         }
-    }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get all topology entities of type PhysicalAppliance and attributes."
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?targetFilter=/attributes"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-physical:PhysicalAppliance": [
+                            {
+                                "id": "urn:o-ran:smo:teiv:PhysicalAppliance=135",
+                                "attributes": {
+                                    "vendorName": "ORAN",
+                                    "modelName": "ORAN-135"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-physical:PhysicalAppliance": [
+                            {
+                                "id": "urn:o-ran:smo:teiv:PhysicalAppliance=246",
+                                "attributes": {
+                                    "vendorName": "ORAN",
+                                    "modelName": "ORAN-246"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?offset=0&limit=500&targetFilter=/attributes"
+                },
+                "first": {
+                    "href": "/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?offset=0&limit=500&targetFilter=/attributes"
+                },
+                "prev": {
+                    "href": "/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?offset=0&limit=500&targetFilter=/attributes"
+                },
+                "next": {
+                    "href": "/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?offset=0&limit=500&targetFilter=/attributes"
+                },
+                "last": {
+                    "href": "/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?offset=0&limit=500&targetFilter=/attributes"
+                },
+                "totalCount": 2
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-physical:PhysicalAppliance[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-physical:PhysicalAppliance[0].id', byEquality())
+            }
+        }
+    },
 ]

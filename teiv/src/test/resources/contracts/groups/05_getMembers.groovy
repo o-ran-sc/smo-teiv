@@ -214,6 +214,15 @@ import org.springframework.cloud.contract.spec.Contract
                                 "id": "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=9243B48F7D6A6CF471226915C74CF5FE4BDA6FA3CF7D897473007B46DF7FC50230BD6B8B4256116A6AFBF4D822CF9379EB56DE9490C1C0B54238263F2574B426"
                             }
                         ]
+                    },
+                    {
+                        "o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION": [
+                            {
+                                "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9",
+                                "aSide": "urn:o-ran:smo:teiv:PhysicalAppliance=135",
+                                "id": "urn:o-ran:smo:teiv:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION=135"
+                            }
+                        ]
                     }
                 ],
                 "self": {
@@ -231,11 +240,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440002/members?offset=0&limit=500"
                 },
-                "totalCount": 7
+                "totalCount": 8
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(7)
+                    occurrence(8)
                 })
                 jsonPath('$.items[0].o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRSECTORCARRIER[0].id', byEquality())
                 jsonPath('$.items[1].o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRSECTORCARRIER[0].id', byEquality())
@@ -244,6 +253,7 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[4].o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU[0].id', byEquality())
                 jsonPath('$.items[5].o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU[0].id', byEquality())
                 jsonPath('$.items[6].o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_ODUFUNCTION[0].id', byEquality())
+                jsonPath('$.items[7].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].id', byEquality())
             }
         }
     },

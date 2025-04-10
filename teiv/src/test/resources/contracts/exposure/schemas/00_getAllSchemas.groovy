@@ -117,6 +117,14 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "o-ran-smo-teiv-physical",
+                        "domain": "PHYSICAL",
+                        "revision": "2025-02-10",
+                        "content": {
+                            "href": "/schemas/o-ran-smo-teiv-physical/content"
+                        }
+                    },
+                    {
                         "name": "o-ran-smo-teiv-ran",
                         "domain": "RAN",
                         "revision": "2025-03-20",
@@ -154,6 +162,14 @@ import org.springframework.cloud.contract.spec.Contract
                         "revision": "2024-10-04",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-rel-oam-ran/content"
+                        }
+                    },
+                    {
+                        "name": "o-ran-smo-teiv-rel-physical-ran",
+                        "domain": "REL_PHYSICAL_RAN",
+                        "revision": "2025-02-10",
+                        "content": {
+                            "href": "/schemas/o-ran-smo-teiv-rel-physical-ran/content"
                         }
                     },
                     {
@@ -228,11 +244,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=0&limit=500"
                 },
-                "totalCount": 22
+                "totalCount": 24
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(22)
+                    occurrence(24)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].domain', byEquality())
@@ -294,6 +310,10 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[14].domain', byEquality())
                 jsonPath('$.items[14].revision', byEquality())
                 jsonPath('$.items[14].content.href', byEquality())
+                jsonPath('$.items[15].name', byEquality())
+                jsonPath('$.items[15].domain', byEquality())
+                jsonPath('$.items[15].revision', byEquality())
+                jsonPath('$.items[15].content.href', byEquality())
                 jsonPath('$.items[16].name', byEquality())
                 jsonPath('$.items[16].domain', byEquality())
                 jsonPath('$.items[16].revision', byEquality())
@@ -318,6 +338,14 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[21].domain', byEquality())
                 jsonPath('$.items[21].revision', byEquality())
                 jsonPath('$.items[21].content.href', byEquality())
+                jsonPath('$.items[22].name', byEquality())
+                jsonPath('$.items[22].domain', byEquality())
+                jsonPath('$.items[22].revision', byEquality())
+                jsonPath('$.items[22].content.href', byEquality())
+                jsonPath('$.items[23].name', byEquality())
+                jsonPath('$.items[23].domain', byEquality())
+                jsonPath('$.items[23].revision', byEquality())
+                jsonPath('$.items[23].content.href', byEquality())
             }
         }
     },
@@ -356,9 +384,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/schemas?offset=1&limit=1"
                 },
                 "last": {
-                    "href": "/schemas?offset=21&limit=1"
+                    "href": "/schemas?offset=23&limit=1"
                 },
-                "totalCount": 22
+                "totalCount": 24
             }''')
         }
     },
@@ -415,7 +443,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=21&limit=3"
                 },
-                "totalCount": 22
+                "totalCount": 24
             }''')
         }
     },
@@ -504,6 +532,14 @@ import org.springframework.cloud.contract.spec.Contract
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-rel-equipment-ran/content"
                         }
+                    },
+                    {
+                        "name": "o-ran-smo-teiv-rel-physical-ran",
+                        "domain": "REL_PHYSICAL_RAN",
+                        "revision": "2025-02-10",
+                        "content": {
+                            "href": "/schemas/o-ran-smo-teiv-rel-physical-ran/content"
+                        }
                     }
                 ],
                 "self": {
@@ -521,7 +557,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=0&limit=500&domain=.*RAN.*"
                 },
-                "totalCount": 4
+                "totalCount": 5
             }''')
         }
     },

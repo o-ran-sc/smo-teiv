@@ -803,5 +803,67 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[0].o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_ODUFUNCTION[0].bSide', byEquality())
             }
         }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get topology relationships of type PHYSICALAPPLIANCE_SERVES_ODUFUNCTION"
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION": [
+                            {
+                                "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9",
+                                "aSide": "urn:o-ran:smo:teiv:PhysicalAppliance=135",
+                                "id": "urn:o-ran:smo:teiv:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION=135"
+                            }
+                        ]
+                    },
+                    {
+                        "o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION": [
+                            {
+                                "bSide": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=10,ODUFunction=10",
+                                "aSide": "urn:o-ran:smo:teiv:PhysicalAppliance=246",
+                                "id": "urn:o-ran:smo:teiv:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION=246"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships?offset=0&limit=500"
+                },
+                "first": {
+                    "href": "/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships?offset=0&limit=500"
+                },
+                "prev": {
+                    "href": "/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships?offset=0&limit=500"
+                },
+                "next": {
+                    "href": "/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships?offset=0&limit=500"
+                },
+                "last": {
+                    "href": "/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships?offset=0&limit=500"
+                },
+                "totalCount": 2
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].id', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].aSide', byEquality())
+                jsonPath('$.items[0].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].bSide', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].id', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].aSide', byEquality())
+                jsonPath('$.items[1].o-ran-smo-teiv-rel-physical-ran:PHYSICALAPPLIANCE_SERVES_ODUFUNCTION[0].bSide', byEquality())
+            }
+        }
     }
 ]

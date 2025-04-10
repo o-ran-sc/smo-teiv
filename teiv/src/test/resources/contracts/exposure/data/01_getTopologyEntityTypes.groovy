@@ -435,9 +435,21 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
+                        "name": "PhysicalAppliance",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/PhysicalAppliance/entities"
+                        }
+                    },
+                    {
                         "name": "Sector",
                         "entities": {
                             "href": "/domains/TEIV/entity-types/Sector/entities"
+                        }
+                    },
+                    {
+                        "name": "Site",
+                        "entities": {
+                            "href": "/domains/TEIV/entity-types/Site/entities"
                         }
                     },
                     {
@@ -462,11 +474,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/domains/TEIV/entity-types?offset=0&limit=500"
                 },
-                "totalCount": 20
+                "totalCount": 22
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(20)
+                    occurrence(22)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].entities.href', byEquality())
@@ -508,6 +520,10 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[18].entities.href', byEquality())
                 jsonPath('$.items[19].name', byEquality())
                 jsonPath('$.items[19].entities.href', byEquality())
+                jsonPath('$.items[20].name', byEquality())
+                jsonPath('$.items[20].entities.href', byEquality())
+                jsonPath('$.items[21].name', byEquality())
+                jsonPath('$.items[21].entities.href', byEquality())
             }
         }
     },
@@ -525,7 +541,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Unknown domain",
-                "details": "Unknown domain: INVALID, known domains: [CLOUD, EQUIPMENT, OAM, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, TEIV, TEST]"
+                "details": "Unknown domain: INVALID, known domains: [CLOUD, EQUIPMENT, OAM, PHYSICAL, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, REL_PHYSICAL_RAN, TEIV, TEST]"
             }''')
         }
     },
@@ -543,7 +559,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid Value",
-                "details": "Offset cannot be larger than 19"
+                "details": "Offset cannot be larger than 21"
             }''')
         }
     }
