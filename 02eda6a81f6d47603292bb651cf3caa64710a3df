@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7b50a79_dc14ea63",
+        "filename": "docs/data-models/physical.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-04-10T11:08:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf106feb_3d30ee85",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 22
+      },
+      "revId": "02eda6a81f6d47603292bb651cf3caa64710a3df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1921e88_73f28198",
@@ -47,6 +71,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f8fe877_e33372fc",
+        "filename": "docs/data-models/rel-physical-ran.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-04-10T11:08:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1921e88_73f28198",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 22
+      },
+      "revId": "02eda6a81f6d47603292bb651cf3caa64710a3df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "738e4ec9_a13a377b",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-04-04T11:59:01Z",
       "side": 1,
       "message": "items array in body contains only 7 elements(same in body matchers verification as well). 8th element should be introduced or totalCount should not be changed?",
+      "range": {
+        "startLine": 234,
+        "startChar": 16,
+        "endLine": 234,
+        "endChar": 31
+      },
+      "revId": "02eda6a81f6d47603292bb651cf3caa64710a3df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df458b8e_720f08a6",
+        "filename": "teiv/src/test/resources/contracts/groups/05_getMembers.groovy",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-04-10T11:08:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "738e4ec9_a13a377b",
       "range": {
         "startLine": 234,
         "startChar": 16,
