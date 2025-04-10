@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f985d737_1cda562d",
+        "filename": "pgsql-schema-generator/src/main/java/org/oran/smo/teiv/pgsqlgenerator/graphgenerator/RelationshipGraphGenerator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-04-10T17:37:45Z",
+      "side": 1,
+      "message": "Might need to tweak the fill color generator. Currently the color for Physical and OAM are more-or-less the same :-(",
+      "range": {
+        "startLine": 90,
+        "startChar": 18,
+        "endLine": 90,
+        "endChar": 29
+      },
+      "revId": "0820aa55dd203c01feea4199d37f5a136431c7a9",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
