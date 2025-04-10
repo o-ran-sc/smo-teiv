@@ -1,0 +1,38 @@
+module o-ran-smo-teiv-oam-test {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-oam-test";
+    prefix or-teiv-oam-test;
+
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+        "These are just test O&M topology model.";
+
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Entity_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain OAM;
+
+    list ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt {
+        description "A Managed Element (ME) is a node into a telecommunication
+        network providing support and/or service to subscribers. An ME
+        communicates with a manager application (directly or indirectly)
+        over one or more interfaces for the purpose of being monitored
+        and/or controlled.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+    }
+}

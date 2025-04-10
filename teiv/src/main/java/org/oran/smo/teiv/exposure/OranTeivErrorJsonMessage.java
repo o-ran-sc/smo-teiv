@@ -1,7 +1,6 @@
 /*
  *  ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Ericsson
- *  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+ *  Modifications Copyright (C) 2025 OpenInfra Foundation Europe
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,27 +17,20 @@
  *  SPDX-License-Identifier: Apache-2.0
  *  ============LICENSE_END=========================================================
  */
-package org.oran.smo.teiv.listener.audit;
 
-import static org.oran.smo.teiv.listener.audit.ExecutionStatus.SUCCESS;
-
-import org.apache.commons.lang3.StringUtils;
+package org.oran.smo.teiv.exposure;
 
 import lombok.Builder;
+import org.oran.smo.teiv.api.model.OranTeivErrorMessage;
 
-@Builder
-public class IngestionAuditInfo {
-    private final ExecutionStatus status;
-    private final String operation;
-    private final String messageKey;
-    private final String cloudEvent;
-    private final String exceptionMessage;
+public class OranTeivErrorJsonMessage extends OranTeivErrorMessage {
+    @Builder(builderMethodName = "extendedBuilder")
+    public OranTeivErrorJsonMessage(String status, final String message, final String details) {
+        super(status, message, details);
+    }
 
-    @Override
-    public String toString() {
-        String baseMessage = String.format("%s - %s topology. Message key: %s, CloudEvent: %s", status, StringUtils
-                .capitalize(operation), messageKey, cloudEvent);
-
-        return status.equals(SUCCESS) ? baseMessage : (baseMessage + ", " + exceptionMessage);
+    public String toJson() {
+        return "{" + "\"status\": \"" + this.getStatus() + "\"," + "\"message\": \"" + this
+                .getMessage() + "\"," + "\"details\": \"" + this.getDetails() + "\"}";
     }
 }

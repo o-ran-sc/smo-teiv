@@ -31,7 +31,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CloudEventTestUtil {
 
     private CloudEventTestUtil() {
@@ -62,6 +64,7 @@ public class CloudEventTestUtil {
             cloudEventBuilder.withDataSchema(URI.create(rootNode.get("dataschema").asText()));
             cloudEventBuilder.withData(rootNode.get("data").toString().getBytes());
             CloudEvent event = cloudEventBuilder.build();
+            log.info("CloudEvent data: {}", rootNode.get("data").toString());
             return event;
         } catch (Exception e) {
             throw new RuntimeException(e);

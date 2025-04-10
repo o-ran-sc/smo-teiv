@@ -204,6 +204,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status INTERNAL_SERVER_ERROR()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "INTERNAL_SERVER_ERROR",
                 "message": "Criteria deserialization exception",
@@ -225,7 +228,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -242,6 +245,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status NOT_FOUND()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",

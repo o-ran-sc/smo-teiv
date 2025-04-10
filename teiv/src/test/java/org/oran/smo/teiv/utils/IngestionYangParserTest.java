@@ -30,7 +30,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -71,6 +73,27 @@ class IngestionYangParserTest {
         SchemaLoader mockSchemaLoader = new MockSchemaLoader();
         mockSchemaLoader.loadSchemaRegistry();
         IngestionYangParser.loadModels();
+    }
+
+    @Test
+    void testLoadAndValuateModels_Successful() {
+        final Set<String> modulesToImport = Set.of("_3gpp-common-yang-extensions", "_3gpp-common-yang-types",
+                "ietf-geo-location", "ietf-inet-types", "ietf-yang-types");
+
+        final Set<String> modulesToImplement = Set.of("o-ran-smo-teiv-common-yang-extensions",
+                "o-ran-smo-teiv-common-yang-types", "o-ran-smo-teiv-equipment", "o-ran-smo-teiv-oam", "o-ran-smo-teiv-ran",
+                "o-ran-smo-teiv-rel-equipment-ran", "o-ran-smo-teiv-rel-oam-ran");
+
+        List<String> importModelList = assertDoesNotThrow(() -> YangModelLoader.readYangModelsFromPath(
+                "classpath:models/import/*.yang"));
+        List<String> implementModelList = assertDoesNotThrow(() -> YangModelLoader.readYangModelsFromPath(
+                "classpath:models/*.yang"));
+
+        Set<String> importModulesSet = new HashSet<>(importModelList);
+        Set<String> implementModulesSet = new HashSet<>(implementModelList);
+
+        assertTrue(importModulesSet.containsAll(modulesToImport));
+        assertTrue(implementModulesSet.containsAll(modulesToImplement));
     }
 
     @Test

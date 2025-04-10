@@ -66,6 +66,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
         }
     }
 ]

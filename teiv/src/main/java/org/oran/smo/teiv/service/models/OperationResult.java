@@ -26,6 +26,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,13 +35,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+// Include.NON_NULL was chosen over NON_EMPTY, since empty classifiers/decorators means those field in DB are empty,
+// while null classifiers/decorators means they were irrelevant in terms of the executed operation.
+@JsonInclude(Include.NON_NULL)
 @Builder
 public class OperationResult {
     private String id;
     private String type; // e.g.: NRCellDU, Site, CloudNativeApplication
     private String category; // "entity" or "relationship"
     private Map<String, Object> attributes;
+    private String module;
     private String aSide;
     private String bSide;
     private List<String> classifiers;
@@ -48,6 +52,7 @@ public class OperationResult {
     private Map<String, Object> metadata;
     private List<String> sourceIds;
     private boolean isUpdatedInDb;
+    private boolean isInferred;
     public static final String ENTITY_CATEGORY = "entity";
     public static final String RELATIONSHIP_CATEGORY = "relationship";
 

@@ -138,5 +138,5 @@ public interface DataRepository {
      *     The id
      * @return true if exists, false if it does not
      */
-    boolean isTopologyExist(final Persistable type, final String id);
+    boolean doesTopologyExist(final Persistable type, final String id);
 }

@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import io.cloudevents.CloudEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +35,9 @@ import org.apache.kafka.common.config.TopicConfig;
 import org.oran.smo.teiv.config.KafkaAdminConfig;
 import org.oran.smo.teiv.config.KafkaConfig;
 import org.oran.smo.teiv.utils.RetryOperationUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
@@ -57,9 +54,6 @@ public class KafkaTopicService {
 
     @Getter
     private final KafkaConfig kafkaConfig;
-
-    @Qualifier("topologyAuditKafkaTemplate")
-    private final KafkaTemplate<String, CloudEvent> topologyAuditkafkaTemplate;
 
     public boolean checkTopologyIngestionTopic() {
         return checkTopicCreated(kafkaConfig.getTopologyIngestion().getTopicName());

@@ -70,7 +70,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status NOT_FOUND()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "NOT_FOUND",

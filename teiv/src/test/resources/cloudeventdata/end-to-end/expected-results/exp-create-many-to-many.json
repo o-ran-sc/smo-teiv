@@ -22,10 +22,10 @@
     "o-ran-smo-teiv-ran_AntennaCapability": [
         {
             "id": "AntennaCapability_1",
-            "geranFqBands": {
-                "attribute_1": "1",
-                "attribute_2": "2"
-            },
+            "geranFqBands": [
+                1,
+                2
+            ],
             "metadata": {
                 "reliabilityIndicator": "OK",
                 "firstDiscovered": "<AFTER TEST START TIME>",
@@ -34,10 +34,10 @@
         },
         {
             "id": "AntennaCapability_2",
-            "geranFqBands": {
-                "attribute_1": "1",
-                "attribute_2": "2"
-            },
+            "geranFqBands": [
+                1,
+                2
+            ],
             "metadata": {
                 "reliabilityIndicator": "OK",
                 "firstDiscovered": "<AFTER TEST START TIME>",

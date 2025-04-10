@@ -41,6 +41,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid schema name",
@@ -56,6 +59,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid schema name",

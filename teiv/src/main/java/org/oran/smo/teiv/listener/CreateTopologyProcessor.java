@@ -36,6 +36,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_CREATE;
@@ -59,7 +60,7 @@ public class CreateTopologyProcessor implements TopologyProcessor {
         if (null == parsedCloudEventData) {
             log.error("Failed to parse the following CloudEvent: {}", CloudEventUtil.cloudEventToPrettyString(cloudEvent));
             customMetrics.incrementNumUnsuccessfullyParsedCreateCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey,
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey,
                     "Failed to parse the CloudEvent");
             return;
         }
@@ -70,28 +71,33 @@ public class CreateTopologyProcessor implements TopologyProcessor {
 
         stopWatch.start();
         List<OperationResult> operationResults;
+        List<String> inferredItems = new ArrayList<>();
         final String sourceAdapter = String.valueOf(cloudEvent.getSource());
         try {
             operationResults = teivDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData,
                     sourceAdapter);
+            operationResults.stream().filter(OperationResult::isInferred).map(result -> String.format(
+                    "{\"%s:%s\":[{\"id\":\"%s\"}]}", result.getModule(), result.getType(), result.getId())).forEach(
+                            inferredItems::add);
         } catch (InvalidFieldInYangDataException e) {
             log.error("Invalid field in yang data. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                     CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedCreateCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, e
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, e
                     .getMessage());
             return;
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                     CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedCreateCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, e
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, e
                     .getMessage());
             return;
         }
         stopWatch.stop();
         customMetrics.incrementNumSuccessfullyPersistedCreateCloudEvents();
         customMetrics.recordCloudEventCreatePersistTime(stopWatch.lastTaskInfo().getTimeNanos());
-        auditLogger.auditLog(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey, "");
+        auditLogger.logSuccess(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_CREATE, cloudEvent, messageKey,
+                inferredItems);
     }
 }

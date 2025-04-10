@@ -20,10 +20,15 @@
  */
 package org.oran.smo.teiv.schema;
 
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.DUPLICATE_ENTITY_NAME_IN_DOMAIN;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.DUPLICATE_ENTITY_NAME_IN_TEIV_DOMAIN;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.DUPLICATE_RELATION_NAME_IN_DOMAIN;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.DUPLICATE_RELATION_NAME_IN_TEIV_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_MODULE;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_MODULE;
+import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DOMAIN;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -156,29 +161,44 @@ public class SchemaRegistry {
     }
 
     /**
-     * Gets the {@link EntityType} by the given module name and the entity type name.
+     * Gets the {@link EntityType} by the given domain name and the entity type name.
      * Since TEIV supports TEIV as top level domain on the exposure side, there is possibility to return more than one
-     * EntityType for a given name
-     * with domain as TIEV.
+     * EntityType for a given name with domain as TEIV. In this instance, an error will be thrown because this is not yet
+     * implemented in TEIV.
      *
      * @param domain
      *     - name of the domain
      * @param entityTypeName
      *     - name of the entityType
-     * @return the list of {@link EntityType}
+     * @return the {@link EntityType}
      * @throws SchemaRegistryException
      *     if entity type is not found in the domain
      */
-    public static List<EntityType> getEntityTypeByDomainAndName(final String domain, final String entityTypeName)
+    @Cacheable("entityTypeByDomainAndName")
+    public static EntityType getEntityTypeByDomainAndName(final String domain, final String entityTypeName)
             throws SchemaRegistryException {
-        final List<EntityType> matchedEntityTypes = entityTypes.stream().filter(entityType -> entityType.getModule()
-                .getDomain().equals(domain) && entityType.getName().equals(entityTypeName)).toList();
-        if (matchedEntityTypes.isEmpty()) {
+        final List<EntityType> matchedEntityTypes = getEntityTypesByDomain(domain).stream().filter(entityType -> entityType
+                .getName().equals(entityTypeName)).toList();
+        if (matchedEntityTypes.size() == 1) {
+            return matchedEntityTypes.get(0);
+        } else if (matchedEntityTypes.isEmpty()) {
             log.warn("Domain: {} does not contain the entity type: {}", domain, entityTypeName);
             throw new SchemaRegistryException(ENTITY_NOT_FOUND_IN_DOMAIN, String.format(
                     "Entity type: %s not found in domain: %s", entityTypeName, domain));
+        } else {
+            if (domain.equals(TEIV_DOMAIN)) {
+                log.warn("Domain: {} contains duplicate entity type: {}. This is yet to be implemented in TEIV.", domain,
+                        entityTypeName);
+                throw new SchemaRegistryException(DUPLICATE_ENTITY_NAME_IN_TEIV_DOMAIN, String.format(
+                        "Duplicate entity type: %s found in domain: %s. This is yet to be implemented in TEIV.",
+                        entityTypeName, domain));
+            }
+            log.warn("Domain: {} contains duplicate entity type: {}. This is not supported in TEIV.", domain,
+                    entityTypeName);
+            throw new SchemaRegistryException(DUPLICATE_ENTITY_NAME_IN_DOMAIN, String.format(
+                    "Duplicate entity type: %s found in domain: %s. This is not supported in TEIV.", entityTypeName,
+                    domain));
         }
-        return matchedEntityTypes;
     }
 
     /**
@@ -290,28 +310,44 @@ public class SchemaRegistry {
     }
 
     /**
-     * Gets the {@link RelationType} (could be more than one when domain is TEIV) by the given module name and the relation
-     * type
-     * name.
+     * Gets the {@link RelationType} by the given domain name and the relation type name.
+     * Since TEIV supports TEIV as top level domain on the exposure side, there is possibility to return more than one
+     * RelationType for a given name with domain as TEIV. In this instance, an error will be thrown because this is not yet
+     * implemented in TEIV.
      *
      * @param domain
      *     - name of the domain
      * @param relationTypeName
      *     - name of the relation type
-     * @return the list of {@link RelationType}
+     * @return the {@link RelationType}
      * @throws SchemaRegistryException
      *     if relation type is not found in the domain
      */
-    public static List<RelationType> getRelationTypeByDomainAndName(final String domain, final String relationTypeName)
+    @Cacheable("relationTypeByDomainAndName")
+    public static RelationType getRelationTypeByDomainAndName(final String domain, final String relationTypeName)
             throws SchemaRegistryException {
-        final List<RelationType> matchedRelationTypes = relationTypes.stream().filter(relationType -> relationType
-                .getModule().getDomain().equals(domain) && relationType.getName().equals(relationTypeName)).toList();
-        if (matchedRelationTypes.isEmpty()) {
+        final List<RelationType> matchedRelationTypes = getRelationTypesByDomain(domain).stream().filter(
+                relationType -> relationType.getName().equals(relationTypeName)).toList();
+        if (matchedRelationTypes.size() == 1) {
+            return matchedRelationTypes.get(0);
+        } else if (matchedRelationTypes.isEmpty()) {
             log.warn("Domain: {} does not contain the relation type: {}", domain, relationTypeName);
             throw new SchemaRegistryException(RELATIONSHIP_NOT_FOUND_IN_DOMAIN, String.format(
                     "Relation type: %s not found in domain: %s", relationTypeName, domain));
+        } else {
+            if (domain.equals(TEIV_DOMAIN)) {
+                log.warn("Domain: {} contains duplicate relation type: {}. This is yet to be implemented in TEIV.", domain,
+                        relationTypeName);
+                throw new SchemaRegistryException(DUPLICATE_RELATION_NAME_IN_TEIV_DOMAIN, String.format(
+                        "Duplicate relation type: %s found in domain: %s. This is yet to be implemented in TEIV.",
+                        relationTypeName, domain));
+            }
+            log.warn("Domain: {} contains duplicate relation type: {}. This is not supported in TEIV.", domain,
+                    relationTypeName);
+            throw new SchemaRegistryException(DUPLICATE_RELATION_NAME_IN_DOMAIN, String.format(
+                    "Duplicate relation type: %s found in domain: %s. This is not supported in TEIV.", relationTypeName,
+                    domain));
         }
-        return matchedRelationTypes;
     }
 
     /**

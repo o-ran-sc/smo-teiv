@@ -109,7 +109,7 @@ class SourceEntityDeleteTopologyProcessorTest {
             verify(metrics, times(1)).incrementNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents();
             verifyNoMoreInteractions(metrics);
 
-            verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
+            verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
                     anyString(), anyString());
         }
     }
@@ -128,7 +128,7 @@ class SourceEntityDeleteTopologyProcessorTest {
             verify(metrics, times(1)).incrementNumReceivedCloudEventNotSupported();
             verifyNoMoreInteractions(metrics);
 
-            verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
+            verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
                     anyString(), anyString());
         }
     }
@@ -153,7 +153,7 @@ class SourceEntityDeleteTopologyProcessorTest {
             verify(metrics, times(1)).recordCloudEventSourceEntityDeleteParseTime(anyLong());
             verifyNoMoreInteractions(metrics);
 
-            verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
+            verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("source-entity-delete"), any(CloudEvent.class),
                     anyString(), any());
         }
     }
@@ -203,7 +203,7 @@ class SourceEntityDeleteTopologyProcessorTest {
 
             verifyNoMoreInteractions(metrics);
 
-            verify(auditLogger).auditLog(eq(ExecutionStatus.SUCCESS), eq("source-entity-delete"), any(CloudEvent.class),
+            verify(auditLogger).logSuccess(eq(ExecutionStatus.SUCCESS), eq("source-entity-delete"), any(CloudEvent.class),
                     anyString(), any());
             verifyNoMoreInteractions(metrics);
         } catch (IllegalAccessException e) {

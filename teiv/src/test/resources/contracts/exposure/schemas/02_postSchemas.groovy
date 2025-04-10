@@ -61,6 +61,9 @@ import org.springframework.cloud.contract.spec.Contract
                     '    leaf weekend { ' +
                     '            type uint32; ' +
                     '        } ' +
+                    '    leaf decimal { ' +
+                    '            type decimal64; ' +
+                    '        } ' +
                     '    } ' +
                     '   ' +
                     '  identity geo-classifier { ' +
@@ -225,6 +228,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid schema name",
@@ -288,6 +294,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid schema name",
@@ -363,6 +372,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -429,6 +441,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -496,6 +511,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -552,6 +570,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid schema name",
@@ -619,6 +640,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -686,6 +710,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -711,6 +738,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -734,6 +764,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
             "status": "BAD_REQUEST",
             "message": "Invalid file input",
@@ -794,6 +827,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -854,6 +890,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -902,6 +941,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -942,6 +984,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -1009,6 +1054,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -1076,6 +1124,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -1116,6 +1167,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "Invalid file input",
@@ -1177,6 +1231,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -1240,6 +1297,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
             "status": "BAD_REQUEST",
             "message": "Invalid file input",
@@ -1303,6 +1363,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
@@ -1361,11 +1424,84 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status CONFLICT()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "CONFLICT",
                 "message": "Schema in deleting state",
                 "details": "Schema test-app-in-deleting-status already exists and is in the process of being deleted. This may take some time, please try again later."
             }''')
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Create a new classifier and decorator schema with not supported decorator type"
+        request {
+            method POST()
+            url("/topology-inventory/v1alpha11/schemas")
+            headers {
+                contentType(multipartFormData())
+            }
+            multipart(
+                    file: named(
+                    name: $(c(regex(nonEmpty())), p('file.yang')),
+                    contentType: p('application/yang'),
+                    content: $(c(regex(nonEmpty())),
+                    p('module module-rapp-model15 { ' +
+                    '  ' +
+                    '  yang-version 1.1; ' +
+                    '  namespace "urn:module-rapp-model15"; ' +
+                    '  prefix model15; ' +
+                    '   ' +
+                    '    import o-ran-smo-teiv-common-yang-types { prefix model; } ' +
+                    '  import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; } ' +
+                    '   ' +
+                    '  revision "2024-05-08" { ' +
+                    '    description ' +
+                    '    "Initial revision."; ' +
+                    '    or-teiv-yext:label 0.3.0; ' +
+                    '  } ' +
+                    '   ' +
+                    '  augment /model:decorators { ' +
+                    '        leaf urban { ' +
+                    '            type string; ' +
+                    '        } ' +
+                    '    leaf rural { ' +
+                    '            type boolean; ' +
+                    '        } ' +
+                    '    leaf weekend { ' +
+                    '            type uint32; ' +
+                    '        } ' +
+                    '    leaf decimal { ' +
+                    '            type decimal32; ' +
+                    '        } ' +
+                    '    } ' +
+                    '   ' +
+                    '  identity geo-classifier { ' +
+                    '    base model:classifiers; ' +
+                    '  } ' +
+                    '  ' +
+                    '    identity classifierTest1 { ' +
+                    '        base geo-classifier; ' +
+                    '    } ' +
+                    '   ' +
+                    '  identity classifierTest2 { ' +
+                    '        base geo-classifier; ' +
+                    '    } ' +
+                    '   ' +
+                    '  identity classifierTest3 { ' +
+                    '        base model:classifiers; ' +
+                    '  } ' +
+                    '   ' +
+                    '}'))))
+        }
+        response {
+            status BAD_REQUEST()
+            body('''{
+                    "status": "BAD_REQUEST",
+                    "message": "Invalid file input",
+                    "details": "Invalid file input: Cannot resolve typedef 'decimal32'."
+                }''')
         }
     }
 ]

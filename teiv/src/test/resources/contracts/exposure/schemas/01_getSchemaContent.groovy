@@ -244,7 +244,7 @@ import org.springframework.cloud.contract.spec.Contract
                     "details": "Invalid schema name: invalid"
                 }''')
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
         }
     }

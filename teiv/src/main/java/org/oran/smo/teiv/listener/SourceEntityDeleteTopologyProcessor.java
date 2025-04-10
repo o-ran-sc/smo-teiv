@@ -70,7 +70,7 @@ public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
         } catch (IOException e) {
             log.error("Error while parsing the {} event.", e.getMessage());
             customMetrics.incrementNumUnsuccessfullyParsedSourceEntityDeleteCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
                     "Failed to parse the CloudEvent");
             return;
         }
@@ -80,7 +80,7 @@ public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
             log.error("Unsupported type: {} for source-entity-delete event. Event: {}", sourceEntityDelete.type,
                     cloudEvent);
             customMetrics.incrementNumReceivedCloudEventNotSupported();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
                     String.format("Unsupported type: %s for source-entity-delete event.", sourceEntityDelete.type));
             return;
         }
@@ -107,7 +107,7 @@ public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                     CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedSourceEntityDeleteCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
                     e.getMessage());
             return;
         }
@@ -115,8 +115,8 @@ public class SourceEntityDeleteTopologyProcessor implements TopologyProcessor {
         stopWatch.stop();
         customMetrics.recordCloudEventSourceEntityDeletePersistTime(stopWatch.lastTaskInfo().getTimeNanos());
         customMetrics.incrementNumSuccessfullyPersistedSourceEntityDeleteCloudEvents();
-        auditLogger.auditLog(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
-                "");
+        auditLogger.logSuccess(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_SOURCE_ENTITY_DELETE, cloudEvent, messageKey,
+                List.of());
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

@@ -1,0 +1,69 @@
+module o-ran-smo-teiv-rel-oam-ran-test {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-rel-oam-ran-test";
+    prefix or-teiv-rel-oam-ran-test;
+
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
+
+    import o-ran-smo-teiv-oam-test { prefix or-teiv-oam-test; }
+
+    import o-ran-smo-teiv-ran-test { prefix or-teiv-ran-test; }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+        "These are just test O&M and RAN topology relation model.";
+
+    revision "2024-10-04" {
+        description "Added grouping, Origin_Relationship_Mapping_Grp to the topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain REL_OAM_RAN;
+
+    or-teiv-yext:biDirectionalTopologyRelationship ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU { // 1 to 0..1
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf used-nrCellDu {
+            description "gNodeB-DU Function uses NR Cell-DU.";
+            or-teiv-yext:aSide or-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt;
+            type instance-identifier;
+        }
+
+        leaf used-by-managedElement {
+            description "NR Cell-DU used by managedElement.";
+            or-teiv-yext:bSide or-teiv-ran-test:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU;
+            type instance-identifier;
+            mandatory true;
+        }
+
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_GNBDUFUNCTIONNNNNNNNNNNNNNN {    // 1 to 0..n
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf-list managed-gnbduFunction {
+            description "Managed Element manages gNodeB-DU Function.";
+            or-teiv-yext:aSide or-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt;
+            type instance-identifier;
+        }
+
+        leaf managed-by-managedElement {
+            description "gNodeB-DU Function managed by Managed Element.";
+            or-teiv-yext:bSide or-teiv-ran-test:GNBDUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn;
+            type instance-identifier;
+            mandatory true;
+        }
+    }
+}

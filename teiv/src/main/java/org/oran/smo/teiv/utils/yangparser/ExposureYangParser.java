@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.oran.smo.teiv.exception.YangException;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.oran.smo.yangtools.parser.ParserExecutionContext;
@@ -43,7 +44,6 @@ import org.oran.smo.yangtools.parser.model.YangModel;
 import org.oran.smo.yangtools.parser.model.yangdom.YangDomElement;
 import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangParsingException;
-import org.oran.smo.teiv.exception.YangSchemaException;
 
 public class ExposureYangParser extends YangModelLoader {
     private static final List<YangModel> yangModelInputs = new CopyOnWriteArrayList<>();
@@ -52,7 +52,7 @@ public class ExposureYangParser extends YangModelLoader {
             ModuleAndFindingTypeAndSchemaNodePathFilterPredicate.fromString("ietf-*;*;*"),
             ModuleAndFindingTypeAndSchemaNodePathFilterPredicate.fromString("_3gpp*;*;*"));
 
-    public static void loadAndValidateModels() throws YangSchemaException {
+    public static void loadAndValidateModels() throws YangException {
         ParserExecutionContext context = createParserExecutionContext(List.of(), List.of(), FILTER_PREDICATES);
         context.setFailFast(false);
         final List<YangModel> yangModels = YangModelLoader.loadModulesFromSchemaRegistry();
@@ -127,6 +127,7 @@ public class ExposureYangParser extends YangModelLoader {
                         case "string" -> "TEXT";
                         case "boolean" -> "BOOLEAN";
                         case "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64" -> "INT";
+                        case "decimal64" -> "DEC";
                         default -> throw TeivException.invalidFileInput("Invalid data type");
                     };
                     if (resultMap.putIfAbsent(key, value) != null) {

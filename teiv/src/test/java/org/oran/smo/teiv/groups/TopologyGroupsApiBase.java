@@ -36,12 +36,11 @@ import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
-import org.oran.smo.teiv.groups.utils.GroupCreationRequestFilter;
+import org.oran.smo.teiv.groups.rest.controller.GroupCreationRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,7 +63,9 @@ public abstract class TopologyGroupsApiBase extends TopologyApiBase {
     private ApplicationContext context;
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
     private LoggerHandler loggerHandler;
 
     @BeforeAll
@@ -82,7 +83,7 @@ public abstract class TopologyGroupsApiBase extends TopologyApiBase {
 
     @BeforeEach
     public void setup() {
-        GroupCreationRequestFilter groupCreationRequestFilter = new GroupCreationRequestFilter(loggerHandler);
+        GroupCreationRequestFilter groupCreationRequestFilter = new GroupCreationRequestFilter(loggerHandler, objectMapper);
         mockMvc = MockMvcBuilders.webAppContextSetup((WebApplicationContext) context).addFilter(groupCreationRequestFilter,
                 "/topology-inventory/v1alpha11/groups").build();
 

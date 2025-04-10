@@ -1,0 +1,240 @@
+module o-ran-smo-teiv-ran-test {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-ran-test";
+    prefix or-teiv-ran-test;
+
+    import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }
+
+    import _3gpp-common-yang-types { prefix types3gpp; }
+
+    import ietf-geo-location {
+        prefix geo;
+        reference "RFC 9179: A YANG Grouping for Geographic Locations";
+    }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+        "These are just test RAN topology model.";
+
+    revision "2024-10-08" {
+        description "Added range for azimuth attribute of Sector.";
+        or-teiv-yext:label 0.5.0;
+    }
+
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology object.";
+        or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain RAN;
+
+    list ODUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn {
+        description "gNodeB Distributed Unit (gNB-DU).
+
+        A gNB may consist of a gNB-Centralized Unit (gNB-CU) and a gNB-DU.
+        The CU processes non-real time protocols and services, and the DU
+        processes PHY level protocol and real time services. The gNB-CU and
+        the gNB-DU units are connected via F1 logical interface.
+
+        The following is true for a gNB-DU:
+        Is connected to the gNB-CU-CP through the F1-C interface. Is
+        connected to the gNB-CU-UP through the F1-U interface. One gNB-DU is
+        connected to only one gNB-CU-CP. One gNB-DU can be connected to
+        multiple gNB-CU-UPs under the control of the same gNB-CU-CP.
+
+        Note: A gNB may consist of a gNB-CU-CP, multiple gNB-CU-UPs and
+        multiple gNB-DUs. gNB-DU is a concrete class that extends the NG-RAN
+        node object. In Topology, you can create, read, update, and delete
+        the gNB-DU object.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        container attributes {
+            container dUpLMNId {
+                description "PLMN identifier used as part of PM Events data";
+                uses types3gpp:PLMNId;
+            }
+
+            leaf gNBDUId {
+                description "Unique identifier for the DU within a gNodeB";
+                type int64;
+            }
+
+            leaf gNBId {
+                description "Identity of gNodeB within a PLMN";
+                type int64;
+            }
+
+            leaf gNBIdLength {
+                description "Length of gNBId bit string representation";
+                type int32;
+            }
+        }
+    }
+
+
+    list NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU  {
+        description "Represents an NR Cell in gNodeB-DU.
+
+        5G NR is a new radio access technology (RAT) developed by 3GPP for
+        the 5G (fifth generation) mobile network. It is designed to be the
+        global standard for the air interface of 5G networks.
+
+        5G NR has synchronization signal that is known as Primary
+        Synchronization signal (PSS) and Secondary Synchronization signal
+        (SSS). These signals are specific to NR physical layer and provide
+        the following information required by UE for downlink
+        synchronization: PSS provides Radio Frame Boundary (Position of 1st
+        Symbol in a Radio frame) SSS provides Subframe Boundary (Position of
+        1st Symbol in a Subframe) Physical Layer Cell ID (PCI) information
+        using both PSS and SSS.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        container attributes {
+            leaf cellLocalIdddddddddddddddddddddddddddddddddddddddddddddddddddddd {
+                description "Used together with gNodeB identifier to identify NR
+                cell in PLMN. Used together with gNBId to form NCI.";
+                type int32;
+            }
+
+            leaf nCI {
+                description "NR Cell Identity.";
+                type int64;
+            }
+
+            leaf nRPCI {
+                description "The Physical Cell Identity (PCI) of the NR cell.";
+                type int32;
+            }
+
+            leaf nRTAC {
+                description "NR Tracking Area Code (TAC).";
+                type int32;
+            }
+        }
+    }
+
+    list AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy {
+        description "This MO serves as a mapping between the cell and the RBS
+        equipment used to provide coverage in a certain geographical area.
+        The MO also controls the maximum output power of the sector.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        container attributes {
+            leaf-list eUtranFqBands {
+                description "List of LTE frequency bands that associated
+                hardware supports";
+                type string;
+            }
+
+            leaf-list geranFqBands {
+                description "List of GERAN frequency bands that associated
+                hardware supports";
+                type string;
+            }
+
+            leaf-list nRFqBands {
+                description "List of NR frequency bands associated hardware
+                supports";
+                type string;
+            }
+        }
+    }
+
+    list LTESectorCarrierrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr {
+        description "The LTE Sector Carrier object provides the attributes for
+        defining the logical characteristics of a carrier (cell) in a
+        sector. A sector is a coverage area associated with a base station
+        having its own antennas, radio ports, and control channels. The
+        concept of sectors was developed to improve co-channel interference
+        in cellular systems, and most wireless systems use three sector
+        cells.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        container attributes {
+            leaf sectorCarrierType {
+                description "Indicates whether or not the sector carrier
+                modelled by MO SectorCarrier is a digital sector.";
+                type enumeration {
+                    enum normal_sector {
+                        value 0;
+                        description "Not a digital sector";
+                    }
+                    enum left_digital_sector {
+                        value 1;
+                        description "Left digital sector for 2DS";
+                    }
+                    enum right_digital_sector {
+                        value 2;
+                        description "Right digital sector for 2DS";
+                    }
+                    enum left_digital_sector_3ds {
+                        value 3;
+                        description "Left digital sector for 3DS";
+                    }
+                    enum right_digital_sector_3ds {
+                        value 4;
+                        description "Right digital sector for 3DS";
+                    }
+                    enum middle_digital_sector_3ds {
+                        value 5;
+                        description "Middle digital sector for 3DS";
+                    }
+                }
+            }
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ODUFUNCTIONNNNNNNNNNNNNNNNN_PROVIDES_NRCELLDUUUUUUUUUUUUUUUUUU { // 1 to 0..n
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf-list provided-nrCellDu {
+            description "gNodeB-DU Function provides NR Cell-DU.";
+            or-teiv-yext:aSide ODUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn;
+            type instance-identifier;
+        }
+
+        leaf provided-by-gnbduFunction {
+            description "NR Cell-DU provided by gNodeB-DU Function.";
+            or-teiv-yext:bSide NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU;
+            type instance-identifier;
+            mandatory true;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship LTESECTORCARRIERRRRRRRRRRRRRRRRRRRRR_USES_ANTENNACAPABILITYYYYYYYYYYYYYYY { // 0..n to 0..1
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf used-antennaCapability {
+            description "LTE Sector Carrier uses Antenna Capability.";
+            or-teiv-yext:aSide LTESectorCarrierrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr;
+            type instance-identifier;
+        }
+
+        leaf-list used-by-lteSectorCarrier {
+            description "Antenna Capability used by LTE Sector Carrier.";
+            or-teiv-yext:bSide AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy;
+            type instance-identifier;
+        }
+    }
+}

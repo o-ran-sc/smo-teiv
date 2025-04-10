@@ -1,5 +1,5 @@
 {
-    "84E676149362F50C55FE1E004B98D4891916BBF3": [
+    "F93C2CA075353668A76B4718E07B741ACCD83641": [
         {
             "id": "NRCellDU_41"
         },
@@ -13,9 +13,15 @@
                 "firstDiscovered": "<AFTER TEST START TIME>",
                 "lastModified": "<AFTER TEST START TIME>"
             }
+        },
+        {
+            "id": "NRCellDU_X",
+            "CD_sourceIds": [
+                "relation_one_to_one_both_sides_missing"
+            ]
         }
     ],
-    "28C9A375E800E82308EBE7DA2932EF2C0AF13C38": [
+    "C9475FE40C02BEB41F720B4284A856F2CF49E1F3": [
         {
             "id": "ManagedElement_61",
             "REL_FK_used-nrCellDu": "NRCellDU_51",
@@ -37,6 +43,18 @@
                 "firstDiscovered": "<AFTER TEST START TIME>",
                 "lastModified": "<AFTER TEST START TIME>"
             },
+            "REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4": [
+                "source1",
+                "source2"
+            ]
+        },
+        {
+            "id": "ManagedElement_X",
+            "REL_FK_used-nrCellDu": "NRCellDU_X",
+            "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": "relation_one_to_one_both_sides_missing",
+            "CD_sourceIds": [
+                "relation_one_to_one_both_sides_missing"
+            ],
             "REL_CD_1F61FA6DDAECE90540F9880F2A98037B1530A5A4": [
                 "source1",
                 "source2"
@@ -75,13 +93,30 @@
                 "source1",
                 "source2"
             ]
+        },
+        {
+            "id": "NRCellDU_X",
+            "REL_FK_provided-by-oduFunction": "ODU_X",
+            "REL_ID_ODUFUNCTION_PROVIDES_NRCELLDU": "relation_one_to_many_both_sides_missing",
+            "CD_sourceIds": [
+                "relation_one_to_many_both_sides_missing"
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            },
+            "REL_CD_sourceIds_ODUFUNCTION_PROVIDES_NRCELLDU": [
+                "source1",
+                "source2"
+            ]
         }
     ],
     "o-ran-smo-teiv-ran_ODUFunction": [
         {
             "id": "ODU_2",
             "dUpLMNId": {
-                "mcc": "111",
+                "mcc": "251",
                 "mnc": "211"
             },
             "gNBDUId": 13,
@@ -97,6 +132,17 @@
             "id": "ODU_3",
             "CD_sourceIds": [
                 "relation_one_to_many_aSide_missing"
+            ],
+            "metadata": {
+                "reliabilityIndicator": "ADVISED",
+                "firstDiscovered": "<AFTER TEST START TIME>",
+                "lastModified": "<AFTER TEST START TIME>"
+            }
+        },
+        {
+            "id": "ODU_X",
+            "CD_sourceIds": [
+                "relation_one_to_many_both_sides_missing"
             ],
             "metadata": {
                 "reliabilityIndicator": "ADVISED",
@@ -136,10 +182,10 @@
     "o-ran-smo-teiv-ran_AntennaCapability": [
         {
             "id": "AntennaCapability_3",
-            "geranFqBands": {
-                "attribute_1": "1",
-                "attribute_2": "2"
-            }
+            "geranFqBands": [
+                1,
+                2
+            ]
         },
         {
             "id": "AntennaCapability_123",

@@ -35,13 +35,16 @@ import org.oran.smo.teiv.schema.RelationshipDataLocation;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import org.oran.smo.teiv.utils.query.exception.TeivPathException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.jooq.impl.DSL.exists;
 import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.selectOne;
 import static org.jooq.impl.DSL.table;
 import static org.oran.smo.teiv.exposure.teivpath.innerlanguage.TopologyObjectType.ASSOCIATION;
 import static org.oran.smo.teiv.utils.PersistableUtil.getTableNameWithColumnName;
@@ -56,7 +59,26 @@ public class ScopeLogicalBlock extends LogicalBlock {
 
     @Override
     public Condition getCondition() {
-        return ConditionFactory.create(scopeObject).getCondition(scopeObject);
+        Condition scopeCondition = ConditionFactory.create(scopeObject).getCondition(scopeObject);
+        List<Pair<String, Field>> whereExistsConditions = new ArrayList<>(getWhereExistsConditions());
+        if (!whereExistsConditions.isEmpty()) {
+            if (whereExistsConditions.size() > 2) {
+                //error out as with in a scope block there cannot be more than two joins/where exists conditions(many to many)
+                throw TeivException.serverException("Server unknown exception",
+                        "More than two where exists condition within a logical block is not supported", null);
+            }
+            Condition existsCondition;
+            if (whereExistsConditions.size() == 1) {
+                existsCondition = exists(selectOne().from(whereExistsConditions.get(0).getLeft()).where(scopeCondition).and(
+                        whereExistsConditions.get(0).getRight()));
+            } else {
+                existsCondition = exists(selectOne().from(whereExistsConditions.get(0).getLeft()).where(
+                        whereExistsConditions.get(0).getRight()).andExists(selectOne().from(whereExistsConditions.get(1)
+                                .getLeft()).where(whereExistsConditions.get(1).getRight()).and(scopeCondition)));
+            }
+            return existsCondition;
+        }
+        return scopeCondition;
     }
 
     @Override
@@ -75,8 +97,8 @@ public class ScopeLogicalBlock extends LogicalBlock {
     }
 
     @SuppressWarnings({ "java:S1874" })
-    public Set<Pair<String, Field>> getJoinCondition() {
-        Set<Pair<String, Field>> joinCondition = new LinkedHashSet<>();
+    public Set<Pair<String, Field>> getWhereExistsConditions() {
+        Set<Pair<String, Field>> whereExistsCondition = new LinkedHashSet<>();
         String[] topologyObjectSplit = scopeObject.getTopologyObject().split("/");
         if (scopeObject.getTopologyObjectType().equals(ASSOCIATION) && SchemaRegistry.getEntityTypeByName(
                 topologyObjectSplit[0]) != null) {
@@ -87,26 +109,26 @@ public class ScopeLogicalBlock extends LogicalBlock {
                     entityType) || relation.getBSide().equals(entityType)).findFirst().orElseThrow(() -> TeivPathException
                             .invalidAssociation(entityType.getName(), association));
             if (isManyToMany(relationType)) {
-                String columnName = getColumnNameForManyToManyJoin(entityType, relationType);
-                String col1 = constructColumnNameForJoinCondition(relationType, columnName);
+                String columnName = getColumnNameForManyToManyWhereExists(entityType, relationType);
+                String col1 = constructColumnNameForWhereExistsCondition(relationType, columnName);
                 String col2 = getTableNameWithColumnName(entityType.getTableName(), ID_COLUMN_NAME);
-                joinCondition.add(constructJoinConditionPair(relationType.getTableName(), col1, col2));
+                whereExistsCondition.add(constructWhereExistsConditionPair(relationType.getTableName(), col1, col2));
 
-                if (isSecondJoinNeeded()) {
-                    joinCondition.add(getSecondJoinCondition(entityType, relationType));
+                if (isNestedWhereExistsRequired()) {
+                    whereExistsCondition.add(getNestedWhereExistsCondition(entityType, relationType));
                 }
-            } else if (isJoinNeeded(topologyObjectSplit, relationType)) {
-                String col1 = constructColumnNameForJoinCondition(relationType, relationType
+            } else if (isWhereExistsNeeded(topologyObjectSplit, relationType)) {
+                String col1 = constructColumnNameForWhereExistsCondition(relationType, relationType
                         .getNotStoringSideEntityIdColumnNameInStoringSideTable());
                 String col2 = getTableNameWithColumnName(relationType.getNotStoringSideTableName(), ID_COLUMN_NAME);
-                String tableName = getTableNameForJoin(topologyObjectSplit, relationType);
-                joinCondition.add(constructJoinConditionPair(tableName, col1, col2));
+                String tableName = getTableNameForWhereExists(topologyObjectSplit, relationType);
+                whereExistsCondition.add(constructWhereExistsConditionPair(tableName, col1, col2));
             }
         }
-        return joinCondition;
+        return whereExistsCondition;
     }
 
-    private boolean isSecondJoinNeeded() {
+    private boolean isNestedWhereExistsRequired() {
         return !scopeObject.getContainer().equals(ContainerType.ID) && !scopeObject.getContainer().equals(
                 ContainerType.NOT_NULL);
     }
@@ -115,12 +137,12 @@ public class ScopeLogicalBlock extends LogicalBlock {
         return relationType.getRelationshipStorageLocation().equals(RelationshipDataLocation.RELATION);
     }
 
-    private boolean isJoinNeeded(String[] topologyObjectSplit, RelationType relationType) {
+    private boolean isWhereExistsNeeded(String[] topologyObjectSplit, RelationType relationType) {
         return !relationType.getStoringSideEntityType().getName().equals(topologyObjectSplit[0]) || (!scopeObject
                 .getContainer().equals(ContainerType.ID) && !scopeObject.getContainer().equals(ContainerType.NOT_NULL));
     }
 
-    private static String getTableNameForJoin(String[] topologyObjectSplit, RelationType relationType) {
+    private static String getTableNameForWhereExists(String[] topologyObjectSplit, RelationType relationType) {
         if (relationType.getStoringSideEntityType().getName().equals(topologyObjectSplit[0])) {
             return relationType.getNotStoringSideTableName();
         } else {
@@ -128,22 +150,25 @@ public class ScopeLogicalBlock extends LogicalBlock {
         }
     }
 
-    private static Pair<String, Field> getSecondJoinCondition(EntityType entityType, RelationType relationType) {
-        EntityType entityTypeForSecondJoin;
-        String columnNameForSecondJoin;
+    private static Pair<String, Field> getNestedWhereExistsCondition(EntityType entityType, RelationType relationType) {
+        EntityType entityTypeForNestedWhereExists;
+        String columnNameForNestedWhereExists;
         if (!relationType.getASide().equals(entityType)) {
-            columnNameForSecondJoin = relationType.aSideColumnName();
-            entityTypeForSecondJoin = relationType.getASide();
+            columnNameForNestedWhereExists = relationType.aSideColumnName();
+            entityTypeForNestedWhereExists = relationType.getASide();
         } else {
-            columnNameForSecondJoin = relationType.bSideColumnName();
-            entityTypeForSecondJoin = relationType.getBSide();
+            columnNameForNestedWhereExists = relationType.bSideColumnName();
+            entityTypeForNestedWhereExists = relationType.getBSide();
         }
-        String col1ForSecondJoin = constructColumnNameForJoinCondition(relationType, columnNameForSecondJoin);
-        String col2ForSecondJoin = getTableNameWithColumnName(entityTypeForSecondJoin.getTableName(), ID_COLUMN_NAME);
-        return constructJoinConditionPair(entityTypeForSecondJoin.getTableName(), col1ForSecondJoin, col2ForSecondJoin);
+        String col1ForNestedWhereExists = constructColumnNameForWhereExistsCondition(relationType,
+                columnNameForNestedWhereExists);
+        String col2ForNestedWhereExists = getTableNameWithColumnName(entityTypeForNestedWhereExists.getTableName(),
+                ID_COLUMN_NAME);
+        return constructWhereExistsConditionPair(entityTypeForNestedWhereExists.getTableName(), col1ForNestedWhereExists,
+                col2ForNestedWhereExists);
     }
 
-    private static String getColumnNameForManyToManyJoin(EntityType entityType, RelationType relationType) {
+    private static String getColumnNameForManyToManyWhereExists(EntityType entityType, RelationType relationType) {
         if (relationType.getASide().equals(entityType)) {
             return relationType.aSideColumnName();
         } else {
@@ -151,11 +176,11 @@ public class ScopeLogicalBlock extends LogicalBlock {
         }
     }
 
-    private static String constructColumnNameForJoinCondition(RelationType relationType, String columnName) {
+    private static String constructColumnNameForWhereExistsCondition(RelationType relationType, String columnName) {
         return relationType.getTableName() + "." + String.format(QUOTED_STRING, columnName);
     }
 
-    private static Pair<String, Field> constructJoinConditionPair(String tableName, String col1, String col2) {
+    private static Pair<String, Field> constructWhereExistsConditionPair(String tableName, String col1, String col2) {
         Field equalsField = field(col1 + "=" + col2);
         return new ImmutablePair<>(tableName, equalsField);
     }

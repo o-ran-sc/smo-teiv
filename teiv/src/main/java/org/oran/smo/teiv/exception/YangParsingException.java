@@ -21,6 +21,9 @@
 package org.oran.smo.teiv.exception;
 
 public class YangParsingException extends YangException {
+    private YangParsingException(final String message) {
+        super(message);
+    }
 
     public YangParsingException(final String message, final Throwable cause) {
         super(message, cause);
@@ -28,5 +31,9 @@ public class YangParsingException extends YangException {
 
     public static YangParsingException failedIOExecution(Exception e) {
         return new YangParsingException("Failed to execute IO operation", e);
+    }
+
+    public static YangParsingException modelDirectoryDoesNotExists() {
+        return new YangParsingException("Model directory does not exist");
     }
 }

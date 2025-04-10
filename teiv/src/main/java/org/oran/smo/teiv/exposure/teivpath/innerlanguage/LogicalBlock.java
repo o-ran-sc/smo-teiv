@@ -36,5 +36,5 @@ public abstract class LogicalBlock {
 
     public abstract Set<Table> getTables();
 
-    public abstract Set<Pair<String, Field>> getJoinCondition();
+    public abstract Set<Pair<String, Field>> getWhereExistsConditions();
 }

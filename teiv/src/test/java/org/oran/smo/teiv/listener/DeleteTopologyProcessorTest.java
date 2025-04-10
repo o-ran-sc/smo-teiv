@@ -111,7 +111,7 @@ class DeleteTopologyProcessorTest {
 
         verify(teivDbService, times(1)).execute(anyList());
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("delete"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("delete"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -126,7 +126,7 @@ class DeleteTopologyProcessorTest {
         verify(metrics, times(1)).incrementNumUnsuccessfullyParsedDeleteCloudEvents();
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("delete"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("delete"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 

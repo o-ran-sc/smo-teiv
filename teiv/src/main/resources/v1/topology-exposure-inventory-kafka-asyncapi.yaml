@@ -82,32 +82,32 @@ components:
           payload:
             entities:
               - o-ran-smo-teiv-ran:NRCellDU:
-                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                  - id: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
                     attributes:
                       cellLocalId: 4589
                       nRPCI: 12
                       nRTAC: 310
                       sourceIds:
-                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                        - "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
                         - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
               - o-ran-smo-teiv-ran:NRCellDU:
-                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                  - id: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
                     attributes:
                       cellLocalId: 4590
                       nRPCI: 32
                       nRTAC: 510
                       sourceIds:
-                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                        - "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
                         - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
             relationships:
               - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
                   - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
-                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
-                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRSectorCarrier=1"
               - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
                   - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78"
-                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRSectorCarrier=2"
           headers:
             ce_specversion: '1.0'
             ce_id: a30e63c9-d29e-46ff-b99a-b63ed83fd233
@@ -132,32 +132,32 @@ components:
           payload:
             entities:
               - o-ran-smo-teiv-ran:NRCellDU:
-                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                  - id: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
                     attributes:
                       cellLocalId: 4579
                       nRPCI: 12
                       nRTAC: 310
                       sourceIds:
-                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                        - "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
                         - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
               - o-ran-smo-teiv-ran:NRCellDU:
-                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                  - id: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
                     attributes:
                       cellLocalId: 4580
                       nRPCI: 32
                       nRTAC: 510
                       sourceIds:
-                        - "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                        - "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
                         - "urn:cmHandle:395221E080CCF0FD1924103B15873814"
             relationships:
               - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
                   - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
-                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
-                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=1"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRSectorCarrier=1"
               - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
                   - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=11AB21444F9D7C6DAC7453879AB5586D294B495E43AC6F94750767DD624014DB7317E9A5EE73239876649D801037D6347355B19C5D97222B3C25000CF8A97C78"
-                    aSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
-                    bSide: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRSectorCarrier=2"
+                    aSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
+                    bSide: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRSectorCarrier=2"
           headers:
             ce_specversion: '1.0'
             ce_id: a30e63c9-d29e-46ff-b99a-b63ed83fd234
@@ -182,9 +182,9 @@ components:
           payload:
             entities:
               - o-ran-smo-teiv-ran:NRCellDU:
-                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=1"
+                  - id: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1"
               - o-ran-smo-teiv-ran:NRCellDU:
-                  - id: "urn:3gpp:dn:ManagedElement=1,GNBDUFunction=1,NRCellDU=2"
+                  - id: "urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=2"
             relationships:
               - o-ran-smo-teiv-ran:NRCELLDU_USES_NRSECTORCARRIER:
                   - id: "urn:o-ran:smo:teiv:sha512:NRCELLDU_USES_NRSECTORCARRIER=CA576F4716C36A1BD1C506DCB58418FC731858D3D3F856F536813A8C4D3F1CC21292E506815410E04496D709D96066EBC0E4890DEFC3789EDC4BD9C28DA1D52B"
@@ -212,15 +212,13 @@ components:
       items:
         type: object
         description: Entities schema will adhere to the entity types and
-          attributes mentioned in the yang modules. Refer to EIC Developer
-          Portal for Yang Modules.
+          attributes mentioned in the yang modules.
     relationships:
       type: array
       items:
         type: object
         description: Relationship schema will adhere to the relationship
-          types mentioned in the yang modules. Refer to EIC Developer Portal
-          for Yang Modules.
+          types mentioned in the yang modules.
   messageTraits:
     commonHeaders:
       headers:

@@ -1,0 +1,192 @@
+module o-ran-smo-teiv-equipment-test {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-equipment-test";
+    prefix or-teiv-equip-test;
+
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
+
+    import ietf-geo-location {
+        prefix geo;
+        reference "RFC 9179: A YANG Grouping for Geographic Locations";
+    }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+        "These are just test Equipment topology model";
+
+    revision "2024-10-21" {
+        description "Deprecate AntennaModule attribute antennaBeamWidth.
+        To be replaced by horizontalBeamWidth and verticalBeamWidth.";
+        or-teiv-yext:label 0.6.0;
+    }
+
+    revision "2024-10-08" {
+        description "Added azimuth attribute for AntennaModule.";
+        or-teiv-yext:label 0.5.0;
+    }
+
+    revision "2024-10-04" {
+        description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
+        to the corresponding topology objects.";
+        or-teiv-yext:label 0.4.0;
+    }
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain EQUIPMENT;
+
+    list AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee {
+        description "An Antenna Module represents the physical aspect of an
+        antenna.";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Entity_Mapping_Grp;
+        key id;
+
+        container attributes {
+            leaf antennaModelNumber {
+                description "Vendor-specific antenna model identifier. This
+                attribute is part of AISG v3 ADB Standard and has no
+                operational impact.";
+                type string;
+            }
+
+            leaf mechanicalAntennaBearing {
+                description "Antenna bearing on antenna subunit where antenna
+                unit is installed.";
+                type int32;
+            }
+
+            leaf mechanicalAntennaTilt {
+                description "The fixed antenna tilt of the installation, defined
+                as the inclination of the antenna element respect to the
+                vertical plane. It is a signed value. Positive indicates
+                downtilt, and negative indicates uptilt.";
+                type int32;
+            }
+
+            leaf positionWithinSector {
+                description "Antenna unit position within sector. This attribute
+                is part of AISG v3 ADB Standard and has no operational
+                impact.";
+                type string;
+            }
+
+            leaf totalTilt {
+                description "Total antenna elevation including the installed
+                tilt and the tilt applied by the Remote Electrical
+                Tilt (RET).";
+                type int32;
+            }
+
+            leaf electricalAntennaTilt {
+                description "Electrically-controlled tilt of main beam maximum
+                with respect to direction orthogonal to antenna element
+                axis (see 3GPP TS 25.466). Value is signed; tilt down is
+                positive, tilt up is negative.";
+                type int32;
+            }
+
+            leaf-list antennaBeamWidth {
+                description "The angular span of the main lobe of the antenna
+                radiation pattern in the horizontal plane. Measured in
+                degrees.
+
+                Deprecated: Since 24.Q4. Replaced by AntennaModule::horizontalBeamWidth
+                and AntennaModule::verticalBeamWidth. Planned to be removed.";
+                type uint32;
+            }
+
+            leaf horizontalBeamWidth  {
+                description "The angular span of the main lobe of the antenna
+                radiation pattern in the horizontal plane.";
+                type decimal64 {
+                    fraction-digits 1;
+                    range "0..360";
+                }
+                units "decimal degrees";
+            }
+
+            leaf verticalBeamWidth   {
+                description "The angular span of the main lobe of the antenna
+                radiation pattern in the vertical plane.";
+                type decimal64 {
+                    fraction-digits 1;
+                    range "0..360";
+                }
+                units "decimal degrees";
+            }
+
+            leaf azimuth {
+                description "The value of the azimuth of the Antenna Module.";
+                type decimal64 {
+                    fraction-digits 1;
+                    range "0..360";
+                }
+                units "decimal degrees";
+            }
+
+            uses geo:geo-location;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE {
+
+        description
+            "The aSide of this relationship is an instance of the AntennaModule type.
+            The bSide of this relationship is an instance of the AntennaModule type.
+            The AntennaModule represents the physical antenna that realised by the AntennaModule.
+            An AntennaModule instance can realised one AntennaModule.
+            An AntennaModule instance can be realised by many AntennaModules.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list realised-antennaModule {
+            description "Antenna Module realised by many Antenna Modules.";
+            or-teiv-yext:aSide or-teiv-equip-test:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee;
+            type instance-identifier;
+        }
+
+        leaf-list realising-antennaModule {
+            description "Antenna Module realising this Antenna Module.";
+            or-teiv-yext:bSide or-teiv-equip-test:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee;
+            type instance-identifier;
+        }
+    }
+
+    or-teiv-yext:biDirectionalTopologyRelationship ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE { // 1..n to 0..m
+
+        description
+            "The aSide of this relationship is an instance of the AntennaModule type.
+            The bSide of this relationship is an instance of the AntennaModule type.
+            The AntennaModule represents the physical antenna that developed on the AntennaModule.
+            An AntennaModule instance can developed one AntennaModule.
+            An AntennaModule instance can be developed on one AntennaModule.
+            ";
+
+        uses or-teiv-types:Top_Grp_Type;
+        uses or-teiv-types:Origin_Relationship_Mapping_Grp;
+        key id;
+
+        leaf-list developed-on-antennaModule {
+            description "Antenna Module developed on this Antenna Module.";
+            or-teiv-yext:aSide or-teiv-equip-test:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee;
+            type instance-identifier;
+        }
+
+        leaf-list developing-antennaModule {
+            description "Antenna Module developing this Antenna Module.";
+            or-teiv-yext:bSide or-teiv-equip-test:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee;
+            type instance-identifier;
+        }
+    }
+}

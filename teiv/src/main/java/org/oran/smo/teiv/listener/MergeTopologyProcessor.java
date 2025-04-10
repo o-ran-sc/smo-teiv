@@ -65,7 +65,7 @@ public class MergeTopologyProcessor implements TopologyProcessor {
         if (null == parsedCloudEventData) {
             log.error("Failed to parse the following CloudEvent: {}", CloudEventUtil.cloudEventToPrettyString(cloudEvent));
             customMetrics.incrementNumUnsuccessfullyParsedMergeCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, "Failed to parse the CloudEvent");
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, "Failed to parse the CloudEvent");
             return;
         }
         parsedCloudEventData.sort();
@@ -75,27 +75,32 @@ public class MergeTopologyProcessor implements TopologyProcessor {
 
         stopWatch.start();
         List<OperationResult> operationResults = new ArrayList<>();
+        List<String> inferredItems = new ArrayList<>();
         final String sourceAdapter = String.valueOf(cloudEvent.getSource());
         try {
             operationResults = teivDbOperations.executeEntityAndRelationshipMergeOperations(parsedCloudEventData, sourceAdapter);
+            operationResults.stream()
+                .filter(OperationResult::isInferred)
+                .map(result -> String.format("{\"%s:%s\":[{\"id\":\"%s\"}]}", result.getModule(), result.getType(), result.getId()))
+                .forEach(inferredItems::add);
         } catch (InvalidFieldInYangDataException e) {
             log.error("Invalid field in yang data. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                 CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedMergeCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, e.getMessage());
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, e.getMessage());
             return;
         } catch (RuntimeException e) {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                 CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedMergeCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, e.getMessage());
+            auditLogger.logError(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, e.getMessage());
             return;
         }
         stopWatch.stop();
 
         customMetrics.incrementNumSuccessfullyPersistedMergeCloudEvents();
         customMetrics.recordCloudEventMergePersistTime(stopWatch.lastTaskInfo().getTimeNanos());
-        auditLogger.auditLog(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, "");
+        auditLogger.logSuccess(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_MERGE, cloudEvent, messageKey, inferredItems);
     }
     //spotless:on
 }

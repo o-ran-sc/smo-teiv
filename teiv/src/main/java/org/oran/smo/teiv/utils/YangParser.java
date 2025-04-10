@@ -266,6 +266,7 @@ public class YangParser {
                     case "string" -> "TEXT";
                     case "boolean" -> "BOOLEAN";
                     case "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64" -> "INT";
+                    case "decimal64" -> "DEC";
                     default -> throw TeivException.invalidFileInput("Invalid data type");
                 }));
             }

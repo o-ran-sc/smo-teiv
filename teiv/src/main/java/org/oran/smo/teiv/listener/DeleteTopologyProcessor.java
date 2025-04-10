@@ -29,7 +29,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.oran.smo.teiv.CustomMetrics;
-import org.oran.smo.teiv.listener.audit.ExecutionStatus;
 import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
@@ -45,6 +44,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+import static org.oran.smo.teiv.listener.audit.ExecutionStatus.FAILED;
+import static org.oran.smo.teiv.listener.audit.ExecutionStatus.SUCCESS;
+import static org.oran.smo.teiv.utils.OperationResultParser.fromOperationResults;
 import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_DELETE;
 
 @Component
@@ -68,7 +70,7 @@ public class DeleteTopologyProcessor implements TopologyProcessor {
         if (parsedCloudEventData == null) {
             log.error("Failed to parse the following CloudEvent: {}", CloudEventUtil.cloudEventToPrettyString(cloudEvent));
             customMetrics.incrementNumUnsuccessfullyParsedDeleteCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_DELETE, cloudEvent, messageKey, "Failed to parse the CloudEvent");
+            auditLogger.logError(FAILED, CLOUD_EVENT_WITH_TYPE_DELETE, cloudEvent, messageKey, "Failed to parse the CloudEvent");
             return;
         }
         parsedCloudEventData.sort();
@@ -106,13 +108,13 @@ public class DeleteTopologyProcessor implements TopologyProcessor {
             log.error("Failed to process a CloudEvent. Discarded CloudEvent: {}. Used kafka message key: {}. Reason: {}",
                 CloudEventUtil.cloudEventToPrettyString(cloudEvent), messageKey, e.getMessage());
             customMetrics.incrementNumUnsuccessfullyPersistedDeleteCloudEvents();
-            auditLogger.auditLog(ExecutionStatus.FAILED, CLOUD_EVENT_WITH_TYPE_DELETE, cloudEvent, messageKey, e.getMessage());
+            auditLogger.logError(FAILED, CLOUD_EVENT_WITH_TYPE_DELETE, cloudEvent, messageKey, e.getMessage());
             return;
         }
         stopWatch.stop();
         customMetrics.recordCloudEventDeletePersistTime(stopWatch.lastTaskInfo().getTimeNanos());
         customMetrics.incrementNumSuccessfullyPersistedDeleteCloudEvents();
-        auditLogger.auditLog(ExecutionStatus.SUCCESS, CLOUD_EVENT_WITH_TYPE_DELETE, cloudEvent, messageKey, "");
+        auditLogger.logSuccess(SUCCESS, CLOUD_EVENT_WITH_TYPE_DELETE, cloudEvent, messageKey, fromOperationResults(operationResults));
     }
     //spotless:on
 }

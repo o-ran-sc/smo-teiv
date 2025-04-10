@@ -21,6 +21,14 @@
 
 BEGIN;
 
+COPY teiv_data."o-ran-smo-teiv-oam_ManagedElement" ("id", "CD_sourceIds", "CD_classifiers", "CD_decorators", "metadata" ) FROM stdin;
+urn:3gpp:dn:SubNetwork=ManagedElementForDeletion,MeContext=1,ManagedElement=1	["urn:3gpp:dn:SubNetwork=ManagedElementForDeletion,MeContext=1,ManagedElement=1","urn:cmHandle:C4388D6BB970EC663F88B46CC14F8620"]	[]	{}	{"reliabilityIndicator":"RESTORED","firstDiscovered":"2025-01-08T10:40:36.46156500Z","lastModified":"2025-01-08T10:40:36.46156500Z"}
+\.
+
+COPY teiv_data."o-ran-smo-teiv-ran_ODUFunction" ("id", "dUpLMNId", "gNBDUId", "gNBId", "gNBIdLength", "CD_sourceIds", "CD_classifiers", "CD_decorators", "REL_FK_managed-by-managedElement", "REL_ID_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "REL_CD_sourceIds_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "REL_CD_classifiers_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "REL_CD_decorators_MANAGEDELEMENT_MANAGES_ODUFUNCTION", "metadata", "REL_metadata_MANAGEDELEMENT_MANAGES_ODUFUNCTION" ) FROM stdin;
+urn:3gpp:dn:SubNetwork=ODUFunctionForDeletion,MeContext=1,ManagedElement=1,ODUFunction=1	{"mcc":"123","mnc":"82"}	\N	9	1	["urn:3gpp:dn:SubNetwork=ODUFunctionForDeletion,MeContext=1,ManagedElement=1,ODUFunction=1","urn:cmHandle:C4388D6BB970EC663F88B46CC14F8619"]	["test-app-module:Indoor","test-app-module:Weekend"]	{"test-app-module:textdata":"Ericsson"}	urn:3gpp:dn:SubNetwork=ManagedElementForDeletion,MeContext=1,ManagedElement=1	urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_ODUFUNCTION=9243B48F7D6A6CF471226915C74CF5FE4BDA6FA3CF7D897473007B46DF7FC50230BD6B8B4256116A6AFBF4D822CF9379EB56DE9490C1C0B54238263F2574B345	["urn:3gpp:dn:SubNetwork=ManagedElementForDeletion,MeContext=1,ManagedElement=1"]	["test-app-module:Indoor","test-app-module:Weekend"]	{"test-app-module:textdata":"Ericsson"}	{"reliabilityIndicator":"OK","firstDiscovered":"2025-01-09T10:40:36.461565Z","lastModified":"2025-01-09T10:40:36.461565Z"}	{"reliabilityIndicator":"ADVISED","firstDiscovered":"2025-01-09T10:40:36.461565Z","lastModified":"2025-01-09T10:40:36.461565Z"}
+\.
+
 COPY teiv_data."o-ran-smo-teiv-ran_NRCellDU" ("id", "metadata", "cellLocalId", "nCI", "nRPCI", "nRTAC") FROM stdin;
 myReliabilityCell_1	{"reliabilityIndicator":"OK","firstDiscovered":"2025-01-08T10:40:36.46156500Z","lastModified":"2025-01-08T10:40:36.46156500Z"}	51	61	\N	\N
 myReliabilityCell_2	{"reliabilityIndicator":"OK","firstDiscovered":"2025-01-08T10:40:36.46156500Z","lastModified":"2025-01-08T10:40:36.46156500Z"}	51	61	701	\N

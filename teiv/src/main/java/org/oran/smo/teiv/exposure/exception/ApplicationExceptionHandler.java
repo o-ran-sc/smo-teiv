@@ -38,6 +38,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import static org.oran.smo.teiv.utils.ResponseUtil.getHeadersContentTypeAppProblemJson;
+
 @Slf4j
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -48,8 +50,9 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         if (exception.getException() != null) {
             log.error(exception.getMessage(), exception.getException());
         }
-        return new ResponseEntity<>(new OranTeivErrorMessage().message(exception.getMessage()).details(exception
-                .getDetails()).status(exception.getStatus().name()), exception.getStatus());
+        return ResponseEntity.status(exception.getStatus()).headers(getHeadersContentTypeAppProblemJson()).body(
+                OranTeivErrorMessage.builder().status(exception.getStatus().name()).message(exception.getMessage()).details(
+                        exception.getDetails()).build());
     }
 
     @ResponseBody
@@ -58,8 +61,9 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         if (exception.getResponse() != null) {
             return new ResponseEntity<>(exception.getResponse(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new OranTeivErrorMessage().message(exception.getMessage()).details(exception
-                    .getDetails()).status(exception.getHttpStatus().name()), exception.getHttpStatus());
+            return ResponseEntity.status(exception.getHttpStatus()).headers(getHeadersContentTypeAppProblemJson()).body(
+                    OranTeivErrorMessage.builder().status(exception.getHttpStatus().name()).message(exception.getMessage())
+                            .details(exception.getDetails()).build());
         }
     }
 
@@ -67,28 +71,32 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<OranTeivErrorMessage> handleGeneralException(final Exception ex) {
         log.error("Handling general exception", ex);
-        return new ResponseEntity<>(new OranTeivErrorMessage().status(HttpStatus.INTERNAL_SERVER_ERROR.name()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(getHeadersContentTypeAppProblemJson()).body(
+                new OranTeivErrorMessage().status(HttpStatus.INTERNAL_SERVER_ERROR.name()));
     }
 
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<OranTeivErrorMessage> handleConstraintViolationException(ConstraintViolationException exception) {
-        return new ResponseEntity<>(new OranTeivErrorMessage().message(exception.getMessage()).status(HttpStatus.BAD_REQUEST
-                .name()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(getHeadersContentTypeAppProblemJson()).body(
+                getBadRequestErrorMessage(exception));
     }
 
     @Override
     protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException exception, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new OranTeivErrorMessage().message(exception.getMessage()).status(HttpStatus.BAD_REQUEST
-                .name()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(getHeadersContentTypeAppProblemJson()).body(
+                getBadRequestErrorMessage(exception));
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException exception,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new OranTeivErrorMessage().message(exception.getMessage()).status(HttpStatus.BAD_REQUEST
-                .name()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(getHeadersContentTypeAppProblemJson()).body(
+                getBadRequestErrorMessage(exception));
+    }
+
+    public static OranTeivErrorMessage getBadRequestErrorMessage(final Exception e) {
+        return OranTeivErrorMessage.builder().status(HttpStatus.BAD_REQUEST.name()).message(e.getMessage()).build();
     }
 }

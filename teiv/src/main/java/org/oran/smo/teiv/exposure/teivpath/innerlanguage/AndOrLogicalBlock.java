@@ -45,10 +45,10 @@ public abstract class AndOrLogicalBlock extends LogicalBlock {
     }
 
     @Override
-    public Set<Pair<String, Field>> getJoinCondition() {
+    public Set<Pair<String, Field>> getWhereExistsConditions() {
         Set<Pair<String, Field>> tables = new LinkedHashSet<>();
-        tables.addAll(children.get(0).getJoinCondition());
-        tables.addAll(children.get(1).getJoinCondition());
+        tables.addAll(children.get(0).getWhereExistsConditions());
+        tables.addAll(children.get(1).getWhereExistsConditions());
         return tables;
     }
 

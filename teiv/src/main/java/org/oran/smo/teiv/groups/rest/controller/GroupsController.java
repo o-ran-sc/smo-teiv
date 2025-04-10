@@ -29,17 +29,19 @@ import static org.oran.smo.teiv.groups.audit.GroupOperation.REMOVE_PROVIDED_MEMB
 import static org.oran.smo.teiv.groups.audit.GroupOperation.UPDATE_NAME;
 import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.MEMBERS_HREF_TEMPLATE;
 import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.PROVIDED_MEMBERS_HREF_TEMPLATE;
+import static org.oran.smo.teiv.utils.ResponseUtil.getHeadersContentTypeAppProblemJson;
+import static org.oran.smo.teiv.utils.TeivConstants.REQUEST_MAPPING;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.oran.smo.teiv.api.model.OranTeivDynamicGroupByIdResponse;
 import org.oran.smo.teiv.api.model.OranTeivStaticGroupByIdResponse;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.groups.audit.AuditInfo;
 import org.oran.smo.teiv.groups.audit.ExecutionStatus;
-import org.oran.smo.teiv.groups.utils.GroupCreationRequestFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -66,11 +68,10 @@ import org.oran.smo.teiv.api.model.OranTeivUpdateGroupNamePayload;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.groups.GroupsCustomMetrics;
 import org.oran.smo.teiv.groups.api.GroupsService;
-import org.oran.smo.teiv.utils.TeivConstants;
 
 @Slf4j
 @RestController
-@RequestMapping(TeivConstants.REQUEST_MAPPING)
+@RequestMapping(REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("groups")
 public class GroupsController implements GroupsApi {
@@ -195,7 +196,8 @@ public class GroupsController implements GroupsApi {
         final OranTeivErrorMessage errorMessage = OranTeivErrorMessage.builder().status(exception.getStatus().name())
                 .message(exception.getMessage()).details(exception.getDetails()).build();
 
-        return new ResponseEntity<>(errorMessage, exception.getStatus());
+        return ResponseEntity.status(exception.getStatus()).headers(getHeadersContentTypeAppProblemJson()).body(
+                errorMessage);
     }
 
     private <T> T runWithFailCheck(final Supplier<T> supp, final Runnable runnable) {
@@ -224,10 +226,10 @@ public class GroupsController implements GroupsApi {
     }
 
     @Bean
-    public FilterRegistrationBean<GroupCreationRequestFilter> loggingFilter() {
+    public FilterRegistrationBean<GroupCreationRequestFilter> loggingFilter(final ObjectMapper objectMapper) {
         FilterRegistrationBean<GroupCreationRequestFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new GroupCreationRequestFilter(loggerHandler));
-        registrationBean.addUrlPatterns("/groups");
+        registrationBean.setFilter(new GroupCreationRequestFilter(loggerHandler, objectMapper));
+        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/groups");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }

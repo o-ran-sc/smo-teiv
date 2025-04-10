@@ -297,5 +297,80 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status NO_CONTENT()
         }
+    },
+    Contract.make {
+        description "BAD REQUEST - 400: Invalid operation type in the decorators request."
+        request {
+            method POST()
+            url "/topology-inventory/v1alpha11/decorators"
+            headers {
+                contentType("application/json")
+                accept('application/problem+json')
+            }
+            body('''{
+                "decorators": {
+                    "test-app-module:textdata": "Stockholm",
+                    "test-app-module:intdata": 123
+                },
+                "entityIds": [
+                    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,ODUFunction=13",
+                    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
+                ],
+                "operation": "unknown"
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Failed to process the request to merge/remove decorators",
+                "details": "Unexpected value 'unknown'. Invalid value for OperationEnum, allowed values: [merge, delete]"
+            }''')
+            bodyMatchers {
+                jsonPath('$.status', byEquality())
+                jsonPath('$.message', byEquality())
+                jsonPath('$.details', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "BAD REQUEST - 400: Using list type for the decorators parameter in the payload."
+        request {
+            method POST()
+            url "/topology-inventory/v1alpha11/decorators"
+            headers {
+                contentType("application/json")
+                accept('application/problem+json')
+            }
+            body('''{
+                "decorators": [
+                    "test-app-module:textdata"
+                ],
+                "entityIds": [
+                    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=13,ODUFunction=13",
+                    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=14,ODUFunction=14"
+                ],
+                "operation": "delete"
+            }''')
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Failed to process the request to merge/remove decorators",
+                "details": "Cannot deserialize value of type `java.util.LinkedHashMap<java.lang.String,java.lang.Object>` from Array value (token `JsonToken.START_ARRAY`)"
+            }''')
+            bodyMatchers {
+                jsonPath('$.status', byEquality())
+                jsonPath('$.message', byEquality())
+                jsonPath('$.details', byEquality())
+            }
+        }
     }
 ]

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.oran.smo.teiv.exception.YangException;
 import org.oran.smo.yangtools.parser.ParserExecutionContext;
 import org.oran.smo.yangtools.parser.YangDeviceModel;
 import org.oran.smo.yangtools.parser.data.YangData;
@@ -45,7 +46,6 @@ import org.oran.smo.yangtools.parser.model.statements.ietf.IetfExtensionsClassSu
 import org.oran.smo.yangtools.parser.model.statements.threegpp.ThreeGppExtensionsClassSupplier;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.exception.YangParsingException;
-import org.oran.smo.teiv.exception.YangSchemaException;
 import org.oran.smo.teiv.exception.YangValidationException;
 
 public class IngestionYangParser extends YangModelLoader {
@@ -58,7 +58,7 @@ public class IngestionYangParser extends YangModelLoader {
     private static final List<StatementClassSupplier> EXTENSION_CREATORS = List.of(new IetfExtensionsClassSupplier(),
             new ThreeGppExtensionsClassSupplier());
 
-    public static void loadModels() throws YangSchemaException, YangValidationException {
+    public static void loadModels() throws YangException {
         ParserExecutionContext context = createParserExecutionContext(EXTENSION_CREATORS, List.of(), FILTER_PREDICATES);
         final List<YangModel> yangModels = YangModelLoader.loadModulesFromSchemaRegistry();
         List<YangModel> models = YangModelLoader.parseModelsIntoContext(context, yangModels);

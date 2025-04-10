@@ -18,26 +18,21 @@
  *  SPDX-License-Identifier: Apache-2.0
  *  ============LICENSE_END=========================================================
  */
-package org.oran.smo.teiv.groups.utils;
+package org.oran.smo.teiv.groups.rest.controller;
 
 import static org.oran.smo.teiv.groups.audit.ExecutionStatus.FAILED;
 import static org.oran.smo.teiv.groups.audit.GroupOperation.CREATE;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.oran.smo.teiv.CachedBodyHttpServletRequest;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.groups.audit.AuditInfo;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -54,14 +49,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @Profile("groups")
 public class GroupCreationRequestFilter implements jakarta.servlet.Filter {
 
     private final LoggerHandler loggerHandler;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
@@ -70,7 +63,7 @@ public class GroupCreationRequestFilter implements jakarta.servlet.Filter {
         CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(httpServletRequest);
         ContentCachingResponseWrapper httpServletResponse = new ContentCachingResponseWrapper(
                 (HttpServletResponse) response);
-        String payloadString = readRequestBody(cachedBodyHttpServletRequest);
+        String payloadString = cachedBodyHttpServletRequest.getRequestBody();
         try {
             if (cachedBodyHttpServletRequest.getMethod().equalsIgnoreCase("POST")) {
                 JsonNode createGroupPayload = objectMapper.readValue(payloadString, JsonNode.class);
@@ -80,7 +73,7 @@ public class GroupCreationRequestFilter implements jakarta.servlet.Filter {
                             payloadString).exceptionMessage(message).status(FAILED).build().toString(),
                             cachedBodyHttpServletRequest);
                     httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    httpServletResponse.setContentType("application/json");
+                    httpServletResponse.setContentType("application/problem+json");
                     httpServletResponse.getWriter().write(generateResponse(message));
                     httpServletResponse.getWriter().flush();
                     return;
@@ -124,17 +117,5 @@ public class GroupCreationRequestFilter implements jakarta.servlet.Filter {
         jsonResponse.put("message", "Invalid type specified");
         jsonResponse.put("status", HttpStatus.BAD_REQUEST);
         return objectMapper.writeValueAsString(jsonResponse);
-    }
-
-    private String readRequestBody(HttpServletRequest request) throws IOException {
-        StringBuilder body = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream(),
-                StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                body.append(line);
-            }
-        }
-        return body.toString();
     }
 }

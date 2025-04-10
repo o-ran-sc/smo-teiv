@@ -9,12 +9,9 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
+                "o-ran-smo-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
                     {
                         "id": "ManagedElement_21",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "source1",
                             "source2"
@@ -22,9 +19,6 @@
                     },
                     {
                         "id": "ManagedElement_41",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "source1",
                             "source2"
@@ -33,7 +27,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-test:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "NRCellDU_21",
                         "attributes": {
@@ -62,7 +56,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-rel-oam-ran:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-rel-oam-ran-test:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
                     {
                         "id": "relation_11",
                         "aSide": "ManagedElement_21",

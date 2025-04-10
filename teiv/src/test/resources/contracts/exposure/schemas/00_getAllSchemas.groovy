@@ -566,7 +566,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",

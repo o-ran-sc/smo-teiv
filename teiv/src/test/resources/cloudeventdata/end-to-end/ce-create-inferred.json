@@ -27,10 +27,10 @@
                     {
                         "id": "AntennaCapability_3",
                         "attributes": {
-                            "geranFqBands": {
-                                "attribute_1": "1",
-                                "attribute_2": "2"
-                            }
+                            "geranFqBands": [
+                                "1",
+                                "2"
+                            ]
                         },
                         "sourceIds": [
                             "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00009,ManagedElement=NR01gNodeBRadio00009,OCUCPFunction=1",
@@ -45,7 +45,7 @@
                         "id": "ODU_2",
                         "attributes": {
                             "dUpLMNId": {
-                                "mcc": "111",
+                                "mcc": "251",
                                 "mnc": "211"
                             },
                             "gNBDUId": 13,
@@ -74,12 +74,9 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
+                "o-ran-smo-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
                     {
                         "id": "ManagedElement_61",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "source1",
                             "source2"
@@ -88,12 +85,9 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-test:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "NRCellDU_41",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "source1",
                             "source2"
@@ -104,7 +98,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-rel-oam-ran:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-rel-oam-ran-test:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
                     {
                         "id": "relation_one_to_one_missing_bSide",
                         "aSide": "ManagedElement_61",
@@ -118,6 +112,15 @@
                         "id": "relation_one_to_one_missing_aSide",
                         "aSide": "ManagedElement_81",
                         "bSide": "NRCellDU_41",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "relation_one_to_one_both_sides_missing",
+                        "aSide": "ManagedElement_X",
+                        "bSide": "NRCellDU_X",
                         "sourceIds": [
                             "source1",
                             "source2"
@@ -140,6 +143,15 @@
                         "id": "relation_one_to_many_aSide_missing",
                         "aSide": "ODU_3",
                         "bSide": "NRCellDU_4",
+                        "sourceIds": [
+                            "source1",
+                            "source2"
+                        ]
+                    },
+                    {
+                        "id": "relation_one_to_many_both_sides_missing",
+                        "aSide": "ODU_X",
+                        "bSide": "NRCellDU_X",
                         "sourceIds": [
                             "source1",
                             "source2"

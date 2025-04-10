@@ -12,9 +12,6 @@
                 "o-ran-smo-teiv-oam:ManagedElement": [
                     {
                         "id": "ManagedElement_1",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "urn:3gpp:dn:fdn1",
                             "urn:cmHandle:1234"

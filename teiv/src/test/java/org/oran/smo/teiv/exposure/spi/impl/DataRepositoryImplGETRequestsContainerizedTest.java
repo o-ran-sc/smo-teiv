@@ -179,38 +179,37 @@ class DataRepositoryImplGETRequestsContainerizedTest {
     }
 
     @Test
-    void isTopologyExist_entityTest() throws SchemaRegistryException {
-        EntityType entityType = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "NRCellDU").get(0);
+    void doesTopologyExist_entityTest() throws SchemaRegistryException {
+        EntityType entityType = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "NRCellDU");
         String entityId = "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91";
-        Assertions.assertTrue(underTest.isTopologyExist(entityType, entityId),
+        Assertions.assertTrue(underTest.doesTopologyExist(entityType, entityId),
                 "That's strange, the result should have been true as this id in DB dataset: " + entityId);
         String nonExistentEntityId = "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=911";
-        Assertions.assertFalse(underTest.isTopologyExist(entityType, nonExistentEntityId),
+        Assertions.assertFalse(underTest.doesTopologyExist(entityType, nonExistentEntityId),
                 "Result should have been false as the entity id is not in DB data set: " + nonExistentEntityId);
     }
 
     @Test
-    void isTopologyExist_relationshipTest() throws SchemaRegistryException {
+    void doesTopologyExist_relationshipTest() throws SchemaRegistryException {
         RelationType relationType = SchemaRegistry.getRelationTypeByDomainAndName("RAN",
-                "NRSECTORCARRIER_USES_ANTENNACAPABILITY").get(0);
+                "NRSECTORCARRIER_USES_ANTENNACAPABILITY");
         String aSideRelationshipId = "urn:o-ran:smo:teiv:sha512:NRSECTORCARRIER_USES_ANTENNACAPABILITY=11EDFC31E2BE240D3CB15DB1A3FA3B78C828524BC8FCA3365A615129A61A627C21DA8EBF6DD788CDBDEC668344D1F79A371749083D6AE04DDDD57CB4FA8C3ECB";
-        Assertions.assertTrue(underTest.isTopologyExist(relationType, aSideRelationshipId),
+        Assertions.assertTrue(underTest.doesTopologyExist(relationType, aSideRelationshipId),
                 "That's strange, the result should have been true as this id in DB dataset: " + aSideRelationshipId);
 
-        relationType = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION")
-                .get(0);
+        relationType = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN", "MANAGEDELEMENT_MANAGES_OCUUPFUNCTION");
         String bSideRelationshipId = "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A";
-        Assertions.assertTrue(underTest.isTopologyExist(relationType, bSideRelationshipId),
+        Assertions.assertTrue(underTest.doesTopologyExist(relationType, bSideRelationshipId),
                 "That's strange, the result should have been true as this id in DB dataset: " + bSideRelationshipId);
 
         relationType = SchemaRegistry.getRelationTypeByDomainAndName("REL_EQUIPMENT_RAN",
-                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY").get(0);
+                "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
         String manyToManyRelationshipId = "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_SERVES_ANTENNACAPABILITY=ABD52B030DF1169F9F41C898913EF30F7BB5741F53352F482310B280C90AC569B7D31D52A2BB41F1F0099AE1EDD56CACF0B285D145A5584D376DD45DED1E2D65";
-        Assertions.assertTrue(underTest.isTopologyExist(relationType, manyToManyRelationshipId),
+        Assertions.assertTrue(underTest.doesTopologyExist(relationType, manyToManyRelationshipId),
                 "That's strange, the result should have been true as this id in DB dataset: " + manyToManyRelationshipId);
 
         String nonExistentRelationshipId = "urn:o-ran:smo:teiv:sha512:MANAGEDELEMENT_MANAGES_OCUUPFUNCTION=5255F37093F8EB3763CE5F017DFC1E162B44FC9DF6E13744C04DC1832C5E754AB7BE440DBE1187EE8EEE42FD04E652BB8148655C6F977B1FFDDA54FE87C6411A";
-        Assertions.assertFalse(underTest.isTopologyExist(relationType, nonExistentRelationshipId),
+        Assertions.assertFalse(underTest.doesTopologyExist(relationType, nonExistentRelationshipId),
                 "Result should have been false as the relationship id is not in DB data set: " + nonExistentRelationshipId);
     }
 

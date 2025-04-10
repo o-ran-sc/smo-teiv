@@ -43,6 +43,7 @@ import org.jooq.Result;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockedStatic;
@@ -75,6 +76,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 
 @Configuration
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @SpringBootTest
 @ActiveProfiles({ "test", "ingestion" })
 class IngestionOperationValidatorTest {

@@ -20,6 +20,7 @@
  */
 package org.oran.smo.teiv.exposure.teivpath.refiner;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.oran.smo.teiv.utils.TeivConstants.ID_COLUMN_NAME;
 import static org.oran.smo.teiv.utils.TeivConstants.ITEM;
 import static org.oran.smo.teiv.utils.TeivConstants.WILDCARD;
@@ -100,7 +101,7 @@ class BasePathRefinementTest {
         expectedScopeObject.setDataType(DataType.PRIMITIVE);
         expectedTargets.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
         expectedTargets.get(0).setAllParamQueried(true);
-        Assertions.assertEquals(expectedFilterCriteria, filterCriteria);
+        assertEquals(expectedFilterCriteria, filterCriteria);
     }
 
     @Test
@@ -126,7 +127,7 @@ class BasePathRefinementTest {
         expectedScopeObject.setDataType(DataType.PRIMITIVE);
         expectedTargets.get(0).setTopologyObjectType(TopologyObjectType.ENTITY);
         expectedTargets.get(0).setAllParamQueried(false);
-        Assertions.assertEquals(expectedFilterCriteria, filterCriteria);
+        assertEquals(expectedFilterCriteria, filterCriteria);
     }
 
     @Test
@@ -138,7 +139,7 @@ class BasePathRefinementTest {
         ScopeObject scopeObjectResult1 = ScopeObject.builder(WILDCARD + "/managed-by-managedElement").container(
                 ContainerType.ID).innerContainer(List.of()).resolverDataType(ResolverDataType.STRING).queryFunction(
                         QueryFunction.EQ).leaf(null).parameter("me1").build();
-        Assertions.assertEquals(scopeObjectResult1, ((ScopeLogicalBlock) logicalBlock1).getScopeObject());
+        assertEquals(scopeObjectResult1, ((ScopeLogicalBlock) logicalBlock1).getScopeObject());
         LogicalBlock logicalBlock2 = scopeResolver.process(ODU_FUNCTION, "/managed-by-managedElement");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock2).build()));
         basePathRefinement.handleAssociationsInScope((ScopeLogicalBlock) logicalBlock2, "RAN");
@@ -146,7 +147,7 @@ class BasePathRefinementTest {
         ScopeObject scopeObjectResult2 = ScopeObject.builder(ODU_FUNCTION + "/managed-by-managedElement")
                 .topologyObjectType(TopologyObjectType.ASSOCIATION).container(ContainerType.NOT_NULL).resolverDataType(
                         ResolverDataType.NOT_NULL).queryFunction(QueryFunction.NOT_NULL).build();
-        Assertions.assertEquals(scopeObjectResult2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
+        assertEquals(scopeObjectResult2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
         LogicalBlock logicalBlock3 = scopeResolver.process(null, "/ODUFUNCTION_PROVIDES_NRCELLDU");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock3).build()));
         Assertions.assertThrows(TeivPathException.class, () -> basePathRefinement
@@ -156,7 +157,7 @@ class BasePathRefinementTest {
         basePathRefinement.processTopologyObjectsWithContainerTypeNull(filterCriteria);
         ScopeObject scopeObjectResult4 = ScopeObject.builder(WILDCARD + "/" + ODU_FUNCTION).container(ContainerType.ID)
                 .resolverDataType(ResolverDataType.STRING).queryFunction(QueryFunction.EQ).parameter("odu1").build();
-        Assertions.assertEquals(scopeObjectResult4, ((ScopeLogicalBlock) logicalBlock4).getScopeObject());
+        assertEquals(scopeObjectResult4, ((ScopeLogicalBlock) logicalBlock4).getScopeObject());
         try (MockedStatic<SchemaRegistry> utilities = Mockito.mockStatic(SchemaRegistry.class)) {
             utilities.when(() -> SchemaRegistry.getEntityNamesByDomain("RAN")).thenReturn(Arrays.asList(
                     "RelationAndEntity"));
@@ -181,7 +182,7 @@ class BasePathRefinementTest {
         ScopeObject scopeObjectResult9 = ScopeObject.builder("*/NRCellDU").container(ContainerType.ATTRIBUTES)
                 .resolverDataType(ResolverDataType.INTEGER).queryFunction(QueryFunction.EQ).leaf("nCI").parameter("12")
                 .build();
-        Assertions.assertEquals(scopeObjectResult9, ((ScopeLogicalBlock) logicalBlock9).getScopeObject());
+        assertEquals(scopeObjectResult9, ((ScopeLogicalBlock) logicalBlock9).getScopeObject());
         LogicalBlock logicalBlock10 = scopeResolver.process(null, "/NRCellDU[@nCI=12]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock10).build()));
         Assertions.assertThrows(TeivPathException.class, () -> basePathRefinement
@@ -215,8 +216,8 @@ class BasePathRefinementTest {
         resultTargetObjects.add(targetObjectResult);
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects, filterCriteria.getTargets());
-        Assertions.assertEquals(scopeResult1, filterCriteria.getScope());
+        assertEquals(resultTargetObjects, filterCriteria.getTargets());
+        assertEquals(scopeResult1, filterCriteria.getScope());
     }
 
     @Test
@@ -234,7 +235,7 @@ class BasePathRefinementTest {
         basePathRefinement.handleAssociationsInScope((ScopeLogicalBlock) filterCriteria.getScope(), "RAN");
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects3_1, filterCriteria.getTargets());
+        assertEquals(resultTargetObjects3_1, filterCriteria.getTargets());
     }
 
     @Test
@@ -254,7 +255,7 @@ class BasePathRefinementTest {
         resultTargetObjects4_1.add(targetObjectResult4_2);
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects4_1, filterCriteria.getTargets());
+        assertEquals(resultTargetObjects4_1, filterCriteria.getTargets());
     }
 
     @Test
@@ -307,8 +308,8 @@ class BasePathRefinementTest {
         resultTargetObjects5_1.add(targetObjectResult5_2);
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects5_1, filterCriteria.getTargets());
-        Assertions.assertEquals(or1, filterCriteria.getScope());
+        assertEquals(resultTargetObjects5_1, filterCriteria.getTargets());
+        assertEquals(or1, filterCriteria.getScope());
     }
 
     @Test
@@ -328,8 +329,8 @@ class BasePathRefinementTest {
                 "cellLocalId").queryFunction(QueryFunction.EQ).parameter("156").resolverDataType(ResolverDataType.INTEGER)
                 .build();
         LogicalBlock logicalBlockResult6_1 = new ScopeLogicalBlock(scopeObjectResult6_1);
-        Assertions.assertEquals(resultTargetObjects6_1, filterCriteria.getTargets());
-        Assertions.assertEquals(logicalBlockResult6_1, filterCriteria.getScope());
+        assertEquals(resultTargetObjects6_1, filterCriteria.getTargets());
+        assertEquals(logicalBlockResult6_1, filterCriteria.getScope());
     }
 
     @Test
@@ -396,8 +397,8 @@ class BasePathRefinementTest {
         resultTargetObjects9_1.add(targetObjectResult9_2);
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects9_1, filterCriteria.getTargets());
-        Assertions.assertEquals(or, filterCriteria.getScope());
+        assertEquals(resultTargetObjects9_1, filterCriteria.getTargets());
+        assertEquals(or, filterCriteria.getScope());
     }
 
     @Test
@@ -472,8 +473,8 @@ class BasePathRefinementTest {
         resultTargetObjects11_1.add(targetObjectResult11_2);
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects11_1, filterCriteria.getTargets());
-        Assertions.assertEquals(or1, filterCriteria.getScope());
+        assertEquals(resultTargetObjects11_1, filterCriteria.getTargets());
+        assertEquals(or1, filterCriteria.getScope());
     }
 
     @Test
@@ -557,8 +558,8 @@ class BasePathRefinementTest {
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria2, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
 
-        Assertions.assertEquals(resultTargetObjectsResult13_1, filterCriteria2.getTargets());
-        Assertions.assertEquals(or1, filterCriteria2.getScope());
+        assertEquals(resultTargetObjectsResult13_1, filterCriteria2.getTargets());
+        assertEquals(or1, filterCriteria2.getScope());
     }
 
     @Test
@@ -575,7 +576,7 @@ class BasePathRefinementTest {
                 .of(filterCriteria)).build());
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.ENTITY);
-        Assertions.assertEquals(resultTargetObjects9_1, filterCriteria.getTargets());
+        assertEquals(resultTargetObjects9_1, filterCriteria.getTargets());
     }
 
     @Test
@@ -589,7 +590,7 @@ class BasePathRefinementTest {
                 .of(filterCriteria)).build());
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.RELATIONSHIP);
-        Assertions.assertEquals(new ScopeLogicalBlock(scopeObject), filterCriteria.getScope());
+        assertEquals(new ScopeLogicalBlock(scopeObject), filterCriteria.getScope());
     }
 
     @Test
@@ -630,8 +631,8 @@ class BasePathRefinementTest {
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria2, "RAN",
                 FilterCriteria.ResolvingTopologyObjectType.RELATIONSHIP);
 
-        Assertions.assertEquals(resultTargetObjectsResult13_1, filterCriteria2.getTargets());
-        Assertions.assertEquals(or1, filterCriteria2.getScope());
+        assertEquals(resultTargetObjectsResult13_1, filterCriteria2.getTargets());
+        assertEquals(or1, filterCriteria2.getScope());
     }
 
     @Test
@@ -701,8 +702,8 @@ class BasePathRefinementTest {
         basePathRefinement.resolveWildCardObjectsInScopeAndTarget(filterCriteria2, "REL_OAM_RAN",
                 FilterCriteria.ResolvingTopologyObjectType.RELATIONSHIP);
 
-        Assertions.assertEquals(resultTargetObjectsResult13_1, filterCriteria2.getTargets());
-        Assertions.assertEquals(or1, filterCriteria2.getScope());
+        assertEquals(resultTargetObjectsResult13_1, filterCriteria2.getTargets());
+        assertEquals(or1, filterCriteria2.getScope());
     }
 
     @Test
@@ -720,15 +721,15 @@ class BasePathRefinementTest {
             utilities.when(() -> SchemaRegistry.getRelationNamesByDomain("RAN")).thenReturn(Arrays.asList(
                     "ODUFUNCTION_PROVIDES_NRCELLDU"));
             basePathRefinement.resolveUndefinedTopologyObjectTypes(filterCriteria);
-            Assertions.assertEquals(TopologyObjectType.ENTITY, filterCriteria.getFilterCriteriaList().get(0).getTargets()
-                    .get(0).getTopologyObjectType());
-            Assertions.assertEquals(TopologyObjectType.ENTITY, ((ScopeLogicalBlock) filterCriteria.getFilterCriteriaList()
-                    .get(0).getScope()).getScopeObject().getTopologyObjectType());
+            assertEquals(TopologyObjectType.ENTITY, filterCriteria.getFilterCriteriaList().get(0).getTargets().get(0)
+                    .getTopologyObjectType());
+            assertEquals(TopologyObjectType.ENTITY, ((ScopeLogicalBlock) filterCriteria.getFilterCriteriaList().get(0)
+                    .getScope()).getScopeObject().getTopologyObjectType());
             filterCriteria.getFilterCriteriaList().get(0).setScope(EmptyLogicalBlock.getInstance());
             targetObject.setTopologyObjectType(TopologyObjectType.UNDEFINED);
             basePathRefinement.resolveUndefinedTopologyObjectTypes(filterCriteria);
-            Assertions.assertEquals(TopologyObjectType.ENTITY, filterCriteria.getFilterCriteriaList().get(0).getTargets()
-                    .get(0).getTopologyObjectType());
+            assertEquals(TopologyObjectType.ENTITY, filterCriteria.getFilterCriteriaList().get(0).getTargets().get(0)
+                    .getTopologyObjectType());
         }
     }
 
@@ -747,10 +748,10 @@ class BasePathRefinementTest {
             utilities.when(() -> SchemaRegistry.getRelationNamesByDomain("RAN")).thenReturn(Arrays.asList(
                     "ODUFUNCTION_PROVIDES_NRCELLDU"));
             basePathRefinement.resolveUndefinedTopologyObjectTypes(filterCriteria);
-            Assertions.assertEquals(TopologyObjectType.RELATION, filterCriteria.getFilterCriteriaList().get(0).getTargets()
-                    .get(0).getTopologyObjectType());
-            Assertions.assertEquals(TopologyObjectType.RELATION, ((ScopeLogicalBlock) filterCriteria.getFilterCriteriaList()
-                    .get(0).getScope()).getScopeObject().getTopologyObjectType());
+            assertEquals(TopologyObjectType.RELATION, filterCriteria.getFilterCriteriaList().get(0).getTargets().get(0)
+                    .getTopologyObjectType());
+            assertEquals(TopologyObjectType.RELATION, ((ScopeLogicalBlock) filterCriteria.getFilterCriteriaList().get(0)
+                    .getScope()).getScopeObject().getTopologyObjectType());
         }
     }
 
@@ -891,7 +892,7 @@ class BasePathRefinementTest {
         LogicalBlock logicalBlock1 = scopeResolver.process(ODU_FUNCTION, "/attributes[@gNBId=21]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock1).build()));
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
-        Assertions.assertEquals(DataType.BIGINT, ((ScopeLogicalBlock) logicalBlock1).getScopeObject().getDataType());
+        assertEquals(DataType.BIGINT, ((ScopeLogicalBlock) logicalBlock1).getScopeObject().getDataType());
         // error reason: for gNBId attribute string value is not accepted
         LogicalBlock logicalBlock2 = scopeResolver.process(ODU_FUNCTION, "/attributes[@gNBId='abc']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock2).build()));
@@ -909,7 +910,7 @@ class BasePathRefinementTest {
                 .resolverDataType(ResolverDataType.STRING).build());
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(scopeLogicalBlock1).build()));
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
-        Assertions.assertEquals(DataType.PRIMITIVE, scopeLogicalBlock1.getScopeObject().getDataType());
+        assertEquals(DataType.PRIMITIVE, scopeLogicalBlock1.getScopeObject().getDataType());
         // error reason: scopeFilter: /managed-by-managedElement[@id=1] -> ResolverDataType is INTEGER, but in case of id it should be STRING
         ScopeLogicalBlock scopeLogicalBlock2 = new ScopeLogicalBlock(ScopeObject.builder(ODU_FUNCTION).innerContainer(
                 new ArrayList<>(Arrays.asList("managed-by-managedElement"))).container(ContainerType.ID).topologyObjectType(
@@ -930,7 +931,7 @@ class BasePathRefinementTest {
         LogicalBlock logicalBlock4 = scopeResolver.process(ODU_FUNCTION, "/ODUFunction[@id='odu1']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock4).build()));
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
-        Assertions.assertEquals(DataType.PRIMITIVE, ((ScopeLogicalBlock) logicalBlock4).getScopeObject().getDataType());
+        assertEquals(DataType.PRIMITIVE, ((ScopeLogicalBlock) logicalBlock4).getScopeObject().getDataType());
         // error reason: for id INTEGER ResolverDataType is not accepted
         LogicalBlock logicalBlock5 = scopeResolver.process(ODU_FUNCTION, "/ODUFunction[@id=1]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock5).build()));
@@ -945,7 +946,7 @@ class BasePathRefinementTest {
         LogicalBlock logicalBlock7 = scopeResolver.process(ODU_FUNCTION, "/sourceIds[@items = 'someSourceId']");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock7).build()));
         basePathRefinement.validateScopeParametersDataType(filterCriteria);
-        Assertions.assertEquals(DataType.PRIMITIVE, scopeLogicalBlock1.getScopeObject().getDataType());
+        assertEquals(DataType.PRIMITIVE, scopeLogicalBlock1.getScopeObject().getDataType());
         // error reason: for sourceIds container INTEGER dataType is not accepted
         LogicalBlock logicalBlock8 = scopeResolver.process(ODU_FUNCTION, "/sourceIds[@items = 1]");
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(logicalBlock8).build()));
@@ -1079,8 +1080,8 @@ class BasePathRefinementTest {
                 targetObject3)).scope(fc2or1).build();
         InnerFilterCriteria innerFilterCriteria3 = InnerFilterCriteria.builder().targets(List.of(targetObject4)).scope(
                 fc3and1).build();
-        Assertions.assertEquals(Set.of(innerFilterCriteria1, innerFilterCriteria2, innerFilterCriteria3), new HashSet<>(
-                filterCriteria.getFilterCriteriaList()));
+        assertEquals(Set.of(innerFilterCriteria1, innerFilterCriteria2, innerFilterCriteria3), new HashSet<>(filterCriteria
+                .getFilterCriteriaList()));
     }
 
     @Test
@@ -1107,7 +1108,7 @@ class BasePathRefinementTest {
         scopeLogicalBlock6.setValid(false);
         filterCriteria.setFilterCriteriaList(List.of(InnerFilterCriteria.builder().scope(orLogicalBlock1).build()));
         basePathRefinement.validateQuery(filterCriteria);
-        Assertions.assertEquals(andLogicalBlock2, filterCriteria.getFilterCriteriaList().get(0).getScope());
+        assertEquals(andLogicalBlock2, filterCriteria.getFilterCriteriaList().get(0).getScope());
         ScopeLogicalBlock scopeLogicalBlock2_1 = new ScopeLogicalBlock(null);
         ScopeLogicalBlock scopeLogicalBlock2_2 = new ScopeLogicalBlock(null);
         AndOrLogicalBlock andLogicalBlock2_1 = new AndLogicalBlock();
@@ -1149,10 +1150,10 @@ class BasePathRefinementTest {
         orLogicalBlock.setChildren(Arrays.asList(orLogicalBlockChild1, orLogicalBlockChild2));
         basePathRefinement.runOnTree(orLogicalBlock, filterCriteria.getDomain(), (ScopeLogicalBlock lb, String domain) -> lb
                 .getScopeObject().setParameter("0"));
-        Assertions.assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock1).getScopeObject().getParameter());
-        Assertions.assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock2).getScopeObject().getParameter());
-        Assertions.assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock3).getScopeObject().getParameter());
-        Assertions.assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock4).getScopeObject().getParameter());
+        assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock1).getScopeObject().getParameter());
+        assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock2).getScopeObject().getParameter());
+        assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock3).getScopeObject().getParameter());
+        assertEquals("0", ((ScopeLogicalBlock) scopeLogicalBlock4).getScopeObject().getParameter());
     }
 
     @Test
@@ -1165,8 +1166,8 @@ class BasePathRefinementTest {
 
         TeivPathException thrown = Assertions.assertThrows(TeivPathException.class, () -> basePathRefinement.refine(
                 filterCriteria));
-        Assertions.assertEquals("Querying any thing other than id is not supported in case of association of relation",
-                thrown.getDetails());
+        assertEquals("Querying any thing other than id is not supported in case of association of relation", thrown
+                .getDetails());
 
     }
 
@@ -1199,7 +1200,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria);
 
-        Assertions.assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
+        assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
 
         LogicalBlock logicalBlock2 = scopeResolver.resolve("NRCellDU",
                 "/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]");
@@ -1221,7 +1222,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria2);
 
-        Assertions.assertEquals(expectedScopeObject2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
+        assertEquals(expectedScopeObject2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
 
         LogicalBlock logicalBlock3 = scopeResolver.resolve("NRCellDU",
                 "/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]");
@@ -1243,7 +1244,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria3);
 
-        Assertions.assertEquals(expectedScopeObject3, ((ScopeLogicalBlock) logicalBlock3).getScopeObject());
+        assertEquals(expectedScopeObject3, ((ScopeLogicalBlock) logicalBlock3).getScopeObject());
 
         LogicalBlock logicalBlock4 = scopeResolver.resolve("NRCellDU",
                 "/serving-antennaModule/attributes[@antennaModelNumber='5']");
@@ -1265,7 +1266,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria4);
 
-        Assertions.assertEquals(expectedScopeObject4, ((ScopeLogicalBlock) logicalBlock4).getScopeObject());
+        assertEquals(expectedScopeObject4, ((ScopeLogicalBlock) logicalBlock4).getScopeObject());
 
         LogicalBlock logicalBlock5 = scopeResolver.resolve(null,
                 "/serving-antennaModule/attributes[@antennaModelNumber='5']");
@@ -1286,7 +1287,7 @@ class BasePathRefinementTest {
         expectedScopeObject5.setDataType(DataType.PRIMITIVE);
 
         basePathRefinement.refine(filterCriteria5);
-        Assertions.assertEquals(new ScopeLogicalBlock(expectedScopeObject5), filterCriteria5.getFilterCriteriaList().get(0)
+        assertEquals(new ScopeLogicalBlock(expectedScopeObject5), filterCriteria5.getFilterCriteriaList().get(0)
                 .getScope());
 
     }
@@ -1314,7 +1315,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria);
 
-        Assertions.assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
+        assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
 
         LogicalBlock logicalBlock2 = scopeResolver.resolve("NRCellDU",
                 "/serving-antennaModule/sourceIds[contains(@item,'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1')]");
@@ -1337,7 +1338,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria2);
 
-        Assertions.assertEquals(expectedScopeObject2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
+        assertEquals(expectedScopeObject2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
 
     }
 
@@ -1371,7 +1372,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria);
 
-        Assertions.assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
+        assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
 
         LogicalBlock logicalBlock2 = scopeResolver.resolve("NRCellDU",
                 "/serving-antennaModule/classifiers[contains(@item,'app-module:Rural')]");
@@ -1393,7 +1394,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria2);
 
-        Assertions.assertEquals(expectedScopeObject2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
+        assertEquals(expectedScopeObject2, ((ScopeLogicalBlock) logicalBlock2).getScopeObject());
     }
 
     @Test
@@ -1418,7 +1419,7 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria);
 
-        Assertions.assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
+        assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
 
     }
 
@@ -1444,6 +1445,6 @@ class BasePathRefinementTest {
 
         basePathRefinement.refine(filterCriteria);
 
-        Assertions.assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
+        assertEquals(expectedScopeObject, ((ScopeLogicalBlock) logicalBlock).getScopeObject());
     }
 }

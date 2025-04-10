@@ -23,8 +23,10 @@ package org.oran.smo.teiv.utils.yangparser;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -43,15 +45,14 @@ import org.oran.smo.teiv.exception.YangParsingException;
 import org.oran.smo.teiv.exception.YangSchemaException;
 import org.oran.smo.teiv.exposure.spi.Module;
 import org.oran.smo.teiv.schema.SchemaRegistry;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.util.StringUtils;
 
 public abstract class YangModelLoader {
-    private static final Set<String> MODULES_TO_IMPORT = Set.of("_3gpp-common-yang-extensions", "_3gpp-common-yang-types",
-            "ietf-geo-location", "ietf-inet-types", "ietf-yang-types");
 
-    private static final Set<String> MODULES_TO_IMPLEMENT = Set.of("o-ran-smo-teiv-common-yang-extensions",
-            "o-ran-smo-teiv-common-yang-types", "o-ran-smo-teiv-equipment", "o-ran-smo-teiv-oam", "o-ran-smo-teiv-ran",
-            "o-ran-smo-teiv-rel-equipment-ran", "o-ran-smo-teiv-rel-oam-ran", "o-ran-smo-teiv-cloud",
-            "o-ran-smo-teiv-rel-cloud-ran");
+    private static final String IMPORT_MODELS_PATH = "classpath:models/import/*.yang";
+    private static final String IMPLEMENT_MODELS_PATH = "classpath:models/*.yang";
 
     public static ParserExecutionContext createParserExecutionContext(List<StatementClassSupplier> extensions,
             List<CustomProcessor> customProcessors, Set<FindingFilterPredicate> filterPredicates) {
@@ -62,22 +63,35 @@ public abstract class YangModelLoader {
         return context;
     }
 
-    public static List<YangModel> loadModulesFromSchemaRegistry() throws YangSchemaException {
+    public static List<YangModel> loadModulesFromSchemaRegistry() throws YangSchemaException, YangParsingException {
         Map<String, Module> modules = SchemaRegistry.getModuleRegistry();
         if (modules == null) {
             throw YangSchemaException.failedToLoadSchema();
         }
+        List<String> importModels = readYangModelsFromPath(IMPORT_MODELS_PATH);
+        List<String> implementModels = readYangModelsFromPath(IMPLEMENT_MODELS_PATH);
         List<String> implementList = new ArrayList<>();
         List<String> importList = new ArrayList<>();
         modules.values().stream().filter(module -> module.getContent() != null).forEach(module -> {
             String content = new String(Base64.getDecoder().decode(module.getContent()), StandardCharsets.UTF_8);
-            if (MODULES_TO_IMPORT.contains(module.getName())) {
+            if (importModels.contains(module.getName())) {
                 importList.add(content);
-            } else if (MODULES_TO_IMPLEMENT.contains(module.getName())) {
+            } else if (implementModels.contains(module.getName())) {
                 implementList.add(content);
             }
         });
         return createYangModels(importList, implementList);
+    }
+
+    public static List<String> readYangModelsFromPath(String modelsPath) throws YangParsingException {
+        try {
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(YangModelLoader.class
+                    .getClassLoader());
+            return Arrays.stream(resolver.getResources(modelsPath)).map(f -> StringUtils.stripFilenameExtension(Objects
+                    .requireNonNull(f.getFilename()).toLowerCase(Locale.ROOT))).toList();
+        } catch (IOException e) {
+            throw YangParsingException.modelDirectoryDoesNotExists();
+        }
     }
 
     public static List<YangModel> parseModelsIntoContext(ParserExecutionContext context, List<YangModel> yangModelInputs)

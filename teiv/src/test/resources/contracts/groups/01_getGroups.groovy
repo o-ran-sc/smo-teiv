@@ -268,6 +268,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                     "status": "BAD_REQUEST",
                     "message": "getAllGroups.limit: must be less than or equal to 500"

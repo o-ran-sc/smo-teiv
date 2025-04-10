@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -57,7 +58,6 @@ import org.oran.smo.teiv.service.models.OperationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -83,6 +83,7 @@ import org.oran.smo.teiv.service.cloudevent.data.Relationship;
 import org.oran.smo.teiv.startup.SchemaHandler;
 import org.oran.smo.teiv.utils.CloudEventTestUtil;
 import org.oran.smo.teiv.utils.JooqTypeConverter;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @Configuration
 @SpringBootTest
@@ -106,7 +107,7 @@ class TeivDbOperationResultsTest {
 
     @Autowired
     CloudEventParser cloudEventParser;
-    @MockBean
+    @MockitoBean
     private SchemaHandler schemaHandler;
 
     @BeforeAll
@@ -119,6 +120,7 @@ class TeivDbOperationResultsTest {
         teivDbOperations = new TeivDbOperations(teivDbService, new IngestionOperationValidatorFactory(),
                 new RelationshipMergeValidator(), new TeivMetadataResolver());
         TestPostgresqlContainer.loadIngestionTestData();
+        TestPostgresqlContainer.loadEndToEndTestData();
         PostgresSchemaLoader postgresSchemaLoader = new PostgresSchemaLoader(dslContext, new ObjectMapper());
         postgresSchemaLoader.loadSchemaRegistry();
     }
@@ -130,7 +132,7 @@ class TeivDbOperationResultsTest {
             entityTypeMe = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElement");
             entityTypeORU = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "ORUFunction");
             entityTypeAntennMod = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment", "AntennaModule");
-            entityTypeAntennModLongName = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+            entityTypeAntennModLongName = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                     "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             entityTypeAntennCap = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "AntennaCapability");
             relTypeMeManagesORU = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
@@ -138,7 +140,7 @@ class TeivDbOperationResultsTest {
             relTypeantennServesAntennCap = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-equipment-ran",
                     "ANTENNAMODULE_SERVES_ANTENNACAPABILITY");
             relTypeAntennModRealisedByAntennaModLongName = SchemaRegistry.getRelationTypeByModuleAndName(
-                    "o-ran-smo-teiv-equipment", "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE");
+                    "o-ran-smo-teiv-equipment-test", "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE");
         } catch (SchemaRegistryException e) {
             throw new RuntimeException(e);
         }
@@ -179,8 +181,8 @@ class TeivDbOperationResultsTest {
                 .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElement"), "managed_element_entity_id1");
 
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("managed_element_entity_id1").type(
-                "ManagedElement").category(ENTITY_CATEGORY).build()),
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("managed_element_entity_id1")
+                .type("ManagedElement").category(ENTITY_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'managed_element_entity_id1'");
 
         // Delete operation with the same EIID - expected to fail
@@ -194,14 +196,14 @@ class TeivDbOperationResultsTest {
     void testDeleteOneToOneByRelationId() throws SchemaRegistryException {
         Map<String, Object> managedElementEntity = new HashMap<>();
         managedElementEntity.put("id", "me-id1");
-        EntityType entityTypeMeLongName = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-oam",
+        EntityType entityTypeMeLongName = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-oam-test",
                 "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt");
         teivDbOperations.merge(dslContext, entityTypeMeLongName, managedElementEntity);
 
         Map<String, Object> nrCellDuEntity = new HashMap<>();
         nrCellDuEntity.put("id", "nrcelldu-id1");
         nrCellDuEntity.put("020335B0F627C169E24167748C38FE756FB34AE2", 1);
-        EntityType entityTypeNrCellDuLongName = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+        EntityType entityTypeNrCellDuLongName = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                 "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
         teivDbOperations.merge(dslContext, entityTypeNrCellDuLongName, nrCellDuEntity);
 
@@ -215,25 +217,25 @@ class TeivDbOperationResultsTest {
 
         // Delete operation for aSide - expected to succeed
         Optional<OperationResult> deleteASideResultMatch = teivDbOperations.deleteRelationFromEntityTableByRelationId(
-                dslContext, "eiid1", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                dslContext, "eiid1", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran-test",
                         "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"));
 
         assertTrue(deleteASideResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.builder().id("eiid1").type("ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU")
-                .category(RELATIONSHIP_CATEGORY).build(), deleteASideResultMatch.get(),
-                "The delete operation result should be present for: 'eiid1'");
+        assertTrue(containsWithPartialMatch(deleteASideResultMatch.stream().collect(Collectors.toList()), OperationResult
+                .builder().id("eiid1").type("ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU").category(
+                        RELATIONSHIP_CATEGORY).build()), "The delete operation result should be present for: 'eiid1'");
 
         // Delete operation with the same EIID - expected to fail
         Optional<OperationResult> deleteResultNoMatch = teivDbOperations.deleteRelationFromEntityTableByRelationId(
-                dslContext, "eiid1", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran",
+                dslContext, "eiid1", SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-rel-oam-ran-test",
                         "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU"));
         assertTrue(deleteResultNoMatch.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
 
         Result<Record> nrcellduRows = TeivDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
+                "teiv_data.\"F93C2CA075353668A76B4718E07B741ACCD83641\"");
         Result<Record> managedElementRows = TeivDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "teiv_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
+                "teiv_data.\"C9475FE40C02BEB41F720B4284A856F2CF49E1F3\"");
         assertEquals("me-id1", managedElementRows.get(0).get("id"));
         assertEquals("nrcelldu-id1", nrcellduRows.get(0).get("id"));
         assertNull(managedElementRows.get(0).get("REL_FK_used-nrCellDu"));
@@ -267,9 +269,9 @@ class TeivDbOperationResultsTest {
                         "MANAGEDELEMENT_MANAGES_ORUFUNCTION"));
 
         assertFalse(deleteResultMatch.isEmpty(), "Delete operation should return a non-empty list");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid1").type(
-                "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
-                "The list should contain the delete operation result with id: 'eiid1'");
+        assertTrue(containsWithPartialMatch(deleteResultMatch, (OperationResult.builder().id("eiid1").type(
+                "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).module("o-ran-smo-teiv-rel-oam-ran")
+                .build())), "The list should contain the delete operation result with id: 'eiid1'");
 
         // Delete operation with the same entity ID - expected to return an empty list
         List<OperationResult> deleteResultNoMatch = teivDbOperations.deleteRelationshipByManySideEntityId(dslContext,
@@ -315,16 +317,17 @@ class TeivDbOperationResultsTest {
 
         // Check if all expected IDs are present in the deletion result
         assertEquals(4, deleteResultMatch.size(), "Delete operation should match expected size");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("me-id1").type("ManagedElement").category(
-                ENTITY_CATEGORY).build()), "The list should contain the delete operation result with id: 'me-id1'");
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("me-id1").type("ManagedElement")
+                .category(ENTITY_CATEGORY).build()),
+                "The list should contain the delete operation result with id: 'me-id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid1").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("eiid1").type(
                 "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid1'");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid2").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("eiid2").type(
                 "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid2'");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("eiid3").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("eiid3").type(
                 "MANAGEDELEMENT_MANAGES_ORUFUNCTION").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'eiid3'");
 
@@ -387,8 +390,9 @@ class TeivDbOperationResultsTest {
         Optional<OperationResult> deleteResultMatch = teivDbOperations.deleteManyToManyRelationByRelationId(dslContext,
                 relType, "rel_id1");
         assertTrue(deleteResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.builder().id("rel_id1").type("ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(
-                RELATIONSHIP_CATEGORY).build(), deleteResultMatch.get(), "Deleted relationship ID should match 'rel_id1'");
+        assertTrue(containsWithPartialMatch(deleteResultMatch.stream().collect(Collectors.toList()), OperationResult
+                .builder().id("rel_id1").type("ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(RELATIONSHIP_CATEGORY)
+                .build()), "Deleted relationship ID should match 'rel_id1'");
 
         // Test deletion of the same relationship ID again (expected failure)
         Optional<OperationResult> deleteResultNoMatch = teivDbOperations.deleteManyToManyRelationByRelationId(dslContext,
@@ -441,11 +445,11 @@ class TeivDbOperationResultsTest {
         List<OperationResult> deleteResultMatch = teivDbOperations.deleteManyToManyRelationByEntityId(dslContext, relType,
                 "antennamodule_id1", "aSide_AntennaModule", "bSide_AntennaCapability");
         assertEquals(2, deleteResultMatch.size(), "Expected two relations to be deleted");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id1").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("rel_id1").type(
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'rel_id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id2").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("rel_id2").type(
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY").category(RELATIONSHIP_CATEGORY).build()),
                 "The list should contain the delete operation result with id: 'rel_id2'");
 
@@ -493,13 +497,13 @@ class TeivDbOperationResultsTest {
         teivDbOperations.merge(dslContext, relTypeAntennModRealisedByAntennaModLongName, rel2);
 
         Result<Record> row1 = TeivDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "teiv_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"");
+                "teiv_data.\"98D95275440120DC7A5FEF7E870FB6649F275AEC\"");
         assertEquals(2, row1.size());
         Result<Record> row2 = TeivDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "teiv_data.\"53089669D370B15C78B7E8376D434921D1C94240\"");
+                "teiv_data.\"98D95275440120DC7A5FEF7E870FB6649F275AEC\"");
         assertEquals(2, row2.size());
 
-        RelationType antennaRelType1 = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
+        RelationType antennaRelType1 = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                 "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE");
 
         // Test deletion of a relationship by ID (expected success)
@@ -507,9 +511,9 @@ class TeivDbOperationResultsTest {
                 antennaRelType1, "rel_id1");
 
         assertTrue(deleteResultMatch.isPresent(), "Delete operation should return a present Optional");
-        assertEquals(OperationResult.builder().id("rel_id1").type(
-                "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(RELATIONSHIP_CATEGORY).build(),
-                deleteResultMatch.get(), "Deleted relationship ID should match 'rel_id1'");
+        assertTrue(containsWithPartialMatch(deleteResultMatch.stream().collect(Collectors.toList()), OperationResult
+                .builder().id("rel_id1").type("ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(
+                        RELATIONSHIP_CATEGORY).build()), "Deleted relationship ID should match 'rel_id1'");
 
         // Test deletion of the same relationship ID again (expected failure)
         Optional<OperationResult> deleteResultNoMatch = teivDbOperations.deleteManyToManyRelationByRelationId(dslContext,
@@ -554,12 +558,12 @@ class TeivDbOperationResultsTest {
         teivDbOperations.merge(dslContext, relTypeAntennModRealisedByAntennaModLongName, rel2);
 
         assertEquals(2, TeivDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "teiv_data.\"53017288F3FE983848689A3DD21D48D298CCD23E\"").size(), "Expected two AntennaModule records");
+                "teiv_data.\"98D95275440120DC7A5FEF7E870FB6649F275AEC\"").size(), "Expected two AntennaModule records");
         assertEquals(2, TeivDbServiceContainerizedTest.selectAllRowsFromTable(dslContext,
-                "teiv_data.\"53089669D370B15C78B7E8376D434921D1C94240\"").size(),
+                "teiv_data.\"98D95275440120DC7A5FEF7E870FB6649F275AEC\"").size(),
                 "Expected two ANTENNAMODULE_REALISED_BY_ANTENNAMODULE relations");
 
-        RelationType relType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment",
+        RelationType relType = SchemaRegistry.getRelationTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                 "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE");
 
         // Test deletion of relations by entity ID (expected to delete two relations)
@@ -567,11 +571,11 @@ class TeivDbOperationResultsTest {
                 "module_id1", "aSide_2A2D3374BF907674FA1905478E30ACB8882DC03C",
                 "bSide_EE6DD4A2CFD743779BBCBFC18FC296EF6D72EB1E");
         assertEquals(2, deleteResultMatch.size(), "Expected two relations to be deleted");
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id1").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("rel_id1").type(
                 "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(RELATIONSHIP_CATEGORY)
                 .build()), "The list should contain the delete operation result with id: 'rel_id1'");
 
-        assertTrue(deleteResultMatch.contains(OperationResult.builder().id("rel_id2").type(
+        assertTrue(containsWithPartialMatch(deleteResultMatch, OperationResult.builder().id("rel_id2").type(
                 "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE").category(RELATIONSHIP_CATEGORY)
                 .build()), "The list should contain the delete operation result with id: 'rel_id2'");
 
@@ -610,37 +614,37 @@ class TeivDbOperationResultsTest {
 
         // Entity with One_To_One relationship
         List<OperationResult> deleteEntityResult1 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam-test",
                         "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt"), "ManagedElement_3");
         assertEquals(2, deleteEntityResult1.size());
 
         // Entity with One_To_Many relationship
         List<OperationResult> deleteEntityResult2 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "ODUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"), "ODUFunction_1");
         assertEquals(2, deleteEntityResult2.size());
 
         // Entity and Many_To_One relationship
         List<OperationResult> deleteEntityResult3 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "LTESectorCarrierrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"), "LTESectorCarrier_id1");
         assertEquals(2, deleteEntityResult3.size());
 
         // Entity with Many_To_Many relationship
         List<OperationResult> deleteEntityResult4 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                         "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_7");
         assertEquals(2, deleteEntityResult4.size());
 
         // Entity with One_To_Many relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult5 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                         "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_5");
         assertEquals(2, deleteEntityResult5.size());
 
         // Entity with One_To_One relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult6 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                         "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_1");
         assertEquals(2, deleteEntityResult6.size());
     }
@@ -658,44 +662,44 @@ class TeivDbOperationResultsTest {
 
         // Entity with One_To_One relationship
         List<OperationResult> deleteEntityResult1 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU"), "NRCellDU_2");
         assertEquals(2, deleteEntityResult1.size());
 
         // Entity with One_To_Many relationship
         List<OperationResult> deleteEntityResult2 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU"), "NRCellDU_1");
         assertEquals(2, deleteEntityResult2.size());
 
         // Entity with Many_To_One relationship
         List<OperationResult> deleteEntityResult3 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"), "AntennaCapability_id2");
         assertEquals(2, deleteEntityResult3.size());
 
         // Entity with Many_To_Many relationship
         List<OperationResult> deleteEntityResult4 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"), "AntennaCapability_id1");
         assertEquals(2, deleteEntityResult4.size());
 
         // Entity with One_To_Many relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult5 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                         "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_6");
         assertEquals(2, deleteEntityResult5.size());
 
         // Entity with One_To_One relationship ConnectingSameEntity
         List<OperationResult> deleteEntityResult6 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-equipment-test",
                         "AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"), "AntennaModule_2");
         assertEquals(2, deleteEntityResult6.size());
 
         // Again delete AntennaCapability(id=AntennaCapability_id1) should
         // return empty result list
         List<OperationResult> deleteEntityResult7 = teivDbOperations.deleteEntity(dslContext, SchemaRegistry
-                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran",
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-ran-test",
                         "AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"), "AntennaCapability_id1");
         assertTrue(deleteEntityResult7.isEmpty(),
                 "Delete operation should return an empty list for already deleted/non existing ID");
@@ -713,7 +717,7 @@ class TeivDbOperationResultsTest {
         assertEquals(25, mergeResult.size());
 
         // One_To_One Relationship
-        Relationship oneToOneRelationship = new Relationship("o-ran-smo-teiv-rel-oam-ran",
+        Relationship oneToOneRelationship = new Relationship("o-ran-smo-teiv-rel-oam-ran-test",
                 "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU", "ManagedElement_USES_NRCELLDU_relation_1",
                 "ManagedElement_3", "NRCellDU_2", List.of());
         RelationType oneToOneRelationType = SchemaRegistry.getRelationTypeByModuleAndName(oneToOneRelationship.getModule(),
@@ -723,7 +727,7 @@ class TeivDbOperationResultsTest {
         assertTrue(deleteOneToOneRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // One_To_Many Relationship
-        Relationship oneToManyRelationship = new Relationship("o-ran-smo-teiv-rel-oam-ran",
+        Relationship oneToManyRelationship = new Relationship("o-ran-smo-teiv-rel-oam-ran-test",
                 "MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_ODUFUNCTIONNNNNNNNNNNNNNN",
                 "MANAGEDELEMENT_MANAGES_ODUFUNCTION_relation_1", "ManagedElement_1", "ODUFunction_1", List.of());
         RelationType oneToManyRelationType = SchemaRegistry.getRelationTypeByModuleAndName(oneToManyRelationship
@@ -734,7 +738,7 @@ class TeivDbOperationResultsTest {
         assertTrue(deleteOneToManyRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // Many_To_One Relationship
-        Relationship manyToOneRelationship = new Relationship("o-ran-smo-teiv-ran",
+        Relationship manyToOneRelationship = new Relationship("o-ran-smo-teiv-ran-test",
                 "LTESECTORCARRIERRRRRRRRRRRRRRRRRRRRR_USES_ANTENNACAPABILITYYYYYYYYYYYYYYY",
                 "LTESECTORCARRIER_USES_ANTENNACAPABILITY_relation_1", "LTESectorCarrier_id1", "AntennaCapability_id2", List
                         .of());
@@ -746,7 +750,7 @@ class TeivDbOperationResultsTest {
         assertTrue(deleteManyToOneRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // Many_To_Many Relationship
-        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran",
+        Relationship manyToManyRelationship = new Relationship("o-ran-smo-teiv-rel-equipment-ran-test",
                 "ANTENNAMODULEEEEEEEEEEEEEEEEEEEE_SERVES_ANTENNACAPABILITYYYYYYYYYYYYYYYYYY",
                 "ANTENNAMODULE_SERVES_ANTENNACAPABILITY_relation_1", "AntennaModule_7", "AntennaCapability_id1", List.of());
         RelationType manyToManyRelationType = SchemaRegistry.getRelationTypeByModuleAndName(manyToManyRelationship
@@ -756,7 +760,7 @@ class TeivDbOperationResultsTest {
         assertTrue(deleteManyToManyRelationshipResult.isPresent(), "Delete operation should return a present Optional");
 
         // One_To_One Relationship ConnectingSameEntity
-        Relationship connectingSameEntityOneToOneRelationship = new Relationship("o-ran-smo-teiv-equipment",
+        Relationship connectingSameEntityOneToOneRelationship = new Relationship("o-ran-smo-teiv-equipment-test",
                 "ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE",
                 "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE_relation_1", "AntennaModule_1", "AntennaModule_2", List.of());
         RelationType connectingSameEntityType = SchemaRegistry.getRelationTypeByModuleAndName(
@@ -768,7 +772,7 @@ class TeivDbOperationResultsTest {
                 "Delete operation should return a present Optional");
 
         // One_To_Many Relationship ConnectingSameEntity
-        Relationship connectingSameEntityOneToManyRelationship = new Relationship("o-ran-smo-teiv-equipment",
+        Relationship connectingSameEntityOneToManyRelationship = new Relationship("o-ran-smo-teiv-equipment-test",
                 "ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE",
                 "ANTENNAMODULE_DEPLOYED_ON_ANTENNAMODULE_relation_1", "AntennaModule_5", "AntennaModule_6", List.of());
         connectingSameEntityType = SchemaRegistry.getRelationTypeByModuleAndName(connectingSameEntityOneToManyRelationship
@@ -1192,5 +1196,11 @@ class TeivDbOperationResultsTest {
         final boolean contains = dbResults.stream().map(row -> row.get(idColumn)).filter(Objects::nonNull).map(
                 Object::toString).anyMatch(result.getId()::equals);
         assertTrue(contains);
+    }
+
+    private boolean containsWithPartialMatch(List<OperationResult> list, OperationResult op) {
+        return list.stream().anyMatch(obj -> Objects.equals(obj.getId(), op.getId()) && Objects.equals(obj.getType(), op
+                .getType()) && Objects.equals(obj.getCategory(), op.getCategory()) && (op.getModule() == null || Objects
+                        .equals(obj.getModule(), op.getModule())));
     }
 }

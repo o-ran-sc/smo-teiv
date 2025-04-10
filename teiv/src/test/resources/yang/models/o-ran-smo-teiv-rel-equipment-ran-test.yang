@@ -1,0 +1,43 @@
+module o-ran-smo-teiv-rel-equipment-ran-test {
+    yang-version 1.1;
+    namespace "urn:o-ran:smo-teiv-rel-equipment-ran";
+    prefix or-teiv-rel-equipran-test;
+
+    import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
+
+    import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
+
+    import o-ran-smo-teiv-equipment-test { prefix or-teiv-equip-test; }
+
+    import o-ran-smo-teiv-ran-test { prefix or-teiv-ran-test; }
+
+    organization "ORAN";
+    contact "The Authors";
+    description
+        "These are just test Equipment and RAN topology relation model.";
+
+    revision "2024-05-24" {
+        description "Initial revision.";
+        or-teiv-yext:label 0.3.0;
+    }
+
+    or-teiv-yext:domain REL_EQUIPMENT_RAN;
+
+    or-teiv-yext:biDirectionalTopologyRelationship ANTENNAMODULEEEEEEEEEEEEEEEEEEEE_SERVES_ANTENNACAPABILITYYYYYYYYYYYYYYYYYY { // 0..n to 0..m
+
+        uses or-teiv-types:Top_Grp_Type;
+        key id;
+
+        leaf-list serviced-antennaCapability {
+            description "Antenna Capability serviced by this Antenna Module.";
+            or-teiv-yext:aSide or-teiv-equip-test:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee;
+            type instance-identifier;
+        }
+
+        leaf-list serving-antennaModule {
+            description "Antenna Module serves this Antenna Capability.";
+            or-teiv-yext:bSide or-teiv-ran-test:AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy;
+            type instance-identifier;
+        }
+    }
+}

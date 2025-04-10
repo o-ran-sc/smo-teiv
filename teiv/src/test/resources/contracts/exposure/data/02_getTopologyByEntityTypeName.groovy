@@ -1520,7 +1520,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1538,12 +1538,30 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid query condition",
                 "details": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)"
+            }''')
+        }
+    },
+    Contract.make {
+        description 'ERROR - 400: Get entities of type AntennaModule with scopeFilter inside MULTIPOLYGON - Invalid format: missing parentheses in the second list of points.'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),(60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+        }
+        response {
+            status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
+            body('''{
+                "status": "BAD_REQUEST",
+                "message": "Invalid query condition",
+                "details": "Invalid parameter for covered by condition"
             }''')
         }
     },
@@ -1556,7 +1574,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1574,7 +1592,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1592,7 +1610,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1610,7 +1628,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1629,7 +1647,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1647,7 +1665,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -1835,7 +1853,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                "status": "BAD_REQUEST",
@@ -1858,7 +1876,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                "status": "BAD_REQUEST",
@@ -1881,7 +1899,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                "status": "BAD_REQUEST",
@@ -1904,7 +1922,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                "status": "BAD_REQUEST",
@@ -1999,6 +2017,51 @@ import org.springframework.cloud.contract.spec.Contract
                 },
                 "last": {
                     "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+                },
+                "totalCount": 1
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(1)
+                })
+            }
+        }
+    },
+    Contract.make {
+        description 'SUCCESS - 200: Get entities of type AntennaModule inside MultiPolygon'
+        request {
+            method GET()
+            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "o-ran-smo-teiv-equipment:AntennaModule": [
+                            {
+                                "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7"
+                            }
+                        ]
+                    }
+                ],
+                "self": {
+                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+                },
+                "first": {
+                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+                },
+                "prev": {
+                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+                },
+                "next": {
+                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+                },
+                "last": {
+                    "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
                 },
                 "totalCount": 1
             }''')
@@ -2755,7 +2818,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -2773,7 +2836,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -3318,7 +3381,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                     "status": "BAD_REQUEST",
@@ -3341,7 +3404,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                     "status": "BAD_REQUEST",
@@ -3472,7 +3535,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                     "status": "BAD_REQUEST",
@@ -3495,7 +3558,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -3513,7 +3576,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -3625,7 +3688,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",
@@ -3643,7 +3706,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                 "status": "BAD_REQUEST",

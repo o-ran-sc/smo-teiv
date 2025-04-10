@@ -20,6 +20,7 @@
  */
 package org.oran.smo.teiv.listener.audit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,11 @@ import io.cloudevents.CloudEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
+import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_CREATE;
+import static org.oran.smo.teiv.utils.TeivConstants.CLOUD_EVENT_WITH_TYPE_MERGE;
+
 @Slf4j
 @AllArgsConstructor
 @Component
@@ -35,10 +41,25 @@ public class IngestionAuditLogger {
 
     private final LoggerHandler loggerHandler;
 
-    public void auditLog(ExecutionStatus status, String operationType, CloudEvent cloudEvent, String messageKey,
+    public void logError(ExecutionStatus status, String operationType, CloudEvent cloudEvent, String messageKey,
             String errorMsg) {
-        loggerHandler.logAuditBase(log, IngestionAuditInfo.builder().status(status).operation(operationType).messageKey(
-                messageKey).cloudEvent(CloudEventUtil.cloudEventToPrettyString(cloudEvent)).exceptionMessage(errorMsg)
-                .build().toString(), String.valueOf(cloudEvent.getSource()));
+        final String message = String.format("%s. Exception = %s", getMessage(status, operationType, cloudEvent,
+                messageKey), errorMsg);
+        loggerHandler.logAuditBase(log, message, cloudEvent.getSource().toString());
+    }
+
+    public void logSuccess(ExecutionStatus status, String operationType, CloudEvent cloudEvent, String messageKey,
+            List<String> inferred) {
+        final String message = String.format("%s. Implicitly %sd items = %s", getMessage(status, operationType, cloudEvent,
+                messageKey), operationType.equals(CLOUD_EVENT_WITH_TYPE_MERGE) ?
+                        CLOUD_EVENT_WITH_TYPE_CREATE :
+                        operationType, inferred);
+        loggerHandler.logAuditBase(log, message, cloudEvent.getSource().toString());
+    }
+
+    private String getMessage(final ExecutionStatus status, final String operation, final CloudEvent cloudEvent,
+            final String messageKey) {
+        return String.format("%s - %s topology. Message key: %s, CloudEvent: %s", status, StringUtils.capitalize(operation),
+                messageKey, CloudEventUtil.cloudEventToPrettyString(cloudEvent));
     }
 }

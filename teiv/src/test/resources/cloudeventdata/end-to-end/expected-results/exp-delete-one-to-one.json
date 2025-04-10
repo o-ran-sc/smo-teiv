@@ -1,5 +1,5 @@
 {
-    "84E676149362F50C55FE1E004B98D4891916BBF3": [
+    "F93C2CA075353668A76B4718E07B741ACCD83641": [
         {
             "id": "NRCellDU_21"
         },
@@ -7,12 +7,16 @@
             "id": "NRCellDU_31"
         }
     ],
-    "28C9A375E800E82308EBE7DA2932EF2C0AF13C38": [
+    "C9475FE40C02BEB41F720B4284A856F2CF49E1F3": [
         {
             "id": "ManagedElement_41",
             "REL_FK_used-nrCellDu": null,
             "REL_ID_ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": null,
-            "REL_metadata_C9E09FBCCBA1F6A3252B71B869B269EF28AACDFB": null
+            "REL_metadata_C9E09FBCCBA1F6A3252B71B869B269EF28AACDFB": null,
+            "REL_CD_E388983F3E6BFAD67CA100F0AFCF8CD3E9B89ADD": [],
+            "REL_CD_EF3979E9DAF31B7949C883654633E633B9D35B92": {
+
+            }
         }
     ]
 }

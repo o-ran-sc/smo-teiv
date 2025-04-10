@@ -25,6 +25,7 @@ import static org.oran.smo.teiv.schema.RelationshipDataLocation.A_SIDE;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.B_SIDE;
 import static org.oran.smo.teiv.schema.RelationshipDataLocation.RELATION;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_DOMAIN;
+import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.ENTITY_NOT_FOUND_IN_MODULE;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_DOMAIN;
 import static org.oran.smo.teiv.schema.SchemaRegistryErrorCode.RELATIONSHIP_NOT_FOUND_IN_MODULE;
 import static org.oran.smo.teiv.utils.TeivConstants.QUOTED_STRING;
@@ -124,10 +125,20 @@ class SchemaRegistryTest {
     @Test
     void testGetEntityTypeByDomainAndName() throws SchemaRegistryException {
         //when
-        List<EntityType> entityTypes = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "ODUFunction");
+        EntityType entityType = SchemaRegistry.getEntityTypeByDomainAndName("RAN", "ODUFunction");
         //then
-        assertEquals(1, entityTypes.size());
-        EntityType entityType = entityTypes.get(0);
+        assertEquals("ODUFunction", entityType.getName());
+        assertEquals("RAN", entityType.getModule().getDomain());
+
+        //when
+        entityType = SchemaRegistry.getEntityTypeByDomainAndName("TEIV", "ODUFunction");
+        //then
+        assertEquals("ODUFunction", entityType.getName());
+        assertEquals("RAN", entityType.getModule().getDomain());
+
+        //when
+        entityType = SchemaRegistry.getEntityTypeByDomainAndName("REL_OAM_RAN", "ODUFunction");
+        //then
         assertEquals("ODUFunction", entityType.getName());
         assertEquals("RAN", entityType.getModule().getDomain());
 
@@ -145,8 +156,8 @@ class SchemaRegistryTest {
         assertEquals("RAN", entityType.getModule().getDomain());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
-                .getEntityTypeByDomainAndName("o-ran-smo-teiv-oam", "ODUFunction"));
-        assertEquals(ENTITY_NOT_FOUND_IN_DOMAIN, exception.getErrorCode());
+                .getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ODUFunction"));
+        assertEquals(ENTITY_NOT_FOUND_IN_MODULE, exception.getErrorCode());
     }
 
     @Test
@@ -280,15 +291,38 @@ class SchemaRegistryTest {
         Association expectedASideAssociation = new Association("managed-ocucpFunction", 1, 1);
         Association expectedBSideAssociation = new Association("managed-by-managedElement", 0, 9223372036854775807L);
         //when
-        List<RelationType> relationTypes = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN",
+        RelationType relationType = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN",
                 "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
         //then
-        assertEquals(1, relationTypes.size());
-        RelationType managedElementManagesOcucpfunction = relationTypes.get(0);
-        assertEquals(expectedASideAssociation.toString(), managedElementManagesOcucpfunction.getASideAssociation()
-                .toString());
-        assertEquals(expectedBSideAssociation.toString(), managedElementManagesOcucpfunction.getBSideAssociation()
-                .toString());
+        assertEquals(expectedASideAssociation.toString(), relationType.getASideAssociation().toString());
+        assertEquals(expectedBSideAssociation.toString(), relationType.getBSideAssociation().toString());
+
+        //when
+        relationType = SchemaRegistry.getRelationTypeByDomainAndName("TEIV", "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
+        //then
+        assertEquals(expectedASideAssociation.toString(), relationType.getASideAssociation().toString());
+        assertEquals(expectedBSideAssociation.toString(), relationType.getBSideAssociation().toString());
+
+        //given
+        Association expectedASideAssociation1 = new Association("provided-nrCellDu", 1, 1);
+        Association expectedBSideAssociation1 = new Association("provided-by-oduFunction", 0, 9223372036854775807L);
+        //when
+        RelationType relationType1 = SchemaRegistry.getRelationTypeByDomainAndName("RAN", "ODUFUNCTION_PROVIDES_NRCELLDU");
+        //then
+        assertEquals(expectedASideAssociation1.toString(), relationType1.getASideAssociation().toString());
+        assertEquals(expectedBSideAssociation1.toString(), relationType1.getBSideAssociation().toString());
+
+        //when
+        relationType1 = SchemaRegistry.getRelationTypeByDomainAndName("TEIV", "ODUFUNCTION_PROVIDES_NRCELLDU");
+        //then
+        assertEquals(expectedASideAssociation1.toString(), relationType1.getASideAssociation().toString());
+        assertEquals(expectedBSideAssociation1.toString(), relationType1.getBSideAssociation().toString());
+
+        //when
+        relationType1 = SchemaRegistry.getRelationTypeByDomainAndName("REL_OAM_RAN", "ODUFUNCTION_PROVIDES_NRCELLDU");
+        //then
+        assertEquals(expectedASideAssociation1.toString(), relationType1.getASideAssociation().toString());
+        assertEquals(expectedBSideAssociation1.toString(), relationType1.getBSideAssociation().toString());
 
         final SchemaRegistryException exception = assertThrows(SchemaRegistryException.class, () -> SchemaRegistry
                 .getRelationTypeByDomainAndName("OAM", "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION"));

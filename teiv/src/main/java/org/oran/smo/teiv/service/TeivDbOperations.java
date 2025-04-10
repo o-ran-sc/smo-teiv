@@ -153,7 +153,8 @@ public class TeivDbOperations {
         int affectedRows = context.delete(table(entityType.getTableName())).where(field(ID_COLUMN_NAME).eq(entityId))
                 .execute();
         if (affectedRows > 0) {
-            result.add(OperationResult.builder().id(entityId).type(entityType.getName()).category(ENTITY_CATEGORY).build());
+            result.add(OperationResult.builder().id(entityId).type(entityType.getName()).category(ENTITY_CATEGORY).module(
+                    entityType.getModule().getName()).build());
         }
         return result;
     }
@@ -168,15 +169,14 @@ public class TeivDbOperations {
                 .getIdColumnName()), String.class)).from(table(relationType.getTableName())).where(field(String.format(
                         QUOTED_STRING, manySideEntityIdColumn)).eq(manySideEntityId)).forUpdate().fetchInto(String.class)
                 .stream().filter(Objects::nonNull).map(id -> OperationResult.builder().id(id).type(relationType.getName())
-                        .category(RELATIONSHIP_CATEGORY).build()).collect(Collectors.toList());
+                        .category(RELATIONSHIP_CATEGORY).module(relationType.getModule().getName()).build()).collect(
+                                Collectors.toList());
+        int updateResult;
         if (relationshipList.isEmpty()) {
             return relationshipList;
         } else {
-            int updateResult = context.update(table(relationType.getTableName())).setNull(field(String.format(QUOTED_STRING,
-                    relationType.getIdColumnName()))).setNull(field(String.format(QUOTED_STRING, oneSideEntityIdColumn)))
-                    .set(field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), toJsonb(List.of()))
-                    .setNull(field(String.format(QUOTED_STRING, relationType.getMetadataColumnName()))).where(field(String
-                            .format(QUOTED_STRING, manySideEntityIdColumn)).eq(manySideEntityId)).execute();
+            updateResult = executeRelationshipDelete(context, manySideEntityIdColumn, manySideEntityId, relationType,
+                    oneSideEntityIdColumn);
             return updateResult > 0 ? relationshipList : List.of();
         }
 
@@ -187,15 +187,26 @@ public class TeivDbOperations {
         String oneSideEntityIdColumn = relationType.getRelationshipStorageLocation().equals(B_SIDE) ?
                 relationType.aSideColumnName() :
                 relationType.bSideColumnName();
-        int affectedRows = context.update(table(relationType.getTableName())).setNull(field(String.format(QUOTED_STRING,
-                relationType.getIdColumnName()))).setNull(field(String.format(QUOTED_STRING, oneSideEntityIdColumn))).set(
-                        field(String.format(QUOTED_STRING, relationType.getSourceIdsColumnName())), toJsonb(List.of()))
-                .setNull(field(String.format(QUOTED_STRING, relationType.getMetadataColumnName()))).where(field(String
-                        .format(QUOTED_STRING, relationType.getIdColumnName())).eq(relationshipId)).execute();
+
+        int affectedRows;
+        affectedRows = executeRelationshipDelete(context, relationType.getIdColumnName(), relationshipId, relationType,
+                oneSideEntityIdColumn);
         return affectedRows > 0 ?
                 Optional.of(OperationResult.builder().id(relationshipId).type(relationType.getName()).category(
-                        RELATIONSHIP_CATEGORY).build()) :
+                        RELATIONSHIP_CATEGORY).module(relationType.getModule().getName()).build()) :
                 Optional.empty();
+    }
+
+    private static int executeRelationshipDelete(DSLContext context, String whereClauseColumnName,
+            String whereClauseColumnId, RelationType relationType, String oneSideEntityIdColumn) {
+        return context.update(table(relationType.getTableName())).setNull(field(String.format(QUOTED_STRING, relationType
+                .getIdColumnName()))).setNull(field(String.format(QUOTED_STRING, oneSideEntityIdColumn))).set(field(String
+                        .format(QUOTED_STRING, relationType.getSourceIdsColumnName())), toJsonb(List.of())).set(field(String
+                                .format(QUOTED_STRING, relationType.getClassifiersColumnName())), toJsonb(List.of())).set(
+                                        field(String.format(QUOTED_STRING, relationType.getDecoratorsColumnName())),
+                                        toJsonb("{}")).setNull(field(String.format(QUOTED_STRING, relationType
+                                                .getMetadataColumnName()))).where(field(String.format(QUOTED_STRING,
+                                                        whereClauseColumnName)).eq(whereClauseColumnId)).execute();
     }
 
     public List<OperationResult> deleteManyToManyRelationByEntityId(DSLContext context, RelationType relationType,
@@ -206,7 +217,7 @@ public class TeivDbOperations {
                                 TeivConstants.ID_COLUMN_NAME), String.class);
 
         return deletedIds.stream().map(id -> OperationResult.builder().id(id).type(relationType.getName()).category(
-                RELATIONSHIP_CATEGORY).build()).collect(Collectors.toList());
+                RELATIONSHIP_CATEGORY).module(relationType.getModule().getName()).build()).collect(Collectors.toList());
     }
 
     public Optional<OperationResult> deleteManyToManyRelationByRelationId(DSLContext context, RelationType relationType,
@@ -215,7 +226,7 @@ public class TeivDbOperations {
                 relationshipId)).execute();
         return affectedRows > 0 ?
                 Optional.of(OperationResult.builder().id(relationshipId).type(relationType.getName()).category(
-                        RELATIONSHIP_CATEGORY).build()) :
+                        RELATIONSHIP_CATEGORY).module(relationType.getModule().getName()).build()) :
                 Optional.empty();
     }
 
@@ -348,7 +359,8 @@ public class TeivDbOperations {
                             createMissingStoringSideEntity(dslContext, relationship, relationType, respAdapterByteArray,
                                     metadataMissingEntity);
                             addEntityToOperationResults(results, relationship.getStoringSideEntityId(),
-                                    metadataMissingEntity, relationType.getStoringSideEntityType().getName());
+                                    metadataMissingEntity, relationType.getStoringSideEntityType().getName(), relationType
+                                            .getStoringSideEntityType().getModule().getName());
                             updateRelationshipInEntityTable(dslContext, relationship, relationType, dbMap).ifPresentOrElse(
                                     results::add, () -> {
                                         throw new IllegalOneToManyRelationshipUpdateException(relationship, true);
@@ -365,12 +377,14 @@ public class TeivDbOperations {
                     createMissingStoringSideEntity(dslContext, relationship, relationType, respAdapterByteArray,
                             metadataMissingEntity);
                     addEntityToOperationResults(results, relationship.getStoringSideEntityId(), metadataMissingEntity,
-                            relationType.getStoringSideEntityType().getName());
+                            relationType.getStoringSideEntityType().getName(), relationType.getStoringSideEntityType()
+                                    .getModule().getName());
                 }
                 createMissingNotStoringSideEntity(dslContext, relationship, relationType, respAdapterByteArray,
                         metadataMissingEntity);
                 addEntityToOperationResults(results, relationship.getNotStoringSideEntityId(), metadataMissingEntity,
-                        relationType.getNotStoringSideEntityType().getName());
+                        relationType.getNotStoringSideEntityType().getName(), relationType.getNotStoringSideEntityType()
+                                .getModule().getName());
                 updateRelationshipInEntityTable(dslContext, relationship, relationType, dbMap).ifPresentOrElse(results::add,
                         () -> {
                             throw new IllegalOneToManyRelationshipUpdateException(relationship, false);
@@ -446,20 +460,24 @@ public class TeivDbOperations {
             List<OperationResult> results, byte[] respAdapterByteArray) {
         String aSideTableName = relationType.getASide().getTableName();
         String aSideId = relationship.getASide();
+        String aSideModuleName = relationType.getASide().getModule().getName();
         String bSideTableName = relationType.getBSide().getTableName();
         String bSideId = relationship.getBSide();
+        String bSideModuleName = relationType.getASide().getModule().getName();
         String relationshipId = relationship.getId();
         final Map<String, Object> metadata = TeivMetadataResolver.getMetadataForInferredEntity();
 
         if (createMissingEntity(aSideTableName, aSideId, relationshipId, dslContext, relationType.getASide(),
                 respAdapterByteArray, metadata) == 1) {
             results.add(OperationResult.builder().id(aSideId).type(relationType.getASide().getName()).category(
-                    ENTITY_CATEGORY).sourceIds(List.of(relationshipId)).metadata(metadata).build());
+                    ENTITY_CATEGORY).sourceIds(List.of(relationshipId)).metadata(metadata).module(aSideModuleName)
+                    .isInferred(true).build());
         }
         if (createMissingEntity(bSideTableName, bSideId, relationshipId, dslContext, relationType.getBSide(),
                 respAdapterByteArray, metadata) == 1) {
             results.add(OperationResult.builder().id(bSideId).type(relationType.getBSide().getName()).category(
-                    ENTITY_CATEGORY).sourceIds(List.of(relationshipId)).metadata(metadata).build());
+                    ENTITY_CATEGORY).sourceIds(List.of(relationshipId)).metadata(metadata).module(bSideModuleName)
+                    .isInferred(true).build());
         }
     }
 
@@ -513,9 +531,9 @@ public class TeivDbOperations {
     }
 
     private void addEntityToOperationResults(List<OperationResult> results, String entityId, Map<String, Object> metadata,
-            String entityType) {
+            String entityType, String entityModule) {
         OperationResult result = OperationResult.builder().id(entityId).type(entityType).category(ENTITY_CATEGORY).metadata(
-                metadata).build();
+                metadata).module(entityModule).isInferred(true).build();
         if (!results.contains(result)) {
             results.add(result);
         }

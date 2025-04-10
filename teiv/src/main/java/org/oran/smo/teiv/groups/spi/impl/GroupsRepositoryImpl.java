@@ -215,7 +215,7 @@ public class GroupsRepositoryImpl implements GroupsRepository {
 
     @Override
     public void createStaticGroup(final StaticGroupRecord groupRecord) {
-        log.debug("Create a static group with name {}", groupRecord.getGroupName());
+        log.debug("Create a static group with name: {}", groupRecord.getGroupName());
         writeDataDslContext.transaction((Configuration trx) -> {
             trx.dsl().insertInto(GROUPS_TABLE).set(GROUP_ID, groupRecord.getId()).set(GROUP_NAME, groupRecord
                     .getGroupName()).set(GROUP_TYPE, groupRecord.getGroupType()).execute();

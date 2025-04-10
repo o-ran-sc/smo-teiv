@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
+                "o-ran-smo-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
                     {
                         "id": "ManagedElement_1",
                         "attributes": {
@@ -43,7 +43,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-test:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "NRCellDU_1",
                         "attributes": {
@@ -73,12 +73,12 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:ODUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn": [
+                "o-ran-smo-teiv-ran-test:ODUFunctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn": [
                     {
                         "id": "ODUFunction_1",
                         "attributes": {
                             "dUpLMNId": {
-                                "mcc": "110",
+                                "mcc": "250",
                                 "mnc": "210"
                             },
                             "gNBDUId": 12,
@@ -94,7 +94,7 @@
                         "id": "ODUFunction_2",
                         "attributes": {
                             "dUpLMNId": {
-                                "mcc": "110",
+                                "mcc": "250",
                                 "mnc": "210"
                             },
                             "gNBDUId": 12,
@@ -109,7 +109,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
+                "o-ran-smo-teiv-equipment-test:AntennaModuleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
                     {
                         "id": "AntennaModule_1",
                         "attributes": {
@@ -183,7 +183,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy": [
+                "o-ran-smo-teiv-ran-test:AntennaCapabilityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy": [
                     {
                         "id": "AntennaCapability_id1",
                         "attributes": {
@@ -207,7 +207,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:LTESectorCarrierrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr": [
+                "o-ran-smo-teiv-ran-test:LTESectorCarrierrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr": [
                     {
                         "id": "LTESectorCarrier_id1",
                         "attributes": {
@@ -223,7 +223,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_ODUFUNCTIONNNNNNNNNNNNNNN": [
+                "o-ran-smo-teiv-rel-oam-ran-test:MANAGEDELEMENTTTTTTTTTTTTTTT_MANAGES_ODUFUNCTIONNNNNNNNNNNNNNN": [
                     {
                         "id": "MANAGEDELEMENT_MANAGES_ODUFUNCTION_relation_1",
                         "aSide": "ManagedElement_1",
@@ -236,7 +236,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:ODUFUNCTIONNNNNNNNNNNNNNNNN_PROVIDES_NRCELLDUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-test:ODUFUNCTIONNNNNNNNNNNNNNNNN_PROVIDES_NRCELLDUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "ODUFUNCTION_PROVIDES_NRCELLDU_relation_1",
                         "aSide": "ODUFunction_2",
@@ -249,7 +249,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-rel-oam-ran:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-rel-oam-ran-test:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
                     {
                         "id": "ManagedElement_USES_NRCELLDU_relation_1",
                         "aSide": "ManagedElement_3",
@@ -262,7 +262,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE": [
+                "o-ran-smo-teiv-equipment-test:ANTENNAMODULEEEEEEEEEEEE_REALISED_BY_ANTENNAMODULEEEEEEEEEEEEEEE": [
                     {
                         "id": "ANTENNAMODULE_REALISED_BY_ANTENNAMODULE_relation_1",
                         "aSide": "AntennaModule_1",
@@ -284,7 +284,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-equipment:ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE": [
+                "o-ran-smo-teiv-equipment-test:ANTENNAMODULEEEEEEEEEEEE_DEPLOYED_ON_ANTENNAMODULEEEEEEEEEEEEEEE": [
                     {
                         "id": "ANTENNAMODULE_DEPLOYED_ON_ANTENNAMODULE_relation_1",
                         "aSide": "AntennaModule_5",
@@ -297,7 +297,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-rel-equipment-ran:ANTENNAMODULEEEEEEEEEEEEEEEEEEEE_SERVES_ANTENNACAPABILITYYYYYYYYYYYYYYYYYY": [
+                "o-ran-smo-teiv-rel-equipment-ran-test:ANTENNAMODULEEEEEEEEEEEEEEEEEEEE_SERVES_ANTENNACAPABILITYYYYYYYYYYYYYYYYYY": [
                     {
                         "id": "ANTENNAMODULE_SERVES_ANTENNACAPABILITY_relation_1",
                         "aSide": "AntennaModule_7",
@@ -310,7 +310,7 @@
                 ]
             },
             {
-                "o-ran-smo-teiv-ran:LTESECTORCARRIERRRRRRRRRRRRRRRRRRRRR_USES_ANTENNACAPABILITYYYYYYYYYYYYYYY": [
+                "o-ran-smo-teiv-ran-test:LTESECTORCARRIERRRRRRRRRRRRRRRRRRRRR_USES_ANTENNACAPABILITYYYYYYYYYYYYYYY": [
                     {
                         "id": "LTESECTORCARRIER_USES_ANTENNACAPABILITY_relation_1",
                         "aSide": "LTESectorCarrier_id1",

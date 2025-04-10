@@ -225,7 +225,7 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "SUCCESS - 200: Get classifiers using getRelationshipsByType - CONTAINS"
+        description "NOT FOUND - 404: Get classifiers using getRelationshipsByType - CONTAINS"
         request {
             method GET()
             url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'NOT_EXISTING')]"
@@ -233,7 +233,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status NOT_FOUND()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body('''{
                     "status": "NOT_FOUND",

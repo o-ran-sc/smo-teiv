@@ -52,7 +52,7 @@ public class AppInit {
      * unaffected by retries.
      */
     @Async
-    @Order(value = 20)
+    @Order(value = 25)
     @EventListener(value = ApplicationReadyEvent.class)
     public void startUpHandler() {
         if (dependentServiceAvailabilityKafka.checkService()) {

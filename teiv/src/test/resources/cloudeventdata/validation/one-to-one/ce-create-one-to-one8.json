@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-ran:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-ran-test:NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU": [
                     {
                         "id": "NRCellDU_2",
                         "attributes": {
@@ -28,7 +28,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-rel-oam-ran:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-rel-oam-ran-test:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
                     {
                         "id": "Relation_OneToOne_1",
                         "aSide": "ManagedElement_2",

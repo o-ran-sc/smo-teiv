@@ -20,8 +20,6 @@
  */
 package org.oran.smo.teiv.exposure.teivpath.refiner;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.jooq.Field;
 import org.jooq.JSONB;
 import org.jooq.OrderField;
 import org.jooq.Record;
@@ -109,10 +107,6 @@ public class PathToJooqRefinement {
         }
         SelectJoinStep<Record> query = select(resolvedFields).from(filterCriteria.getTableFromTarget(filterCriteria
                 .getTargets().get(0)));
-        List<Pair<String, Field>> joinConditions = new ArrayList<>(filterCriteria.getJoinCondition());
-        for (int i = 0; i < joinConditions.size(); i++) {
-            query = query.join(joinConditions.get(i).getLeft()).on(joinConditions.get(i).getRight());
-        }
         SelectConditionStep<Record> conditionStep = query.where(filterCriteria.getCondition());
         if (countMode) {
             return conditionStep;

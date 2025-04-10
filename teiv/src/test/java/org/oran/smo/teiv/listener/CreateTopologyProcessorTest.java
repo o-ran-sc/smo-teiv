@@ -111,7 +111,7 @@ class CreateTopologyProcessorTest {
 
         verify(teivDbService, times(1)).execute(anyList());
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -134,7 +134,7 @@ class CreateTopologyProcessorTest {
 
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -157,7 +157,7 @@ class CreateTopologyProcessorTest {
 
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -172,7 +172,7 @@ class CreateTopologyProcessorTest {
 
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("create"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 }

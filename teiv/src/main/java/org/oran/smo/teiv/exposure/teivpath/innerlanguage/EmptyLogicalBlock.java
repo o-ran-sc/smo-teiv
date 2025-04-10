@@ -53,7 +53,7 @@ public class EmptyLogicalBlock extends LogicalBlock {
         return Collections.emptySet();
     }
 
-    public Set<Pair<String, Field>> getJoinCondition() {
+    public Set<Pair<String, Field>> getWhereExistsConditions() {
         return Collections.emptySet();
     }
 }

@@ -41,10 +41,10 @@
                             "urn:cmHandle:395221E080CCF0FD1929103B15999999"
                         ],
                         "attributes": {
-                            "geranFqBands": {
-                                "attribute_1": "1",
-                                "attribute_2": "2"
-                            }
+                            "geranFqBands": [
+                                "1",
+                                "2"
+                            ]
                         }
                     },
                     {
@@ -54,10 +54,10 @@
                             "urn:cmHandle:395221E080CCF0FD1929103B15999999"
                         ],
                         "attributes": {
-                            "geranFqBands": {
-                                "attribute_1": "1",
-                                "attribute_2": "2"
-                            }
+                            "geranFqBands": [
+                                "1",
+                                "2"
+                            ]
                         }
                     }
                 ]

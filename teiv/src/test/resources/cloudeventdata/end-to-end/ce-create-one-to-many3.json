@@ -12,9 +12,6 @@
                 "o-ran-smo-teiv-oam:ManagedElement": [
                     {
                         "id": "ManagedElement_1",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "urn:3gpp:dn:fdn1",
                             "urn:cmHandle:12345"
@@ -22,9 +19,6 @@
                     },
                     {
                         "id": "ManagedElement_2",
-                        "attributes": {
-
-                        },
                         "sourceIds": [
                             "urn:3gpp:dn:fdn1",
                             "urn:cmHandle:12345"
@@ -52,8 +46,8 @@
                         "id": "ODU_1",
                         "attributes": {
                             "dUpLMNId": {
-                                "mcc": 110,
-                                "mnc": 210
+                                "mcc": "250",
+                                "mnc": "210"
                             },
                             "gNBDUId": 111,
                             "gNBId": 123,

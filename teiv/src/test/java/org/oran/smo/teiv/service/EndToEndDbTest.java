@@ -24,13 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.oran.smo.teiv.utils.JooqTypeConverter.jsonbToMap;
+import static org.oran.smo.teiv.utils.OperationResultParser.fromOperationResults;
 import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
 import static org.oran.smo.teiv.utils.TeivTestConstants.KAFKA_RETRY_INTERVAL_10_MS;
 import static org.oran.smo.teiv.utils.TeivTestConstants.SPRING_BOOT_SERVER_HOST;
 import static org.oran.smo.teiv.utils.TeivTestConstants.SPRING_BOOT_SERVER_PORT;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -64,16 +69,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.availability.DependentServiceAvailabilityKafka;
 import org.oran.smo.teiv.config.KafkaConfig;
 import org.oran.smo.teiv.db.TestPostgresqlContainer;
+import org.oran.smo.teiv.exception.YangException;
 import org.oran.smo.teiv.listener.ListenerStarter;
+import org.oran.smo.teiv.listener.audit.ExecutionStatus;
+import org.oran.smo.teiv.listener.audit.IngestionAuditLogger;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.service.kafka.KafkaTopicService;
+import org.oran.smo.teiv.service.models.OperationResult;
 import org.oran.smo.teiv.startup.AppInit;
 import org.oran.smo.teiv.utils.CloudEventTestUtil;
 import org.oran.smo.teiv.utils.EndToEndExpectedResults;
 import org.oran.smo.teiv.utils.KafkaTestExecutionListener;
+import org.oran.smo.teiv.utils.YangModelValidationTestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
@@ -87,6 +102,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.testcontainers.shaded.org.checkerframework.checker.nullness.qual.Nullable;
 
 @EmbeddedKafka
@@ -134,6 +150,9 @@ public class EndToEndDbTest {
     @Autowired
     private DSLContext writeDataDslContext;
 
+    @MockitoSpyBean
+    IngestionAuditLogger auditLogger;
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.read.jdbc-url", () -> postgresqlContainer.getJdbcUrl());
@@ -151,13 +170,16 @@ public class EndToEndDbTest {
     private OffsetDateTime testStartTime;
 
     @BeforeAll
-    static void beforeAll() {
+    static void beforeAll() throws SchemaLoaderException {
         TestPostgresqlContainer.loadData();
         TestPostgresqlContainer.loadIngestionTestData();
+        TestPostgresqlContainer.loadEndToEndTestData();
+        SchemaLoader mockSchemaLoader = new MockSchemaLoader();
+        mockSchemaLoader.loadSchemaRegistry();
     }
 
     @BeforeEach
-    void setupEach() {
+    void setupEach() throws IOException, YangException {
         TestPostgresqlContainer.truncateSchemas(List.of(TEIV_DATA_SCHEMA), writeDataDslContext);
         appInit = new AppInit(dependentServiceAvailabilityKafka, kafkaTopicService, listenerStarter);
         appInit.startUpHandler();
@@ -165,6 +187,7 @@ public class EndToEndDbTest {
                 new StringSerializer(), new CloudEventSerializer());
         producer = factory.createProducer();
         testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
+        YangModelValidationTestUtil.mockLoadAndValidateModels();
     }
 
     @AfterEach
@@ -268,8 +291,7 @@ public class EndToEndDbTest {
 
         testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
         sendEventFromFile(CREATE_INFERRED_ENTITIES);
-
-        validateWithTimeout(25, () -> {
+        validateWithTimeout(30, () -> {
             EndToEndExpectedResults expected = getExpectedResults(EXP_CREATE_INFERRED_ENTITIES);
             assertDbContainsExpectedValues(expected);
             validateReceivedCloudEventMetrics(5, 3, 0, 0);
@@ -299,6 +321,23 @@ public class EndToEndDbTest {
             EndToEndExpectedResults notExpected = getExpectedResults(NOT_EXP_DELETE_ONE_TO_ONE_PATH);
             assertDbNotContainsExpectedValues(notExpected);
             validateReceivedCloudEventMetrics(6, 3, 2, 0);
+            List<Map<String, List<String>>> expectedItems = List.of(Map.of(
+                    "o-ran-smo-teiv-rel-oam-ran-test:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU", List.of(
+                            "relation_11", "relation_12")), Map.of(
+                                    "o-ran-smo-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt",
+                                    List.of("ManagedElement_21")));
+            List<OperationResult> operationResults = List.of(OperationResult.builder().id("relation_11").type(
+                    "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU").module("o-ran-smo-teiv-rel-oam-ran-test")
+                    .build(), OperationResult.builder().id("ManagedElement_21").type(
+                            "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt").module(
+                                    "o-ran-smo-teiv-oam-test").build(), OperationResult.builder().id("relation_12").type(
+                                            "ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU").module(
+                                                    "o-ran-smo-teiv-rel-oam-ran-test").build());
+            ArgumentCaptor<List<String>> auditLogCaptor = ArgumentCaptor.forClass(List.class);
+            Mockito.verify(auditLogger, Mockito.atLeastOnce()).logSuccess(eq(ExecutionStatus.SUCCESS), eq("delete"), any(
+                    CloudEvent.class), nullable(String.class), auditLogCaptor.capture());
+            List<String> actualResponse = auditLogCaptor.getValue();
+            assertEquals(fromOperationResults(operationResults), actualResponse);
         });
 
         testStartTime = OffsetDateTime.now(ZoneOffset.UTC);
@@ -557,7 +596,7 @@ public class EndToEndDbTest {
     }
 
     private void validateWithTimeout(int timeout, Runnable runnable) {
-        Awaitility.await().atMost(timeout, TimeUnit.SECONDS).pollDelay(Duration.ofSeconds(5)).untilAsserted(() -> {
+        Awaitility.await().atMost(timeout, TimeUnit.SECONDS).pollDelay(Duration.ofSeconds(10)).untilAsserted(() -> {
             try {
                 runnable.run();
             } catch (AssertionError e) {

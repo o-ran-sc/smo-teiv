@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 
 import io.micrometer.core.annotation.Timed;
@@ -37,17 +39,21 @@ import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exposure.audit.AuditMapper;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.decorators.api.DecoratorsService;
-import org.oran.smo.teiv.utils.TeivConstants;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.oran.smo.teiv.utils.TeivConstants.REQUEST_MAPPING;
+
 @Slf4j
 @RestController
-@RequestMapping(TeivConstants.REQUEST_MAPPING)
+@RequestMapping(REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("exposure")
 public class DecoratorsRestController implements DecoratorsApi {
@@ -96,5 +102,14 @@ public class DecoratorsRestController implements DecoratorsApi {
             log.error("Exception during service call", ex);
             throw ex;
         }
+    }
+
+    @Bean
+    public FilterRegistrationBean<DecoratorsRequestFilter> decoratorsRequestFilter(final ObjectMapper objectMapper) {
+        FilterRegistrationBean<DecoratorsRequestFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new DecoratorsRequestFilter(loggerHandler, objectMapper, customMetrics));
+        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/decorators");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 }

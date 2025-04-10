@@ -37,10 +37,10 @@
                     {
                         "id": "AntennaCapability_1",
                         "attributes": {
-                            "geranFqBands": {
-                                "attribute_1": "1",
-                                "attribute_2": "2"
-                            }
+                            "geranFqBands": [
+                                "1",
+                                "2"
+                            ]
                         },
                         "sourceIds": [
                             "source1",
@@ -50,10 +50,10 @@
                     {
                         "id": "AntennaCapability_2",
                         "attributes": {
-                            "geranFqBands": {
-                                "attribute_1": "1",
-                                "attribute_2": "2"
-                            }
+                            "geranFqBands": [
+                                "1",
+                                "2"
+                            ]
                         },
                         "sourceIds": [
                             "source1",

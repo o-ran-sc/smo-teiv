@@ -597,6 +597,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status NOT_FOUND()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",
@@ -613,7 +616,7 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status NOT_FOUND()
             headers {
-                contentType('application/json')
+                contentType('application/problem+json')
             }
             body ('''{
                 "status": "NOT_FOUND",
@@ -630,6 +633,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Grammar error",
@@ -645,6 +651,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status NOT_FOUND()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",
@@ -660,6 +669,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Filter Error",
@@ -675,6 +687,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid target filter, only relationship conditions can be provided",

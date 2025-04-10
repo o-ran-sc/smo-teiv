@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +40,16 @@ import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.classifiers.api.ClassifiersService;
 import org.oran.smo.teiv.utils.TeivConstants;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.oran.smo.teiv.utils.TeivConstants.REQUEST_MAPPING;
 
 @Slf4j
 @RestController
@@ -96,5 +102,14 @@ public class ClassifiersRestController implements ClassifiersApi {
             log.error("Exception during service call", ex);
             throw ex;
         }
+    }
+
+    @Bean
+    public FilterRegistrationBean<ClassifiersRequestFilter> classifiersRequestFilter(final ObjectMapper objectMapper) {
+        FilterRegistrationBean<ClassifiersRequestFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new ClassifiersRequestFilter(loggerHandler, objectMapper, customMetrics));
+        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/classifiers");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 }

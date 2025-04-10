@@ -74,11 +74,10 @@ public class InnerFilterCriteria {
         return tables;
     }
 
-    public Set<Pair<String, Field>> getJoinCondition() {
-        Set<Pair<String, Field>> joins = new LinkedHashSet<>();
-        joins.addAll(scope.getJoinCondition());
-
-        return joins;
+    public Set<Pair<String, Field>> getWhereExistsCondition() {
+        Set<Pair<String, Field>> whereExistsCondition = new LinkedHashSet<>();
+        whereExistsCondition.addAll(scope.getWhereExistsConditions());
+        return whereExistsCondition;
     }
 
     public Map<SelectField, Map<SelectField, DataType>> getSelects() {

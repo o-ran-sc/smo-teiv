@@ -410,6 +410,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status BAD_REQUEST()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid status",
@@ -425,6 +428,9 @@ import org.springframework.cloud.contract.spec.Contract
         }
         response {
             status NOT_FOUND()
+            headers {
+                contentType('application/problem+json')
+            }
             body('''{
                 "status": "NOT_FOUND",
                 "message": "Resource Not Found",

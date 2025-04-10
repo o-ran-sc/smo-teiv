@@ -111,7 +111,7 @@ class MergeTopologyProcessorTest {
 
         verify(teivDbService, times(1)).execute(anyList());
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -134,7 +134,7 @@ class MergeTopologyProcessorTest {
 
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -157,7 +157,7 @@ class MergeTopologyProcessorTest {
 
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 
@@ -171,7 +171,7 @@ class MergeTopologyProcessorTest {
         verify(metrics, times(1)).incrementNumUnsuccessfullyParsedMergeCloudEvents();
         verifyNoMoreInteractions(metrics);
 
-        verify(auditLogger).auditLog(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
+        verify(auditLogger).logError(eq(ExecutionStatus.FAILED), eq("merge"), any(CloudEvent.class), anyString(),
                 anyString());
     }
 }

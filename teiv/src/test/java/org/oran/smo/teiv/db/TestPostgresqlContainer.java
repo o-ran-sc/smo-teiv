@@ -57,6 +57,10 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
                     "/pgsqlschema/ingestion-test-model.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/ingestion-test-data.sql"),
                     "/pgsqlschema/ingestion-test-data.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/end-to-end-test-model.sql"),
+                    "/pgsqlschema/end-to-end-test-model.sql");
+            container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/end-to-end-test-data.sql"),
+                    "/pgsqlschema/end-to-end-test-data.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/consumer-data.sql"),
                     "/pgsqlschema/consumer-data.sql");
             container.withCopyFileToContainer(MountableFile.forClasspathResource("pgsqlschema/groups.sql"),
@@ -99,6 +103,17 @@ public class TestPostgresqlContainer extends PostgreSQLContainer<TestPostgresqlC
         try {
             loadSampleData();
             container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/groups.sql", "--set=pguser=test");
+        } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static void loadEndToEndTestData() {
+        try {
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/end-to-end-test-data.sql",
+                    "--set=pguser=test");
+            container.execInContainer("psql", "-U", "test", "-w", "-f", "/pgsqlschema/end-to-end-test-model.sql",
+                    "--set=pguser=test");
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         }

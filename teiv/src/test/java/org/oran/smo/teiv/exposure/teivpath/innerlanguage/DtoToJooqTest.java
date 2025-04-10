@@ -733,12 +733,31 @@ class DtoToJooqTest {
         alb.setChildren(List.of(scopeObject1, scopeObject2));
         Condition actualCondition = alb.getCondition();
         // spotless:off
-        assertEquals(condition(
-            "\n" +
-                "  teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
-                "  and teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\" = 'odu1'\n" +
-                "  and teiv_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"REL_FK_managed-by-managedElement\" is not null\n")
-            .toString(), actualCondition.toString());
+        assertEquals(
+            condition(
+                "\n" +
+                    "  exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
+                    "      and teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\" = 'odu1'\n" +
+                    "      and teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"REL_FK_managed-by-managedElement\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-oam_ManagedElement\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n" +
+                    "  and exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"o-ran-smo-teiv-ran_OCUCPFunction\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"REL_FK_managed-by-managedElement\" is not null\n" +
+                    "      and teiv_data.\"o-ran-smo-teiv-ran_OCUCPFunction\".\"REL_FK_managed-by-managedElement\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-oam_ManagedElement\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n"
+            ).toString(),
+            actualCondition.toString()
+        );
         // spotless:on
     }
 
@@ -775,14 +794,31 @@ class DtoToJooqTest {
         alb.setChildren(List.of(scopeObject1, scopeObject2));
         Condition actualCondition = alb.getCondition();
         // spotless:off
-        assertEquals(condition(
-            "\n" +
-                "  (\n" +
-                "    teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" +
-                "    and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n" +
-                "  )\n" +
-                "  or teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n")
-            .toString(), actualCondition.toString());
+        assertEquals(
+            condition(
+                "\n" +
+                    "  exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" +
+                    "      and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" = 'am1'\n" +
+                    "      and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-equipment_Site\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n" +
+                    "  or exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" +
+                    "      and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-equipment_Site\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n"
+            ).toString(),
+            actualCondition.toString()
+        );
         // spotless:on
     }
 
@@ -793,20 +829,33 @@ class DtoToJooqTest {
                 .innerContainer(List.of()).leaf("id").queryFunction(QueryFunction.CONTAINS).parameter("am1").build());
         Condition actualCondition = scopeObject1.getCondition();
         // spotless:off
-        assertEquals(condition(
-            "\n" +
-                "teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" +
-                "and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" like (" +
-                "('%' || replace(" + "\n"+
-                "replace(" + "\n"+
-                "replace('am1', '!', '!!')," + "\n"+
-                "'%'," + "\n"+
-                "'!%'" + "\n"+
-                ")," + "\n"+
-                "'_'," + "\n"+
-                "'!_'" + "\n"+
-                ")) || '%') escape '!'" + "\n")
-            .toString().replace(" ", ""), actualCondition.toString().replace(" ", ""));
+        String expectedCondition = condition(
+            "exists (\n" +
+                "  select 1 \"one\"\n" +
+                "  from teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\"\n" +
+                "  where (\n" +
+                "    teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\" is not null\n" +
+                "    and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\" like (('%' || replace(\n" +
+                "      replace(\n" +
+                "        replace('am1', '!', '!!'),\n" +
+                "        '%',\n" +
+                "        '!%'\n" +
+                "      ),\n" +
+                "      '_',\n" +
+                "      '!_'\n" +
+                "    )) || '%') escape '!'\n" +
+                "    and teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"REL_FK_installed-at-site\"=" +
+                "teiv_data.\"o-ran-smo-teiv-equipment_Site\".\"id\"\n" +
+                "  )\n" +
+                ")"
+        ).toString();
+
+        // Remove outer parentheses if they exist
+        if (expectedCondition.startsWith("(") && expectedCondition.endsWith(")")) {
+            expectedCondition = expectedCondition.substring(1, expectedCondition.length() - 1);
+        }
+
+        assertEquals(expectedCondition, actualCondition.toString());
         // spotless:on
     }
 
@@ -818,17 +867,32 @@ class DtoToJooqTest {
                 .parameter("ac1").build());
         Condition actualCondition = scopeObject1.getCondition();
         // spotless:off
-        assertEquals(("teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"" +
-            ".\"bSide_AntennaCapability\"like(('%'||replace(" + "\n"+
-            "replace(" + "\n"+
-            "replace('ac1','!','!!')," + "\n"+
-            "'%'," + "\n"+
-            "'!%'" + "\n"+
-            ")," + "\n"+
-            "'_'," + "\n"+
-            "'!_'" + "\n"+
-            "))||'%')escape'!'")
-            .replace(" ", ""), actualCondition.toString().replace(" ", ""));
+        String expectedCondition = condition(
+            "exists (\n" +
+                "  select 1 \"one\"\n" +
+                "  from teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"\n" +
+                "  where (\n" +
+                "    teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\" like (('%' || replace(\n" +
+                "      replace(\n" +
+                "        replace('ac1', '!', '!!'),\n" +
+                "        '%',\n" +
+                "        '!%'\n" +
+                "      ),\n" +
+                "      '_',\n" +
+                "      '!_'\n" +
+                "    )) || '%') escape '!'\n" +
+                "    and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\"=" +
+                "teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\"\n" +
+                "  )\n" +
+                ")"
+        ).toString();
+
+        // Remove outer parentheses if they exist
+        if (expectedCondition.startsWith("(") && expectedCondition.endsWith(")")) {
+            expectedCondition = expectedCondition.substring(1, expectedCondition.length() - 1);
+        }
+
+        assertEquals(expectedCondition, actualCondition.toString());
         // spotless:on
     }
 
@@ -867,11 +931,30 @@ class DtoToJooqTest {
         alb.setChildren(List.of(scopeObject1, scopeObject2));
         Condition actualCondition = alb.getCondition();
         // spotless:off
-        assertEquals(condition(
-            "\n" +
-                "  teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\" = 'ac1'\n" +
-                "  and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
-            .toString(), actualCondition.toString());
+        assertEquals(
+            condition(
+                "\n" +
+                    "  exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\" = 'ac1'\n" +
+                    "      and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n" +
+                    "  and exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n" +
+                    "      and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-equipment_AntennaModule\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n"
+            ).toString(),
+            actualCondition.toString()
+        );
         // spotless:on
     }
 
@@ -889,11 +972,30 @@ class DtoToJooqTest {
         alb.setChildren(List.of(scopeObject1, scopeObject2));
         Condition actualCondition = alb.getCondition();
         // spotless:off
-        assertEquals(condition(
-            "\n" +
-                "  teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\" = 'am1'\n" +
-                "  and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n")
-            .toString(), actualCondition.toString());
+        assertEquals(
+            condition(
+                "\n" + // Keeping the initial newline for consistency
+                    "  exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"aSide_AntennaModule\" = 'am1'\n" +
+                    "      and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-ran_AntennaCapability\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n" +
+                    "  and exists (\n" +
+                    "    select 1 \"one\"\n" +
+                    "    from teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"\n" +
+                    "    where (\n" +
+                    "      teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".id is not null\n" +
+                    "      and teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\"=" +
+                    "teiv_data.\"o-ran-smo-teiv-ran_AntennaCapability\".\"id\"\n" +
+                    "    )\n" +
+                    "  )\n"
+            ).toString(),
+            actualCondition.toString()
+        );
         // spotless:on
     }
 
@@ -1238,14 +1340,14 @@ class DtoToJooqTest {
     }
 
     @Test
-    void testGetJoinCondition() {
+    void testWhereExistsCondition() {
         LogicalBlock slb1 = new ScopeLogicalBlock(ScopeObject.builder("ODUFunction/provided-nrCellDu").topologyObjectType(
                 TopologyObjectType.ASSOCIATION).innerContainer(List.of()).build());
         InnerFilterCriteria innerFilterCriteria1 = InnerFilterCriteria.builder().scope(slb1).build();
         Pair<String, Field> pair1 = new ImmutablePair<>("teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\"", field(
                 "teiv_data.\"o-ran-smo-teiv-ran_NRCellDU\".\"REL_FK_provided-by-oduFunction\"" + "=" + "teiv_data.\"o-ran-smo-teiv-ran_ODUFunction\".\"id\""));
         Assertions.assertEquals(new HashSet(Arrays.asList(pair1)), innerFilterCriteria1.builder().scope(slb1).build()
-                .getJoinCondition());
+                .getWhereExistsCondition());
         LogicalBlock slb2 = new ScopeLogicalBlock(ScopeObject.builder("AntennaCapability/serving-antennaModule")
                 .topologyObjectType(TopologyObjectType.ASSOCIATION).container(ContainerType.ID).innerContainer(List.of())
                 .build());
@@ -1253,6 +1355,6 @@ class DtoToJooqTest {
         Pair<String, Field> pair2 = new ImmutablePair<>("teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\"", field(
                 "teiv_data.\"CFC235E0404703D1E4454647DF8AAE2C193DB402\".\"bSide_AntennaCapability\"" + "=" + "teiv_data.\"o-ran-smo-teiv-ran_AntennaCapability\".\"id\""));
         Assertions.assertEquals(new HashSet(Arrays.asList(pair2)), innerFilterCriteria2.builder().scope(slb2).build()
-                .getJoinCondition());
+                .getWhereExistsCondition());
     }
 }

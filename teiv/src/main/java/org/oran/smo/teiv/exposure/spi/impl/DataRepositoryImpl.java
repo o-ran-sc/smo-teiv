@@ -175,7 +175,7 @@ public class DataRepositoryImpl implements DataRepository {
     }
 
     @Override
-    public boolean isTopologyExist(final Persistable type, final String id) {
+    public boolean doesTopologyExist(final Persistable type, final String id) {
         return runMethodSafe(() -> readDataDslContext.fetchExists(readDataDslContext.selectFrom(table(type.getTableName()))
                 .where(field(name(type.getIdColumnName())).eq(id))));
     }

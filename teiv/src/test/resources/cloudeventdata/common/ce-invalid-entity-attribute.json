@@ -13,7 +13,7 @@
                     {
                         "id": "id1",
                         "attributes": {
-                            "gNBId": -1.0
+                            "gNBId": "abba"
                         },
                         "sourceIds": [
                             "source1",

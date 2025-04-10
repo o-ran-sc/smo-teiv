@@ -9,7 +9,7 @@
     "data": {
         "entities": [
             {
-                "o-ran-smo-teiv-oam:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
+                "o-ran-smo-teiv-oam-test:ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt": [
                     {
                         "id": "ManagedElement_21"
                     }
@@ -18,7 +18,7 @@
         ],
         "relationships": [
             {
-                "o-ran-smo-teiv-rel-oam-ran:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
+                "o-ran-smo-teiv-rel-oam-ran-test:ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU": [
                     {
                         "id": "relation_12"
                     }
