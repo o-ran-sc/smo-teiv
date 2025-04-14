@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright (C) 2025 OpenInfra Foundation Europe. All Rights Reserved
 
-Relationship: Physical RAN
+Relationship: PHYSICAL RAN
 ---------------------------
 
 .. image:: ../_static/data-model/o-ran-smo-teiv-rel-physical-ran-rel.svg

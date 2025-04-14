@@ -119,7 +119,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-physical",
                         "domain": "PHYSICAL",
-                        "revision": "2025-02-10",
+                        "revision": "2025-04-14",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-physical/content"
                         }
@@ -167,7 +167,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-rel-physical-ran",
                         "domain": "REL_PHYSICAL_RAN",
-                        "revision": "2025-02-10",
+                        "revision": "2025-04-14",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-rel-physical-ran/content"
                         }
@@ -536,7 +536,7 @@ import org.springframework.cloud.contract.spec.Contract
                     {
                         "name": "o-ran-smo-teiv-rel-physical-ran",
                         "domain": "REL_PHYSICAL_RAN",
-                        "revision": "2025-02-10",
+                        "revision": "2025-04-14",
                         "content": {
                             "href": "/schemas/o-ran-smo-teiv-rel-physical-ran/content"
                         }

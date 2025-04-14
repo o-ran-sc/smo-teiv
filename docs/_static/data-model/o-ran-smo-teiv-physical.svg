@@ -1,73 +1,77 @@
-<svg width="627px" height="162px"
- viewBox="0.00 0.00 627.00 162.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 158.0)">
+<svg width="627px" height="192px"
+ viewBox="0.00 0.00 627.00 192.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 188.0)">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;physical</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-158 623,-158 623,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-188 623,-188 623,4 -4,4"/>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;physical -->
 <g id="node1" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;physical</title>
-<polygon fill="lightblue" stroke="black" points="158,-87.5 0,-87.5 0,-51.5 158,-51.5 158,-87.5"/>
-<text text-anchor="middle" x="79" y="-65.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;physical</text>
+<polygon fill="lightblue" stroke="black" points="158,-109.5 0,-109.5 0,-73.5 158,-73.5 158,-109.5"/>
+<text text-anchor="middle" x="79" y="-87.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;physical</text>
 </g>
 <!-- PhysicalAppliance -->
 <g id="node4" class="node">
 <title>PhysicalAppliance</title>
-<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="320,-122.5 194,-122.5 194,-86.5 320,-86.5 320,-122.5"/>
-<text text-anchor="middle" x="257" y="-100.8" font-family="Arial" font-size="14.00">PhysicalAppliance</text>
+<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="320,-148.5 194,-148.5 194,-112.5 320,-112.5 320,-148.5"/>
+<text text-anchor="middle" x="257" y="-126.8" font-family="Arial" font-size="14.00">PhysicalAppliance</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;physical&#45;&gt;PhysicalAppliance -->
 <g id="edge1" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;physical&#45;&gt;PhysicalAppliance</title>
-<path fill="none" stroke="black" d="M158.22,-85.06C166.8,-86.76 175.5,-88.49 184,-90.18"/>
-<polygon fill="black" stroke="black" points="183.37,-93.63 193.86,-92.14 184.74,-86.76 183.37,-93.63"/>
+<path fill="none" stroke="black" d="M158.22,-108.83C166.8,-110.73 175.5,-112.66 184,-114.55"/>
+<polygon fill="black" stroke="black" points="183.34,-117.98 193.86,-116.73 184.86,-111.15 183.34,-117.98"/>
 </g>
 <!-- Site -->
 <g id="node5" class="node">
 <title>Site</title>
-<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="284,-60.5 230,-60.5 230,-24.5 284,-24.5 284,-60.5"/>
-<text text-anchor="middle" x="257" y="-38.8" font-family="Arial" font-size="14.00">Site</text>
+<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="284,-82.5 230,-82.5 230,-46.5 284,-46.5 284,-82.5"/>
+<text text-anchor="middle" x="257" y="-60.8" font-family="Arial" font-size="14.00">Site</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;physical&#45;&gt;Site -->
 <g id="edge2" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;physical&#45;&gt;Site</title>
-<path fill="none" stroke="black" d="M158.22,-57.5C179.71,-54.2 201.99,-50.79 219.84,-48.05"/>
-<polygon fill="black" stroke="black" points="220.45,-51.5 229.8,-46.52 219.38,-44.58 220.45,-51.5"/>
+<path fill="none" stroke="black" d="M158.22,-79.5C179.71,-76.2 201.99,-72.79 219.84,-70.05"/>
+<polygon fill="black" stroke="black" points="220.45,-73.5 229.8,-68.52 219.38,-66.58 220.45,-73.5"/>
 </g>
 <!-- PhysicalAppliance&#45;attributes -->
 <g id="node2" class="node">
 <title>PhysicalAppliance&#45;attributes</title>
-<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="619,-154 356,-154 356,-71 619,-71 619,-154"/>
-<text text-anchor="start" x="364.5" y="-138.3" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="577.5" y="-138.3" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="364.5" y="-123.3" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="473.5" y="-123.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="364.5" y="-108.3" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="364.5" y="-93.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;modelName</text>
-<text text-anchor="start" x="577.5" y="-93.3" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="364.5" y="-78.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;vendorName</text>
-<text text-anchor="start" x="577.5" y="-78.3" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="619,-184 356,-184 356,-101 619,-101 619,-184"/>
+<text text-anchor="start" x="364.5" y="-168.3" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="577.5" y="-168.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="364.5" y="-153.3" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="473.5" y="-153.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="364.5" y="-138.3" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="364.5" y="-123.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;modelName</text>
+<text text-anchor="start" x="577.5" y="-123.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="364.5" y="-108.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;vendorName</text>
+<text text-anchor="start" x="577.5" y="-108.3" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- Site&#45;attributes -->
 <g id="node3" class="node">
 <title>Site&#45;attributes</title>
-<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="594,-53 381,-53 381,0 594,0 594,-53"/>
-<text text-anchor="start" x="389.5" y="-37.3" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="552.5" y="-37.3" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="389.5" y="-22.3" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="448.5" y="-22.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="389.5" y="-7.3" font-family="Arial" font-size="14.00"> attributes: </text>
+<polygon fill="#074ee2" fill-opacity="0.254902" stroke="black" points="616,-83 359,-83 359,0 616,0 616,-83"/>
+<text text-anchor="start" x="367.5" y="-67.3" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="574.5" y="-67.3" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="367.5" y="-52.3" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="470.5" y="-52.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="367.5" y="-37.3" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="367.5" y="-22.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;siteLocation</text>
+<text text-anchor="start" x="470.5" y="-22.3" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="367.5" y="-7.3" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;siteName</text>
+<text text-anchor="start" x="574.5" y="-7.3" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- PhysicalAppliance&#45;&gt;PhysicalAppliance&#45;attributes -->
 <g id="edge3" class="edge">
 <title>PhysicalAppliance&#45;&gt;PhysicalAppliance&#45;attributes</title>
-<path fill="none" stroke="black" d="M320.14,-106.68C328.3,-106.96 336.91,-107.26 345.75,-107.57"/>
-<polygon fill="black" stroke="black" points="345.69,-111.07 355.81,-107.92 345.94,-104.08 345.69,-111.07"/>
+<path fill="none" stroke="black" d="M320.14,-133.76C328.3,-134.19 336.91,-134.64 345.75,-135.11"/>
+<polygon fill="black" stroke="black" points="345.64,-138.61 355.81,-135.64 346.01,-131.62 345.64,-138.61"/>
 </g>
 <!-- Site&#45;&gt;Site&#45;attributes -->
 <g id="edge4" class="edge">
 <title>Site&#45;&gt;Site&#45;attributes</title>
-<path fill="none" stroke="black" d="M284.21,-40.66C305.88,-39.15 338.28,-36.88 370.83,-34.6"/>
-<polygon fill="black" stroke="black" points="371.19,-38.08 380.92,-33.89 370.7,-31.1 371.19,-38.08"/>
+<path fill="none" stroke="black" d="M284.21,-61.86C300.9,-60.18 323.95,-57.86 348.54,-55.39"/>
+<polygon fill="black" stroke="black" points="349.18,-58.84 358.77,-54.36 348.47,-51.88 349.18,-58.84"/>
 </g>
 </g>
 </svg>

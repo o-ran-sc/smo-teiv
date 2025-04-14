@@ -3,13 +3,13 @@ module o-ran-smo-teiv-rel-physical-ran {
   namespace "urn:o-ran:smo-teiv-rel-physical-ran";
   prefix or-teiv-rel-phyran;
 
-  import o-ran-smo-teiv-common-yang-types {prefix or-teiv-types; }
+  import o-ran-smo-teiv-common-yang-types { prefix or-teiv-types; }
 
-  import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext;}
+  import o-ran-smo-teiv-common-yang-extensions { prefix or-teiv-yext; }
 
-  import o-ran-smo-teiv-physical {prefix or-teiv-physical; }
+  import o-ran-smo-teiv-physical { prefix or-teiv-physical; }
 
-  import o-ran-smo-teiv-ran {prefix or-teiv-ran; }
+  import o-ran-smo-teiv-ran { prefix or-teiv-ran; }
 
   organization "O-RAN Alliance";
 
@@ -20,8 +20,9 @@ module o-ran-smo-teiv-rel-physical-ran {
     "Physical to RAN Logical topology domain model.
 
     This model contains the topology relationship between the
-	physical domain and the RAN domain.
+    physical domain and the RAN domain.
 
+    Modifications Copyright (C) 2025 OpenInfra Foundation Europe
     Copyright 2025 the O-RAN Alliance.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
@@ -48,6 +49,11 @@ module o-ran-smo-teiv-rel-physical-ran {
     contributors may be used to endorse or promote products derived from
     this software without specific prior written permission.";
 
+    revision "2025-04-14" {
+        description "Formatting.";
+        or-teiv-yext:label 1.1.0;
+    }
+
   revision "2025-02-10" {
     description "Initial revision.";
       or-teiv-yext:label 1.0.0;
@@ -57,10 +63,10 @@ module o-ran-smo-teiv-rel-physical-ran {
   or-teiv-yext:domain REL_PHYSICAL_RAN;
 
   or-teiv-yext:biDirectionalTopologyRelationship PHYSICALAPPLIANCE_SERVES_ODUFUNCTION { // 1..n to 1..m
-
     uses or-teiv-types:Top_Grp_Type;
     uses or-teiv-types:Origin_Relationship_Mapping_Grp;
     key id;
+
     description "The aSide of this relationship is an instance of the PhysicalAppliance type.
     The bSide of this relationship is an instance of the ODUFunction type.";
 
@@ -78,11 +84,11 @@ module o-ran-smo-teiv-rel-physical-ran {
   }
 
   or-teiv-yext:biDirectionalTopologyRelationship PHYSICALAPPLIANCE_SERVES_OCUCPFUNCTION { // 1..n to 1..m
-
     uses or-teiv-types:Top_Grp_Type;
     uses or-teiv-types:Origin_Relationship_Mapping_Grp;
     key id;
-    description "The aSide of this relationship is an instance of the PhysicalAppliance type. 
+
+    description "The aSide of this relationship is an instance of the PhysicalAppliance type.
     The bSide of this relationship is an instance of the OCUCPFunction type.";
 
     leaf-list served-ocucpFunction {
@@ -99,10 +105,10 @@ module o-ran-smo-teiv-rel-physical-ran {
   }
 
   or-teiv-yext:biDirectionalTopologyRelationship PHYSICALAPPLIANCE_SERVES_OCUUPFUNCTION { // 1..n to 1..m
-
     uses or-teiv-types:Top_Grp_Type;
     uses or-teiv-types:Origin_Relationship_Mapping_Grp;
     key id;
+
     description "The aSide of this relationship is an instance of the PhysicalAppliance type.
         The bSide of this relationship is an instance of the OCUUPFunction type.";
 
@@ -120,23 +126,23 @@ module o-ran-smo-teiv-rel-physical-ran {
   }
 
   or-teiv-yext:biDirectionalTopologyRelationship PHYSICALAPPLIANCE_SERVES_NEARRTRICFUNCTION { // 1..n to 1..m
-
     uses or-teiv-types:Top_Grp_Type;
     uses or-teiv-types:Origin_Relationship_Mapping_Grp;
     key id;
+
     description "The aSide of this relationship is an instance of the PhysicalAppliance type.
         The bSide of this relationship is an instance of the NearRTRICFunction type.";
 
     leaf-list served-nearRTRICFunction {
         type instance-identifier;
         description "NearRTRICFunction served by PhysicalAppliance.";
-        or-teiv-yext:aSide or-teiv-physical:PhysicalAppliance;   
+        or-teiv-yext:aSide or-teiv-physical:PhysicalAppliance;
     }
 
     leaf-list serving-physicalAppliance {
         type instance-identifier;
         description "PhysicalAppliance serving NearRTRICFunction.";
-        or-teiv-yext:bSide or-teiv-ran:NearRTRICFunction; 
+        or-teiv-yext:bSide or-teiv-ran:NearRTRICFunction;
     }
   }
 }

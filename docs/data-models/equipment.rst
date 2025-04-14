@@ -3,7 +3,7 @@
 .. Copyright (C) 2024 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
-Equipment
+EQUIPMENT
 ---------
 
 .. image:: ../_static/data-model/o-ran-smo-teiv-equipment.svg

@@ -441,6 +441,8 @@ ALTER TABLE ONLY teiv_data."o-ran-smo-teiv-physical_PhysicalAppliance" ALTER COL
 
 CREATE TABLE IF NOT EXISTS teiv_data."o-ran-smo-teiv-physical_Site" (
 	"id"			TEXT,
+	"siteLocation"			jsonb,
+	"siteName"			TEXT,
 	"CD_sourceIds"			jsonb,
 	"CD_classifiers"			jsonb,
 	"CD_decorators"			jsonb,
@@ -1525,6 +1527,8 @@ CREATE INDEX IF NOT EXISTS "IDX_CD60BBA5629EE3D5882EE9907BAB87E9E18BF2A4" ON tei
 CREATE INDEX IF NOT EXISTS "IDX_1D52205C41F3233591749A18B5ED604A4A6B5144" ON teiv_data."o-ran-smo-teiv-physical_PhysicalAppliance" USING GIN (("CD_classifiers"::TEXT) gin_trgm_ops);
 
 CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-physical_PhysicalAppliance_CD_decorators" ON teiv_data."o-ran-smo-teiv-physical_PhysicalAppliance" USING GIN ("CD_decorators");
+
+CREATE INDEX IF NOT EXISTS "IDX_GIN_o-ran-smo-teiv-physical_Site_siteLocation" ON teiv_data."o-ran-smo-teiv-physical_Site" USING GIN ("siteLocation");
 
 CREATE INDEX IF NOT EXISTS "IDX_555DE28C10DDDB6CB6AB619D5C71E93068D432FB" ON teiv_data."o-ran-smo-teiv-physical_Site" USING GIN (("CD_sourceIds"::TEXT) gin_trgm_ops);
 

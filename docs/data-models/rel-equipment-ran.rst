@@ -3,7 +3,7 @@
 .. Copyright (C) 2024 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
-Relationship: Equipment RAN
+Relationship: EQUIPMENT RAN
 ---------------------------
 
 .. image:: ../_static/data-model/o-ran-smo-teiv-rel-equipment-ran-rel.svg

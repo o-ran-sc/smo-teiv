@@ -17,6 +17,7 @@ module o-ran-smo-teiv-physical {
     This model contains the topology entities and relations in the
     Physical domain.
 
+    Modifications Copyright (C) 2025 OpenInfra Foundation Europe
     Copyright 2025 the O-RAN Alliance.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
@@ -42,6 +43,11 @@ module o-ran-smo-teiv-physical {
     * Neither the Members of the O-RAN Alliance nor the names of its
     contributors may be used to endorse or promote products derived from
     this software without specific prior written permission.";
+
+  revision "2025-04-14" {
+    description "Added attributes container to Site";
+    or-teiv-yext:label 1.1.0;
+  }
 
   revision "2025-02-10" {
     description "Initial revision.";
@@ -76,15 +82,18 @@ module o-ran-smo-teiv-physical {
     uses or-teiv-types:Top_Grp_Type;
     uses or-teiv-types:Origin_Entity_Mapping_Grp;
     key id;
-    
+
     description "Represents the Site in the Physical domain";
-    container siteLocation {
-        description "Representation of physical site location";
-        uses or-teiv-types:GeoInformation;
-    }
-    leaf siteName {
-      type string;
-      description "Human readable name of the physical site as identified by the mobile network operator";
+
+    container attributes {
+      container siteLocation {
+          description "Representation of physical site location";
+          uses or-teiv-types:GeoInformation;
+      }
+      leaf siteName {
+        type string;
+        description "Human readable name of the physical site as identified by the mobile network operator";
+      }
     }
   }
 

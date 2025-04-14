@@ -9,7 +9,6 @@ PHYSICAL
   :width: 900
 
 .. image:: ../_static/data-model/o-ran-smo-teiv-physical-rel.svg
-  :width: 900
 
 .. literalinclude:: ../../teiv/src/main/resources/models/o-ran-smo-teiv-physical.yang
    :language: yang
