@@ -1,0 +1,89 @@
+{
+    "_3gpp-common-managed-element:ManagedElement": [
+        {
+            "id": "ManagedElement-004",
+            "attributes": {
+                "dnPrefix": "SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR004",
+                "priorityLabel": 1
+            },
+            "_3gpp-nr-nrm-gnbcucpfunction:GNBCUCPFunction": [
+                {
+                    "id": "GNBCUCPFunction-003",
+                    "attributes": {
+                        "gNBCUName": "gnbcucp003",
+                        "gNBId": "3",
+                        "pLMNId": {
+                            "mcc": "01",
+                            "mnc": "234"
+                        },
+                        "gNBIdLength": "23"
+                    },
+                    "_3gpp-nr-nrm-nrcellcu:NRCellCU": [
+                        {
+                            "id": "NRCellCU-003",
+                            "attributes": {
+                                "cellLocalId": 3,
+                                "nRTAC": 50,
+                                "nCI": 500,
+                                "primaryPLMNId": {
+                                    "mcc": "03",
+                                    "mnc": "345"
+                                }
+                            }
+                        },
+                        {
+                            "id": "NRCellCU-004",
+                            "attributes": {
+                                "cellLocalId": 4,
+                                "nRTAC": 60,
+                                "nCI": 600,
+                                "primaryPLMNId": {
+                                    "mcc": "04",
+                                    "mnc": "456"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "GNBCUCPFunction-004",
+                    "attributes": {
+                        "gNBCUName": "gnbcucp004",
+                        "gNBId": "4",
+                        "pLMNId": {
+                            "mcc": "01",
+                            "mnc": "234"
+                        },
+                        "gNBIdLength": "23"
+                    },
+                    "_3gpp-nr-nrm-nrcellcu:NRCellCU": [
+                        {
+                            "id": "NRCellCU-005",
+                            "attributes": {
+                                "cellLocalId": 5,
+                                "nRTAC": 50,
+                                "nCI": 500,
+                                "primaryPLMNId": {
+                                    "mcc": "05",
+                                    "mnc": "567"
+                                }
+                            }
+                        },
+                        {
+                            "id": "NRCellCU-006",
+                            "attributes": {
+                                "cellLocalId": 6,
+                                "nRTAC": 60,
+                                "nCI": 600,
+                                "primaryPLMNId": {
+                                    "mcc": "06",
+                                    "mnc": "678"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
