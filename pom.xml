@@ -47,6 +47,7 @@
         <module>yang-parser</module>
         <module>pgsql-schema-generator</module>
         <module>teiv</module>
+        <module>adapters</module>
     </modules>
 
     <properties>
