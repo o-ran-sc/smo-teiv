@@ -3,6 +3,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bcc7f53b_ce5713c4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-04-22T12:00:29Z",
+      "side": 1,
+      "message": "add E1 link between cu-cu and cu-cp",
+      "revId": "dfc06c7fcaf6cb10d1741d57c5fb6d7cb7d9e70c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ba3cb14_68594c8d",
+        "filename": "teiv/src/main/resources/models/o-ran-smo-teiv-ran.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-04-22T12:00:29Z",
+      "side": 1,
+      "message": "add for cu-cp and cu-up as well",
+      "range": {
+        "startLine": 636,
+        "startChar": 51,
+        "endLine": 636,
+        "endChar": 87
+      },
+      "revId": "dfc06c7fcaf6cb10d1741d57c5fb6d7cb7d9e70c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9d81f278_47667bd9",
         "filename": "teiv/src/main/resources/models/o-ran-smo-teiv-ran.yang",
         "patchSetId": 3
@@ -14,6 +54,29 @@
       "writtenOn": "2025-04-22T11:59:36Z",
       "side": 1,
       "message": "leaf\n\nDU to CUCP is 1:1",
+      "range": {
+        "startLine": 935,
+        "startChar": 8,
+        "endLine": 935,
+        "endChar": 17
+      },
+      "revId": "dfc06c7fcaf6cb10d1741d57c5fb6d7cb7d9e70c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38e33dc5_8084955f",
+        "filename": "teiv/src/main/resources/models/o-ran-smo-teiv-ran.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 935,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-04-22T12:00:29Z",
+      "side": 1,
+      "message": "should be leaf. 1 to 1",
       "range": {
         "startLine": 935,
         "startChar": 8,
