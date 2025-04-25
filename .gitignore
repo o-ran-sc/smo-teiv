@@ -25,7 +25,30 @@ target
 **/.openapi-generator
 .openapi-generator-ignore
 yang-parser/yang-parser-jar/src/main/resources/modules/*.yang
+# The following ietf models are temporarily missing and can't be downloaded so are included here
+!yang-parser/yang-parser-jar/src/main/resources/modules/ietf-inet-types-2019-11-04.yang
+!yang-parser/yang-parser-jar/src/main/resources/modules/ietf-yang-types-2019-11-04.yang
+#
 yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf*.yang
+# The following ietf models are temporarily missing and can't be downloaded so are included here
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-inet-types-2019-11-04.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-yang-types-2019-11-04.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-crypto-types-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-keystore-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-netconf-client-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-netconf-server-2018-09-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-ssh-client-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-ssh-common-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-ssh-server-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-tcp-client-2019-10-18.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-tcp-common-2019-10-18.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-tcp-server-2019-10-18.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-tls-client-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-tls-common-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-tls-server-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-truststore-2019-11-20.yang
+!yang-parser/yang-parser-jar/src/test/resources/_orig-modules/ietf-yang-push-2019-05-21.yang
+#
 yang-parser/yang-parser-jar/src/test/resources/_orig-modules/_3gpp*.yang
 yang-parser/yang-parser-jar/src/test/resources/_orig-modules/iana*.yang
 pgsql-schema-generator/src/test/resources/generate-defaults/import/*.yang
