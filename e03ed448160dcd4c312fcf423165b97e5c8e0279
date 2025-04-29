@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7a4528b_d4f91443",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-04-29T12:18:34Z",
+      "side": 1,
+      "message": "Question: Should we use the Parser to create the data elements for the events? Rather than JSON strings. \nIt would ensure the events are model-compliant .. but its a fair bit of overhead. \n\nOtherwise looks good to me for now.",
+      "revId": "e03ed448160dcd4c312fcf423165b97e5c8e0279",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c2865ff_46522962",
+        "filename": "adapters/ncmp-to-teiv-adapter/src/main/java/org/oran/smo/ncmp_to_teiv_adapter/KafkaEventProducer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-04-29T12:18:34Z",
+      "side": 1,
+      "message": "could be debug - might be many.",
+      "range": {
+        "startLine": 40,
+        "startChar": 12,
+        "endLine": 40,
+        "endChar": 16
+      },
+      "revId": "e03ed448160dcd4c312fcf423165b97e5c8e0279",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
