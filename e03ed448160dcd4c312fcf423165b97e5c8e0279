@@ -39,6 +39,30 @@
       },
       "revId": "e03ed448160dcd4c312fcf423165b97e5c8e0279",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14ac8e8c_e03d90b9",
+        "filename": "adapters/ncmp-to-teiv-adapter/src/main/java/org/oran/smo/ncmp_to_teiv_adapter/KafkaEventProducer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1002461
+      },
+      "writtenOn": "2025-05-02T08:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c2865ff_46522962",
+      "range": {
+        "startLine": 40,
+        "startChar": 12,
+        "endLine": 40,
+        "endChar": 16
+      },
+      "revId": "e03ed448160dcd4c312fcf423165b97e5c8e0279",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
