@@ -77,7 +77,8 @@ public class ManagedElement extends AbstractEntity {
         if (!entityMap.containsKey(ranFunctionType)) {
             entityMap.put(ranFunctionType, new ArrayList<>());
         }
-        entityMap.get(ranFunctionType).add(ranFunction.addTeivEntitiesAndRelationships(entityMap, relationshipMap, getId()));
+        entityMap.get(ranFunctionType).add(ranFunction.addTeivEntitiesAndRelationships(entityMap, relationshipMap,
+                getId()));
     }
 
     private void addRelationshipWithRanFunction(AbstractFunction ranFunction, Map<String, List<Object>> relationshipMap) {
