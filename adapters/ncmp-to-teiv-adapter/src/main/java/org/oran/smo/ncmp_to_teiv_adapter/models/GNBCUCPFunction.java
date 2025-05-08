@@ -72,7 +72,8 @@ public class GNBCUCPFunction extends AbstractFunction {
         String gnbcucpFunctionFdn = "urn:oran:smo:teiv:" + getId();
         String managedElementFdn = "urn:oran:smo:teiv:" + managedElementId;
         return Map.of("id", String.format("urn:oran:smo:teiv:%s_MANAGES_%s", managedElementId, getId()), "aSide",
-            managedElementFdn, "bSide", gnbcucpFunctionFdn, "sourceIds", List.of(managedElementFdn, gnbcucpFunctionFdn));
+                managedElementFdn, "bSide", gnbcucpFunctionFdn, "sourceIds", List.of(managedElementFdn,
+                        gnbcucpFunctionFdn));
     }
 
     @Override
