@@ -77,20 +77,24 @@ public class NcmpToTeivIngestion {
         ManagedElementWrapper wrapper = ncmpPollingClient.getAllManagedElementsFromNcmp(cmHandle);
         Map<String, Object> json = wrapper.toTeivCloudEventPayload();
         try {
-            sendCloudEvent(json, "merge");
-
             if (addedCmHandles.containsKey(cmHandle)) {
                 Map<String, Object> previousJson = (Map<String, Object>) addedCmHandles.get(cmHandle);
-
                 Map<String, Object> toDeleteJson = new HashMap<>();
-                toDeleteJson.put("entities", List.of(findMissingItems(extractEntities(previousJson), extractEntities(json),
-                        "entities")));
-                toDeleteJson.put("relationships", List.of(findMissingItems(extractRelationships(previousJson),
-                        extractRelationships(json), "relationships")));
-
-                sendCloudEvent(toDeleteJson, "delete");
+                Map<String, Object> missingEntities = findMissingItems(extractEntities(previousJson), extractEntities(json),
+                        "entities");
+                if (!missingEntities.isEmpty()) {
+                    toDeleteJson.put("entities", List.of(missingEntities));
+                }
+                Map<String, Object> missingRelationships = findMissingItems(extractRelationships(previousJson),
+                        extractRelationships(json), "relationships");
+                if (!missingRelationships.isEmpty()) {
+                    toDeleteJson.put("relationships", List.of(missingRelationships));
+                }
+                if (!toDeleteJson.isEmpty()) {
+                    sendCloudEvent(toDeleteJson, "delete");
+                }
             }
-
+            sendCloudEvent(json, "merge");
             addedCmHandles.put(cmHandle, json);
         } catch (JsonProcessingException e) {
             log.error("Error processing data from cmHandle {}. Event not sent. Error message: {}", cmHandle, e
@@ -113,7 +117,8 @@ public class NcmpToTeivIngestion {
             List<Map<String, Object>> currentList = currentItems.getOrDefault(key, List.of());
             List<Map<String, Object>> previousList = previousItems.get(key);
 
-            List<Map<String, Object>> missing = previousList.stream().filter(item -> !currentList.contains(item)).toList();
+            List<Map<String, Object>> missing = previousList.stream().filter(item -> currentList.stream().noneMatch(
+                    currentItem -> currentItem.get("id").equals(item.get("id")))).toList();
             if (!missing.isEmpty()) {
                 missingItems.put(key, missing);
                 log.info("Missing {} for key {}: {}", itemType, key, missing);

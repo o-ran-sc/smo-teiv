@@ -56,7 +56,7 @@ public class NcmpPollingClient {
     public List<String> getAllCmHandlesFromNcmp() {
         try {
             HttpUrl url = HttpUrl.parse(baseUrl + searchesUrl).newBuilder().build();
-            String requestBody = "{\"conditions\": [{\"name\": \"hasAllModules\"}]}";
+            String requestBody = "{\"cmHandleQueryParameters\":[{\"conditionName\":\"cmHandleWithCpsPath\",\"conditionParameters\":[{\"cpsPath\":\"//state[@cm-handle-state='READY']\"}]}]}";
             RequestBody body = RequestBody.create(requestBody, MediaType.parse("application/json"));
 
             Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json")
