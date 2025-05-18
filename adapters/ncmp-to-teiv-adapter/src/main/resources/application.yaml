@@ -15,18 +15,29 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
+spring:
+  application:
+    name: ncmp-to-teiv-adapter
+  kafka:
+    bootstrap-servers: localhost:9093
+    security:
+      enabled: false
+      protocol: SASL_PLAINTEXT
+      properties:
+        sasl.mechanism: SCRAM-SHA-512
+        sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="" password="";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.cloudevents.kafka.CloudEventSerializer
 
-spring.application.name=ncmp-to-teiv-adapter
+kafka:
+  topic: topology-inventory-ingestion
 
-spring.kafka.bootstrap-servers=localhost:9093
-spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
-spring.kafka.producer.value-serializer=io.cloudevents.kafka.CloudEventSerializer
-kafka.topic=topology-inventory-ingestion
+send-sample-ocucp-event: false
 
-send-sample-ocucp-event=false
-
-polling.base-url=http://localhost:8883/ncmp/v1/ch
-polling.data-store-url=/data/ds/ncmp-datastore:passthrough-running
-polling.searches-url=/id-searches
-polling.include-descendants=false
-polling.interval=60000
+polling:
+  base-url: http://localhost:8883/ncmp/v1/ch
+  data-store-url: /data/ds/ncmp-datastore:passthrough-running
+  searches-url: /id-searches
+  include-descendants: false
+  interval: 60000

@@ -26,7 +26,7 @@ RUN apt-get update && \
 ARG JAR
 WORKDIR /opt/app/teiv
 
-ADD src/main/resources/application.properties /opt/app/teiv/config/application.properties
+ADD src/main/resources/application.yaml /opt/app/teiv/config/application.yaml
 ADD target/${JAR} /opt/app/teiv/ncmp-to-teiv-adapter.jar
 
 CMD ["/bin/sh", "-c", "java -jar ncmp-to-teiv-adapter.jar"]

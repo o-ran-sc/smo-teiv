@@ -20,6 +20,8 @@
 package org.oran.smo.ncmp_to_teiv_adapter;
 
 import io.cloudevents.CloudEvent;
+import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import io.cloudevents.kafka.CloudEventSerializer;
@@ -34,10 +36,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaProducerConfig {
+
+    private final KafkaSecurityConfig securityConfig;
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
+
+    @Value("${spring.kafka.security.enabled}")
+    private boolean securityEnabled;
 
     @Bean
     public ProducerFactory<String, CloudEvent> producerFactory() {
@@ -45,7 +53,10 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class);
-
+        if (securityConfig.isEnabled()) {
+            configProps.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, securityConfig.getProtocol());
+            configProps.putAll(securityConfig.getProperties());
+        }
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
