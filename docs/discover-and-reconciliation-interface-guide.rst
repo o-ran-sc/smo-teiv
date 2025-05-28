@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2024 Nordix Foundation. All rights Reserved
+.. Copyright (C) 2024-2025 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
 Discover and Reconciliation Interface Guide
@@ -77,61 +77,63 @@ Payload:
 .. code:: json
 
     {
-       "entities": [
-         {
-           "o-ran-smo-teiv-equipment:Site": [
-             {
-               "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
-               "attributes": {
-                 "name": "Dublin",
-                 "geo-location": {
-                   "latitude": 41.73297,
-                   "longitude": -73.007696
-                 }
-               },
+      "entities": [
+        {
+          "o-ran-smo-teiv-equipment:Site": [
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:Site=8864DE35AF8F7552810308401DE712AD07877BBA7568860029BCECD3667F7A9D6DF5DFDA72BF475E5153BBE3035AAC229AD63DECC539C541B45598509088DB4E",
+              "attributes": {
+                "name": "Dublin",
+                "geo-location": {
+                  "latitude": 41.73297,
+                  "longitude": -73.007696
+                }
+              },
                "sourceIds": [
-                  "urn:oran:smo:teiv:Site=1"
+                  "urn:oran:smo:teiv:atoll:Site=1"
                ]
-             }
-           ]
-         },
-         {
-           "o-ran-smo-teiv-equipment:AntennaModule": [
-             {
-               "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-               "attributes": {
-                 "geo-location": {
-                   "latitude": 41.73297,
-                   "longitude": -73.007696
-                 },
-                 "sourceIds": [
-                    "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
-                    "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
-                    "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
-                 ]
-               }
-             }
-           ]
-         }
-       ],
-       "relationships": [
-         {
-           "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-             {
-               "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
-               "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-               "bSide": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
+            }
+          ]
+        },
+        {
+          "o-ran-smo-teiv-equipment:AntennaModule": [
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
+              "attributes": {
+                "geo-location": {
+                  "latitude": 41.73297,
+                  "longitude": -73.007696
+                }
+              },
+                "sourceIds": [
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
+                  "urn:cmHandle:72538B1D598FA5A901D945A187D5542A"
+              ]
+            }
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=E725018642FCC6D9BD7EB846DF31F080B878420A9C5E002CFB39F2AAEB6D3D66E655A132DB0852C6984B2052ABB62B1815A9C802A35ED865F8992328F1144C25",
+              "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
+              "bSide": "urn:o-ran:smo:teiv:sha512:Site=8864DE35AF8F7552810308401DE712AD07877BBA7568860029BCECD3667F7A9D6DF5DFDA72BF475E5153BBE3035AAC229AD63DECC539C541B45598509088DB4E",
                "sourceIds": [
                   "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
                   "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
                   "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
-                  "urn:oran:smo:teiv:Site=1"
+                  "urn:cmHandle:72538B1D598FA5A901D945A187D5542A",
+                  "urn:oran:smo:teiv:atoll:Site=1"
                ]
-             }
-           ]
-         }
-       ]
-   }
+            }
+          ]
+        }
+      ]
+    }
 
 Example of modify enriched Topology & Inventory with geographical data
 ----------------------------------------------------------------------
@@ -159,62 +161,64 @@ Payload:
 
 .. code:: json
 
-   {
-     "entities": [
-       {
-         "o-ran-smo-teiv-equipment:Site": [
-           {
-             "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
-             "attributes": {
-               "name": "Dublin",
-               "geo-location": {
-                 "latitude": 52.73297,
-                 "longitude": -84.007696
-               }
-             },
-             "sourceIds": [
-                "urn:oran:smo:teiv:atoll:Site=1"
-             ]
-           }
-         ]
-       },
-       {
-         "o-ran-smo-teiv-equipment:AntennaModule": [
-           {
-             "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-             "attributes": {
-               "geo-location": {
-                 "latitude": 52.73297,
-                 "longitude": -84.007696
-               },
+    {
+      "entities": [
+        {
+          "o-ran-smo-teiv-equipment:Site": [
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:Site=8864DE35AF8F7552810308401DE712AD07877BBA7568860029BCECD3667F7A9D6DF5DFDA72BF475E5153BBE3035AAC229AD63DECC539C541B45598509088DB4E",
+              "attributes": {
+                "name": "Dublin",
+                "geo-location": {
+                  "latitude": 52.73297,
+                  "longitude": -84.007696
+                }
+              },
                "sourceIds": [
-                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
-                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
-                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1"
+                  "urn:oran:smo:teiv:atoll:Site=1"
                ]
-             }
-           }
-         ]
-       }
-     ],
-     "relationships": [
-       {
-         "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-           {
-             "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
-             "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=1FEBF137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC15323F1906228E93CFA4A1DB37D50252B3AFE6AEC9860E2CEA4A77BB3A25C9EA45DEDA87E765",
-             "bSide": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
-             "sourceIds": [
-                "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1",
-                "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1",
-                "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=1,RetSubUnit=1",
-                "urn:oran:smo:teiv:atoll:Site=1"
-             ]
-           }
-         ]
-       }
-     ]
-   }
+            }
+          ]
+        },
+        {
+          "o-ran-smo-teiv-equipment:AntennaModule": [
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:AntennaModule=3FF03633DCCAF1C44409FA0D0D3C32F00635DDAD5363A5E175A04A4AE5125641FCC6D727801275E8E6879AFB6D342B3E9473CC1307A702E41389882ECB513C8A",
+              "attributes": {
+                "geo-location": {
+                  "latitude": 52.73297,
+                  "longitude": -84.007696
+                }
+              },
+                "sourceIds": [
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
+                  "urn:cmHandle:72538B1D598FA5A901D945A187D5542A"
+                ]
+            }
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=3F3C6E552965769E31FB0E25FE805A25981B47A50AE3115BE5C74EB018866D79524A4D30D92E30EF547A3208CA8F88041136608319826B577C66E63A1CB0AA82",
+              "aSide": "urn:o-ran:smo:teiv:sha512:AntennaModule=3FF03633DCCAF1C44409FA0D0D3C32F00635DDAD5363A5E175A04A4AE5125641FCC6D727801275E8E6879AFB6D342B3E9473CC1307A702E41389882ECB513C8A",
+              "bSide": "urn:o-ran:smo:teiv:sha512:Site=8864DE35AF8F7552810308401DE712AD07877BBA7568860029BCECD3667F7A9D6DF5DFDA72BF475E5153BBE3035AAC229AD63DECC539C541B45598509088DB4E",
+               "sourceIds": [
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
+                  "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
+                  "urn:cmHandle:72538B1D598FA5A901D945A187D5542A",
+                  "urn:oran:smo:teiv:atoll:Site=1"
+               ]
+            }
+          ]
+        }
+      ]
+    }
 
 Example of delete enriched data from Topology & Inventory
 ---------------------------------------------------------
@@ -243,35 +247,26 @@ Payload:
 
 .. code:: json
 
-   {
+    {
       "entities" : [
         {
           "o-ran-smo-teiv-equipment:Site": [
-              {
-                  "id": "urn:o-ran:smo:teiv:sha512:Site=1F137533843657E9E9DBE60DBD86B045A057DB6D04B6A07AC153",
-                  "sourceIds": [
-                     "urn:oran:smo:teiv:atoll:Site=1"
-                  ]
-              }
+            {
+              "id": "urn:o-ran:smo:teiv:sha512:Site=8864DE35AF8F7552810308401DE712AD07877BBA7568860029BCECD3667F7A9D6DF5DFDA72BF475E5153BBE3035AAC229AD63DECC539C541B45598509088DB4E"
+            }
           ]
         }
       ],
       "relationships": [
         {
           "o-ran-smo-teiv-equipment:ANTENNAMODULE_INSTALLED_AT_SITE": [
-              {
-                  "id" : "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=TlJDZWxsRFU6U3ViTmV0d29yaz1FdXJvcGUsU3ViTmV0d29yaz1JcmVs=",
-                  "sourceIds": [
-                     "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2",
-                     "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaUnit=2,AntennaSubunit=1",
-                     "urn:3gpp:dn:ManagedElement=NR01,Equipment=1,AntennaUnitGroup=1,AntennaNearUnit=2,RetSubUnit=1",
-                     "urn:oran:smo:teiv:atoll:Site=1"
-                  ]
-              }
+            {
+              "id" : "urn:o-ran:smo:teiv:sha512:ANTENNAMODULE_INSTALLED_AT_SITE=3F3C6E552965769E31FB0E25FE805A25981B47A50AE3115BE5C74EB018866D79524A4D30D92E30EF547A3208CA8F88041136608319826B577C66E63A1CB0AA82"
+            }
           ]
         }
       ]
-   }
+    }
 
 How to create and produce an event
 ==================================

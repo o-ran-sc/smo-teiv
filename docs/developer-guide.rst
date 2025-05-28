@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2024 Nordix Foundation. All rights Reserved
+.. Copyright (C) 2024-2025 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
 Developer Guide
@@ -15,51 +15,40 @@ topology and inventory data in your network.
 Introducing topology and inventory data
 =======================================
 
-Topology and inventory data is the information that represents entities
-in a telecommunications network and the relationships between them that
-provide insight into a particular aspect of the network of importance to
-specific use cases. Topology and inventory data can be derived from
-inventory, configuration, or other data. Topology & Inventory is being
-updated autonomously based on changes in the network.
+Topology and inventory data is the information that represents the entities
+in a telecommunications network and the relationships between them. Topology
+and inventory data can be derived from inventory and configuration. Topology
+& Inventory is being updated autonomously based on changes in the network.
 
 Topology & Inventory supports several topology and inventory domains,
 see the :doc:`Data Models </data-models-guide>` for
-details on the topology and inventory model. The understanding of the
-model is important to enable a user making queries on topology and
-inventory data. The entities are modeled as managed objects (found under
-the schema in the data dictionary) and grouped together in modules based
-on functionality. See
+details on the topology and inventory models. The understanding of the model
+is important to enable a user making queries on topology and inventory data.
+The entities are modeled as managed objects (under the schema in the data
+dictionary) and grouped together in modules based on functionality. For
+additional information, see
 :ref:`Supported domains <Supported domains>`
-for the list of the topology and inventory domains currently supported
-in Topology & Inventory capability.
 
 Concepts
 --------
 
-The building blocks of the Topology & Inventory are domains, entities,
-and the relationships between each other. From a graph perspective,
-entities are the vertices and relationships are the edges. These two
-components are part of a subgraph, or the so-called domain. A
-relationship can go beyond a single domain, since it can happen that the
-two entities come from two separate ones. In this particular case, they
-have a cross-domain relationship.
+The building blocks of the Topology & Inventory are domains, entities, and
+the relationships between each other. From a graph perspective, entities are
+the vertices and relationships are the edges. These two components are part of
+a subgraph, or the so-called domain. A relationship can be a cross-domain
+relationship when its entities belong to different domains.
 
 Domain
 ~~~~~~
 
-A domain is a grouping of topology and inventory entities that handles
-topology and inventory data. Topology and inventory data is the
-information that represents entities in a telecommunications network and
-the relationships between them that provides insight into a particular
-aspect of the network of import to specific use cases. Topology and
-inventory data can be derived from inventory, configuration, or other
-data. Therefore, the topology and inventory model must define what the
-telecoms network entities and relationships are. More information can be
-found in :ref:`Supported domains <Supported domains>`.
-The Topology Exposure and Inventory Management (TEIV) domain is the
-parent domain used for entities and relationships. This domain can be
-used in reading and querying topology and inventory data when the domain
-name of an entity or relationship is not known.
+A domain is a grouping of topology and inventory entities that handles topology
+and inventory data. The topology and inventory model defines what the telecoms
+network entities and relationships are. More information can be found in
+:ref:`Supported domains <Supported domains>`.
+The Topology Exposure and Inventory Management (TEIV) domain is the parent domain
+used for entities and relationships. This domain can be used in reading and querying
+topology and inventory data when the domain name of an entity or relationship is not
+known.
 
 Entity
 ~~~~~~
@@ -84,23 +73,6 @@ have one or multiple relationships which can be defined by the user. A
 possible relationship between ManagedElement and ODUFunction can be
 *MANAGEDELEMENT_MANAGES_ODUFUNCTION*.
 
-Consumer Data
-~~~~~~~~~~~~~
-
-Consumer data is data that enriches Topology & Inventory models. It can be 
-attached to topology entity or topology relation instance, outside of the
-declared topology entity or topology relationship attributes.
-
-Three types of consumer data are supported:
-
-- Source IDs (read only)
-- Classifiers (read and write)
-- Decorators (read and write)
-
-For information about how consumer data relates to the Topology & Inventory model
-and how this information is encoded, see
-:doc:`Topology & Inventory Data Models <data-models-guide>`
-
 Topology identifiers
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -115,24 +87,17 @@ Topology & Inventory.
 Apps must rely on `sourceIds` which is a list that contains the URN prefixed source
 identifiers of a topology object.
 
-Metadata and reliability Indicator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Understanding identifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Source IDs is a list which contains the URN prefixed FDNs of a topology entity. It
+contains one or more entries (number of entries can be dependent on the vendor)
 
-Metadata provides additional information about entities and relationships within the
-database.
-
-The **reliabilityIndicator** is used to indicate the status of the topology data
-within the network. See the
-:doc:`Common YANG Types <data-models/common-yang-types>`
-in the Topology & Inventory Data Models for more information. It is implemented as a name-value
-pair within the metadata column. It applies to every entity and relationship.
-
-Values for **reliabilityIndicator**:
-
-1. **RESTORED**: The data was restored from a backup and the responsible adapters are checking to ensure that the data is current.
-2. **OK**: The data is in alignment with the source of truth, as far as Topology Exposure Handling is aware.
-3. **ADVISED**: Entity implicitly created by Topology & Inventory Exposure Handling and potentially not aligned with the source of truth.
-
+- Entities that can be derived directly from CM. These entities have only one instance
+  of "`urn:3gpp:dn:`" within the sourceIds list. Examples of these are the ODUFunction
+  and NRCellDU instances.
+- Composite entities that cannot be derived directly from CM. These entities have
+  multiple instances of "`urn:3gpp:dn:`" within the sourceIds list. An example of these
+  entities are the AntennaModule instances.
 
 Topology & Inventory models
 ---------------------------
@@ -164,6 +129,41 @@ NRCellDU has direct relationships with ODUFunction and
 NRSectorCarrier, while it also has indirect relationships with
 ManagedElement, AntennaCapability, and AntennaModule.
 
+Consumer Data
+~~~~~~~~~~~~~
+
+Consumer data is data that enriches Topology & Inventory models. It can be 
+attached to topology entity or topology relation instance, outside of the
+declared topology entity or topology relationship attributes.
+
+Three types of consumer data are supported:
+
+- Source IDs (read only)
+- Classifiers (read and write)
+- Decorators (read and write)
+
+For information about how consumer data relates to the Topology & Inventory model
+and how this information is encoded, see
+:doc:`Topology & Inventory Data Models <data-models-guide>`
+
+Metadata and reliability Indicator
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Metadata provides additional information about entities and relationships within the
+database.
+
+The **reliabilityIndicator** is used to indicate the status of the topology data
+within the network. See the
+:doc:`Common YANG Types <data-models/common-yang-types>`
+in the Topology & Inventory Data Models for more information. It is implemented as a name-value
+pair within the metadata column. It applies to every entity and relationship.
+
+Values for **reliabilityIndicator**:
+
+1. **RESTORED**: The data was restored from a backup and the responsible adapters are checking to ensure that the data is current.
+2. **OK**: The data is in alignment with the source of truth, as far as Topology Exposure Handling is aware.
+3. **ADVISED**: Entity implicitly created by Topology & Inventory Exposure Handling and potentially not aligned with the source of truth.
+
 Supported domains
 -----------------
 
@@ -183,7 +183,7 @@ Supported domains
 |                                   | | example, tilt, max power, and so on.                |
 +-----------------------------------+-------------------------------------------------------+
 | OAM                               | | This model contains the topology entities and       |
-|                                   | | relations in the O&M domain, which are intended     |
+|                                   | | relations in the OAM domain, which are intended     |
 |                                   | | to represent management systems and management      |
 |                                   | | interfaces.                                         |
 +-----------------------------------+-------------------------------------------------------+
@@ -192,15 +192,23 @@ Supported domains
 |                                   | | comprises cloud infrastructure and deployment       |
 |                                   | | aspects that can be used in the topology model.     |
 +-----------------------------------+-------------------------------------------------------+
+| PHYSICAL                          | | This model contains the topology entities and       |
+|                                   | | relations in the Physical domain, which is          |
+|                                   | | modeled to understand the physical appliances and   |
+|                                   | | locations to be used in the topology model.         |
++-----------------------------------+-------------------------------------------------------+
 | REL_EQUIPMENT_RAN                 | | This model contains the topology relations          |
 |                                   | | between Equipment and RAN.                          |
 +-----------------------------------+-------------------------------------------------------+
 | REL_OAM_RAN                       | | This model contains the topology relations          |
-|                                   | | between O&M and RAN.                                |
+|                                   | | between OAM and RAN.                                |
 +-----------------------------------+-------------------------------------------------------+
-| REL_CLOUD_RAN                     | | This model contains the RAN Cloud to RAN Logical    |
+| REL_CLOUD_RAN                     | | This model contains the Cloud to RAN Logical        |
 |                                   | | topology relations.                                 |
 +-----------------------------------+-------------------------------------------------------+
-| REL_OAM_CLOUD                     | | This model contains the RAN O&M to Cloud            |
+| REL_OAM_CLOUD                     | | This model contains the OAM to Cloud                |
 |                                   | | topology relations.                                 |
++-----------------------------------+-------------------------------------------------------+
+| REL_PHYSICAL_RAN                  | | This model contains the topology relationship       |
+|                                   | | between the physical domain and the RAN domain.     |
 +-----------------------------------+-------------------------------------------------------+

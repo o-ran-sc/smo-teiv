@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2024 Nordix Foundation. All rights Reserved
+.. Copyright (C) 2024-2025 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
 Supported filter options
@@ -20,6 +20,103 @@ Sample structure using target and scope filters:
 
    See :doc:`Topology & Inventory API <api-documentation>` for all possible
    filter options and sample responses for each endpoint.
+
+Query grammar
+-------------
+
++----------------------+---------------------------------+----------------+---------------------------+
+| Grammar element      | Syntax                          | Applies to     | Description               |
++======================+=================================+================+===========================+
+| Path navigation      | | XPath-like structure using /  | | targetFilter | | Specifies hierarchical  |
+|                      | | for hierarchy navigation      | | scopeFilter  | | path to attributes,     |
+|                      |                                 |                | | sourceIds, classifiers, |
+|                      |                                 |                | | decorators, or metadata |
++----------------------+---------------------------------+----------------+---------------------------+
+| Attribute            | /entity/attributes(attr1,attr2) | targetFilter   | | Selects specific        |
+| selection            |                                 |                | | attributes for          |
+|                      |                                 |                | | retrieval               |
++----------------------+---------------------------------+----------------+---------------------------+
+| Conditional          | []                              | scopeFilter    | | Encloses filtering      |
+| brackets             |                                 |                | | conditions              |
++----------------------+---------------------------------+----------------+---------------------------+
+| @ Notation           | @attribute                      | scopeFilter    | | Mandatory prefix for    |
+|                      |                                 |                | | all attribute           |
+|                      |                                 |                | | references              |
+|                      |                                 |                | | in conditional brackets |
++----------------------+---------------------------------+----------------+---------------------------+
+| @item                | @item                           | scopeFilter    | | item is a Reserved key  |
+|                      |                                 |                | | word to iterate the     |
+|                      |                                 |                | | items in the list of    |
+|                      |                                 |                | | sourceIds or            |
+|                      |                                 |                | | classifiers             |
++----------------------+---------------------------------+----------------+---------------------------+
+| Logical AND          | and                             | scopeFilter    | | Combines multiple       |
+|                      |                                 |                | | conditions within the   |
+|                      |                                 |                | | same container for      |
+|                      |                                 |                | | example, it can be used |
+|                      |                                 |                | | only within the         |
+|                      |                                 |                | | conditional brackets    |
++----------------------+---------------------------------+----------------+---------------------------+
+| Logical OR           | or                              | scopeFilter    | | Specifies alternative   |
+|                      |                                 |                | | values within the same  |
+|                      |                                 |                | | container, for example, |
+|                      |                                 |                | | it can be used only     |
+|                      |                                 |                | | within the conditional  |
+|                      |                                 |                | | brackets                |
++----------------------+---------------------------------+----------------+---------------------------+
+| Union (|)            | filter1 `|` filter2             | scopeFilter    | | Combines results from   |
+|                      |                                 |                | | multiple filters that   |
+|                      |                                 |                | | apply to the same or    |
+|                      |                                 |                | | different containers    |
++----------------------+---------------------------------+----------------+---------------------------+
+| Multi-filter (;)     | filter1; filter2                | | targetFilter | | Applies multiple        |
+|                      |                                 | | scopeFilter  | | independent filters in  |
+|                      |                                 |                | | sequence, each of which |
+|                      |                                 |                | | can target a different  |
+|                      |                                 |                | | container (attributes,  |
+|                      |                                 |                | | sourceIds, classifiers, |
+|                      |                                 |                | | decorators, or          |
+|                      |                                 |                | | metadata)               |
++----------------------+---------------------------------+----------------+---------------------------+
+| contains()           | [contains @attribute,'text')]   | scopeFilter    | | Matches if attribute    |
+|                      |                                 |                | | contains the specified  |
+|                      |                                 |                | | substring               |
+|                      |                                 |                | | (case-sensitive)        |
++----------------------+---------------------------------+----------------+---------------------------+
+
+Geo-location grammar
+--------------------
+
++----------------------+---------------------------------+----------------+---------------------------+
+| Grammar element      | Syntax                          | Applies to     | Description               |
++======================+=================================+================+===========================+
+| POINT                | POINT(lon lat)                  | scopeFilter    | | Specifies geographic    |
+|                      |                                 |                | | coordinates             |
+|                      |                                 |                | | (longitude, latitude)   |
++----------------------+---------------------------------+----------------+---------------------------+
+| POLYGON              | | POLYGON((                     | scopeFilter    | | Specifies an area as a  |
+|                      | | lon1 lat1, lon2 lat2, ...,    |                | | closed shape defined by |
+|                      | | lonN latN))                   |                | | multiple                |
+|                      |                                 |                | | longitude/latitude      |
+|                      |                                 |                | | pairs                   |
++----------------------+---------------------------------+----------------+---------------------------+
+| MULTIPOLYGON	       | | MULTIPOLYGON((                | scopeFilter    | | Specifies a set of      |
+|                      | | (lon1 lat1, lon2 lat2, ...,   |                | | polygons                |
+|                      | | lonN latN)), ((lon1 lat1,     |                | |                         |
+|                      | | lon2 lat2, ..., lonN latN)))  |                | |                         |
++----------------------+---------------------------------+----------------+---------------------------+
+| withinMeters()       | | withinMeters(@geo-location,   | scopeFilter    | | Filters entities within |
+|                      | | POINT(lon lat), distance in   |                | | a specified distance    |
+|                      | | meters)                       |                | | (in meters) of a        |
+|                      |                                 |                | | geographic point        |
+|                      |                                 |                |                           |
+|                      |                                 |                |                           |
++----------------------+---------------------------------+----------------+---------------------------+
+| coveredBy()          | | coveredBy(@geo-location,      | scopeFilter    | | Filters entities whose  |
+|                      | | 'POLYGON((...))')             |                | | geo-location is inside  |
+|                      |                                 |                | | the specified polygon   |
+|                      |                                 |                | | or multipolygon area    |
++----------------------+---------------------------------+----------------+---------------------------+
 
 Querying simple entities
 ------------------------
@@ -132,9 +229,16 @@ The *entityTypeName* is used as the root of the queries.
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
 | | To return the ids for all instances of | RAN         | NRCellDU       |              | /serving-antennaModule/    | | All NRCellDU entities served by AntennaModule  |
 | | an entityTypeName related by an        |             |                |              | attributes[withinMeters    | | entities within 500.5 meters from a point with |
-| | association to other entities whose    |             |                |              | (@geo-location, 'POINT(    | | latitude and longitude values of -73.958444    |
-| | attribute matches the given            |             |                |              | -73.958444 40.800533)',    | | and 40.800533 respectively.                    |
+| | association to other entities whose    |             |                |              | (@geo-location, 'POINT(    | | latitude and longitude values of 40.800533     |
+| | attribute matches the given            |             |                |              | 40.800533 -73.958444)',    | | and -73.958444 respectively.                   |
 | | *scopeFilter* parameter.               |             |                |              | 500.5)]                    |                                                  |
++------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
+| | To return the ids for all instances of | RAN         | NRCellDU       |              | /serving-antennaModule/    | | All NRCellDU entities served by AntennaModule  |
+| | an entityTypeName related by an        |             |                |              | /classifiers[@item=        | | whose classifiers match test-app-module:Rural. |
+| | association to other entities whose    |             |                |              | 'test-app-module:Rural']   |                                                  |
+| | classifiers/decorators/sourceId        |             |                |              |                            |                                                  |
+| | matches the given *scopeFilter*        |             |                |              |                            |                                                  |
+| | parameter                              |             |                |              |                            |                                                  |
 +------------------------------------------+-------------+----------------+--------------+----------------------------+--------------------------------------------------+
 
     **/domains/{domainName}/entities**
@@ -165,6 +269,12 @@ The *entityTypeName* is used as the root of the queries.
 | | attributes match a specified           |             |                |                                           |                                                  |
 | | *scopeFilter* query.                   |             |                |                                           |                                                  |
 +------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | To return the ids of all entities in a | EQUIPMENT   |                | /grouped-by-sector/classifiers[           | | All entities that are grouped by a Sector      |
+| | given domain related by one or         |             |                | @item='test-app-module:Rural']            | | whose classifiers match test-app-module:Rural. |
+| | more associations to other entities    |             |                |                                           |                                                  |
+| | whose classifiers/decorators/sourceId  |             |                |                                           |                                                  |
+| | match a specified scopeFilter query.   |             |                |                                           |                                                  |
++------------------------------------------+-------------+----------------+-------------------------------------------+--------------------------------------------------+
 
 Querying entities for relationships
 -----------------------------------
@@ -179,19 +289,19 @@ The *entityTypeName* is used as the root of the queries.
 |                                          |             |                |                   |                 |                            |                                                     |
 |                                          |             |                |                   |                 |                            |                                                     |
 +==========================================+=============+================+===================+=================+============================+=====================================================+
-| | To return the relationships for a      | RAN         | ODUFunction    | urn\:3gpp:dn:     |                 |                            | | All relations for the ODUFunction with id         |
-| | given entity specified by its id.      |             |                | ManagedElement=1, |                 |                            | | *urn\:3gpp:dn: ManagedElement=1, ODUFunction=1*   |
+| | To return the relationships for a      | RAN         | ODUFunction    | `urn:3gpp:dn:`    |                 |                            | | All relations for the ODUFunction with id         |
+| | given entity specified by its id.      |             |                | ManagedElement=1, |                 |                            | | *urn:3gpp:dn:ManagedElement=1,ODUFunction=1*      |
 |                                          |             |                | ODUFunction=1     |                 |                            |                                                     |
 +------------------------------------------+-------------+----------------+-------------------+-----------------+----------------------------+-----------------------------------------------------+
-| | To return specific relationships for a | REL_OAM_RAN | ODUFunction    | urn\:3gpp:dn:     | /MANAGEDELEMENT |                            | | All *MANAGEDELEMENT _MANAGES _ODUFUNCTION*        |
+| | To return specific relationships for a | REL_OAM_RAN | ODUFunction    | `urn:3gpp:dn:`    | /MANAGEDELEMENT |                            | | All *MANAGEDELEMENT _MANAGES _ODUFUNCTION*        |
 | | given entity specified by its id.      |             |                | ManagedElement=1, | _MANAGES        |                            | | relations for the ODUFunction with id             |
-|                                          |             |                | ODUFunction=1     | _ODUFUNCTION    |                            | | *urn\:3gpp:dn: ManagedElement=1, ODUFunction=1*   |
+|                                          |             |                | ODUFunction=1     | _ODUFUNCTION    |                            | | *urn:3gpp:dn:ManagedElement=1,ODUFunction=1*      |
 +------------------------------------------+-------------+----------------+-------------------+-----------------+----------------------------+-----------------------------------------------------+
-| | To return specific relationships for   | REL_OAM_RAN | ODUFunction    | urn\:3gpp:dn:     |                 | /managed-by-managedElement | | All *MANAGEDELEMENT _MANAGES _ODUFUNCTION*        |
-| | an entity specified by its id to       |             |                | ManagedElement=1, |                 | [@id = 'urn\:3gpp:dn:      | | relations for the ODUFunction with id             |
-| | another entity using its id and        |             |                | ODUFunction=1     |                 | ManagedElement=1']         | | *urn\:3gpp:dn: ManagedElement=1, ODUFunction=1*   |
+| | To return specific relationships for   | REL_OAM_RAN | ODUFunction    | `urn:3gpp:dn:`    |                 | /managed-by-managedElement | | All *MANAGEDELEMENT_MANAGES_ODUFUNCTION*          |
+| | an entity specified by its id to       |             |                | ManagedElement=1, |                 | [@id = '`urn:3gpp:dn:`     | | relations for the ODUFunction with id             |
+| | another entity using its id and        |             |                | ODUFunction=1     |                 | ManagedElement=1']         | | *urn:3gpp:dn:ManagedElement=1,ODUFunction=1*      |
 | | association.                           |             |                |                   |                 |                            | | where the managed element is                      |
-|                                          |             |                |                   |                 |                            | | *urn\:3gpp:dn: ManagedElement=1*.                 |
+|                                          |             |                |                   |                 |                            | | *urn:3gpp:dn:ManagedElement=1*.                   |
 +------------------------------------------+-------------+----------------+-------------------+-----------------+----------------------------+-----------------------------------------------------+
 
 Querying on relationships
@@ -395,47 +505,65 @@ This functionality is supported by the following endpoints
 
    **/domains/{domainName}/relationship-types/{relationshipTypeName}/relationships**
 
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
-| Use case                      | entity | relationshipTypeName    | targetFilter       | scopeFilter                 |
-|                               |        |                         |                    |                             |
-|                               | Name   |                         |                    |                             |
-+===============================+========+=========================+====================+=============================+
-| | Return all related          |        | MANAGEDELEMENT _MANAGES | /classifiers       |                             |
-| | relationship IDs and        |        | _ORUFUNCTION            |                    |                             |
-| | classifiers.                |        |                         |                    |                             |
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
-| | Return all related          |        | MANAGEDELEMENT _MANAGES | /decorators        |                             |
-| | relationship IDs and        |        | _ORUFUNCTION            |                    |                             |
-| | decorators.                 |        |                         |                    |                             |
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
-| | Return related relationship |        | MANAGEDELEMENT _MANAGES |                    | /classifiers[@item =        |
-| | IDs that match the          |        | _ORUFUNCTION            |                    | 'odu-function-model         |
-| | classifier and decorator.   |        |                         |                    | :Indoor'];                  |
-|                               |        |                         |                    |                             |
-|                               |        |                         |                    | /decorators[@odu-function   |
-|                               |        |                         |                    | -model:textdata =           |
-|                               |        |                         |                    | 'Stockholm']                |
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
-| | Return related relationship |        | MANAGEDELEMENT _MANAGES | /classifiers       | /classifiers[contains       |
-| | IDs and classifiers that    |        | _ORUFUNCTION            |                    | (@item, 'Ind')]             |
-| | are partially matched       |        |                         |                    |                             |
-| | for the classifier.         |        |                         |                    |                             |
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
-| | Return related relationship |        | MANAGEDELEMENT _MANAGES | /decorators        | /decorators[contains        |
-| | IDs and decorators where    |        | _ORUFUNCTION            |                    | (@odu-function-model:       |
-| | the key matches exactly and |        |                         |                    | textdata, 'Stock')]         |
-| | the value matches           |        |                         |                    |                             |
-| | partially.                  |        |                         |                    |                             |
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
-| | Return related relationship |        | MANAGEDELEMENT _MANAGES | | /classifiers     | /classifiers[contains       |
-| | IDs, decorators, and        |        | _ORUFUNCTION            | | /decorators      | (@item, 'Ind')];            |
-| | classifiers where decorator |        |                         |                    | /decorators[contains        |
-| | key is exact and value      |        |                         |                    | (@odu-function-model:       |
-| | partially matches, and      |        |                         |                    | textdata, 'Stock')]         |
-| | classifiers partially match |        |                         |                    |                             |
-| | the parameters.             |        |                         |                    |                             |
-+-------------------------------+--------+-------------------------+--------------------+-----------------------------+
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
+| Use case                      | relationshipTypeName    | targetFilter       | scopeFilter                 | Query result                |
+|                               |                         |                    |                             |                             |
+|                               |                         |                    |                             |                             |
++===============================+=========================+====================+=============================+=============================+
+| | Return all related          | | MANAGEDELEMENT        | /classifiers       |                             | | All MANAGEDELEMENT        |
+| | relationship IDs and        | | _MANAGES              |                    |                             | | _MANAGES_ORUFUNCTION IDs  |
+| | classifiers.                | | _ORUFUNCTION          |                    |                             | | and classifiers.          |
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
+| | Return all related          | | MANAGEDELEMENT        | /decorators        |                             | | All MANAGEDELEMENT        |
+| | relationship IDs and        | | _MANAGES              |                    |                             | | _MANAGES_ORUFUNCTION IDs  |
+| | decorators.                 | | _ORUFUNCTION          |                    |                             | | and decorators.           |
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
+| | Return related relationship | | MANAGEDELEMENT        |                    | /classifiers[@item =        | | All MANAGEDELEMENT        |
+| | IDs that match the          | | _MANAGES              |                    | 'odu-function-model         | | _MANAGES_ORUFUNCTION IDs  |
+| | classifier and decorator.   | | _ORUFUNCTION          |                    | :Indoor'];                  | | and decorators where key  |
+|                               |                         |                    |                             | | of the decorator is       |
+|                               |                         |                    | /decorators[@odu-function   | | "odu-function-model       |
+|                               |                         |                    | -model:textdata =           | | :textdata" and the value  |
+|                               |                         |                    | 'Stockholm']                | | of the decorator is       |
+|                               |                         |                    |                             | | 'Stockholm' and           |
+|                               |                         |                    |                             | | classifiers exactly       |
+|                               |                         |                    |                             | | contains "odu-function    |
+|                               |                         |                    |                             | | -model:Indoor".           |
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
+| | Return related relationship | | MANAGEDELEMENT        | /classifiers       | /classifiers[contains       | | All MANAGEDELEMENT        |
+| | IDs and classifiers that    | | _MANAGES              |                    | (@item, 'Ind')]             | | _MANAGES_ORUFUNCTION IDs  |
+| | are partially matched       | | _ORUFUNCTION          |                    |                             | | and classifiers where     |
+| | for the classifier.         |                         |                    |                             | | classifiers partially     |
+|                               |                         |                    |                             | | contains the text "Ind".  |
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
+| | Return related relationship | | MANAGEDELEMENT        | /decorators        | /decorators[contains        | | All MANAGEDELEMENT        |
+| | IDs and decorators where    | | _MANAGES              |                    | (@odu-function-model:       | | _MANAGES_ORUFUNCTION IDs  |
+| | the key matches exactly and | | _ORUFUNCTION          |                    | textdata, 'Stock')]         | | and decorators where      |
+| | the value matches           |                         |                    |                             | | where key of the          |
+| | partially.                  |                         |                    |                             | | decorator is "odu-        |
+|                               |                         |                    |                             | | function-model:textdata"  |
+|                               |                         |                    |                             | | and the value of the      |
+|                               |                         |                    |                             | | decorator partially       |
+|                               |                         |                    |                             | | contains 'Stock'.         |
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
+| | Return related relationship | | MANAGEDELEMENT        | | /classifiers     | /classifiers[contains       | | All MANAGEDELEMENT        |
+| | IDs, decorators, and        | | _MANAGES              | | /decorators      | (@item, 'Ind')];            | | _MANAGES_ORUFUNCTION IDs, |
+| | classifiers where decorator | | _ORUFUNCTION          |                    | /decorators[contains        | | decorators and            |
+| | key is exact and value      |                         |                    | (@odu-function-model:       | | classifiers where where   |
+| | partially matches, and      |                         |                    | textdata, 'Stock')]         | | the key of the decorator  |
+| | classifiers partially match |                         |                    |                             | | is "odu-function-model    |
+| | the parameters.             |                         |                    |                             | | :textdata", the value of  |
+|                               |                         |                    |                             | | the decorator partially   |
+|                               |                         |                    |                             | | contains 'Stock', and the |
+|                               |                         |                    |                             | | classifiers partially     |
+|                               |                         |                    |                             | | contain the text "Ind".   |
++-------------------------------+-------------------------+--------------------+-----------------------------+-----------------------------+
 
+**Example:** Get the relationships that have the classifier odu-function-model:Indoor:
+
+::
+
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?targetFilter=/classifiers&scopeFilter=/classifiers[@item = 'odu-function-model:Indoor']
 
 **Result**
 
@@ -491,22 +619,28 @@ For supported geometry objects, see `Querying on geographical information <#capa
 | Use case                                 | entityName    | targetFilter   | scopeFilter                               | Query result                                     |
 +------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
 | | Return the ids for all instances of an | AntennaModule |                | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by the      |
-| | entityTypeName covered by the given    |               |                | 'POLYGON ((-73.958444 40.800533           | | polygon ((-73.958444 40.800533, -73.981962     |
-| | polygon                                |               |                | ,-73.981962 40.768558, -73.973207         | | 40.768558, -73.973207 40.765048, -73.949861    |
-|                                          |               |                | 40.765048, -73.949861 40.797024           | | 40.797024, -73.958444 40.800533)).             |
-|                                          |               |                | ,-73.958444 40.800533))')]                | |                                                |
+| | entityTypeName covered by the given    |               |                | 'POLYGON ((40.800533 -73.958444           | | polygon ((40.800533 -73.958444, 40.768558      |
+| | polygon                                |               |                | ,40.768558 -73.981962, 40.765048          | | -73.981962, 40.765048 -73.973207, 40.797024    |
+|                                          |               |                | -73.973207, 40.797024 -73.949861          | | -73.949861, 40.800533 -73.958444)).            |
+|                                          |               |                | ,40.800533 -73.958444))')]                | |                                                |
 +------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
 | | Return the attributes for all          | AntennaModule | /attributes    | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities with attributes     |
-| | instances of an entityTypeName covered |               |                | 'POLYGON ((40 40, 20 45, 45 30,           | | covered by the polygon                         |
-| | by the given polygon.                  |               |                | 40 40))')]                                | | ((40 40, 20 45, 45 30, 40 40)).                |
+| | instances of an entityTypeName covered |               |                | 'POLYGON ((40 40, 45 20, 30 45, 40 40     | | covered by the polygon                         |
+| | by the given polygon.                  |               |                | ))')]                                     | | ((40 40, 45 20, 30 45, 40 40)).                |
 +------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
 | | Return the ids for all instances of an | AntennaModule |                | /attributes[withinMeters(@geo-location,   | | All AntennaModule entities within 500.5 meters |
-| | entityTypeName within a specified      |               |                | 'POINT(-73.958444 40.800533)', 500.5)]    | | from a point with latitude and longitude       |
-| | distance in meters from a point.       |               |                |                                           | | values of -73.958444 and 40.800533             |
+| | entityTypeName within a specified      |               |                | 'POINT(40.800533 -73.958444)', 500.5)]    | | from a point with latitude and longitude       |
+| | distance in meters from a point.       |               |                |                                           | | values of 40.800533 and -73.958444             |
 |                                          |               |                |                                           | | respectively.                                  |
 +------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the ids for all instances of an | AntennaModule |                | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by the      |
+| | entityTypeName covered by the given    |               |                | 'MULTIPOLYGON (((40 40, 20 45, 45 30, 40  | | given collection of polygons (((40 40, 20 45,  |
+| | collection of polygons.                |               |                | 40)),((20 35, 10 30, 10 10, 30 5, 45 20,  | | 45 30, 40 40)),((20 35, 10 30, 10 10, 30 5, 45 |
+|                                          |               |                | 20 35)),((30 20, 20 15, 20 25, 30         | | 20, 20 35)),((30 20, 20 15, 20 25, 30 20))).   |
+|                                          |               |                | 20)))')]                                  |                                                  |
++------------------------------------------+---------------+----------------+-------------------------------------------+--------------------------------------------------+
 
-**Example:** Get all 'AntennaModule' entities covered by the polygon with points (48 68), (50 68), (50 69), (48 69), and (48 68):
+**Example:** Get all 'AntennaModule' entities covered by the polygon with points (68 48) , (68 50), (69 50), (69 48), and (68 48):
 
 ::
 
@@ -527,19 +661,19 @@ For supported geometry objects, see `Querying on geographical information <#capa
            }
        ],
        "self": {
-           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((68 48, 68 50, 69 50, 69 48, 68 48))')]"
        },
        "first": {
-           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((68 48, 68 50, 69 50, 69 48, 68 48))')]"
        },
        "prev": {
-           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((68 48, 68 50, 69 50, 69 48, 68 48))')]"
        },
        "next": {
-           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((68 48, 68 50, 69 50, 69 48, 68 48))')]"
        },
        "last": {
-           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+           "href": "/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((68 48, 68 50, 69 50, 69 48, 68 48))')]"
        },
        "totalCount": 1
    }
@@ -550,26 +684,32 @@ For supported geometry objects, see `Querying on geographical information <#capa
 | Use case                                 | targetFilter   | scopeFilter                               | Query result                                     |
 +------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
 | | Return the ids for all entities in a   |                | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by the      |
-| | given domain that is covered by a      |                | 'POLYGON ((-73.958444 40.800533           | | polygon ((-73.958444 40.800533, -73.981962     |
-| | specified polygon.                     |                | ,-73.981962 40.768558, -73.973207         | | 40.768558, -73.973207 40.765048, -73.949861    |
-|                                          |                | 40.765048, -73.949861 40.797024           | | 40.797024, -73.958444 40.800533)).             |
-|                                          |                | ,-73.958444 40.800533))')]                | |                                                |
+| | given domain that is covered by a      |                | 'POLYGON ((40.800533 -73.958444           | | polygon ((40.800533 -73.958444, 40.768558      |
+| | specified polygon.                     |                | ,40.768558 -73.981962, 40.765048          | | -73.981962, 40.765048 -73.973207, 40.797024    |
+|                                          |                | -73.973207, 40.797024 -73.949861          | | -73.949861, 40.800533 -73.958444)).            |
+|                                          |                | ,40.800533 -73.958444))')]                |                                                  |
 +------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
 | | Return the attributes for all          | /AntennaModule | /attributes[coveredBy(@geo-location,      | | All AntennaModule entities covered by          |
-| | AntennaModule entities in the given    | /attributes    | 'POLYGON ((40 40, 20 45, 45 30,           | | the polygon ((20 35, 10 30, 10 10, 30          |
-| | domain covered by a specified polygon. |                | 40 40))')]                                | | 5, 45 20, 20 35)).                             |
+| | AntennaModule entities in the given    | /attributes    | 'POLYGON ((40 40, 45 20, 30 45, 40 40))   | | the polygon ((40 40, 45 20, 30 45, 40 40)).    |
+| | domain covered by a specified polygon. |                | ')]                                       |                                                  |
 +------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
 | | Return the ids for all AntennaModule   | /AntennaModule | /attributes[withinMeters(@geo-location,   | | All AntennaModule entities within 500.5 meters |
-| | entities in the given domain within a  |                | 'POINT(-73.958444 40.800533)', 500.5)]    | | from a point with latitude and longitude       |
-| | specified distance in meters from a    |                |                                           | | values of -73.958444 and 40.800533             |
+| | entities in the given domain within a  |                | 'POINT(40.800533 -73.958444)', 500.5)]    | | from a point with latitude and longitude       |
+| | specified distance in meters from a    |                |                                           | | values of 40.800533 and -73.958444             |
 | | point.                                 |                |                                           | | respectively.                                  |
 +------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
+| | Return the ids for all entities in a   |                | /attributes[coveredBy(@geo-location,      | | All entities covered by the given collection   |
+| | given domain that is covered by a      |                | 'MULTIPOLYGON (((40 40, 20 45, 45 30, 40  | | of polygons (((40 40, 20 45, 45 30, 40 40)),(( |
+| | specified polygon.                     |                | 40)),((20 35, 10 30, 10 10, 30 5, 45 20,  | | 20 35, 10 30, 10 10, 30 5, 45 20, 20 35)),((   |
+|                                          |                | 20 35)),((30 20, 20 15, 20 25, 30 20)))   | | 30 20, 20 15, 20 25, 30 20))).                 |
+|                                          |                | ')]                                       |                                                  |
++------------------------------------------+----------------+-------------------------------------------+--------------------------------------------------+
 
-**Example:** Get all entities in the 'EQUIPMENT' domain within 500 meters from a point with latitude and longitude values of 49.40199 and 68.94199 respectively:
+**Example:** Get all entities in the 'EQUIPMENT' domain within 500 meters from a point with latitude and longitude values of 68.94199 and 49.40199 respectively:
 
 ::
 
-   GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entities?scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entities?scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(68.94199 49.40199)', 500)]
 
 **Result**
 
@@ -586,16 +726,16 @@ For supported geometry objects, see `Querying on geographical information <#capa
            }
        ],
        "self": {
-           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(68.94199 49.40199)', 500)]"
        },
        "first": {
-           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(68.94199 49.40199)', 500)]"
        },
        "prev": {
-           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(68.94199 49.40199)', 500)]"
        },
        "next": {
-           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+           "href": "/domains/EQUIPMENT/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(68.94199 49.40199)', 500)]"
        },
        "totalCount": 1
    }

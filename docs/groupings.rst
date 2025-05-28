@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2024 Nordix Foundation. All rights Reserved
+.. Copyright (C) 2024-2025 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
 Topology grouping
@@ -54,6 +54,14 @@ when creating static groups.
 | providedMembers | | A list containing the identities of the   | True         |
 |                 | | desired members (entities or              |              |
 |                 | | relationships) in the model format.       |              |
+|                 | | Only topology modules, entities types,    |              |
+|                 | | and relationships types present in the    |              |
+|                 | | Topology & Inventory models are accepted. |              |
+|                 | | The IDs of the desired members must be in |              |
+|                 | | the Uniform Resource Name (URN) format    |              |
+|                 | | and must start with urn:. The IDs that do |              |
+|                 | | not exist in topology, can also be added  |              |
+|                 | | here.                                     |              |
 +-----------------+---------------------------------------------+--------------+
 
 **Example:** Create a static group with two provided members:
@@ -119,25 +127,38 @@ when creating dynamic groups.
 |                               | | members that are returned when the dynamic   |                                                  |
 |                               | | group is resolved.                           |                                                  |
 +-------------------------------+------------------------------------------------+--------------------------------------------------+
-| criteria.queryType            | | This is the type of query that is performed  | True                                             |
-|                               | | when resolving a topology group. Use one of  |                                                  |
-|                               | | the following query types when creating a    |                                                  |
-|                               | | dynamic group:                               |                                                  |
-|                               | | <ul><li>getEntitiesByDomain</li>             |                                                  |
-|                               | | <li>getEntitiesByType</li>                   |                                                  |
-|                               | | <li>getRelationshipsForEntityId</li>         |                                                  |
-|                               | | <li>getRelationshipsByType</li></ul>         |                                                  |
+| criteria.queryType            | | The type of query performed when resolving a | True                                             |
+|                               | | topology group. Each query type belongs to a |                                                  |
+|                               | | Topology & Inventory API endpoint. A         |                                                  |
+|                               | | detailed description about each query type   |                                                  |
+|                               | | can be found in its corresponding Topology & |                                                  |
+|                               | | Inventory API. The following is the mapping  |                                                  |
+|                               | | of supported query type to its Topology &    |                                                  |
+|                               | | Inventory API:                               |                                                  |
+|                               | |                                              |                                                  |
+|                               | | <queryType>: <API reference>                 |                                                  |
+|                               | | getEntitiesByDomain: Get entities by domain. |                                                  |
+|                               | | getEntitiesByType: Get entities by domain.   |                                                  |
+|                               | | getRelationshipsForEntityId: Get entities by |                                                  |
+|                               | | domain.                                      |                                                  |
+|                               | | getRelationshipsByType: Get entities by      |                                                  |
+|                               | | domain.                                      |                                                  |
 +-------------------------------+------------------------------------------------+--------------------------------------------------+
-| criteria.domain               | | This is the topology domain. Use TEIV if not | True                                             |
-|                               | | known.                                       |                                                  |
+| criteria.domain               | | Topology domain. Accepted domains include    | True                                             |
+|                               | | only those present in the Topology &         |                                                  |
+|                               | | Inventory models. More information can be    |                                                  |
+|                               | | found in Supported domains. Use TEIV if not  |                                                  |
+|                               | | known. It is recommended to use TEIV domain  |                                                  |
+|                               | | in combination with targetFilter and         |                                                  |
+|                               | | scopeFilter for best performance.            |                                                  |
 +-------------------------------+------------------------------------------------+--------------------------------------------------+
 | criteria.entityTypeName       | The entity type, for example, `OCUCPFunction`  | | Required only when *criteria.queryType* is     |
 |                               |                                                | | `getEntitiesByType` or                         |
 |                               |                                                | | `getRelationshipsForEntityId`                  |
 +-------------------------------+------------------------------------------------+--------------------------------------------------+
 | criteria.entityId             | | The entity identifier, for example, urn:     | | Required only when *criteria.queryType* is     |
-|                               | | 3gpp: dn :ManagedElement=1,ODUFunction=1,    | | `getRelationshipsForEntityId`                  |
-|                               | | NRCellDU=1.                                  |                                                  |
+|                               | | `3gpp:dn:ManagedElement=1,ODUFunction=1,`    | | `getRelationshipsForEntityId`                  |
+|                               | | `NRCellDU=1.`                                |                                                  |
 +-------------------------------+------------------------------------------------+--------------------------------------------------+
 | criteria.relationshipTypeName | | The relationship type, for example,          | | Required only when *criteria.queryType* is     |
 |                               | | `ODUFUNCTION_PROVIDES_NRCELLDU`.             | | `getRelationshipsByType`                       |

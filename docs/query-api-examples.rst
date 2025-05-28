@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2024 Nordix Foundation. All rights Reserved
+.. Copyright (C) 2024-2025 Nordix Foundation. All rights Reserved
 .. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
 
 Query API examples
@@ -32,13 +32,14 @@ domain:**
 
 ::
 
-   GET https://<host>/topology-inventory/<API_VERSION>/schemas?domain=ran
+   GET https://<host>/topology-inventory/<API_VERSION>/schemas?domain=RAN
 
 ..
 
-   **Note:** - Partial matches are also supported in the query parameter
-   using the ’*’ symbol as a wild card. - If the specified domain does
-   not exist, an empty list is returned.
+   **Note:**
+    - The specified domain is case-sensitive.
+    - If the specified domain does
+      not exist, an empty list is returned.
 
 To get a specific module, supply a module name in the path parameter.
 For example, /schemas/<name>/content
@@ -62,7 +63,9 @@ Reading entities and relationships
 ----------------------------------
 
 To get a list of all entities with all properties in a specified domain
-name, use: > /domains/{domainName}/entities
+name, use:
+
+``/domains/{domainName}/entities``
 
 **Example:** Get all entities in the *RAN* domain:
 
@@ -71,7 +74,9 @@ name, use: > /domains/{domainName}/entities
    GET https://<host>/topology-inventory/<API_VERSION>/domains/RAN/entities
 
 To get a list of all available entity types in a specified domain name,
-use: > /domains/{domainName}/entity-types
+use:
+
+``/domains/{domainName}/entity-types``
 
 **Example:** Get all entity types in the *RAN* domain:
 
@@ -80,7 +85,9 @@ use: > /domains/{domainName}/entity-types
    GET https://<host>/topology-inventory/<API_VERSION>/domains/RAN/entity-types
 
 To get a list of all available relationship types in a specified domain
-name, use: > /domains/{domainName}/relationship-types
+name, use:
+
+``/domains/{domainName}/relationship-types``
 
 **Example:** Get all relationship types in the *RAN* domain:
 
@@ -107,12 +114,17 @@ Moreover, the user only wants those records that have sourceIds
 containing “SubNetwork=Ireland”. These fields and filters can be defined
 in the request as follows:
 
-   **Parameters:** - **targetFilter:** /NRCellDU - **scopeFilter:**
-   /sourceIds[contains(@item,'SubNetwork=Ireland')]
+   **Parameters:**
+
+   - **targetFilter**: ``/NRCellDU``
+   - **scopeFilter**: ``/sourceIds[contains(@item,'SubNetwork=Europe')]``
+
 
 ::
 
-   GET https://<host>/topology-inventory/<API_VERSION>/domains/RAN?targetFilter=/NRCellDU&scopeFilter=/sourceIds[contains(@item,'SubNetwork=Ireland')]
+   GET https://<host>/topology-inventory/<API_VERSION>/domains/RAN/entities?
+   targetFilter=/NRCellDU&
+   scopeFilter=/sourceIds[contains(@item,'SubNetwork=Ireland')]
 
 ..
 
@@ -140,17 +152,23 @@ distance in meters from the given point.
 **Example:** Get all entities with geographical information in the 'EQUIPMENT' domain within 500 meters
 from a point with latitude and longitude values of 49.40199 and 68.94199 respectively:
 
-```
-GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entities?scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]
-```
+::
+
+    GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entities?
+    scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]
+
+..
 
 **POLYGON:** This can be used with the *coveredBy* function. It requires the latitude and longitude of the points of the polygon. It returns the desired objects covered by the given polygon.
 
 **Example:** Get all 'AntennaModule' entities covered by the polygon with points (48 68) , (50 68), (50 69), (48 69), and (48 68):
 
-```
-GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entity-types/AntennaModule/entities?scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]
-```
+::
+
+    GET https://<host>/topology-inventory/<API_VERSION>/domains/EQUIPMENT/entity-types/AntennaModule/entities?
+    scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]
+
+..
 
     **NOTE:** To draw a valid polygon, the first and last points must be identical.
 
