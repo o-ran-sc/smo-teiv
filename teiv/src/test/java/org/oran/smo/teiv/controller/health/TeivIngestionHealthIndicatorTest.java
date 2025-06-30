@@ -20,7 +20,6 @@
  */
 package org.oran.smo.teiv.controller.health;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -28,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
 import org.oran.smo.teiv.service.SchemaCleanUpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +68,8 @@ class TeivIngestionHealthIndicatorTest {
     ModelRepository modelRepository;
     @MockBean
     SchemaCleanUpService schemaCleanUpService;
+    @MockBean
+    SchemaHandler schemaHandler;
 
     @AfterEach
     protected void tearDown() {
@@ -99,9 +99,7 @@ class TeivIngestionHealthIndicatorTest {
 
     @Test
     void downKafkaUnavailable() throws Exception {
-        SchemaHandler schemaHandlerSpy = Mockito.spy(new SchemaHandler(postgresSchemaLoader, healthStatus));
-        schemaHandlerSpy.initializeSchema();
-        assertTrue(healthStatus.isSchemaInitialized());
+        healthStatus.setSchemaInitialized(true);
         doReturn(false).when(spiedDependentServiceAvailabilityKafka).checkService();
         performReadinessGroupProbesDownWithMessage(" Kafka is unavailable.");
     }
