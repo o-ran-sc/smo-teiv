@@ -23,6 +23,7 @@ package org.oran.smo.teiv.utils.yangparser;
 import static org.oran.smo.teiv.utils.TeivConstants.INVALID_SCHEMA;
 import static org.oran.smo.teiv.utils.TeivConstants.SCHEMA_ALREADY_EXISTS;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -88,17 +89,22 @@ class YangFindingsManager {
     }
 
     protected static void handleExposureFindings(FindingsManager findingsManager) {
+        Set<Finding> findings = findingsManager.getAllFindings();
+        if (findings.isEmpty()) {
+            return;
+        }
         FindingSeverityCalculator severityCalculator = findingsManager.getFindingSeverityCalculator();
-        for (Finding finding : findingsManager.getAllFindings()) {
-            if (isErrorFinding(severityCalculator, finding)) {
-                if (isInvalidSchemaFinding(finding)) {
-                    throw TeivException.invalidFileInput(INVALID_SCHEMA);
-                } else if (finding.getFindingType().contains("P044_SAME_MODULE_IMPLEMENTS_AND_IMPORTS")) {
-                    throw TeivException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
-                } else {
-                    throw TeivException.invalidFileInput(finding.getMessage());
-                }
-            }
+        findings.stream().sorted(Comparator.comparing(Finding::getMessage)).filter(finding -> isErrorFinding(
+                severityCalculator, finding)).findFirst().ifPresent(YangFindingsManager::handleFindingsAsError);
+    }
+
+    private static void handleFindingsAsError(Finding finding) {
+        if (isInvalidSchemaFinding(finding)) {
+            throw TeivException.invalidFileInput(INVALID_SCHEMA);
+        } else if (finding.getFindingType().contains("P044_SAME_MODULE_IMPLEMENTS_AND_IMPORTS")) {
+            throw TeivException.invalidFileInput(SCHEMA_ALREADY_EXISTS);
+        } else {
+            throw TeivException.invalidFileInput(finding.getMessage());
         }
     }
 

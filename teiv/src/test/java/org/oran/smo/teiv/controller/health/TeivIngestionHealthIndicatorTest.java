@@ -27,9 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.oran.smo.teiv.exposure.spi.ModelRepository;
+import org.oran.smo.teiv.schema.MockSchemaLoader;
+import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.service.SchemaCleanUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -70,6 +73,12 @@ class TeivIngestionHealthIndicatorTest {
     ModelRepository modelRepository;
     @MockBean
     SchemaCleanUpService schemaCleanUpService;
+
+    @BeforeAll
+    public static void beforeALL() throws UnsupportedOperationException, SchemaLoaderException {
+        MockSchemaLoader mockSchemaLoader = new MockSchemaLoader();
+        mockSchemaLoader.loadSchemaRegistry();
+    }
 
     @AfterEach
     protected void tearDown() {
