@@ -33,6 +33,23 @@
       "message": "remerge",
       "revId": "deb3c99e0228ba2b0b189d49c58e559aadd0ab1a",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0877c37_59b85096",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-07-02T09:43:36Z",
+      "side": 1,
+      "message": "stage-release",
+      "revId": "deb3c99e0228ba2b0b189d49c58e559aadd0ab1a",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ],
   "submitRequirementResults": [
