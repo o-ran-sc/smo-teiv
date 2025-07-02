@@ -3,7 +3,7 @@
 <!--
   ============LICENSE_START=======================================================
   Copyright (C) 2024 Ericsson
-  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -29,13 +29,13 @@
     <parent>
         <groupId>org.oran.smo</groupId>
         <artifactId>yang-parser</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>0.3.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.oran.smo.yangtools.parser</groupId>
     <artifactId>yang-parser-jar</artifactId>
     <name>Yang Parser</name>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
