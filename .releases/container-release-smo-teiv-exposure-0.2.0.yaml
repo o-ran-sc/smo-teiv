@@ -1,0 +1,10 @@
+---
+distribution_type: container
+container_release_tag: 0.2.0
+container_pull_registry: nexus3.o-ran-sc.org:10004
+container_push_registry: nexus3.o-ran-sc.org:10002
+project: smo-teiv
+ref: a91aeb598898c960b15155f1dade1bcd409aa8ca
+containers:
+    - name: smo-teiv-exposure
+      version: 0.2.0
