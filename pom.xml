@@ -33,7 +33,7 @@
     </parent>
     <groupId>org.oran.smo</groupId>
     <artifactId>topology-exposure-inventory</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <licenses>
@@ -55,7 +55,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Versions of co-located functions to use -->
-        <version.yang-parser-jar>1.2.0-SNAPSHOT</version.yang-parser-jar> <!--use current master snapshot version -->
+        <version.yang-parser-jar>1.2.1-SNAPSHOT</version.yang-parser-jar> <!--use current master snapshot version -->
         <!-- 3PP Versions -->
         <version.jackson-databind-nullable>0.2.6</version.jackson-databind-nullable>
         <version.lombok>1.18.26</version.lombok>

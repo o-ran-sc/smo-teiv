@@ -1,5 +1,5 @@
 #  ============LICENSE_START===============================================
-#  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ application: &applicationConfig
   info.app.description: Topology Exposure and Inventory Service
   info.app.version: '@version@'
   info.app.legal: 'Copyright (C) 2024 Ericsson
-  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -182,7 +182,7 @@ topology-exposure:
   image:
     registry: "nexus3.o-ran-sc.org:10003"
     name: o-ran-sc/smo-teiv-exposure
-    tag: 0.2.0-SNAPSHOT
+    tag: 0.3.0-SNAPSHOT
   service:
     type: ClusterIP
     ports:
@@ -209,7 +209,7 @@ topology-ingestion:
   image:
     registry: "nexus3.o-ran-sc.org:10003"
     name: o-ran-sc/smo-teiv-ingestion
-    tag: 0.2.0-SNAPSHOT
+    tag: 0.3.0-SNAPSHOT
   service:
     type: ClusterIP
     ports:
