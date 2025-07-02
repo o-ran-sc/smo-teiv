@@ -1,7 +1,8 @@
+setuptools
 tox
 sphinx
 doc8
-docutils
+docutils < 0.17
 sphinxcontrib-openapi
 sphinxcontrib-redoc
 lfdocs-conf
