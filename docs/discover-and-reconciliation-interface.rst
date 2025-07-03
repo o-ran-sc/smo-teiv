@@ -1,7 +1,7 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2024-2025 Nordix Foundation. All rights Reserved
-.. Copyright (C) 2024 OpenInfra Foundation Europe. All Rights Reserved
+.. Copyright (C) 2024 Nordix Foundation. All rights Reserved
+.. Copyright (C) 2024-2025 OpenInfra Foundation Europe. All Rights Reserved
 
 Discover and Reconciliation Interface
 #####################################
