@@ -716,7 +716,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "status": "BAD_REQUEST",
                 "message": "Invalid file input",
-                "details": "Invalid file input: Module 'o-ran-smo-teiv-ran' multiple times in the input, with both conformance types IMPLEMENT and IMPORT."
+                "details": "Invalid file input: Module 'o-ran-smo-teiv-ran' has multiple revisions in the input, but desired exact revision not specified in the 'import' statement."
             }''')
         }
     },
@@ -770,7 +770,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
             "status": "BAD_REQUEST",
             "message": "Invalid file input",
-            "details": "Invalid file input: Missing content at the beginning of the document."
+            "details": "Invalid file input: Expected single statement ('module' or 'submodule')."
         }''')
         }
     },

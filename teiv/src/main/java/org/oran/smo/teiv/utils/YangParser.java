@@ -30,6 +30,7 @@ import java.util.*;
 
 import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangModelException;
+import org.oran.smo.teiv.utils.yangparser.ExposureYangParser;
 import org.oran.smo.yangtools.parser.data.YangData;
 import org.oran.smo.yangtools.parser.findings.FindingSeverity;
 import org.oran.smo.yangtools.parser.findings.ModuleAndFindingTypeAndSchemaNodePathFilterPredicate;
@@ -134,6 +135,7 @@ public class YangParser {
         context.setIgnoreImportedProtocolAccessibleObjects(true);
         context.setFailFast(false);
         yangDeviceModel.parseIntoYangModels(context, yangModels);
+        ExposureYangParser.validateContext(findingsManager);
         checkFindings(context.getFindingsManager(), severityCalculator);
 
         assert inputYangModel != null;

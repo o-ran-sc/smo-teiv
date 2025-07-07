@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.oran.smo.teiv.exception.YangException;
+import org.oran.smo.yangtools.parser.findings.FindingsManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.oran.smo.yangtools.parser.ParserExecutionContext;
@@ -135,6 +136,10 @@ public class ExposureYangParser extends YangModelLoader {
                     }
                 });
         return resultMap;
+    }
+
+    public static void validateContext(FindingsManager findingsManager) {
+        YangFindingsManager.handleExposureFindings(findingsManager);
     }
 
 }
