@@ -20,15 +20,12 @@
  */
 package org.oran.smo.teiv.groups.api.impl.resolver;
 
+import org.oran.smo.teiv.api.model.*;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.oran.smo.teiv.api.model.OranTeivCriteria;
-import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
-import org.oran.smo.teiv.api.model.OranTeivGetEntitiesByDomain;
-import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 
@@ -43,12 +40,9 @@ public class EntityByDomainResolver implements CriteriaResolver {
     public OranTeivMembersResponse resolveByCriteria(final OranTeivCriteria criteria, final RequestDetails requestDetails) {
         log.debug("Resolve group with getEntitiesByDomain criteria: {}", criteria);
         OranTeivGetEntitiesByDomain entitiesByDomainCriteria = (OranTeivGetEntitiesByDomain) criteria;
-        final OranTeivEntitiesResponseMessage entitiesByDomain = dataService.getEntitiesByDomain(entitiesByDomainCriteria
-                .getDomain(), entitiesByDomainCriteria.getTargetFilter(), entitiesByDomainCriteria.getScopeFilter(),
-                requestDetails);
+        final OranTeivEntities entitiesByDomain = dataService.getEntitiesByDomain(entitiesByDomainCriteria.getDomain(),
+                entitiesByDomainCriteria.getTargetFilter(), entitiesByDomainCriteria.getScopeFilter(), requestDetails);
 
-        return OranTeivMembersResponse.builder().items(entitiesByDomain.getItems()).first(entitiesByDomain.getFirst()).prev(
-                entitiesByDomain.getPrev()).self(entitiesByDomain.getSelf()).next(entitiesByDomain.getNext()).last(
-                        entitiesByDomain.getLast()).totalCount(entitiesByDomain.getTotalCount()).build();
+        return OranTeivMembersResponse.builder().items(entitiesByDomain.getItems()).build();
     }
 }

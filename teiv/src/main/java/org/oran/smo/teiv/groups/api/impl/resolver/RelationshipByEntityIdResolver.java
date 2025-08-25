@@ -20,6 +20,7 @@
  */
 package org.oran.smo.teiv.groups.api.impl.resolver;
 
+import org.oran.smo.teiv.api.model.*;
 import org.oran.smo.teiv.exposure.utils.RequestValidator;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -27,10 +28,6 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.oran.smo.teiv.api.model.OranTeivCriteria;
-import org.oran.smo.teiv.api.model.OranTeivGetRelationshipsForEntityId;
-import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 
@@ -48,14 +45,10 @@ public class RelationshipByEntityIdResolver implements CriteriaResolver {
 
         OranTeivGetRelationshipsForEntityId relForEntityId = (OranTeivGetRelationshipsForEntityId) criteria;
         requestValidator.validateTopologyID(relForEntityId.getEntityId());
-        final OranTeivRelationshipsResponseMessage relationshipsByEntityId = this.dataService
-                .getAllRelationshipsForObjectId(relForEntityId.getDomain(), relForEntityId.getEntityTypeName(),
-                        relForEntityId.getEntityId(), relForEntityId.getTargetFilter(), relForEntityId.getScopeFilter(),
-                        requestDetails);
+        final OranTeivRelationships relationshipsByEntityId = this.dataService.getAllRelationshipsForObjectId(relForEntityId
+                .getDomain(), relForEntityId.getEntityTypeName(), relForEntityId.getEntityId(), relForEntityId
+                        .getTargetFilter(), relForEntityId.getScopeFilter(), requestDetails);
 
-        return OranTeivMembersResponse.builder().items(relationshipsByEntityId.getItems()).first(relationshipsByEntityId
-                .getFirst()).prev(relationshipsByEntityId.getPrev()).self(relationshipsByEntityId.getSelf()).next(
-                        relationshipsByEntityId.getNext()).last(relationshipsByEntityId.getLast()).totalCount(
-                                relationshipsByEntityId.getTotalCount()).build();
+        return OranTeivMembersResponse.builder().items(relationshipsByEntityId.getItems()).build();
     }
 }

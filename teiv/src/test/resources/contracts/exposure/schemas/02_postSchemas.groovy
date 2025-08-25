@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a new classifiers + decorators schema with name module-rapp-model1"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -92,7 +92,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a new decorators without classifier schema with name module-rapp-model2"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -138,7 +138,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a new classifiers without decorator schema with name module-rapp-model3"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -183,7 +183,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifiers and decorators schema, exception thrown due to wrong inheritance for the classifiers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -242,7 +242,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifiers and decorators schema, exception thrown due to wrong inheritance for the classifiers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -308,7 +308,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifiers and decorators schema, exception thrown due to schema already exists"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -386,7 +386,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifiers and decorators schema, exception thrown due to schema already exists"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -455,7 +455,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifiers and decorators schema, exception thrown due to invalid file input"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -525,7 +525,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifiers and decorators schema, exception thrown due to wrong inheritance for the classifier"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -584,7 +584,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with already existing schema name"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -654,7 +654,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with already existing schema name in model schema"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -725,7 +725,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid file type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -752,7 +752,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Empty file"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -778,7 +778,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid leaf 1"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -841,7 +841,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid leaf 2"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -904,7 +904,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema without any given decorator or classifier"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -955,7 +955,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema without any given decorator or classifier 2"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -998,7 +998,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema missing leaf type for the decorators"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1068,7 +1068,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with wrong decorator type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1138,7 +1138,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with wrong syntax (missing imports)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1181,7 +1181,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with wrong syntax (missing revision)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1245,7 +1245,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with wrong syntax (missing yang version, namespace, prefix)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1311,7 +1311,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with wrong syntax (prefix is different then the inheritances)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1377,7 +1377,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 409: Create a new classifiers and decorators schema, exception thrown due to schema exists and is in deleting status"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }
@@ -1438,7 +1438,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a new classifier and decorator schema with not supported decorator type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
             headers {
                 contentType(multipartFormData())
             }

@@ -56,10 +56,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
-import static org.oran.smo.teiv.utils.TeivConstants.REQUEST_MAPPING;
-import static org.oran.smo.teiv.utils.TeivConstants.TEIV_CONSUMER_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TeivConstants.TEIV_DATA_SCHEMA;
-import static org.oran.smo.teiv.utils.TeivConstants.TEIV_MODEL_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest

@@ -20,16 +20,13 @@
  */
 package org.oran.smo.teiv.groups.api.impl.resolver;
 
+import org.oran.smo.teiv.api.model.*;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.oran.smo.teiv.api.model.OranTeivCriteria;
-import org.oran.smo.teiv.api.model.OranTeivGetRelationshipsByType;
-import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 
@@ -44,12 +41,10 @@ public class RelationshipByTypeResolver implements CriteriaResolver {
     public OranTeivMembersResponse resolveByCriteria(final OranTeivCriteria criteria, final RequestDetails requestDetails) {
         log.debug("Resolve group with getRelationshipsByName criteria: {}", criteria);
         OranTeivGetRelationshipsByType relByTypeCriteria = (OranTeivGetRelationshipsByType) criteria;
-        final OranTeivRelationshipsResponseMessage relationshipsByType = this.dataService.getRelationshipsByType(
-                relByTypeCriteria.getDomain(), relByTypeCriteria.getRelationshipTypeName(), relByTypeCriteria
-                        .getTargetFilter(), relByTypeCriteria.getScopeFilter(), requestDetails);
+        final OranTeivRelationships relationshipsByType = this.dataService.getRelationshipsByType(relByTypeCriteria
+                .getDomain(), relByTypeCriteria.getRelationshipTypeName(), relByTypeCriteria.getTargetFilter(),
+                relByTypeCriteria.getScopeFilter(), requestDetails);
 
-        return OranTeivMembersResponse.builder().items(relationshipsByType.getItems()).first(relationshipsByType.getFirst())
-                .prev(relationshipsByType.getPrev()).self(relationshipsByType.getSelf()).next(relationshipsByType.getNext())
-                .last(relationshipsByType.getLast()).totalCount(relationshipsByType.getTotalCount()).build();
+        return OranTeivMembersResponse.builder().items(relationshipsByType.getItems()).build();
     }
 }

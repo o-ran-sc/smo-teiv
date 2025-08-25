@@ -1,0 +1,113 @@
+/*
+ *  ============LICENSE_START=======================================================
+ *  Copyright (C) 2024 Ericsson
+ *  Modifications Copyright (C) 2024-2025 OpenInfra Foundation Europe
+ *  ================================================================================
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *  ============LICENSE_END=========================================================
+ */
+package org.oran.smo.teiv.exposure.model.rest.controller;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.oran.smo.teiv.api.UserDefinedSchemasApi;
+import org.oran.smo.teiv.api.model.OranTeivUserDefinedSchema;
+import org.oran.smo.teiv.api.model.OranTeivUserDefinedSchemas;
+import org.oran.smo.teiv.exception.TeivException;
+import org.oran.smo.teiv.exposure.audit.LoggerHandler;
+import org.oran.smo.teiv.exposure.model.api.ModelService;
+import org.oran.smo.teiv.exposure.utils.RequestDetails;
+import org.oran.smo.teiv.exposure.utils.RequestValidator;
+import org.oran.smo.teiv.utils.TeivConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URI;
+
+@Slf4j
+@RestController
+@RequestMapping(TeivConstants.REQUEST_MAPPING)
+@RequiredArgsConstructor
+@Profile("exposure")
+public class UserDefinedSchemaController implements UserDefinedSchemasApi {
+
+    private final ModelService modelService;
+    private final RequestValidator requestValidator;
+    private final Logger logger = LoggerFactory.getLogger(UserDefinedSchemaController.class);
+    private final LoggerHandler loggerHandler;
+    private final HttpServletRequest context;
+
+    @Override
+    public ResponseEntity<OranTeivUserDefinedSchema> createUserDefinedSchema(String accept, String contentType,
+            MultipartFile file) {
+        try {
+            requestValidator.validateYangFile(file);
+            final String schemaName = modelService.createModule(file);
+            loggerHandler.logAudit(logger, String.format("Successful - Create schema %s", schemaName), context);
+            URI locationUri = URI.create("/user-defined-schemas/" + schemaName);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(locationUri);
+            return new ResponseEntity<>(modelService.getUserDefinedModuleByName(schemaName), headers, HttpStatus.CREATED);
+        } catch (TeivException ex) {
+            loggerHandler.logAudit(logger, String.format("Failed - Create schema using provided file, %s", ex.getDetails()),
+                    context);
+            log.error("Exception during service call", ex);
+            throw ex;
+        }
+    }
+
+    @Override
+    public ResponseEntity<OranTeivUserDefinedSchemas> getUserDefinedSchemas(@NotNull final String accept,
+            @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
+        final RequestDetails.RequestDetailsBuilder builder = RequestDetails.builder().basePath("/user-defined-schemas")
+                .offset(offset).limit(limit);
+
+        return new ResponseEntity<>(modelService.getUserDefinedModulesByDomain(builder.build()), HttpStatus.OK);
+    }
+
+    @Override
+    @SneakyThrows
+    public ResponseEntity<String> getUserDefinedSchemaByName(@NotNull final String accept, final String schemaName) {
+        final String module = modelService.getUserDefinedModuleContentByName(schemaName);
+        return new ResponseEntity<>(module, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteUserDefinedSchema(String accept, String schemaName) {
+        try {
+            modelService.deleteConsumerModule(schemaName);
+            loggerHandler.logAudit(logger, String.format("Successful - Delete schema %s", schemaName), context);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (TeivException ex) {
+            loggerHandler.logAudit(logger, String.format("Failed - Delete schema %s, %s", schemaName, ex.getDetails()),
+                    context);
+            log.error("Exception during service call", ex);
+            throw ex;
+        }
+    }
+}

@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Delete classifiers with wrong entity ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -64,7 +64,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Delete classifiers with wrong relationship ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -101,7 +101,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "BAD REQUEST - 400: Delete classifiers from non-existing schema."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -138,7 +138,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid classifiers, no topology object given."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -159,7 +159,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid classifiers on entities."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -184,7 +184,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid classifiers on relationships."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -209,7 +209,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid classifiers on entities and relationships."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')

@@ -26,7 +26,7 @@ import lombok.experimental.UtilityClass;
 public class TeivConstants {
     public static final String ENTITIES = "entities";
     public static final String RELATIONSHIPS = "relationships";
-    public static final String API_VERSION = "v1alpha11";
+    public static final String API_VERSION = "v1";
     public static final String REQUEST_MAPPING = "/topology-inventory/" + API_VERSION;
     public static final String REQUEST_MAPPING_AUDIT = "topology-inventory-audit/" + API_VERSION;
 
@@ -46,6 +46,7 @@ public class TeivConstants {
     public static final String SOURCE_IDS = "sourceIds";
     public static final String CLASSIFIERS = "classifiers";
     public static final String DECORATORS = "decorators";
+    public static final String USER_DEFINED_SCHEMAS = "user-defined-schemas";
     public static final String METADATA = "metadata";
     public static final String RESPONSIBLE_ADAPTER = "responsible_adapter";
     public static final String REL_PREFIX = "REL_";
