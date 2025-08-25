@@ -24,7 +24,7 @@ import org.springframework.cloud.contract.spec.Contract
 
 [
     Contract.make {
-        description "SUCCESS - 200: Get a list of all schemas"
+        description "SUCCESS - 200: Get a list of all pre-defined schemas"
         request {
             method GET()
             url("/topology-inventory/v1alpha11/schemas")
@@ -211,22 +211,6 @@ import org.springframework.cloud.contract.spec.Contract
                         "content": {
                             "href": "/schemas/test-built-in-module/content"
                         }
-                    },
-                    {
-                        "name": "test-app-module",
-                        "domain": "",
-                        "revision": "2024-05-24",
-                        "content": {
-                            "href": "/schemas/test-app-module/content"
-                        }
-                    },
-                    {
-                        "name": "test-app-for-deletion-module",
-                        "domain": "",
-                        "revision": "2024-05-24",
-                        "content": {
-                            "href": "/schemas/test-app-for-deletion-module/content"
-                        }
                     }
                 ],
                 "self": {
@@ -244,11 +228,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=0&limit=500"
                 },
-                "totalCount": 24
+                "totalCount": 22
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(24)
+                    occurrence(22)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].domain', byEquality())
@@ -338,14 +322,69 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[21].domain', byEquality())
                 jsonPath('$.items[21].revision', byEquality())
                 jsonPath('$.items[21].content.href', byEquality())
-                jsonPath('$.items[22].name', byEquality())
-                jsonPath('$.items[22].domain', byEquality())
-                jsonPath('$.items[22].revision', byEquality())
-                jsonPath('$.items[22].content.href', byEquality())
-                jsonPath('$.items[23].name', byEquality())
-                jsonPath('$.items[23].domain', byEquality())
-                jsonPath('$.items[23].revision', byEquality())
-                jsonPath('$.items[23].content.href', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get a list of all user-defined schemas"
+        request {
+            method GET()
+            url("/topology-inventory/v1alpha11/user-defined-schemas")
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "name": "test-app-module",
+                        "domain": "",
+                        "revision": "2024-05-24",
+                        "content": {
+                            "href": "/user-defined-schemas/test-app-module/content"
+                        }
+                    },
+                    {
+                        "name": "test-app-for-deletion-module",
+                        "domain": "",
+                        "revision": "2024-05-24",
+                        "content": {
+                            "href": "/user-defined-schemas/test-app-for-deletion-module/content"
+                        }
+                    }
+                    
+                ],
+                "self": {
+                    "href": "/user-defined-schemas?offset=0&limit=500"
+                },
+                "first": {
+                    "href": "/user-defined-schemas?offset=0&limit=500"
+                },
+                "prev": {
+                    "href": "/user-defined-schemas?offset=0&limit=500"
+                },
+                "next": {
+                    "href": "/user-defined-schemas?offset=0&limit=500"
+                },
+                "last": {
+                    "href": "/user-defined-schemas?offset=0&limit=500"
+                },
+                "totalCount": 2
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[0].name', byEquality())
+                jsonPath('$.items[0].domain', byEquality())
+                jsonPath('$.items[0].revision', byEquality())
+                jsonPath('$.items[0].content.href', byEquality())
+                jsonPath('$.items[1].name', byEquality())
+                jsonPath('$.items[1].domain', byEquality())
+                jsonPath('$.items[1].revision', byEquality())
+                jsonPath('$.items[1].content.href', byEquality())
             }
         }
     },
@@ -384,9 +423,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/schemas?offset=1&limit=1"
                 },
                 "last": {
-                    "href": "/schemas?offset=23&limit=1"
+                    "href": "/schemas?offset=21&limit=1"
                 },
-                "totalCount": 24
+                "totalCount": 22
             }''')
         }
     },
@@ -443,7 +482,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=21&limit=3"
                 },
-                "totalCount": 24
+                "totalCount": 22
             }''')
         }
     },

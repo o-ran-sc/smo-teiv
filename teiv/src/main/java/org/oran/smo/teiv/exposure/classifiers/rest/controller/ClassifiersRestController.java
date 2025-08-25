@@ -108,7 +108,7 @@ public class ClassifiersRestController implements ClassifiersApi {
     public FilterRegistrationBean<ClassifiersRequestFilter> classifiersRequestFilter(final ObjectMapper objectMapper) {
         FilterRegistrationBean<ClassifiersRequestFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new ClassifiersRequestFilter(loggerHandler, objectMapper, customMetrics));
-        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/classifiers");
+        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/manage-classifiers");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }

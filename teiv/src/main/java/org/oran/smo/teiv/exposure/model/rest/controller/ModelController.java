@@ -63,6 +63,7 @@ public class ModelController implements SchemasApi {
     private final HttpServletRequest context;
 
     @Override
+    @Deprecated
     public ResponseEntity<Void> createSchema(String accept, String contentType, MultipartFile file) {
         try {
             requestValidator.validateYangFile(file);
@@ -97,6 +98,41 @@ public class ModelController implements SchemasApi {
     }
 
     @Override
+    public ResponseEntity<Void> createUserDefinedSchema(String accept, String contentType, MultipartFile file) {
+        try {
+            requestValidator.validateYangFile(file);
+            final String schemaName = modelService.createModule(file);
+            loggerHandler.logAudit(logger, String.format("Successful - Create schema %s", schemaName), context);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (TeivException ex) {
+            loggerHandler.logAudit(logger, String.format("Failed - Create schema using provided file, %s", ex.getDetails()),
+                    context);
+            log.error("Exception during service call", ex);
+            throw ex;
+        }
+    }
+
+    @Override
+    public ResponseEntity<OranTeivSchemaList> getUserDefinedSchemas(@NotNull final String accept,
+                                                                    @Valid final String domain, @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
+        final RequestDetails.RequestDetailsBuilder builder = RequestDetails.builder().basePath("/user-defined-schemas")
+                .offset(offset).limit(limit);
+        if (!Objects.isNull(domain)) {
+            builder.queryParam("domain", domain);
+        }
+
+        return new ResponseEntity<>(modelService.getUserDefinedModulesByDomain(domain, builder.build()), HttpStatus.OK);
+    }
+
+    @Override
+    @SneakyThrows
+    public ResponseEntity<String> getUserDefinedSchemaByName(@NotNull final String accept, final String schemaName) {
+        final String module = modelService.getUserDefinedModuleContentByName(schemaName);
+        return new ResponseEntity<>(module, HttpStatus.OK);
+    }
+
+    @Override
+    @Deprecated
     public ResponseEntity<Void> deleteSchema(String accept, String schemaName) {
         try {
             modelService.deleteConsumerModule(schemaName);
@@ -110,4 +146,17 @@ public class ModelController implements SchemasApi {
         }
     }
 
+    @Override
+    public ResponseEntity<Void> deleteUserDefinedSchema(String accept, String schemaName) {
+        try {
+            modelService.deleteConsumerModule(schemaName);
+            loggerHandler.logAudit(logger, String.format("Successful - Delete schema %s", schemaName), context);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (TeivException ex) {
+            loggerHandler.logAudit(logger, String.format("Failed - Delete schema %s, %s", schemaName, ex.getDetails()),
+                    context);
+            log.error("Exception during service call", ex);
+            throw ex;
+        }
+    }
 }

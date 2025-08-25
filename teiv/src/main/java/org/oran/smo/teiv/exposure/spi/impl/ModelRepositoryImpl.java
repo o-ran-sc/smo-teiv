@@ -91,7 +91,10 @@ public class ModelRepositoryImpl implements ModelRepository {
                         "ownerAppId")).status(ModuleStatus.valueOf((String) module.get(STATUS))).build());
     }
 
-    @Override
+    /*
+    * @deprecated, splitting into two functions to get predefined and userdefined modules separately.
+    */
+    /*@Override
     public List<Module> getModules() {
         return runMethodSafe(() -> {
             final List<Module> modules = new ArrayList<>();
@@ -101,6 +104,16 @@ public class ModelRepositoryImpl implements ModelRepository {
             modules.addAll(modulesFromConsumerDataSchema);
             return modules;
         });
+    }*/
+
+    @Override
+    public List<Module> getModules() {
+        return runMethodSafe(() -> getModulesBySchema(TEIV_MODEL));
+    }
+
+    @Override
+    public List<Module> getUserDefinedModules() {
+        return runMethodSafe(() -> getModulesBySchema(TEIV_CONSUMER_DATA));
     }
 
     @Override
@@ -114,7 +127,10 @@ public class ModelRepositoryImpl implements ModelRepository {
         });
     }
 
-    @Override
+    /*
+    * @deprecated, splitting into two functions to get predefined and userdefined modules separately.
+    */
+    /*@Override
     public String getModuleContentByName(final String name) {
         return runMethodSafe(() -> {
             String content = getModuleContentByNameFromSchema(TEIV_MODEL, name);
@@ -123,6 +139,16 @@ public class ModelRepositoryImpl implements ModelRepository {
             }
             return content;
         });
+    }*/
+
+    @Override
+    public String getModuleContentByName(final String name) {
+        return runMethodSafe(() -> getModuleContentByNameFromSchema(TEIV_MODEL, name));
+    }
+
+    @Override
+    public String getUserDefinedModuleContentByName(final String name) {
+        return runMethodSafe(() -> getModuleContentByNameFromSchema(TEIV_CONSUMER_DATA, name));
     }
 
     private void createModule(DSLContext transactionalDSL, Module module) {

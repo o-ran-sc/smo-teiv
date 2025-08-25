@@ -1417,7 +1417,7 @@
     },
     "/schemas" : {
       "get" : {
-        "description" : "Get a list of all schemas.",
+        "description" : "Get a list of all pre-defined schemas.",
         "operationId" : "getSchemas",
         "parameters" : [ {
           "explode" : false,
@@ -1547,10 +1547,11 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Get a list of all schemas.",
+        "summary" : "Get a list of all pre-defined schemas.",
         "tags" : [ "Schemas" ]
       },
       "post" : {
+        "deprecated" : true,
         "description" : "Create a new schema. The request body contains the schema in YANG format.",
         "operationId" : "createSchema",
         "parameters" : [ {
@@ -1672,7 +1673,7 @@
     },
     "/schemas/{schemaName}/content" : {
       "get" : {
-        "description" : "Get the model schema by name.",
+        "description" : "Get the pre-defined model schema by name.",
         "operationId" : "getSchemaByName",
         "parameters" : [ {
           "explode" : false,
@@ -1788,12 +1789,390 @@
             "description" : "Internal Server Error"
           }
         },
-        "summary" : "Get the model schema.",
+        "summary" : "Get the pre-defined model schema.",
+        "tags" : [ "Schemas" ]
+      }
+    },
+    "/user-defined-schemas" : {
+      "get" : {
+        "description" : "Get a list of all user defined schemas.",
+        "operationId" : "getUserDefinedSchemas",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "examples" : {
+            "domain" : {
+              "value" : "RAN"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "domain",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Pagination offset.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Result limiter.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 500,
+            "maximum" : 500,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "schemas" : {
+                    "$ref" : "#/components/examples/SchemasResponseExample"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/SchemaList"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get a list of all used defined schemas.",
+        "tags" : [ "Schemas" ]
+      },
+      "post" : {
+        "description" : "Create a new user defined schema. The request body contains the schema in YANG format.",
+        "operationId" : "createUserDefinedSchema",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "multipart/form-data",
+            "example" : "multipart/form-data",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MultipartFile"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created without response body"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Create a new user defined schema.",
+        "tags" : [ "Schemas" ]
+      }
+    },
+    "/user-defined-schemas/{schemaName}/content" : {
+      "get" : {
+        "description" : "Get the user defined model schema by name.",
+        "operationId" : "getUserDefinedSchemaByName",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "schemaName",
+          "required" : true,
+          "schema" : {
+            "default" : "o-ran-smo-teiv-ran",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "examples" : {
+                  "schema" : {
+                    "$ref" : "#/components/examples/SchemaResponseExample"
+                  }
+                },
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "404",
+                  "title" : "Resource Not Found",
+                  "details" : "The requested resource is not found"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Get the user defined model schema.",
         "tags" : [ "Schemas" ]
       }
     },
     "/schemas/{schemaName}" : {
       "delete" : {
+        "deprecated" : true,
         "description" : "Delete a schema.",
         "operationId" : "deleteSchema",
         "parameters" : [ {
@@ -1888,7 +2267,234 @@
         "tags" : [ "Schemas" ]
       }
     },
+    "/user-defined-schemas/{schemaName}" : {
+      "delete" : {
+        "description" : "Delete a user defined schema.",
+        "operationId" : "deleteUserDefinedSchema",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "schemaName",
+          "required" : true,
+          "schema" : {
+            "default" : "o-ran-smo-teiv-ran",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Delete a user defined schema.",
+        "tags" : [ "Schemas" ]
+      }
+    },
     "/classifiers" : {
+      "post" : {
+        "deprecated" : true,
+        "description" : "Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.",
+        "operationId" : "updateClassifierDeprecated",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "updateClassifier" : {
+                  "$ref" : "#/components/examples/ClassifierMergeExample"
+                },
+                "removeClassifier" : {
+                  "$ref" : "#/components/examples/ClassifierDeleteExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Classifier"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Update entities and/or relationships with classifier(s).",
+        "tags" : [ "Classifiers" ]
+      }
+    },
+    "/manage-classifiers" : {
       "post" : {
         "description" : "Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.",
         "operationId" : "updateClassifier",
@@ -2019,6 +2625,137 @@
       }
     },
     "/decorators" : {
+      "post" : {
+        "deprecated" : true,
+        "description" : "Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.",
+        "operationId" : "updateDecoratorDeprecated",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "Content-Type",
+          "required" : true,
+          "schema" : {
+            "default" : "application/json",
+            "example" : "application/json",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "mergeDecorator" : {
+                  "$ref" : "#/components/examples/DecoratorMergeExample"
+                },
+                "removeDecorator" : {
+                  "$ref" : "#/components/examples/DecoratorDeleteExample"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Decorator"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "content" : { },
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "400",
+                  "title" : "Bad Request",
+                  "details" : "The provided request is not valid"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "401",
+                  "title" : "Unauthorized request",
+                  "details" : "This request is unauthorized"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "403",
+                  "title" : "Request Forbidden",
+                  "details" : "This request is forbidden"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "409",
+                  "title" : "Conflicting request",
+                  "details" : "The request cannot be processed as the resource is in use."
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "application/problem+json" : {
+                "example" : {
+                  "status" : "500",
+                  "title" : "Internal Server Error",
+                  "details" : "Internal Server Error occurred"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Update entities and/or relationships with decorator(s).",
+        "tags" : [ "Decorators" ]
+      }
+    },
+    "/manage-decorators" : {
       "post" : {
         "description" : "Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.",
         "operationId" : "updateDecorator",
