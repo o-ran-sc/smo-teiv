@@ -23,8 +23,7 @@ package org.oran.smo.teiv.exposure.model.rest.controller;
 import java.util.Objects;
 
 import org.oran.smo.teiv.api.SchemasApi;
-import org.oran.smo.teiv.api.model.OranTeivSchemaList;
-import org.oran.smo.teiv.exception.TeivException;
+import org.oran.smo.teiv.api.model.OranTeivSchemas;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.exposure.model.api.ModelService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
@@ -37,7 +36,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -54,31 +52,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(TeivConstants.REQUEST_MAPPING)
 @RequiredArgsConstructor
 @Profile("exposure")
-public class ModelController implements SchemasApi {
+public class PredefinedSchemaController implements SchemasApi {
 
     private final ModelService modelService;
     private final RequestValidator requestValidator;
-    private final Logger logger = LoggerFactory.getLogger(ModelController.class);
+    private final Logger logger = LoggerFactory.getLogger(PredefinedSchemaController.class);
     private final LoggerHandler loggerHandler;
     private final HttpServletRequest context;
 
     @Override
-    public ResponseEntity<Void> createSchema(String accept, String contentType, MultipartFile file) {
-        try {
-            requestValidator.validateYangFile(file);
-            final String schemaName = modelService.createModule(file);
-            loggerHandler.logAudit(logger, String.format("Successful - Create schema %s", schemaName), context);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (TeivException ex) {
-            loggerHandler.logAudit(logger, String.format("Failed - Create schema using provided file, %s", ex.getDetails()),
-                    context);
-            log.error("Exception during service call", ex);
-            throw ex;
-        }
-    }
-
-    @Override
-    public ResponseEntity<OranTeivSchemaList> getSchemas(@NotNull final String accept, @Valid final String domain,
+    public ResponseEntity<OranTeivSchemas> getSchemas(@NotNull final String accept, @Valid final String domain,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
         final RequestDetails.RequestDetailsBuilder builder = RequestDetails.builder().basePath("/schemas").offset(offset)
                 .limit(limit);
@@ -95,19 +78,4 @@ public class ModelController implements SchemasApi {
         final String module = modelService.getModuleContentByName(schemaName);
         return new ResponseEntity<>(module, HttpStatus.OK);
     }
-
-    @Override
-    public ResponseEntity<Void> deleteSchema(String accept, String schemaName) {
-        try {
-            modelService.deleteConsumerModule(schemaName);
-            loggerHandler.logAudit(logger, String.format("Successful - Delete schema %s", schemaName), context);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (TeivException ex) {
-            loggerHandler.logAudit(logger, String.format("Failed - Delete schema %s, %s", schemaName, ex.getDetails()),
-                    context);
-            log.error("Exception during service call", ex);
-            throw ex;
-        }
-    }
-
 }

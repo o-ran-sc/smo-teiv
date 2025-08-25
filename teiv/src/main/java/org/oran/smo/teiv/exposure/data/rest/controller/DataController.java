@@ -25,10 +25,10 @@ import java.util.function.Supplier;
 import org.oran.smo.teiv.CustomMetrics;
 import org.oran.smo.teiv.api.EntitiesAndRelationshipsApi;
 import org.oran.smo.teiv.api.model.OranTeivDomains;
-import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
 import org.oran.smo.teiv.api.model.OranTeivEntityTypes;
 import org.oran.smo.teiv.api.model.OranTeivRelationshipTypes;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
+import org.oran.smo.teiv.api.model.OranTeivRelationships;
+import org.oran.smo.teiv.api.model.OranTeivEntities;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.exposure.utils.RequestValidator;
@@ -94,8 +94,8 @@ public class DataController implements EntitiesAndRelationshipsApi {
 
     @Override
     @Timed("teiv_exposure_http_get_relationships_by_type_seconds")
-    public ResponseEntity<OranTeivRelationshipsResponseMessage> getRelationshipsByType(@NotNull String accept,
-            String domain, String relationshipType, @Valid String targetFilter, @Valid String scopeFilter,
+    public ResponseEntity<OranTeivRelationships> getRelationshipsByType(@NotNull String accept, String domain,
+            String relationshipType, @Valid String targetFilter, @Valid String scopeFilter,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> {
             requestValidator.validateDomain(domain);
@@ -123,8 +123,8 @@ public class DataController implements EntitiesAndRelationshipsApi {
 
     @Override
     @Timed("teiv_exposure_http_get_entities_by_type_seconds")
-    public ResponseEntity<OranTeivEntitiesResponseMessage> getTopologyByEntityTypeName(@NotNull final String accept,
-            final String domain, final String entityType, @Valid final String targetFilter, @Valid final String scopeFilter,
+    public ResponseEntity<OranTeivEntities> getTopologyByEntityTypeName(@NotNull final String accept, final String domain,
+            final String entityType, @Valid final String targetFilter, @Valid final String scopeFilter,
             @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> {
             requestValidator.validateDomain(domain);
@@ -139,9 +139,9 @@ public class DataController implements EntitiesAndRelationshipsApi {
 
     @Override
     @Timed("teiv_exposure_http_get_entities_by_domain_seconds")
-    public ResponseEntity<OranTeivEntitiesResponseMessage> getEntitiesByDomain(@NotNull final String accept,
-            final String domain, @Valid final String targetFilter, @Valid final String scopeFilter,
-            @Min(0) @Valid final Integer offset, @Min(1) @Max(500) @Valid final Integer limit) {
+    public ResponseEntity<OranTeivEntities> getEntitiesByDomain(@NotNull final String accept, final String domain,
+            @Valid final String targetFilter, @Valid final String scopeFilter, @Min(0) @Valid final Integer offset,
+            @Min(1) @Max(500) @Valid final Integer limit) {
         return runWithFailCheck(() -> {
             requestValidator.validateDomain(domain);
             return ResponseEntity.ok(dataService.getEntitiesByDomain(domain, targetFilter, scopeFilter, RequestDetails
@@ -152,7 +152,7 @@ public class DataController implements EntitiesAndRelationshipsApi {
 
     @Override
     @Timed("teiv_exposure_http_get_relationships_by_entity_id_seconds")
-    public ResponseEntity<OranTeivRelationshipsResponseMessage> getAllRelationshipsForEntityId(@NotNull final String accept,
+    public ResponseEntity<OranTeivRelationships> getAllRelationshipsForEntityId(@NotNull final String accept,
             final String domain, final String entityType, final String id, @Valid final String targetFilter,
             @Valid final String scopeFilter, @Min(0) @Valid final Integer offset,
             @Min(1) @Max(500) @Valid final Integer limit) {

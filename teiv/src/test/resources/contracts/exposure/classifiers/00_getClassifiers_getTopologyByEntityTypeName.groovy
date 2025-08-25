@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural']"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()
@@ -95,7 +95,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter(OR)"
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural'] | /classifiers[@item='test-app-module:Indoor']"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural'] | /classifiers[@item='test-app-module:Indoor']"
         }
         response {
             status OK()
@@ -189,7 +189,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter.(AND)"
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
         }
         response {
             status OK()
@@ -257,7 +257,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter.(Contains)"
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'app-module:Rural')]"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'app-module:Rural')]"
         }
         response {
             status OK()
@@ -325,7 +325,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()
@@ -375,7 +375,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural'] | /provided-nrCellDu/classifiers[@item='test-app-module:Indoor']"
         }
         response {
             status OK()
@@ -425,7 +425,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with classifiers in scopeFilter."
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+            url "topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(gNBId)&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
         }
         response {
             status OK()

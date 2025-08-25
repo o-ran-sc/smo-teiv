@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getRelationshipsByType - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[@test-app-module:textdata = 'Stockholm']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[@test-app-module:textdata = 'Stockholm']"
         }
         response {
             status OK()
@@ -101,7 +101,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getRelationshipsByType - CONTAINS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')]"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')]"
         }
         response {
             status OK()
@@ -175,7 +175,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getRelationshipsByType - CONTAINS and EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')] ; /decorators[@test-app-module:intdata = 123]"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')] ; /decorators[@test-app-module:intdata = 123]"
         }
         response {
             status OK()

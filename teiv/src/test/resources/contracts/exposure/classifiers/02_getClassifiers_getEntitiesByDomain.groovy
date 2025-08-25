@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getEntitiesByDomain - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
+            url "/topology-inventory/v1/domains/RAN/entities?targetFilter=/ODUFunction/classifiers&scopeFilter=/ODUFunction/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()
@@ -90,7 +90,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getEntitiesByDomain - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural']"
+            url "/topology-inventory/v1/domains/RAN/entities?targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()
@@ -164,7 +164,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getEntitiesByDomain - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entities?targetFilter=/classifiers&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
+            url "/topology-inventory/v1/domains/RAN/entities?targetFilter=/classifiers&scopeFilter=/provided-nrCellDu/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()

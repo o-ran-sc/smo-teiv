@@ -20,7 +20,9 @@
  */
 package org.oran.smo.teiv.exposure.model.api;
 
-import org.oran.smo.teiv.api.model.OranTeivSchemaList;
+import org.oran.smo.teiv.api.model.OranTeivSchemas;
+import org.oran.smo.teiv.api.model.OranTeivUserDefinedSchema;
+import org.oran.smo.teiv.api.model.OranTeivUserDefinedSchemas;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +45,7 @@ public interface ModelService {
      *     pagination data
      * @return a map of all schemas in a domain
      */
-    OranTeivSchemaList getModulesByDomain(final String domain, final RequestDetails paginationDTO);
+    OranTeivSchemas getModulesByDomain(final String domain, final RequestDetails paginationDTO);
 
     /**
      * Gets module content
@@ -53,6 +55,33 @@ public interface ModelService {
      * @return the content
      */
     String getModuleContentByName(final String name);
+
+    /**
+     * Gets all user defined modules in a domain
+     *
+     * @param paginationDTO
+     *     pagination data
+     * @return a map of all user defined schemas in a domain
+     */
+    OranTeivUserDefinedSchemas getUserDefinedModulesByDomain(final RequestDetails paginationDTO);
+
+    /**
+     * Gets module content
+     *
+     * @param name
+     *     name
+     * @return the content
+     */
+    String getUserDefinedModuleContentByName(final String name);
+
+    /**
+     * Gets module
+     *
+     * @param name
+     *     name
+     * @return the module
+     */
+    OranTeivUserDefinedSchema getUserDefinedModuleByName(final String name);
 
     /**
      * Deletes module.
