@@ -21,10 +21,10 @@
 package org.oran.smo.teiv.exposure.data.api;
 
 import org.oran.smo.teiv.api.model.OranTeivDomains;
-import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
+import org.oran.smo.teiv.api.model.OranTeivEntities;
 import org.oran.smo.teiv.api.model.OranTeivEntityTypes;
 import org.oran.smo.teiv.api.model.OranTeivRelationshipTypes;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
+import org.oran.smo.teiv.api.model.OranTeivRelationships;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 
 public interface DataService {
@@ -89,8 +89,8 @@ public interface DataService {
      *
      * @return a collection of entity data and attributes
      */
-    OranTeivEntitiesResponseMessage getTopologyByType(final String domain, final String entityType,
-            final String targetFilter, final String scopeFilter, final RequestDetails requestDetails);
+    OranTeivEntities getTopologyByType(final String domain, final String entityType, final String targetFilter,
+            final String scopeFilter, final RequestDetails requestDetails);
 
     /**
      *
@@ -105,8 +105,8 @@ public interface DataService {
      *
      * @return a collection of entity data and attributes
      */
-    OranTeivEntitiesResponseMessage getEntitiesByDomain(final String domain, final String targetFilter,
-            final String scopeFilter, final RequestDetails requestDetails);
+    OranTeivEntities getEntitiesByDomain(final String domain, final String targetFilter, final String scopeFilter,
+            final RequestDetails requestDetails);
 
     /**
      * Get all relationships for entityType with specified id
@@ -126,8 +126,8 @@ public interface DataService {
      *
      * @return a collection of relationships for entity type
      */
-    OranTeivRelationshipsResponseMessage getAllRelationshipsForObjectId(final String domain, final String entityType,
-            final String id, final String targetFilter, final String scopeFilter, final RequestDetails requestDetails);
+    OranTeivRelationships getAllRelationshipsForObjectId(final String domain, final String entityType, final String id,
+            final String targetFilter, final String scopeFilter, final RequestDetails requestDetails);
 
     /**
      * Get relationship with specified id
@@ -152,6 +152,6 @@ public interface DataService {
      *
      * @return relationships by relationship type
      */
-    OranTeivRelationshipsResponseMessage getRelationshipsByType(final String domain, final String relationshipType,
+    OranTeivRelationships getRelationshipsByType(final String domain, final String relationshipType,
             final String targetFilter, final String scopeFilter, final RequestDetails requestDetails);
 }

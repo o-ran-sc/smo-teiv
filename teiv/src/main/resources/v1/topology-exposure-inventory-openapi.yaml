@@ -19,7 +19,7 @@
 # ============LICENSE_END=========================================================
 #
 
-openapi: 3.0.2
+openapi: 3.0.3
 info:
   x-api-id: 52812f69-83ac-4dfa-b83a-1a1bdf2d49b8
   x-audience: external-public
@@ -154,7 +154,7 @@ info:
     | Return all related relationship ids and decorators where key is a exact match and value is partially match.                                                                                            |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /decorators               | /decorators[contains(@odu-function-model:textdata, 'Stock')]                                                                      | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION and where key of the decorator is "odu-function-model:textdata" and the value of the decorator partially contains 'Stock'.                                                                      |
     | Return all related relationship ids,decorators and classifiers where key of the decorator is a exact match and value partially matches, and classifiers partially contains from the given parameters.  |            | MANAGEDELEMENT _MANAGES _ENODEBFUNCTION | /classifiers; /decorators | /classifiers[contains(@item, 'Ind')]; /decorators[contains(@odu-function-model:textdata, 'Stock')]                                | All MANAGEDELEMENT _MANAGES _ENODEBFUNCTION ids and decorators where key of the decorator is "odu-function-model:textdata" and the value of the decorator partially contains 'Stock' and classifiers partially contains the text "Ind".     |
 
-  version: 0.11.0
+  version: 1.2.0
   title: Topology Exposure and Inventory API
   license:
     name: Copyright (C) 2024 Ericsson, Modifications Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
@@ -166,6 +166,8 @@ tags:
     description: "Provides the capability to retrieve topology and inventory entities and relationships."
   - name: Schemas
     description: "Schemas are defined in YANG modeling language. A group of Yang schemas makes the topology and inventory model, which represents topology and inventory entities, their attributes, and their relationships. For more information on YANG modelling language, see [IETF Documentation](https://datatracker.ietf.org/doc/html/rfc6020)."
+  - name: User Defined Schemas
+    description: "User defined schemas are defined in YANG modeling language."
   - name: Classifiers
     description: "Provides the capability to update or remove user-defined keywords or tags on entities and relationships."
   - name: Decorators
@@ -174,7 +176,7 @@ tags:
     description: "Provides the capability to group topology entities and/or relationships of any type. Groups can be created in static or dynamic way. *Static groups*: Group members are defined statically upon group creation. It can include a maximum of 10,000 members. *Dynamic groups*: Group members are dynamically selected based on the defined resource query."
 
 servers:
-  - url: https://{host}/topology-inventory/v1alpha11
+  - url: https://{host}/topology-inventory/v1
     variables:
       host:
         default: localhost
@@ -203,13 +205,25 @@ paths:
                 domains:
                   $ref: '#/components/examples/DomainsResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/entity-types:
     get:
@@ -234,13 +248,25 @@ paths:
                 entityTypes:
                   $ref: '#/components/examples/EntityTypesResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/entity-types/{entityTypeName}/entities:
     get:
@@ -263,27 +289,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EntitiesResponseMessage'
+                $ref: '#/components/schemas/Entities'
               examples:
                 entities:
                   $ref: '#/components/examples/EntitiesResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}:
     get:
-      description: Get topology for entity type name with specified id.
-        Specified id represents the entity instance.
+      description: Get a specific Topology Entity instance of a Topology Entity type
       tags:
         - Entities and relationships
-      summary: Get topology for entity type name with specified id. Specified
-        id represents the entity instance.
+      summary: Get a specific Topology Entity instance of a Topology Entity type
       operationId: "getTopologyById"
       parameters:
         - $ref: '#/components/parameters/acceptYangJsonInHeader'
@@ -297,29 +333,37 @@ paths:
             application/yang.data+json:
               schema:
                 type: object
-                description: "Refer to yang model for schema definition"
+                description: "Encapsulated object reference to the data model for schema definition of Topology Entity"
               examples:
                 entity:
                   $ref: '#/components/examples/EntityResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/entity-types/{entityTypeName}/entities/{entityId}/relationships:
     get:
-      description: Get all relationships for entity type name with specified
-        id. Specified id represents the entity instance.
+      description: Get all relationships for a specific Topology Entity instance of a Topology Entity type
       tags:
         - Entities and relationships
-      summary: Get all relationships for entity type name with specified id.
-        Specified id represents the entity instance.
+      summary: Get all relationships for a specific Topology Entity instance of a Topology Entity type
       operationId: "getAllRelationshipsForEntityId"
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
@@ -336,24 +380,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelationshipsResponseMessage'
+                $ref: '#/components/schemas/Relationships'
               examples:
                 relationships:
                   $ref: '#/components/examples/RelationshipsResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/relationship-types:
     get:
-      description: Get all the available topology relationship types in a specified domain.
+      description: Get all the available Topology Relationship types.
       tags:
         - Entities and relationships
       summary: Get all the available topology relationship types.
@@ -374,21 +428,33 @@ paths:
                 relationshipTypes:
                   $ref: '#/components/examples/RelationshipTypesResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/relationship-types/{relationshipTypeName}/relationships:
     get:
-      description: Get topology relationships of a specific relationship type
+      description: Get all the available Topology Relationships of a specific relationship type name
         name.
       tags:
         - Entities and relationships
-      summary: Get topology relationships of a specific relationship type name.
+      summary: Get all the available Topology Relationships of a specific relationship type name.
       operationId: "getRelationshipsByType"
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
@@ -404,27 +470,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelationshipsResponseMessage'
+                $ref: '#/components/schemas/Relationships'
               examples:
                 relationships:
                   $ref: '#/components/examples/RelationshipsResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/relationship-types/{relationshipTypeName}/relationships/{relationshipId}:
     get:
-      description: Get relationship with specified id. Specified id
-        represents the relationship instance.
+      description: Get a specific Topology Relationship instance of a Topology Relationship type.
       tags:
         - Entities and relationships
-      summary: Get relationship with specified id. Specified id represents
-        the relationship instance.
+      summary: Get a specific Topology Relationship instance of a Topology Relationship type.
       operationId: "getRelationshipById"
       parameters:
         - $ref: '#/components/parameters/acceptYangJsonInHeader'
@@ -438,20 +514,30 @@ paths:
             application/yang.data+json:
               schema:
                 type: object
-                description: "Refer to yang model for schema definition"
+                description: "Encapsulated object reference to the data model for schema definition of Topology Relationship"
               examples:
                 relationship:
                   $ref: '#/components/examples/RelationshipResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /domains/{domainName}/entities:
     get:
@@ -474,21 +560,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EntitiesResponseMessage'
+                $ref: '#/components/schemas/Entities'
               examples:
                 entities:
                   $ref: '#/components/examples/EntitiesResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /schemas:
     post:
+      deprecated: true
       description: Create a new schema. The request body contains the schema in YANG format.
       tags:
         - Schemas
@@ -518,10 +617,10 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
     get:
-      description: Get a list of all schemas.
+      description: Get a list of all topology model schemas.
       tags:
         - Schemas
-      summary: Get a list of all schemas.
+      summary: Get a list of all pre defined schemas.
       operationId: getSchemas
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
@@ -534,18 +633,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SchemaList'
+                $ref: '#/components/schemas/Schemas'
               examples:
                 schemas:
                   $ref: '#/components/examples/SchemasResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /schemas/{schemaName}/content:
     get:
@@ -555,7 +666,7 @@ paths:
       summary: Get the model schema.
       operationId: getSchemaByName
       parameters:
-        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/acceptPlainTextInHeader'
         - $ref: '#/components/parameters/schemaNameInPath'
       responses:
         '200':
@@ -568,18 +679,162 @@ paths:
                 schema:
                   $ref: '#/components/examples/SchemaResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/401'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /user-defined-schemas:
+    post:
+      description: Create a new user defined schema. The request body contains the schema in YANG format.
+      tags:
+        - User Defined Schemas
+      summary: Create a new user defined schema.
+      operationId: createUserDefinedSchema
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/contentTypeMultipartFileInHeader'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MultipartFile'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDefinedSchema'
+          headers:
+            Location:
+              description: 'Contains the URI of the newly created resource'
+              required: true
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '411':
+          $ref: '#/components/responses/411'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+
+    get:
+      description: Get a list of all user defined schemas.
+      tags:
+        - User Defined Schemas
+      summary: Get a list of all used defined schemas.
+      operationId: getUserDefinedSchemas
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDefinedSchemas'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /user-defined-schemas/{schemaName}/content:
+    get:
+      description: Get the user defined model schema by name.
+      tags:
+        - User Defined Schemas
+      summary: Get the user defined model schema.
+      operationId: getUserDefinedSchemaByName
+      parameters:
+        - $ref: '#/components/parameters/acceptPlainTextInHeader'
+        - $ref: '#/components/parameters/schemaNameInPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                schema:
+                  $ref: '#/components/examples/SchemaResponseExample'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '406':
+          $ref: '#/components/responses/406'
+        '414':
+          $ref: '#/components/responses/414'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /schemas/{schemaName}:
     delete:
+      deprecated: true
       description: Delete a schema.
       tags:
         - Schemas
@@ -600,13 +855,44 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /user-defined-schemas/{schemaName}:
+    delete:
+      description: Delete a user defined schema.
+      tags:
+        - User Defined Schemas
+      summary: Delete a user defined schema.
+      operationId: deleteUserDefinedSchema
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/schemaNameInPath'
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+
   /classifiers:
     post:
+      deprecated: true
       description: Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.
       tags:
         - Classifiers
       summary: Update entities and/or relationships with classifier(s).
-      operationId: updateClassifier
+      operationId: updateClassifierDeprecated
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
         - $ref: '#/components/parameters/contentTypeJsonInHeader'
@@ -635,13 +921,63 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /manage-classifiers:
+    post:
+      description: Update entities and/or relationships with classifier(s).
+      tags:
+        - Classifiers
+      summary: Update entities and/or relationships with classifier(s).
+      operationId: updateClassifier
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/contentTypeJsonInHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classifier'
+            examples:
+              updateClassifier:
+                $ref: '#/components/examples/ClassifierMergeExample'
+              removeClassifier:
+                $ref: '#/components/examples/ClassifierDeleteExample'
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '411':
+          $ref: '#/components/responses/411'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+
   /decorators:
     post:
+      deprecated: true
       description: Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.
       tags:
         - Decorators
       summary: Update entities and/or relationships with decorator(s).
-      operationId: updateDecorator
+      operationId: updateDecoratorDeprecated
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
         - $ref: '#/components/parameters/contentTypeJsonInHeader'
@@ -669,6 +1005,55 @@ paths:
           $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalServerError'
+
+  /manage-decorators:
+    post:
+      description: Update entities and/or relationships with decorator(s).
+      tags:
+        - Decorators
+      summary: Update entities and/or relationships with decorator(s).
+      operationId: updateDecorator
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/contentTypeJsonInHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Decorator'
+            examples:
+              mergeDecorator:
+                $ref: '#/components/examples/DecoratorMergeExample'
+              removeDecorator:
+                $ref: '#/components/examples/DecoratorDeleteExample'
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '411':
+          $ref: '#/components/responses/411'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
 
   /groups:
     post:
@@ -729,9 +1114,9 @@ paths:
                 groups:
                   $ref: '#/components/examples/GroupsResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
 
   /groups/{groupId}:
     get:
@@ -756,11 +1141,11 @@ paths:
                 dynamic:
                   $ref: '#/components/examples/DynamicGroupResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
     delete:
       description: Delete a group with specified id.
       tags:
@@ -771,13 +1156,13 @@ paths:
         - $ref: '#/components/parameters/groupIdInPath'
       responses:
         '204':
-          $ref: '#/components/responses/NoContent'
+          $ref: '#/components/responses/204'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
 
   /groups/{groupId}/name:
     put:
@@ -800,13 +1185,13 @@ paths:
                 $ref: '#/components/examples/UpdateGroupNamePayloadExample'
       responses:
         '204':
-          $ref: '#/components/responses/NoContent'
+          $ref: '#/components/responses/204'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
 
   /groups/{groupId}/members:
     get:
@@ -831,11 +1216,11 @@ paths:
                 members:
                   $ref: '#/components/examples/MembersResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
 
   /groups/{groupId}/provided-members:
     get:
@@ -861,11 +1246,11 @@ paths:
                 members:
                   $ref: '#/components/examples/ProvidedMembersResponseExample'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
 
   /groups/{groupId}/provided-members-operations:
     post:
@@ -891,11 +1276,11 @@ paths:
                 $ref: '#/components/examples/RemoveProvidedMembersPayloadExample'
       responses:
         '204':
-          $ref: '#/components/responses/NoContent'
+          $ref: '#/components/responses/204'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/500'
 
 components:
   schemas:
@@ -949,7 +1334,7 @@ components:
           type: array
           items:
             properties:
-              name:
+              domainName:
                 type: string
               entityTypes:
                 $ref: '#/components/schemas/Href'
@@ -976,7 +1361,7 @@ components:
           items:
             type: object
             properties:
-              name:
+              entityTypeName:
                 type: string
               entities:
                 $ref: '#/components/schemas/Href'
@@ -992,7 +1377,7 @@ components:
           $ref: '#/components/schemas/Href'
         totalCount:
           type: integer
-    EntitiesResponseMessage:
+    Entities:
       type: object
       title: Entities
       properties:
@@ -1013,6 +1398,7 @@ components:
           $ref: '#/components/schemas/Href'
         totalCount:
           type: integer
+      required: ['items']
     RelationshipTypes:
       type: object
       title: RelationshipTypes
@@ -1022,7 +1408,7 @@ components:
           items:
             type: object
             properties:
-              name:
+              relationshipTypeName:
                 type: string
               relationships:
                 $ref: '#/components/schemas/Href'
@@ -1038,7 +1424,7 @@ components:
           $ref: '#/components/schemas/Href'
         totalCount:
           type: integer
-    RelationshipsResponseMessage:
+    Relationships:
       type: object
       title: Relationships
       properties:
@@ -1046,7 +1432,7 @@ components:
           type: array
           items:
             type: object
-            description: "Refer to yang model for schema definition of topology relationships"
+            description: "'Encapsulated object reference to the data model for schema definition of Topology Relationships"
         self:
           $ref: '#/components/schemas/Href'
         first:
@@ -1059,6 +1445,7 @@ components:
           $ref: '#/components/schemas/Href'
         totalCount:
           type: integer
+      required: ['items']
     ErrorMessage:
       type: object
       title: Error
@@ -1068,6 +1455,25 @@ components:
         message:
           type: string
         details:
+          type: string
+    ProblemDetails:
+      description: 'A problem detail to carry details in an HTTP response according to RFC 7807'
+      type: object
+      properties:
+        type:
+          description: 'a URI reference according to IETF RFC 3986 that identifies the problem type'
+          type: string
+        title:
+          description: 'human-readable summary of the problem type'
+          type: string
+        status:
+          description: 'the HTTP status code'
+          type: number
+        detail:
+          description: 'human-readable explanation '
+          type: string
+        instance:
+          description: 'URI reference that identifies the specific occurrence of the problem'
           type: string
     Href:
       type: object
@@ -1097,7 +1503,7 @@ components:
           type: string
         content:
           $ref: '#/components/schemas/Href'
-    SchemaList:
+    Schemas:
       type: object
       title: Schemas
       properties:
@@ -1117,6 +1523,26 @@ components:
           $ref: '#/components/schemas/Href'
         totalCount:
           type: integer
+    UserDefinedSchema:
+      type: object
+      title: UserDefinedSchema
+      properties:
+        name:
+          type: string
+        domain:
+          type: string
+        revision:
+          type: string
+        content:
+          $ref: '#/components/schemas/Href'
+    UserDefinedSchemas:
+      type: object
+      title: UserDefinedSchemas
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDefinedSchema'
     StaticEnum:
       type: string
       enum:
@@ -1427,6 +1853,99 @@ components:
           maxLength: 150
 
   responses:
+    '204':
+      description: 'No Content'
+      content: { }
+    '400':
+      description: 'Bad Request'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '401':
+      description: 'Unauthorized'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '403':
+      description: 'Forbidden'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '404':
+      description: 'Not Found'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '405':
+      description: 'Method Not Allowed'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '406':
+      description: 'Not Acceptable'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '409':
+      description: 'Conflict'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '411':
+      description: 'Length Required'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '413':
+      description: 'Payload Too Large'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '414':
+      description: 'URI Too Large'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '415':
+      description: 'Unsupported Media Type'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '429':
+      description: 'Too Many Requests'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '500':
+      description: 'Internal Server Error'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '502':
+      description: 'Bad Gateway'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    '503':
+      description: 'Service Unavailable'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
     NotFound:
       description: Not Found
       content:
@@ -1510,6 +2029,13 @@ components:
         type: string
         example: application/yang.data+json
         default: application/yang.data+json
+    acceptPlainTextInHeader:
+      name: Accept
+      in: header
+      required: true
+      schema:
+        type: string
+        default: text/plain
     contentTypeMultipartFileInHeader:
       name: Content-Type
       in: header

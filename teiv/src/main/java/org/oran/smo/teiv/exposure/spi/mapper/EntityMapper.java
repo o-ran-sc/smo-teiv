@@ -34,20 +34,20 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Record;
 import org.jooq.Result;
 
-import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
+import org.oran.smo.teiv.api.model.OranTeivEntities;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class EntityMapper extends ResponseMapper {
-    public OranTeivEntitiesResponseMessage mapEntities(final Result<Record> results, final RequestDetails requestDetails) {
+    public OranTeivEntities mapEntities(final Result<Record> results, final RequestDetails requestDetails) {
         //Pair<items, totalCount>
         final Pair<List<Object>, Integer> pair = getItemsWithTotalCount(results);
         int totalCount = pair.getRight();
         validateOffset(requestDetails.getOffset(), totalCount);
-        return OranTeivEntitiesResponseMessage.builder().items(pair.getLeft()).first(firstHref(requestDetails)).prev(
-                prevHref(requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails,
-                        totalCount)).last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
+        return OranTeivEntities.builder().items(pair.getLeft()).first(firstHref(requestDetails)).prev(prevHref(
+                requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(
+                        lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
     }
 }

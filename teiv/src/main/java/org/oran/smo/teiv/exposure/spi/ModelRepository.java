@@ -58,6 +58,13 @@ public interface ModelRepository {
     List<Module> getModules();
 
     /**
+     * Gets user defined modules.
+     *
+     * @return the user defined modules
+     */
+    List<Module> getUserDefinedModules();
+
+    /**
      * Gets module that were in the process of being deleted prior to pod restart.
      *
      * @return the module
@@ -72,6 +79,15 @@ public interface ModelRepository {
      * @return the schema
      */
     String getModuleContentByName(final String name);
+
+    /**
+     * Gets user defined module content by name.
+     *
+     * @param name
+     *     the name
+     * @return the user defined schema
+     */
+    String getUserDefinedModuleContentByName(final String name);
 
     /**
      * Updates module status.

@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type MANAGEDELEMENT_MANAGES_ODUFUNCTION(OneToMany)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships"
         }
         response {
             status OK()
@@ -149,7 +149,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type NRSECTORCARRIER_USES_ANTENNACAPABILITY(ManyToOne)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/relationship-types/NRSECTORCARRIER_USES_ANTENNACAPABILITY/relationships"
+            url "/topology-inventory/v1/domains/RAN/relationship-types/NRSECTORCARRIER_USES_ANTENNACAPABILITY/relationships"
         }
         response {
             status OK()
@@ -209,7 +209,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type ANTENNAMODULE_SERVES_ANTENNACAPABILITY(ManyToMany)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/relationship-types/ANTENNAMODULE_SERVES_ANTENNACAPABILITY/relationships"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/relationship-types/ANTENNAMODULE_SERVES_ANTENNACAPABILITY/relationships"
         }
         response {
             status OK()
@@ -260,7 +260,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type MANAGEDELEMENT_MANAGES_ODUFUNCTION with offset=1 and limit=1."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=1&limit=1"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=1&limit=1"
         }
         response {
             status OK()
@@ -302,7 +302,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
+            url "/topology-inventory/v1/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
         }
         response {
             status OK()
@@ -344,7 +344,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS where used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'urn:Rel_OneToOne_SameEntity_LongEntityType1_LongEntityType2'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
+            url "/topology-inventory/v1/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships?offset=0&limit=100&scopeFilter=/used-by-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType2']"
         }
         response {
             status OK()
@@ -386,7 +386,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type SECTOR_GROUPS_NRCELLDU where grouped-nrCellDu id is 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_NRCELLDU/relationships?offset=0&limit=100&scopeFilter=/grouped-nrCellDu[@id='urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1']"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_NRCELLDU/relationships?offset=0&limit=100&scopeFilter=/grouped-nrCellDu[@id='urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1']"
         }
         response {
             status OK()
@@ -436,7 +436,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type SECTOR_GROUPS_NRCELLDU where relation id is 'urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=4BBE73F685A98EF799968ACFE76F376D795F4CC3B56A6B867642048CDF4C1B8E323430EA7C6C38E4031FB891158763CC5459A8704E1A9FBFBD53CE8AD23BF463'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_NRCELLDU/relationships?offset=0&limit=100&scopeFilter=/SECTOR_GROUPS_NRCELLDU[@id='urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=4BBE73F685A98EF799968ACFE76F376D795F4CC3B56A6B867642048CDF4C1B8E323430EA7C6C38E4031FB891158763CC5459A8704E1A9FBFBD53CE8AD23BF463']"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/relationship-types/SECTOR_GROUPS_NRCELLDU/relationships?offset=0&limit=100&scopeFilter=/SECTOR_GROUPS_NRCELLDU[@id='urn:o-ran:smo:teiv:sha512:SECTOR_GROUPS_NRCELLDU=4BBE73F685A98EF799968ACFE76F376D795F4CC3B56A6B867642048CDF4C1B8E323430EA7C6C38E4031FB891158763CC5459A8704E1A9FBFBD53CE8AD23BF463']"
         }
         response {
             status OK()
@@ -486,7 +486,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships for same entity long relationship name of type ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships"
+            url "/topology-inventory/v1/domains/TEST/relationship-types/ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS_USES_ENTITYTYPEAWITHENTITYTYPENAMELENGTHLONGERTHANSIXTYTHREECHARACTERS/relationships"
         }
         response {
             status OK()
@@ -537,7 +537,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get empty items array when no relationship exists of given type."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ORUFUNCTION/relationships"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ORUFUNCTION/relationships"
         }
         response {
             status OK()
@@ -573,7 +573,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get relationship by type checking total count"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/relationship-types/ODUFUNCTION_PROVIDES_NRCELLDU/relationships"
+            url "/topology-inventory/v1/domains/RAN/relationship-types/ODUFUNCTION_PROVIDES_NRCELLDU/relationships"
         }
         response {
             status OK()
@@ -672,7 +672,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get topology relationships of type MANAGEDELEMENT_MANAGES_ODUFUNCTION with invalid offset (greater than total count)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=1000"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=1000"
         }
         response {
             status BAD_REQUEST()
@@ -690,7 +690,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get topology relationships of type SECTOR_GROUPS_NRCELLDU with wrong domain."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/OAM/relationship-types/SECTOR_GROUPS_NRCELLDU/relationships"
+            url "/topology-inventory/v1/domains/OAM/relationship-types/SECTOR_GROUPS_NRCELLDU/relationships"
         }
         response {
             status BAD_REQUEST()
@@ -708,7 +708,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get relationship using scope filter on metadata for reliabilityIndicator - OK"
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?scopeFilter=/metadata[@reliabilityIndicator='OK']"
+            url "topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?scopeFilter=/metadata[@reliabilityIndicator='OK']"
         }
         response {
             status OK()
@@ -758,7 +758,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get relationship using scope filter on metadata for reliabilityIndicator - RESTORED"
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?scopeFilter=/metadata[@reliabilityIndicator='RESTORED']"
+            url "topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?scopeFilter=/metadata[@reliabilityIndicator='RESTORED']"
         }
         response {
             status OK()
@@ -808,7 +808,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology relationships of type PHYSICALAPPLIANCE_SERVES_ODUFUNCTION"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships"
+            url "/topology-inventory/v1/domains/REL_PHYSICAL_RAN/relationship-types/PHYSICALAPPLIANCE_SERVES_ODUFUNCTION/relationships"
         }
         response {
             status OK()

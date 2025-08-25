@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Merge into provided members in an existing static topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -55,7 +55,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Merge into provided members in an existing static topology group which has no static group data present in db"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440212/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440212/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -84,7 +84,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Merge into provided members in an existing static topology group with new topology type and its associated provided members"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -113,7 +113,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Merge duplicate ids (some already present in db) into provided members in an existing static topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -150,7 +150,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Remove from provided members in an existing static topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -178,7 +178,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Remove from provided members in an existing static topology group, where user requests to delete same id multiple times"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -209,7 +209,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Remove from provided members (with duplicates in db) in an existing static topology"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440215/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440215/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -240,7 +240,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing dynamic topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -281,7 +281,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Merge provided members into static group when merge request is more than allowed in a single POST request"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -361,7 +361,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Merge provided members into static group which contains max number of provided members"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440214/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440214/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -417,7 +417,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Merge provided members into static group which on merge will exceed the max limit assigned to provided members"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440216/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440216/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -472,7 +472,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Merge into provided members in an existing static topology group with invalid module name for the entity type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440341/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440341/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -509,7 +509,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Merge provided members into a non existing topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=non-existing-group/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=non-existing-group/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -550,7 +550,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove non existing topology identifiers from provided members in a static topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -591,7 +591,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing topology group and no static group data"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440213/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440213/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -632,7 +632,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group where body is empty"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -648,7 +648,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Invalid request content.",
-                "instance": "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
+                "instance": "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
             }''')
         }
     },
@@ -656,7 +656,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group where topology_type provided is not present in static group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -697,7 +697,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid operation type in body"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -727,7 +727,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Failed to read request",
-                "instance": "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
+                "instance": "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
             }''')
         }
     },
@@ -735,7 +735,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with operation type missing in body"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -765,7 +765,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Invalid request content.",
-                "instance": "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
+                "instance": "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
             }''')
         }
     },
@@ -773,7 +773,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(empty list)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -792,7 +792,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Invalid request content.",
-                "instance": "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
+                "instance": "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations"
             }''')
         }
     },
@@ -800,7 +800,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -828,7 +828,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -860,7 +860,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(list contains empty object)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -887,7 +887,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(list contains empty object)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -918,7 +918,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(invalid id key)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -951,7 +951,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(id value is not of type string)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -984,7 +984,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(group id present in providedMembers)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -1017,7 +1017,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -1051,7 +1051,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Remove from provided members in an existing static topology group with invalid providedMembers(more than one topology type in an anonymous object)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -1089,7 +1089,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Remove provided members from a non existing topology group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=non-existing-group/provided-members-operations")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=non-existing-group/provided-members-operations")
             headers {
                 contentType("application/json")
             }
@@ -1130,7 +1130,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid endpoint"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-update")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-update")
             headers {
                 contentType("application/json")
             }
@@ -1157,7 +1157,7 @@ import org.springframework.cloud.contract.spec.Contract
             }
             body('''{
                 "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-update.",
+                "message": "No static resource topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-update.",
                 "details": null
             }''')
         }

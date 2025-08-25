@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all groups"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups?offset=0&limit=2")
+            url("/topology-inventory/v1/groups?offset=0&limit=2")
             headers {
                 accept("application/json")
             }
@@ -95,7 +95,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all groups by group name filter (static group type)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups?offset=0&limit=2&name=test-group-get-by-name-static-group")
+            url("/topology-inventory/v1/groups?offset=0&limit=2&name=test-group-get-by-name-static-group")
             headers {
                 accept("application/json")
             }
@@ -168,7 +168,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all groups by group name filter (dynamic group type)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups?offset=0&limit=2&name=test-group-get-entities-by-type")
+            url("/topology-inventory/v1/groups?offset=0&limit=2&name=test-group-get-entities-by-type")
             headers {
                 accept("application/json")
             }
@@ -221,7 +221,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get group by name that does not exist"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups?offset=0&limit=2&name=non-existing-group")
+            url("/topology-inventory/v1/groups?offset=0&limit=2&name=non-existing-group")
             headers {
                 accept("application/json")
             }
@@ -261,7 +261,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Bad request when invalid parameters are sent"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups?offset=0&limit=561")
+            url("/topology-inventory/v1/groups?offset=0&limit=561")
             headers {
                 accept("application/json")
             }

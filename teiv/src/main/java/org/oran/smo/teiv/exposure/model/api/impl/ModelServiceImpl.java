@@ -24,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.api.model.OranTeivHref;
 import org.oran.smo.teiv.api.model.OranTeivSchema;
-import org.oran.smo.teiv.api.model.OranTeivSchemaList;
+import org.oran.smo.teiv.api.model.OranTeivSchemas;
+import org.oran.smo.teiv.api.model.OranTeivUserDefinedSchema;
+import org.oran.smo.teiv.api.model.OranTeivUserDefinedSchemas;
 import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.exception.YangModelException;
 import org.oran.smo.teiv.exposure.model.api.ModelService;
@@ -47,14 +49,16 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.oran.smo.teiv.exposure.utils.PaginationUtil.firstHref;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.getViableLimit;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
 import static org.oran.smo.teiv.exposure.utils.PaginationUtil.prevHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
 import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.getViableLimit;
+
 import static org.oran.smo.teiv.utils.TeivConstants.CLASSIFIERS;
 import static org.oran.smo.teiv.utils.TeivConstants.DECORATORS;
 import static org.oran.smo.teiv.utils.TeivConstants.INVALID_SCHEMA;
+import static org.oran.smo.teiv.utils.TeivConstants.USER_DEFINED_SCHEMAS;
 
 @Slf4j
 @Service
@@ -99,7 +103,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public OranTeivSchemaList getModulesByDomain(final String domain, final RequestDetails requestDetails) {
+    public OranTeivSchemas getModulesByDomain(final String domain, final RequestDetails requestDetails) {
         log.debug("Get modules with domain : {}", domain);
         final List<Module> modulesByDomain = modelRepository.getModules().stream().filter(s -> (domain == null) || (s
                 .getDomain() != null && s.getDomain().matches(domain))).toList();
@@ -111,9 +115,24 @@ public class ModelServiceImpl implements ModelService {
                                 .getRevision()).content(OranTeivHref.builder().href(String.format(CONTENT_HREF,
                                         requestDetails.getBasePath(), module.getName())).build()).build()).toList();
 
-        return OranTeivSchemaList.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
+        return OranTeivSchemas.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
                 totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(lastHref(
                         requestDetails, totalCount)).totalCount(totalCount).build();
+    }
+
+    @Override
+    public OranTeivUserDefinedSchemas getUserDefinedModulesByDomain(final RequestDetails requestDetails) {
+        final List<Module> modulesByDomain = modelRepository.getUserDefinedModules();
+        int totalCount = modulesByDomain.size();
+
+        final List<OranTeivUserDefinedSchema> items = modulesByDomain.stream().skip(requestDetails.getOffset()).limit(
+                getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
+                        module -> OranTeivUserDefinedSchema.builder().name(module.getName()).domain(module
+                                .getDomain() == null ? "" : module.getDomain()).revision(module.getRevision()).content(
+                                        OranTeivHref.builder().href(String.format(CONTENT_HREF, requestDetails
+                                                .getBasePath(), module.getName())).build()).build()).toList();
+
+        return OranTeivUserDefinedSchemas.builder().items(items).build();
     }
 
     @Override
@@ -124,6 +143,28 @@ public class ModelServiceImpl implements ModelService {
                     log.warn("No schema found with name: {}", name);
                     throw TeivException.invalidSchema(name);
                 });
+    }
+
+    @Override
+    public String getUserDefinedModuleContentByName(final String name) {
+        log.debug("Get {} user defined module content", name);
+        return Optional.ofNullable(modelRepository.getUserDefinedModuleContentByName(name)).map(content -> new String(Base64
+                .getDecoder().decode(content), StandardCharsets.UTF_8)).orElseGet(() -> {
+                    log.warn("No user defined schema found with name: {}", name);
+                    throw TeivException.invalidSchema(name);
+                });
+    }
+
+    @Override
+    public OranTeivUserDefinedSchema getUserDefinedModuleByName(final String name) {
+        log.debug("Get {} user defined module ", name);
+        return modelRepository.getConsumerModuleByName(name).map(module -> OranTeivUserDefinedSchema.builder().name(module
+                .getName()).domain(module.getDomain() == null ? "" : module.getDomain()).revision(module.getRevision())
+                .content(OranTeivHref.builder().href(String.format(CONTENT_HREF, USER_DEFINED_SCHEMAS, module.getName()))
+                        .build()).build()).orElseThrow(() -> {
+                            log.warn("No module found with name: {}", name);
+                            return TeivException.invalidSchema(name);
+                        });
     }
 
     @Override

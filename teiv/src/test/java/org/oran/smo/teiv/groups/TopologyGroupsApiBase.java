@@ -85,7 +85,7 @@ public abstract class TopologyGroupsApiBase extends TopologyApiBase {
     public void setup() {
         GroupCreationRequestFilter groupCreationRequestFilter = new GroupCreationRequestFilter(loggerHandler, objectMapper);
         mockMvc = MockMvcBuilders.webAppContextSetup((WebApplicationContext) context).addFilter(groupCreationRequestFilter,
-                "/topology-inventory/v1alpha11/groups").build();
+                "/topology-inventory/v1/groups").build();
 
         RestAssuredMockMvc.mockMvc(mockMvc);
     }

@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a dynamic getEntitiesByDomain group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -72,7 +72,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a dynamic getEntitiesByType group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -115,7 +115,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a dynamic getRelationshipsForEntityId group where entity id doesnt exists in teiv"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -160,7 +160,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a dynamic getRelationshipsByType group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -203,7 +203,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 201: Create a static group"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -287,7 +287,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with no criteria specified"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -307,7 +307,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Failed to read request",
-                "instance": "/topology-inventory/v1alpha11/groups"
+                "instance": "/topology-inventory/v1/groups"
             }''')
         }
     },
@@ -315,7 +315,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with 'static' group type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -346,7 +346,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with invalid group type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -377,7 +377,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with invalid query type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -408,7 +408,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with missing criteria property(entityTypeName) for getEntitiesByType"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -432,7 +432,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Failed to read request",
-                "instance": "/topology-inventory/v1alpha11/groups"
+                "instance": "/topology-inventory/v1/groups"
             }''')
         }
     },
@@ -440,7 +440,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with unsupported domain for getRelationshipsByType"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -472,7 +472,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with invalid filter"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -506,7 +506,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400:: Create a dynamic getRelationshipsForEntityId group where entity id does not start with urn:"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -538,7 +538,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with no providedMembers specified"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -558,7 +558,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Invalid request content.",
-                "instance": "/topology-inventory/v1alpha11/groups"
+                "instance": "/topology-inventory/v1/groups"
             }''')
         }
     },
@@ -566,7 +566,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(empty list)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -587,7 +587,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Invalid request content.",
-                "instance": "/topology-inventory/v1alpha11/groups"
+                "instance": "/topology-inventory/v1/groups"
             }''')
         }
     },
@@ -595,7 +595,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -625,7 +625,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -659,7 +659,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid module name for the entity type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -697,7 +697,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with wrong topology type format"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -735,7 +735,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with wrong topology id where topology id doesnt start with urn:"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -773,7 +773,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(list contains empty object)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -803,7 +803,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(list contains empty object)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -836,7 +836,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(invalid id key)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -871,7 +871,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(id value is not of type string)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -906,7 +906,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(group id present in providedMembers)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -941,7 +941,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -977,7 +977,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(more than one topology type in an anonymous object)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -1017,7 +1017,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a static group with invalid providedMembers(topology identifiers exceed max limit)"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -1098,7 +1098,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with 'static' group type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -1132,7 +1132,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Create a dynamic group with invalid group type"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/groups")
+            url("/topology-inventory/v1/groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -1166,7 +1166,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid endpoint"
         request {
             method POST()
-            url("/topology-inventory/v1alpha11/teiv-groups")
+            url("/topology-inventory/v1/teiv-groups")
             headers {
                 accept("application/json")
                 contentType("application/json")
@@ -1189,7 +1189,7 @@ import org.springframework.cloud.contract.spec.Contract
             }
             body('''{
                 "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1alpha11/teiv-groups.",
+                "message": "No static resource topology-inventory/v1/teiv-groups.",
                 "details": null
             }''')
         }
