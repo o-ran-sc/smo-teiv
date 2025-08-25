@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a dynamic group with getEntitiesByDomain queryType"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/members?offset=0&limit=2")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/members?offset=0&limit=2")
         }
         response {
             status OK()
@@ -81,7 +81,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a dynamic group with getEntitiesByType queryType"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440001/members?offset=0&limit=2")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440001/members?offset=0&limit=2")
         }
         response {
             status OK()
@@ -143,7 +143,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a dynamic group with getRelationshipsForEntityId queryType"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440002/members")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440002/members")
         }
         response {
             status OK()
@@ -261,7 +261,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a dynamic group with getRelationshipsByType queryType"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440003/members?offset=0&limit=2")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440003/members?offset=0&limit=2")
         }
         response {
             status OK()
@@ -319,7 +319,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a static group"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -429,7 +429,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a static group when no providedMembersIds are present in the network"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440341/members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440341/members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -466,7 +466,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a static group when topology type is invalid (invalid module and topology name)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440351/members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440351/members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -503,7 +503,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a static group when topology type is invalid (topologytype consist of three parts)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440351/members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440351/members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -540,7 +540,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get the members of a dynamic group when valid target filter & valid scope filter)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440217/members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -603,7 +603,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Get a static group by id that does not exists"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440361/members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440361/members?offset=0&limit=10")
         }
         response {
             status NOT_FOUND()
@@ -621,7 +621,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Get the members of a dynamic group with getRelationshipsForEntityId queryType where entity id doesn't exists"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440004/members")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440004/members")
         }
         response {
             status NOT_FOUND()
@@ -639,7 +639,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get the members of a dynamic group with wrong scope filter"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440005/members")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440005/members")
         }
         response {
             status BAD_REQUEST()
@@ -657,7 +657,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Get the members of a group that does not exists"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/non-existing-group/members")
+            url("/topology-inventory/v1/groups/non-existing-group/members")
         }
         response {
             status NOT_FOUND()
@@ -675,7 +675,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: No target filter exists & invalid scope filter"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440218/members")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440218/members")
         }
         response {
             status BAD_REQUEST()
@@ -693,7 +693,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid target filter & invalid scope filter"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440220/members")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440220/members")
         }
         response {
             status BAD_REQUEST()

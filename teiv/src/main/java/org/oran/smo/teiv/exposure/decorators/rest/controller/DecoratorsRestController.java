@@ -108,7 +108,7 @@ public class DecoratorsRestController implements DecoratorsApi {
     public FilterRegistrationBean<DecoratorsRequestFilter> decoratorsRequestFilter(final ObjectMapper objectMapper) {
         FilterRegistrationBean<DecoratorsRequestFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new DecoratorsRequestFilter(loggerHandler, objectMapper, customMetrics));
-        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/decorators");
+        registrationBean.addUrlPatterns(REQUEST_MAPPING + "/manage-decorators");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }

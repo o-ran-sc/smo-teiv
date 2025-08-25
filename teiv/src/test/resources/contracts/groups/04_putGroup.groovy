@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Update group name for an dynamic existing group."
         request {
             method PUT()
-            url "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/name"
+            url "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/name"
             headers {
                 contentType("application/json")
             }
@@ -43,7 +43,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Update group name for an static existing group, where new name matches the name of another group already in the database."
         request {
             method PUT()
-            url "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440051/name"
+            url "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440051/name"
             headers {
                 contentType("application/json")
             }
@@ -59,7 +59,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Update group name for a group that doesn't exists."
         request {
             method PUT()
-            url "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:non-existing-group/name"
+            url "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:non-existing-group/name"
             headers {
                 contentType("application/json")
             }
@@ -88,7 +88,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 400: Update group name for an existing group with an invalid name."
         request {
             method PUT()
-            url "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/name"
+            url "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/name"
             headers {
                 contentType("application/json")
             }
@@ -106,7 +106,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "title": "Bad Request",
                 "status": 400,
                 "detail": "Invalid request content.",
-                "instance": "/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/name"
+                "instance": "/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050/name"
             }''')
         }
     }

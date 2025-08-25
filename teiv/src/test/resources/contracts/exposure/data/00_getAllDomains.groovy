@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all the available topology domains."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains"
+            url "/topology-inventory/v1/domains"
         }
         response {
             status OK()
@@ -37,7 +37,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "name": "CLOUD",
+                        "domainName": "CLOUD",
                         "entityTypes": {
                             "href": "/domains/CLOUD/entity-types"
                         },
@@ -46,7 +46,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "EQUIPMENT",
+                        "domainName": "EQUIPMENT",
                         "entityTypes": {
                             "href": "/domains/EQUIPMENT/entity-types"
                         },
@@ -55,7 +55,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "OAM",
+                        "domainName": "OAM",
                         "entityTypes": {
                             "href": "/domains/OAM/entity-types"
                         },
@@ -64,7 +64,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "PHYSICAL",
+                        "domainName": "PHYSICAL",
                         "entityTypes": {
                             "href": "/domains/PHYSICAL/entity-types"
                         },
@@ -73,7 +73,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "RAN",
+                        "domainName": "RAN",
                         "entityTypes": {
                             "href": "/domains/RAN/entity-types"
                         },
@@ -82,7 +82,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "REL_CLOUD_RAN",
+                        "domainName": "REL_CLOUD_RAN",
                         "entityTypes": {
                             "href": "/domains/REL_CLOUD_RAN/entity-types"
                         },
@@ -91,7 +91,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "REL_EQUIPMENT_RAN",
+                        "domainName": "REL_EQUIPMENT_RAN",
                         "entityTypes": {
                             "href": "/domains/REL_EQUIPMENT_RAN/entity-types"
                         },
@@ -100,7 +100,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "REL_OAM_CLOUD",
+                        "domainName": "REL_OAM_CLOUD",
                         "entityTypes": {
                             "href": "/domains/REL_OAM_CLOUD/entity-types"
                         },
@@ -109,7 +109,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "REL_OAM_RAN",
+                        "domainName": "REL_OAM_RAN",
                         "entityTypes": {
                             "href": "/domains/REL_OAM_RAN/entity-types"
                         },
@@ -118,7 +118,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "REL_PHYSICAL_RAN",
+                        "domainName": "REL_PHYSICAL_RAN",
                         "entityTypes": {
                             "href": "/domains/REL_PHYSICAL_RAN/entity-types"
                         },
@@ -127,7 +127,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "TEIV",
+                        "domainName": "TEIV",
                         "entityTypes": {
                             "href": "/domains/TEIV/entity-types"
                         },
@@ -136,7 +136,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "TEST",
+                        "domainName": "TEST",
                         "entityTypes": {
                             "href": "/domains/TEST/entity-types"
                         },
@@ -166,40 +166,40 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(12)
                 })
-                jsonPath('$.items[0].name', byEquality())
+                jsonPath('$.items[0].domainName', byEquality())
                 jsonPath('$.items[0].entityTypes.href', byEquality())
                 jsonPath('$.items[0].relationshipTypes.href', byEquality())
-                jsonPath('$.items[1].name', byEquality())
+                jsonPath('$.items[1].domainName', byEquality())
                 jsonPath('$.items[1].entityTypes.href', byEquality())
                 jsonPath('$.items[1].relationshipTypes.href', byEquality())
-                jsonPath('$.items[2].name', byEquality())
+                jsonPath('$.items[2].domainName', byEquality())
                 jsonPath('$.items[2].entityTypes.href', byEquality())
                 jsonPath('$.items[2].relationshipTypes.href', byEquality())
-                jsonPath('$.items[3].name', byEquality())
+                jsonPath('$.items[3].domainName', byEquality())
                 jsonPath('$.items[3].entityTypes.href', byEquality())
                 jsonPath('$.items[3].relationshipTypes.href', byEquality())
-                jsonPath('$.items[4].name', byEquality())
+                jsonPath('$.items[4].domainName', byEquality())
                 jsonPath('$.items[4].entityTypes.href', byEquality())
                 jsonPath('$.items[4].relationshipTypes.href', byEquality())
-                jsonPath('$.items[5].name', byEquality())
+                jsonPath('$.items[5].domainName', byEquality())
                 jsonPath('$.items[5].entityTypes.href', byEquality())
                 jsonPath('$.items[5].relationshipTypes.href', byEquality())
-                jsonPath('$.items[6].name', byEquality())
+                jsonPath('$.items[6].domainName', byEquality())
                 jsonPath('$.items[6].entityTypes.href', byEquality())
                 jsonPath('$.items[6].relationshipTypes.href', byEquality())
-                jsonPath('$.items[7].name', byEquality())
+                jsonPath('$.items[7].domainName', byEquality())
                 jsonPath('$.items[7].entityTypes.href', byEquality())
                 jsonPath('$.items[7].relationshipTypes.href', byEquality())
-                jsonPath('$.items[8].name', byEquality())
+                jsonPath('$.items[8].domainName', byEquality())
                 jsonPath('$.items[8].entityTypes.href', byEquality())
                 jsonPath('$.items[8].relationshipTypes.href', byEquality())
-                jsonPath('$.items[9].name', byEquality())
+                jsonPath('$.items[9].domainName', byEquality())
                 jsonPath('$.items[9].entityTypes.href', byEquality())
                 jsonPath('$.items[9].relationshipTypes.href', byEquality())
-                jsonPath('$.items[10].name', byEquality())
+                jsonPath('$.items[10].domainName', byEquality())
                 jsonPath('$.items[10].entityTypes.href', byEquality())
                 jsonPath('$.items[10].relationshipTypes.href', byEquality())
-                jsonPath('$.items[11].name', byEquality())
+                jsonPath('$.items[11].domainName', byEquality())
                 jsonPath('$.items[11].entityTypes.href', byEquality())
                 jsonPath('$.items[11].relationshipTypes.href', byEquality())
             }
@@ -209,7 +209,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all the available topology domains with offset as 2 and limit as 3."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains?offset=2&limit=3"
+            url "/topology-inventory/v1/domains?offset=2&limit=3"
         }
         response {
             status OK()
@@ -219,7 +219,7 @@ import org.springframework.cloud.contract.spec.Contract
             body('''{
                 "items": [
                     {
-                        "name": "OAM",
+                        "domainName": "OAM",
                         "entityTypes": {
                             "href": "/domains/OAM/entity-types"
                         },
@@ -228,7 +228,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "PHYSICAL",
+                        "domainName": "PHYSICAL",
                         "entityTypes": {
                             "href": "/domains/PHYSICAL/entity-types"
                         },
@@ -237,7 +237,7 @@ import org.springframework.cloud.contract.spec.Contract
                         }
                     },
                     {
-                        "name": "RAN",
+                        "domainName": "RAN",
                         "entityTypes": {
                             "href": "/domains/RAN/entity-types"
                         },
@@ -267,13 +267,13 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items', byType {
                     occurrence(3)
                 })
-                jsonPath('$.items[0].name', byEquality())
+                jsonPath('$.items[0].domainName', byEquality())
                 jsonPath('$.items[0].entityTypes.href', byEquality())
                 jsonPath('$.items[0].relationshipTypes.href', byEquality())
-                jsonPath('$.items[1].name', byEquality())
+                jsonPath('$.items[1].domainName', byEquality())
                 jsonPath('$.items[1].entityTypes.href', byEquality())
                 jsonPath('$.items[1].relationshipTypes.href', byEquality())
-                jsonPath('$.items[2].name', byEquality())
+                jsonPath('$.items[2].domainName', byEquality())
                 jsonPath('$.items[2].entityTypes.href', byEquality())
                 jsonPath('$.items[2].relationshipTypes.href', byEquality())
             }
@@ -283,7 +283,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get all the available topology domains with invalid offset (greater than total count)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains?offset=100"
+            url "/topology-inventory/v1/domains?offset=100"
         }
         response {
             status BAD_REQUEST()

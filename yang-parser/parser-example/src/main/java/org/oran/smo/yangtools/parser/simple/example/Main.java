@@ -59,7 +59,7 @@ public class Main {
         setUp();
 
         // using the yang-parser's jsonParser parse json output from TEIV response:
-        // GET http://localhost:31074/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?targetFilter=/attributes
+        // GET http://localhost:31074/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?targetFilter=/attributes
         JsonObject parsedJsonObject = (JsonObject) JsonParserExample.parseJsonFile(context);
         // get the "items" from the response
         JsonArray items = (JsonArray) getJsonObjectMemberValue(parsedJsonObject, "items");

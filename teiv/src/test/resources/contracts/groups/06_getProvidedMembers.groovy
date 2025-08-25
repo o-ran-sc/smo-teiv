@@ -25,7 +25,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all provided members of a static group"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -143,7 +143,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all provided members of a static group when status is present"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=present&offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=present&offset=0&limit=10")
         }
         response {
             status OK()
@@ -253,7 +253,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get provided members of a static group when status is not-present"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=not-present&offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=not-present&offset=0&limit=10")
         }
         response {
             status OK()
@@ -315,7 +315,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get provided members of a static group when status is invalid"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=invalid&offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=invalid&offset=0&limit=10")
         }
         response {
             status OK()
@@ -369,7 +369,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get provided members by groupId that does not have any provided members"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440391/provided-members?offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440391/provided-members?offset=0&limit=10")
         }
         response {
             status OK()
@@ -406,7 +406,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get the provided members of a static group with wrong status"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=absent&offset=0&limit=10")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201/provided-members?status=absent&offset=0&limit=10")
         }
         response {
             status BAD_REQUEST()
@@ -424,7 +424,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Get the provided members of a group that does not exists"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/non-existing-group/provided-members")
+            url("/topology-inventory/v1/groups/non-existing-group/provided-members")
         }
         response {
             status NOT_FOUND()

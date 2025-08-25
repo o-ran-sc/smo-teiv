@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type NRCellDU."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities"
         }
         response {
             status OK()
@@ -113,7 +113,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with offset as 1 and limit as 4."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=1&limit=4"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=1&limit=4"
         }
         response {
             status OK()
@@ -183,7 +183,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type NRCellDU with scopeFilter."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/NRCellDU/attributes[@cellLocalId=1]"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/NRCellDU/attributes[@cellLocalId=1]"
         }
         response {
             status OK()
@@ -229,7 +229,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type NRCellDU which matches given ID (exact ID match). Alternate to GET entity by ID."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?scopeFilter=/NRCellDU[@id='urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2']"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?scopeFilter=/NRCellDU[@id='urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=2']"
         }
         response {
             status OK()
@@ -275,7 +275,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type NRCellDU which contain 'ManagedElement=9,ODUFunction=9' in ID (partial ID match)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?scopeFilter=/NRCellDU[contains(@id, 'ManagedElement=9,ODUFunction=9')]"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?scopeFilter=/NRCellDU[contains(@id, 'ManagedElement=9,ODUFunction=9')]"
         }
         response {
             status OK()
@@ -337,7 +337,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaCapability which has serving-antennaModule association with ID that contains 'AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A'"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEIV/entity-types/AntennaCapability/entities?scopeFilter=/serving-antennaModule[contains(@id,'AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A')]"
+            url "/topology-inventory/v1/domains/TEIV/entity-types/AntennaCapability/entities?scopeFilter=/serving-antennaModule[contains(@id,'AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A')]"
         }
         response {
             status OK()
@@ -383,7 +383,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction which has provided-nrCellDu association with ID that contains 'NRCellDU=1'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/provided-nrCellDu[contains(@id,'NRCellDU=1')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/provided-nrCellDu[contains(@id,'NRCellDU=1')]"
         }
         response {
             status OK()
@@ -429,7 +429,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaModule with targetFilter=/sourceIds"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?targetFilter=/sourceIds"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?targetFilter=/sourceIds"
         }
         response {
             status OK()
@@ -557,7 +557,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaModule with scopeFilter on sourceIds"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?scopeFilter=/sourceIds[@item = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1']&targetFilter=/sourceIds"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?scopeFilter=/sourceIds[@item = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1']&targetFilter=/sourceIds"
         }
         response {
             status OK()
@@ -613,7 +613,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get empty items array when no entity exists of given filter criteria."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/NRCellDU/attributes[@cellLocalId=898989]"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/NRCellDU/attributes[@cellLocalId=898989]"
         }
         response {
             status OK()
@@ -650,7 +650,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get entities by a long named entity type."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=1&targetFilter=/attributes"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=1&targetFilter=/attributes"
         }
         response {
             status OK()
@@ -721,7 +721,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type NRCellDU with scopeFilter on association."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction[@id='urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9']&targetFilter=/attributes(nCI)"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction[@id='urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9']&targetFilter=/attributes(nCI)"
         }
         response {
             status OK()
@@ -795,7 +795,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with scopeFilter on sourceIds and gNBId with AND condition."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&scopeFilter=/attributes[@gNBId=10]; /sourceIds[@item = 'urn:cmHandle:72FDA73D085F138FECC974CB91F1450E']&targetFilter=/attributes;/sourceIds"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&scopeFilter=/attributes[@gNBId=10]; /sourceIds[@item = 'urn:cmHandle:72FDA73D085F138FECC974CB91F1450E']&targetFilter=/attributes;/sourceIds"
         }
         response {
             status OK()
@@ -854,7 +854,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with scopeFilter with AND an OR conditions."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&scopeFilter=/attributes[@gNBId=10 or @gNBId=13]; /attributes[@gNBIdLength = 2]&targetFilter=/ODUFunction"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&scopeFilter=/attributes[@gNBId=10 or @gNBId=13]; /attributes[@gNBIdLength = 2]&targetFilter=/ODUFunction"
         }
         response {
             status OK()
@@ -908,7 +908,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type ODUFunction with scopeFilter with AND an OR conditions."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&scopeFilter=/attributes[@gNBId = 9 and @gNBIdLength = 1] | /sourceIds[@item = 'urn:cmHandle:72FDA73D085F138FECC974CB91F1450E']&targetFilter=/id"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&scopeFilter=/attributes[@gNBId = 9 and @gNBIdLength = 1] | /sourceIds[@item = 'urn:cmHandle:72FDA73D085F138FECC974CB91F1450E']&targetFilter=/id"
         }
         response {
             status OK()
@@ -962,7 +962,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type ODUFunction with scopeFilter on complex attribute STRING value - EQUALS - KEY AND VALUE EXISTS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(dUpLMNId)&scopeFilter=/attributes/dUpLMNId[@mcc='456']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(dUpLMNId)&scopeFilter=/attributes/dUpLMNId[@mcc='456']"
         }
         response {
             status OK()
@@ -1028,7 +1028,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type ODUFunction with scopeFilter on complex attribute STRING value - EQUALS - KEY AND VALUE EXISTS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(dUpLMNId)&scopeFilter=/attributes/dUpLMNId[@mcc='456']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(dUpLMNId)&scopeFilter=/attributes/dUpLMNId[@mcc='456']"
         }
         response {
             status OK()
@@ -1094,7 +1094,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type ODUFunction with scopeFilter on complex attribute STRING value - CONTAINS - KEY AND VALUE EXISTS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(dUpLMNId)&scopeFilter=/attributes/dUpLMNId[contains(@mcc,'78')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/attributes(dUpLMNId)&scopeFilter=/attributes/dUpLMNId[contains(@mcc,'78')]"
         }
         response {
             status OK()
@@ -1160,7 +1160,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaCapability with scopeFilter on complex attribute STRING array - EXACT MATCH - VALUE EXISTS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[@item='456']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[@item='456']"
         }
         response {
             status OK()
@@ -1228,7 +1228,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaCapability with scopeFilter on complex attribute INTEGER array - EXACT MATCH - VALUE NOT EXISTS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[@item=456]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[@item=456]"
         }
         response {
             status OK()
@@ -1265,7 +1265,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaCapability with scopeFilter on complex attribute STRING array - PARTIAL MATCH - VALUE EXISTS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[contains(@item,'45')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[contains(@item,'45')]"
         }
         response {
             status OK()
@@ -1334,7 +1334,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type AntennaCapability with scopeFilter on complex attribute STRING array - PARTIAL MATCH - VALUE NOT EXISTS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[contains(@item,'999')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&targetFilter=/attributes(eUtranFqBands)&scopeFilter=/attributes/eUtranFqBands[contains(@item,'999')]"
         }
         response {
             status OK()
@@ -1371,7 +1371,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get entities of type AntennaModule with scopeFilter on geographic attribute"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(39.4019881 67.9419888)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(39.4019881 67.9419888)']"
         }
         response {
             status OK()
@@ -1419,7 +1419,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type AntennaModule with scopeFilter on geographic attribute with negative coordinates'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(-49.4019881 -68.9419888)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(-49.4019881 -68.9419888)']"
         }
         response {
             status OK()
@@ -1467,7 +1467,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type AntennaModule with scopeFilter on geographic attribute with height and negative coordinates'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT Z (-47.497913 -19.040236 -111.1)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT Z (-47.497913 -19.040236 -111.1)']"
         }
         response {
             status OK()
@@ -1515,7 +1515,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get entities of type AntennaModule with scopeFilter on geographic attribute - invalid format"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = '(39.4019881 67.9419888)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = '(39.4019881 67.9419888)']"
         }
         response {
             status BAD_REQUEST()
@@ -1533,7 +1533,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get entities of type AntennaModule with scopeFilter on geographic attribute - 1 coordinate"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(39.4019881)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(39.4019881)']"
         }
         response {
             status BAD_REQUEST()
@@ -1551,7 +1551,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Get entities of type AntennaModule with scopeFilter inside MULTIPOLYGON - Invalid format: missing parentheses in the second list of points.'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),(60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),(60 70, 50 68, 50 69, 48 69, 60 70)))')]"
         }
         response {
             status BAD_REQUEST()
@@ -1569,7 +1569,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Get entities of type AntennaModule with scopeFilter on geographic attribute with height - 1 coordinate'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT Z (39.4019881)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT Z (39.4019881)']"
         }
         response {
             status BAD_REQUEST()
@@ -1587,7 +1587,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get entities of type AntennaModule with scopeFilter on geographic attribute - invalid coordinate"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(39.4019881 ABC)']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&targetFilter=/attributes(geo-location)&scopeFilter=/attributes[@geo-location = 'POINT(39.4019881 ABC)']"
         }
         response {
             status BAD_REQUEST()
@@ -1605,7 +1605,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get all topology entities for an entity type that is not in the domain."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/NRCellDU/entities"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/NRCellDU/entities"
         }
         response {
             status BAD_REQUEST()
@@ -1623,7 +1623,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get all topology entities for wrong entity type name."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU1/entities"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU1/entities"
         }
         response {
             status BAD_REQUEST()
@@ -1642,7 +1642,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get all topology entities with invalid scopeFilter (attribute not prefixed with @)"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/OCUCPFunction/entities?scopeFilter=/attributes[contains(gNBCUName,'Cucp-1')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/OCUCPFunction/entities?scopeFilter=/attributes[contains(gNBCUName,'Cucp-1')]"
         }
         response {
             status BAD_REQUEST()
@@ -1660,7 +1660,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get all topology entities of type OCUUPFunction with invalid offset (greater than total count)."
         request {
             method GET()
-            url "topology-inventory/v1alpha11/domains/RAN/entity-types/OCUUPFunction/entities?offset=10000"
+            url "topology-inventory/v1/domains/RAN/entity-types/OCUUPFunction/entities?offset=10000"
         }
         response {
             status BAD_REQUEST()
@@ -1678,7 +1678,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get Entities of type ODUFunction with scopeFilter on metadata for reliabilityIndicator - OK'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityIndicator='OK']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityIndicator='OK']"
         }
         response {
             status OK()
@@ -1724,7 +1724,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get Entities of type ODUFunction with targetFilter on metadata and scopeFilter on metadata for reliabilityIndicator - OK'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='OK']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='OK']"
         }
         response {
             status OK()
@@ -1774,7 +1774,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get Entities of type ODUFunction with targetFilter on metadata and scopeFilter on metadata for reliabilityIndicator - RESTORED'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='RESTORED']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='RESTORED']"
         }
         response {
             status OK()
@@ -1848,7 +1848,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'BAD REQUEST - 400: Get Entities of type ODUFunction using Invalid Operator - CONTAINS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[contains(@reliabilityIndicator,'OK')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[contains(@reliabilityIndicator,'OK')]"
         }
         response {
             status BAD_REQUEST()
@@ -1871,7 +1871,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'BAD REQUEST - 400: Get Entities of type ODUFunction by passing invalid reliabilityIndicator - INVALID'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityIndicator='INVALID']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityIndicator='INVALID']"
         }
         response {
             status BAD_REQUEST()
@@ -1894,7 +1894,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'BAD REQUEST - 400: Get Entities of type ODUFunction by passing invalid metadata - reliabilityYIndicator'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityYIndicator='OK']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityYIndicator='OK']"
         }
         response {
             status BAD_REQUEST()
@@ -1917,7 +1917,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'BAD REQUEST - 400: Get Entities of type ODUFunction by passing invalid data type - INTEGER'
         request {
             method GET()
-            url '/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityIndicator=1]'
+            url '/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?scopeFilter=/metadata[@reliabilityIndicator=1]'
         }
         response {
             status BAD_REQUEST()
@@ -1940,7 +1940,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type AntennaModule within 500 meters radius'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
         }
         response {
             status OK()
@@ -1986,7 +1986,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type AntennaModule inside the specified Polygon'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
         }
         response {
             status OK()
@@ -2031,7 +2031,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type AntennaModule inside MultiPolygon'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/attributes[coveredBy(@geo-location, 'MULTIPOLYGON(((48 68, 50 68, 50 69, 48 69, 48 68)),((60 70, 50 68, 50 69, 48 69, 60 70)))')]"
         }
         response {
             status OK()
@@ -2076,7 +2076,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get entities of type AntennaCapability by AntennaModule id"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
         }
         response {
             status OK()
@@ -2122,7 +2122,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get entities of type NRCellDU by Sector id"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector[@id='urn:Sector=2']"
         }
         response {
             status OK()
@@ -2184,7 +2184,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology entities of type EntityTypeA where used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters id is 'urn:LongEntityType1'. One to One"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeA/entities?offset=0&limit=100&scopeFilter=/used-entityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters[@id='urn:LongEntityType1']"
         }
         response {
             status OK()
@@ -2224,7 +2224,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology entities of type EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters where used-by-entityTypeA id is 'EntityType1'. One to One"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='urn:EntityType1']"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities?offset=0&limit=100&scopeFilter=/used-by-entityTypeA[@id='urn:EntityType1']"
         }
         response {
             status OK()
@@ -2264,7 +2264,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - LESS THAN'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<'2025-01-11T23:40:36.461565Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<'2025-01-11T23:40:36.461565Z']"
         }
         response {
             status OK()
@@ -2350,7 +2350,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - GREATER THAN'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified>'2025-01-11T09:40:36.461565Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified>'2025-01-11T09:40:36.461565Z']"
         }
         response {
             status OK()
@@ -2420,7 +2420,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - GREATER THAN AND LESS THAN'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified>'2024-01-21T11:12:48.628172460Z' and @lastModified<'2025-01-21T11:12:48.628172460Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified>'2024-01-21T11:12:48.628172460Z' and @lastModified<'2025-01-21T11:12:48.628172460Z']"
         }
         response {
             status OK()
@@ -2530,7 +2530,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - LESS THAN OR EQUALS WITH DIFFERENT TIMEZONE'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<='2025-01-09T11:40:36.46156500+01:00']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<='2025-01-09T11:40:36.46156500+01:00']"
         }
         response {
             status OK()
@@ -2584,7 +2584,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - GREATER THAN OR EQUALS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified>='2025-01-11T23:40:36.461565Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified>='2025-01-11T23:40:36.461565Z']"
         }
         response {
             status OK()
@@ -2651,7 +2651,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - EQUALS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified='2025-01-09T11:40:36.461565Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified='2025-01-09T11:40:36.461565Z']"
         }
         response {
             status OK()
@@ -2705,7 +2705,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - GREATER THAN AND LESS THAN WITH RELIABILITY INDICATOR'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='OK' and @lastModified>'2024-01-21T11:12:48.628172460Z' and @lastModified<'2025-01-21T11:12:48.628172460Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='OK' and @lastModified>'2024-01-21T11:12:48.628172460Z' and @lastModified<'2025-01-21T11:12:48.628172460Z']"
         }
         response {
             status OK()
@@ -2759,7 +2759,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities using lastModified in metadata - GREATER THAN OR EQUALS AND LESS THAN OR EQUALS WITH DIFFERENT TIMEZONE'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered>='2025-01-06T12:34:56.789+05:30' and @firstDiscovered<='2025-01-09T16:10:36.461565+05:30']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered>='2025-01-06T12:34:56.789+05:30' and @firstDiscovered<='2025-01-09T16:10:36.461565+05:30']"
         }
         response {
             status OK()
@@ -2813,7 +2813,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Get entities using lastModified in metadata - invalid timeformat'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<'2025-23-23T27:12:48.62817246Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<'2025-23-23T27:12:48.62817246Z']"
         }
         response {
             status BAD_REQUEST()
@@ -2831,7 +2831,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Get entities using lastModified in metadata - invalid date format'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<'202510-11T20:12:48.62817246Z']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?targetFilter=/metadata&scopeFilter=/metadata[@lastModified<'202510-11T20:12:48.62817246Z']"
         }
         response {
             status BAD_REQUEST()
@@ -2849,7 +2849,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type NRCellDU with scopeFilter - LESS THAN ignored.'
         request {
             method GET()
-            url '/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/NRCellDU/attributes[@cellLocalId<2]'
+            url '/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/NRCellDU/attributes[@cellLocalId<2]'
         }
         response {
             status OK()
@@ -2930,7 +2930,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type AntennaCapability inside the specified Polygon of AntennaModule'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[coveredBy(@geo-location, 'POLYGON((48 68, 50 68, 50 69, 48 69, 48 68))')]"
         }
         response {
             status OK()
@@ -2976,7 +2976,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get entities of type AntennaCapability by AntennaModule id"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/AntennaCapability/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@id='urn:o-ran:smo:teiv:sha512:AntennaModule=971FCD28D02B78DDD982611639A0957140339C5522EAAF3FBACA1B8308CF7B0A870CFA80AE04E259805B2A2CB95E263261309883B4D4BF50183FA17AFBA47EA7']"
         }
         response {
             status OK()
@@ -3022,7 +3022,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type NRCellDU 500 meters radius of AntennaModule'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
         }
         response {
             status OK()
@@ -3068,7 +3068,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type NRCellDU 500 meters radius of AntennaModule'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/NRCellDU/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/NRCellDU/serving-antennaModule/attributes[withinMeters(@geo-location, 'POINT(49.40199 68.94199)', 500)]"
         }
         response {
             status OK()
@@ -3114,7 +3114,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type NRCellDU where AntennaModule antennaModelNumber is 5 or 501205'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5'] | /serving-antennaModule/attributes[@antennaModelNumber='501205']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5'] | /serving-antennaModule/attributes[@antennaModelNumber='501205']"
         }
         response {
             status OK()
@@ -3168,7 +3168,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type NRCellDU where AntennaModule antennaModelNumber is 5 and electricalAntennaTilt is 11'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']; /serving-antennaModule/attributes[@electricalAntennaTilt=11]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@antennaModelNumber='5']; /serving-antennaModule/attributes[@electricalAntennaTilt=11]"
         }
         response {
             status OK()
@@ -3222,7 +3222,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type AntennaModule with scopeFilter on sourceIds'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/sourceIds[@item = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/sourceIds[@item = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,Equipment=1,AntennaUnitGroup=1,AntennaUnit=1,AntennaSubunit=1']"
         }
         response {
             status OK()
@@ -3268,7 +3268,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type AntennaModule with scopeFilter on sourceIds'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/metadata[@reliabilityIndicator='OK']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/metadata[@reliabilityIndicator='OK']"
         }
         response {
             status OK()
@@ -3314,7 +3314,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get entities of type NRCellDU where Sector sectorId is 2'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/grouped-by-sector/attributes[@sectorId=2]"
         }
         response {
             status OK()
@@ -3376,7 +3376,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Missing container type for queried leaf antennaModelNumber'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@antennaModelNumber='5']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule[@antennaModelNumber='5']"
         }
         response {
             status BAD_REQUEST()
@@ -3399,7 +3399,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Wrong sysntax for association id is not an attribute'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@id='5']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=500&scopeFilter=/serving-antennaModule/attributes[@id='5']"
         }
         response {
             status BAD_REQUEST()
@@ -3422,7 +3422,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type AntennaModule with scopeFilter association on AntennaCapability complex attribute STRING array - EXACT MATCH - VALUE EXISTS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/serviced-antennaCapability/attributes/eUtranFqBands[@item='456']"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/serviced-antennaCapability/attributes/eUtranFqBands[@item='456']"
         }
         response {
             status OK()
@@ -3476,7 +3476,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type AntennaModule with scopeFilter association on AntennaCapability complex attribute STRING array - EXACT MATCH - VALUE EXISTS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/serviced-antennaCapability/attributes/eUtranFqBands[contains(@item,'45')]"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/serviced-antennaCapability/attributes/eUtranFqBands[contains(@item,'45')]"
         }
         response {
             status OK()
@@ -3530,7 +3530,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Root object doesnt match with entity name'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/NRCellDU/serviced-antennaCapability/attributes/eUtranFqBands[contains(@item,'45')]"
+            url "/topology-inventory/v1/domains/EQUIPMENT/entity-types/AntennaModule/entities?offset=0&limit=500&scopeFilter=/NRCellDU/serviced-antennaCapability/attributes/eUtranFqBands[contains(@item,'45')]"
         }
         response {
             status BAD_REQUEST()
@@ -3553,7 +3553,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Invalid format for association.'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction/attributes/sourceIds[@item='789']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction/attributes/sourceIds[@item='789']"
         }
         response {
             status BAD_REQUEST()
@@ -3571,7 +3571,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Invalid format for association.'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction/attributes/decorators[@test-app-module:textdata='Ericsson']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction/attributes/decorators[@test-app-module:textdata='Ericsson']"
         }
         response {
             status BAD_REQUEST()
@@ -3589,7 +3589,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'SUCCESS - 200: Get all topology entities of type AntennaModule with scopeFilter association on AntennaCapability complex attribute STRING array - EXACT MATCH - VALUE EXISTS'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/OAM/entity-types/ManagedElement/entities?offset=0&limit=500&scopeFilter=/managed-ocucpFunction/attributes/pLMNId[@mcc='01']"
+            url "/topology-inventory/v1/domains/OAM/entity-types/ManagedElement/entities?offset=0&limit=500&scopeFilter=/managed-ocucpFunction/attributes/pLMNId[@mcc='01']"
         }
         response {
             status OK()
@@ -3683,7 +3683,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Invalid format for association.'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/managed-by-managedElement/attributes/NRCellDU/ManagedElement/attributes"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/managed-by-managedElement/attributes/NRCellDU/ManagedElement/attributes"
         }
         response {
             status BAD_REQUEST()
@@ -3701,7 +3701,7 @@ import org.springframework.cloud.contract.spec.Contract
         description 'ERROR - 400: Invalid format for association.'
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/grouped-by-sector/attributes@sectorId=1"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/grouped-by-sector/attributes@sectorId=1"
         }
         response {
             status BAD_REQUEST()
@@ -3719,7 +3719,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all topology entities of type PhysicalAppliance and attributes."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?targetFilter=/attributes"
+            url "/topology-inventory/v1/domains/PHYSICAL/entity-types/PhysicalAppliance/entities?targetFilter=/attributes"
         }
         response {
             status OK()

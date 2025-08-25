@@ -24,10 +24,10 @@ import org.springframework.cloud.contract.spec.Contract
 
 [
     Contract.make {
-        description "SUCCESS - 200: Get a list of all schemas"
+        description "SUCCESS - 200: Get a list of all pre-defined schemas"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas")
+            url("/topology-inventory/v1/schemas")
         }
         response {
             status OK()
@@ -211,22 +211,6 @@ import org.springframework.cloud.contract.spec.Contract
                         "content": {
                             "href": "/schemas/test-built-in-module/content"
                         }
-                    },
-                    {
-                        "name": "test-app-module",
-                        "domain": "",
-                        "revision": "2024-05-24",
-                        "content": {
-                            "href": "/schemas/test-app-module/content"
-                        }
-                    },
-                    {
-                        "name": "test-app-for-deletion-module",
-                        "domain": "",
-                        "revision": "2024-05-24",
-                        "content": {
-                            "href": "/schemas/test-app-for-deletion-module/content"
-                        }
                     }
                 ],
                 "self": {
@@ -244,11 +228,11 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=0&limit=500"
                 },
-                "totalCount": 24
+                "totalCount": 22
             }''')
             bodyMatchers {
                 jsonPath('$.items', byType {
-                    occurrence(24)
+                    occurrence(22)
                 })
                 jsonPath('$.items[0].name', byEquality())
                 jsonPath('$.items[0].domain', byEquality())
@@ -338,14 +322,53 @@ import org.springframework.cloud.contract.spec.Contract
                 jsonPath('$.items[21].domain', byEquality())
                 jsonPath('$.items[21].revision', byEquality())
                 jsonPath('$.items[21].content.href', byEquality())
-                jsonPath('$.items[22].name', byEquality())
-                jsonPath('$.items[22].domain', byEquality())
-                jsonPath('$.items[22].revision', byEquality())
-                jsonPath('$.items[22].content.href', byEquality())
-                jsonPath('$.items[23].name', byEquality())
-                jsonPath('$.items[23].domain', byEquality())
-                jsonPath('$.items[23].revision', byEquality())
-                jsonPath('$.items[23].content.href', byEquality())
+            }
+        }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get a list of all user-defined schemas"
+        request {
+            method GET()
+            url("/topology-inventory/v1/user-defined-schemas")
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body('''{
+                "items": [
+                    {
+                        "name": "test-app-module",
+                        "domain": "",
+                        "revision": "2024-05-24",
+                        "content": {
+                            "href": "/user-defined-schemas/test-app-module/content"
+                        }
+                    },
+                    {
+                        "name": "test-app-for-deletion-module",
+                        "domain": "",
+                        "revision": "2024-05-24",
+                        "content": {
+                            "href": "/user-defined-schemas/test-app-for-deletion-module/content"
+                        }
+                    }
+                    
+                ]
+            }''')
+            bodyMatchers {
+                jsonPath('$.items', byType {
+                    occurrence(2)
+                })
+                jsonPath('$.items[0].name', byEquality())
+                jsonPath('$.items[0].domain', byEquality())
+                jsonPath('$.items[0].revision', byEquality())
+                jsonPath('$.items[0].content.href', byEquality())
+                jsonPath('$.items[1].name', byEquality())
+                jsonPath('$.items[1].domain', byEquality())
+                jsonPath('$.items[1].revision', byEquality())
+                jsonPath('$.items[1].content.href', byEquality())
             }
         }
     },
@@ -353,7 +376,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a list of all schemas with offset as 0 and limit as 1."
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas?offset=0&limit=1")
+            url("/topology-inventory/v1/schemas?offset=0&limit=1")
         }
         response {
             status OK()
@@ -384,9 +407,9 @@ import org.springframework.cloud.contract.spec.Contract
                     "href": "/schemas?offset=1&limit=1"
                 },
                 "last": {
-                    "href": "/schemas?offset=23&limit=1"
+                    "href": "/schemas?offset=21&limit=1"
                 },
-                "totalCount": 24
+                "totalCount": 22
             }''')
         }
     },
@@ -394,7 +417,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a list of all schemas with offset as 3 and limit as 3."
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas?offset=3&limit=3")
+            url("/topology-inventory/v1/schemas?offset=3&limit=3")
         }
         response {
             status OK()
@@ -443,7 +466,7 @@ import org.springframework.cloud.contract.spec.Contract
                 "last": {
                     "href": "/schemas?offset=21&limit=3"
                 },
-                "totalCount": 24
+                "totalCount": 22
             }''')
         }
     },
@@ -451,7 +474,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a list of all schemas with RAN domain"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas?domain=RAN&offset=0&limit=100")
+            url("/topology-inventory/v1/schemas?domain=RAN&offset=0&limit=100")
         }
         response {
             status OK()
@@ -492,7 +515,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a list of all schemas with domain name containing RAN"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas?domain=.*RAN.*")
+            url("/topology-inventory/v1/schemas?domain=.*RAN.*")
         }
         response {
             status OK()
@@ -565,7 +588,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a list of all schemas with invalid domain"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas?domain=INVALID")
+            url("/topology-inventory/v1/schemas?domain=INVALID")
         }
         response {
             status OK()
@@ -597,7 +620,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get a list of all schemas with offset greater than totalCount"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/schemas?domain=RAN.*&offset=100")
+            url("/topology-inventory/v1/schemas?domain=RAN.*&offset=100")
         }
         response {
             status BAD_REQUEST()

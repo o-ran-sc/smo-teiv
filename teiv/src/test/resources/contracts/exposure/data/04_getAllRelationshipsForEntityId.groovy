@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for entity type NRCellDU with ID urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1/relationships?offset=0&limit=100"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1/relationships?offset=0&limit=100"
         }
         response {
             status OK()
@@ -101,7 +101,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for entity type NRCellDU  with ID urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1 & targetFilter=/ODUFUNCTION_PROVIDES_NRCELLDU."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1/relationships?offset=0&limit=100&targetFilter=/ODUFUNCTION_PROVIDES_NRCELLDU"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1/relationships?offset=0&limit=100&targetFilter=/ODUFUNCTION_PROVIDES_NRCELLDU"
         }
         response {
             status OK()
@@ -143,7 +143,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for entity type NRCellDU  with ID urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1 & targetFilter=/ODUFUNCTION_PROVIDES_NRCELLDU;/SECTOR_GROUPS_NRCELLDU."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1/relationships?offset=0&limit=100&targetFilter=/ODUFUNCTION_PROVIDES_NRCELLDU;/SECTOR_GROUPS_NRCELLDU"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1/relationships?offset=0&limit=100&targetFilter=/ODUFUNCTION_PROVIDES_NRCELLDU;/SECTOR_GROUPS_NRCELLDU"
         }
         response {
             status OK()
@@ -194,7 +194,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for entity type ODUFunction with ID urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1. & scopeFilter=/provided-nrCellDu[@id = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1']"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9/relationships?offset=0&limit=100&scopeFilter=/provided-nrCellDu[@id = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9/relationships?offset=0&limit=100&scopeFilter=/provided-nrCellDu[@id = 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=1']"
         }
         response {
             status OK()
@@ -236,7 +236,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for entity type NRCellDU with ID urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3 with limit as 2."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3/relationships?limit=2"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3/relationships?limit=2"
         }
         response {
             status OK()
@@ -298,7 +298,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for long entity type name with id as urn:LongEntityType1 (OneToOne, ManyToOne, ManyToMany and Same Entity with aSide of relationship)"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType1/relationships"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType1/relationships"
         }
         response {
             status OK()
@@ -367,7 +367,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for long entity type name with id as urn:LongEntityType2  (OneToMany and Same Entity with bSide of relationship)"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType2/relationships"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType2/relationships"
         }
         response {
             status OK()
@@ -427,7 +427,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for long entity type name with id as urn:LongEntityType1 and with scope filter on sourceIds"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType1/relationships?scopeFilter=/sourceIds[@item = 'urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616']&targetFilter=/sourceIds"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType1/relationships?scopeFilter=/sourceIds[@item = 'urn:cmHandle:C4388D6BB970EC663F88B46CC14F8616']&targetFilter=/sourceIds"
         }
         response {
             status OK()
@@ -469,7 +469,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for long entity type name with id as urn:LongEntityType3 and with scope filter on classifiers"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType3/relationships?scopeFilter=/classifiers[@item='test-app-module:Weekend']&targetFilter=/classifiers"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType3/relationships?scopeFilter=/classifiers[@item='test-app-module:Weekend']&targetFilter=/classifiers"
         }
         response {
             status OK()
@@ -511,7 +511,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for long entity type name with id as urn:LongEntityType2 and with scope filter on decorators"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType2/relationships?&scopeFilter=/decorators[contains(@test-app-module:textdata, 'ORAN')]&targetFilter=/decorators"
+            url "/topology-inventory/v1/domains/TEST/entity-types/EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters/entities/urn:LongEntityType2/relationships?&scopeFilter=/decorators[contains(@test-app-module:textdata, 'ORAN')]&targetFilter=/decorators"
         }
         response {
             status OK()
@@ -562,7 +562,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Return items as empty for a entity with no relationship"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships"
         }
         response {
             status OK()
@@ -570,31 +570,31 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/json')
             }
             body('''{
-            "items": [],
-            "self": {
-                "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
-            },
-            "first": {
-                "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
-            },
-            "prev": {
-                "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
-            },
-            "next": {
-                "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
-            },
-            "last": {
-                "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
-            },
-            "totalCount": 0
-        }''')
+                "items": [],
+                "self": {
+                    "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
+                },
+                "first": {
+                    "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
+                },
+                "prev": {
+                    "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
+                },
+                "next": {
+                    "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
+                },
+                "last": {
+                    "href": "/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19,NRCellDU=91/relationships?offset=0&limit=500"
+                },
+                "totalCount": 0
+            }''')
         }
     },
     Contract.make {
         description "SUCCESS - 200: Get all relationships for an entity id where there exists no relationships for the entity type in the given domain"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/OCUUPFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,OCUUPFunction=9/relationships"
+            url "/topology-inventory/v1/domains/RAN/entity-types/OCUUPFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,OCUUPFunction=9/relationships"
         }
         response {
             status OK()
@@ -626,7 +626,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for an entity id where there exists no relationships in the given domain"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/OAM/entity-types/ManagedElement/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9/relationships?offset=0&limit=100"
+            url "/topology-inventory/v1/domains/OAM/entity-types/ManagedElement/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9/relationships?offset=0&limit=100"
         }
         response {
             status OK()
@@ -658,7 +658,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get all relationships for entity type AntennaModule with ID urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
+            url "/topology-inventory/v1/domains/TEIV/entity-types/AntennaModule/entities/urn:o-ran:smo:teiv:sha512:AntennaModule=308D6602D2FE1C923DF176A0F30688B1810DFA7BC4AD5B8050BF9E27361ECA86E86B47B8582DC28E8CE92EB81822DE248845E87094557A953FD9F15BA508B03A/relationships?offset=0&limit=100"
         }
         response {
             status OK()
@@ -732,7 +732,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get all relationships for NRCellDU entity with invalid offset (greater than total count)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3/relationships?offset=1000"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9,NRCellDU=3/relationships?offset=1000"
         }
         response {
             status BAD_REQUEST()
@@ -750,7 +750,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Get all relationships for non existing NRCellDU id."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities/urn:non-existent/relationships"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities/urn:non-existent/relationships"
         }
         response {
             status NOT_FOUND()
@@ -768,7 +768,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200 Get all relationships with entityId for ODUFunction using metadata"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='OK']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@reliabilityIndicator='OK']"
         }
         response {
             status OK()
@@ -821,7 +821,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200 Get all relationships with entityId for ODUFunction using firstDiscovered in metadata as filter - LESS THAN"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered<'2025-01-21T11:12:48.628172460Z']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered<'2025-01-21T11:12:48.628172460Z']"
         }
         response {
             status OK()
@@ -921,7 +921,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200 Get all relationships with entityId for ODUFunction using firstDiscovered in metadata as filter - GREATER THAN"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered>'2024-01-21T11:12:48.628172460+01:00']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered>'2024-01-21T11:12:48.628172460+01:00']"
         }
         response {
             status OK()
@@ -1021,7 +1021,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200 Get all relationships with entityId for ODUFunction using firstDiscovered in metadata as filter - LESS THAN AND GREATER THAN"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered>'2025-01-21T11:12:48.628172460Z' and @firstDiscovered<'2025-01-31T11:12:48.628172460Z']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=19,ODUFunction=19/relationships?targetFilter=/metadata&scopeFilter=/metadata[@firstDiscovered>'2025-01-21T11:12:48.628172460Z' and @firstDiscovered<'2025-01-31T11:12:48.628172460Z']"
         }
         response {
             status OK()

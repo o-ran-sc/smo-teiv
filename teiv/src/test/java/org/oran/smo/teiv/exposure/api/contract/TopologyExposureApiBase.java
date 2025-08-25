@@ -103,8 +103,8 @@ public abstract class TopologyExposureApiBase extends TopologyApiBase {
         DecoratorsRequestFilter decoratorsRequestFilter = new DecoratorsRequestFilter(loggerHandler, objectMapper,
                 customMetrics);
         mockMvc = MockMvcBuilders.webAppContextSetup((WebApplicationContext) context).addFilter(classifiersRequestFilter,
-                REQUEST_MAPPING + "/classifiers").addFilter(decoratorsRequestFilter, REQUEST_MAPPING + "/decorators")
-                .build();
+                REQUEST_MAPPING + "/manage-classifiers").addFilter(decoratorsRequestFilter,
+                        REQUEST_MAPPING + "/manage-decorators").build();
 
         RestAssuredMockMvc.mockMvc(mockMvc);
 
