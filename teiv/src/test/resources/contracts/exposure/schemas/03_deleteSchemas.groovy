@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete an existing classifier schema - test-app-for-deletion-module"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/schemas/test-app-for-deletion-module")
+            url("/topology-inventory/v1alpha11/user-defined-schemas/test-app-for-deletion-module")
         }
         response {
             status NO_CONTENT()
@@ -37,7 +37,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Delete a schema that does not exists"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/schemas/does-not-exist-rapp-module")
+            url("/topology-inventory/v1alpha11/user-defined-schemas/does-not-exist-rapp-module")
         }
         response {
             status BAD_REQUEST()
@@ -55,7 +55,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Delete a schema that is in deleting status"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/schemas/test-module-in-deleting-state")
+            url("/topology-inventory/v1alpha11/user-defined-schemas/test-module-in-deleting-state")
         }
         response {
             status BAD_REQUEST()

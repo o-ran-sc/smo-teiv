@@ -117,11 +117,39 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
+    public OranTeivSchemaList getUserDefinedModulesByDomain(final String domain, final RequestDetails requestDetails) {
+        log.debug("Get user defined modules with domain : {}", domain);
+        final List<Module> modulesByDomain = modelRepository.getUserDefinedModules().stream().filter(
+                s -> (domain == null) || (s.getDomain() != null && s.getDomain().matches(domain))).toList();
+        int totalCount = modulesByDomain.size();
+
+        final List<OranTeivSchema> items = modulesByDomain.stream().skip(requestDetails.getOffset()).limit(getViableLimit(
+                requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(module -> OranTeivSchema.builder()
+                        .name(module.getName()).domain(module.getDomain() == null ? "" : module.getDomain()).revision(module
+                                .getRevision()).content(OranTeivHref.builder().href(String.format(CONTENT_HREF,
+                                        requestDetails.getBasePath(), module.getName())).build()).build()).toList();
+
+        return OranTeivSchemaList.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
+                totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(lastHref(
+                        requestDetails, totalCount)).totalCount(totalCount).build();
+    }
+
+    @Override
     public String getModuleContentByName(final String name) {
         log.debug("Get {} module content", name);
         return Optional.ofNullable(modelRepository.getModuleContentByName(name)).map(content -> new String(Base64
                 .getDecoder().decode(content), StandardCharsets.UTF_8)).orElseGet(() -> {
                     log.warn("No schema found with name: {}", name);
+                    throw TeivException.invalidSchema(name);
+                });
+    }
+
+    @Override
+    public String getUserDefinedModuleContentByName(final String name) {
+        log.debug("Get {} user defined module content", name);
+        return Optional.ofNullable(modelRepository.getUserDefinedModuleContentByName(name)).map(content -> new String(Base64
+                .getDecoder().decode(content), StandardCharsets.UTF_8)).orElseGet(() -> {
+                    log.warn("No user defined schema found with name: {}", name);
                     throw TeivException.invalidSchema(name);
                 });
     }

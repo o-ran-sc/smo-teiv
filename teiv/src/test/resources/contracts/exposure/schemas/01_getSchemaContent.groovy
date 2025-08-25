@@ -247,5 +247,73 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
         }
+    },
+    Contract.make {
+        description "SUCCESS - 200: Get user-define schema with name test-app-module"
+        request {
+            method GET()
+            url("/topology-inventory/v1alpha11/user-defined-schemas/test-app-module/content")
+        }
+        response {
+            status OK()
+            body("module test-app-module {\n" +
+                    "\n" +
+                    "    yang-version 1.1;\n" +
+                    "    namespace \"urn:test-app-module\";\n" +
+                    "    prefix module;\n" +
+                    "\n" +
+                    "    import o-ran-smo-teiv-common-yang-types { prefix test; }\n" +
+                    "    import o-ran-smo-teiv-common-yang-extensions {prefix or-teiv-yext; }\n" +
+                    "\n" +
+                    "    revision \"2024-06-10\" {\n" +
+                    "        description\n" +
+                    "        Initial revision.;\n" +
+                    "        or-teiv-yext:label 0.3.0;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    augment /test:decorators {\n" +
+                    "        leaf location {\n" +
+                    "            type string;\n" +
+                    "        }\n" +
+                    "        leaf vendor {\n" +
+                    "            type string;\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    identity Outdoor {\n" +
+                    "        base test:classifiers;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    identity Rural {\n" +
+                    "        base test:classifiers;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    identity Weekend {\n" +
+                    "        base test:classifiers;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "}\n")
+            headers {
+                contentType('text/plain')
+            }
+        }
+    },
+    Contract.make {
+        description "ERROR - 400: Get user-defined schema content with invalid name invalid"
+        request {
+            method GET()
+            url("/topology-inventory/v1alpha11/user-defined-schemas/invalid/content")
+        }
+        response {
+            status BAD_REQUEST()
+            body('''{
+                    "status": "BAD_REQUEST",
+                    "message": "Invalid schema name",
+                    "details": "Invalid schema name: invalid"
+                }''')
+            headers {
+                contentType('application/problem+json')
+            }
+        }
     }
 ]

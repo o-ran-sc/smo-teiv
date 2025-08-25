@@ -55,6 +55,26 @@ public interface ModelService {
     String getModuleContentByName(final String name);
 
     /**
+     * Gets all user defined modules in a domain
+     *
+     * @param domain
+     *     domain name
+     * @param paginationDTO
+     *     pagination data
+     * @return a map of all user defined schemas in a domain
+     */
+    OranTeivSchemaList getUserDefinedModulesByDomain(final String domain, final RequestDetails paginationDTO);
+
+    /**
+     * Gets module content
+     *
+     * @param name
+     *     name
+     * @return the content
+     */
+    String getUserDefinedModuleContentByName(final String name);
+
+    /**
      * Deletes module.
      *
      * @param name

@@ -489,6 +489,7 @@ paths:
 
   /schemas:
     post:
+      deprecated: true
       description: Create a new schema. The request body contains the schema in YANG format.
       tags:
         - Schemas
@@ -518,10 +519,10 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
     get:
-      description: Get a list of all schemas.
+      description: Get a list of all pre-defined schemas.
       tags:
         - Schemas
-      summary: Get a list of all schemas.
+      summary: Get a list of all pre-defined schemas.
       operationId: getSchemas
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
@@ -549,11 +550,102 @@ paths:
 
   /schemas/{schemaName}/content:
     get:
-      description: Get the model schema by name.
+      description: Get the pre-defined model schema by name.
       tags:
         - Schemas
-      summary: Get the model schema.
+      summary: Get the pre-defined model schema.
       operationId: getSchemaByName
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/schemaNameInPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                schema:
+                  $ref: '#/components/examples/SchemaResponseExample'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /user-defined-schemas:
+    post:
+      description: Create a new user defined schema. The request body contains the schema in YANG format.
+      tags:
+        - Schemas
+      summary: Create a new user defined schema.
+      operationId: createUserDefinedSchema
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/contentTypeMultipartFileInHeader'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MultipartFile'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      description: Get a list of all user defined schemas.
+      tags:
+        - Schemas
+      summary: Get a list of all used defined schemas.
+      operationId: getUserDefinedSchemas
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/domainOptionalInQuery'
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaList'
+              examples:
+                schemas:
+                  $ref: '#/components/examples/SchemasResponseExample'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /user-defined-schemas/{schemaName}/content:
+    get:
+      description: Get the user defined model schema by name.
+      tags:
+        - Schemas
+      summary: Get the user defined model schema.
+      operationId: getUserDefinedSchemaByName
       parameters:
         - $ref: '#/components/parameters/acceptJsonInHeader'
         - $ref: '#/components/parameters/schemaNameInPath'
@@ -580,6 +672,7 @@ paths:
 
   /schemas/{schemaName}:
     delete:
+      deprecated: true
       description: Delete a schema.
       tags:
         - Schemas
@@ -600,7 +693,65 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /user-defined-schemas/{schemaName}:
+    delete:
+      description: Delete a user defined schema.
+      tags:
+        - Schemas
+      summary: Delete a user defined schema.
+      operationId: deleteUserDefinedSchema
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/schemaNameInPath'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /classifiers:
+    post:
+      deprecated: true
+      description: Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.
+      tags:
+        - Classifiers
+      summary: Update entities and/or relationships with classifier(s).
+      operationId: updateClassifierDeprecated
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/contentTypeJsonInHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classifier'
+            examples:
+              updateClassifier:
+                $ref: '#/components/examples/ClassifierMergeExample'
+              removeClassifier:
+                $ref: '#/components/examples/ClassifierDeleteExample'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /manage-classifiers:
     post:
       description: Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.
       tags:
@@ -636,6 +787,42 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /decorators:
+    post:
+      deprecated: true
+      description: Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.
+      tags:
+        - Decorators
+      summary: Update entities and/or relationships with decorator(s).
+      operationId: updateDecoratorDeprecated
+      parameters:
+        - $ref: '#/components/parameters/acceptJsonInHeader'
+        - $ref: '#/components/parameters/contentTypeJsonInHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Decorator'
+            examples:
+              mergeDecorator:
+                $ref: '#/components/examples/DecoratorMergeExample'
+              removeDecorator:
+                $ref: '#/components/examples/DecoratorDeleteExample'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /manage-decorators:
     post:
       description: Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.
       tags:

@@ -301,11 +301,13 @@ retrieved and filtered using the <em>/attributes</em>.</p>
   <div class="method-summary"></div>
   <h4><a href="#Classifiers">Classifiers</a></h4>
   <ul>
-  <li><a href="#updateClassifier"><code><span class="http-method">post</span> /classifiers</code></a></li>
+  <li><a href="#updateClassifier"><code><span class="http-method">post</span> /manage-classifiers</code></a></li>
+  <li><a href="#updateClassifierDeprecated"><code><span class="http-method">post</span> /classifiers</code></a></li>
   </ul>
   <h4><a href="#Decorators">Decorators</a></h4>
   <ul>
-  <li><a href="#updateDecorator"><code><span class="http-method">post</span> /decorators</code></a></li>
+  <li><a href="#updateDecorator"><code><span class="http-method">post</span> /manage-decorators</code></a></li>
+  <li><a href="#updateDecoratorDeprecated"><code><span class="http-method">post</span> /decorators</code></a></li>
   </ul>
   <h4><a href="#EntitiesAndRelationships">EntitiesAndRelationships</a></h4>
   <ul>
@@ -333,17 +335,103 @@ retrieved and filtered using the <em>/attributes</em>.</p>
   <h4><a href="#Schemas">Schemas</a></h4>
   <ul>
   <li><a href="#createSchema"><code><span class="http-method">post</span> /schemas</code></a></li>
+  <li><a href="#createUserDefinedSchema"><code><span class="http-method">post</span> /user-defined-schemas</code></a></li>
   <li><a href="#deleteSchema"><code><span class="http-method">delete</span> /schemas/{schemaName}</code></a></li>
+  <li><a href="#deleteUserDefinedSchema"><code><span class="http-method">delete</span> /user-defined-schemas/{schemaName}</code></a></li>
   <li><a href="#getSchemaByName"><code><span class="http-method">get</span> /schemas/{schemaName}/content</code></a></li>
   <li><a href="#getSchemas"><code><span class="http-method">get</span> /schemas</code></a></li>
+  <li><a href="#getUserDefinedSchemaByName"><code><span class="http-method">get</span> /user-defined-schemas/{schemaName}/content</code></a></li>
+  <li><a href="#getUserDefinedSchemas"><code><span class="http-method">get</span> /user-defined-schemas</code></a></li>
   </ul>
 
   <h1><a name="Classifiers">Classifiers</a></h1>
   <div class="method"><a name="updateClassifier"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="post"><code class="huge"><span class="http-method">post</span> /classifiers</code></pre></div>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /manage-classifiers</code></pre></div>
     <div class="method-summary">Update entities and/or relationships with classifier(s). (<span class="nickname">updateClassifier</span>)</div>
+    <div class="method-notes">Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Classifier <a href="#Classifier">Classifier</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateClassifierDeprecated"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /classifiers</code></pre></div>
+    <div class="method-summary">Update entities and/or relationships with classifier(s). (<span class="nickname">updateClassifierDeprecated</span>)</div>
     <div class="method-notes">Update entities and/or relationships with classifier(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.</div>
 
 
@@ -425,8 +513,90 @@ retrieved and filtered using the <em>/attributes</em>.</p>
   <div class="method"><a name="updateDecorator"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="post"><code class="huge"><span class="http-method">post</span> /decorators</code></pre></div>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /manage-decorators</code></pre></div>
     <div class="method-summary">Update entities and/or relationships with decorator(s). (<span class="nickname">updateDecorator</span>)</div>
+    <div class="method-notes">Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Decorator <a href="#Decorator">Decorator</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateDecoratorDeprecated"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /decorators</code></pre></div>
+    <div class="method-summary">Update entities and/or relationships with decorator(s). (<span class="nickname">updateDecoratorDeprecated</span>)</div>
     <div class="method-notes">Update entities and/or relationships with decorator(s). The sum of the given entityIds and relationshipIds cannot exceed 100 by default.</div>
 
 
@@ -2188,6 +2358,87 @@ retrieved and filtered using the <em>/attributes</em>.</p>
         <a href="#ErrorMessage">ErrorMessage</a>
   </div> <!-- method -->
   <hr/>
+  <div class="method"><a name="createUserDefinedSchema"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /user-defined-schemas</code></pre></div>
+    <div class="method-summary">Create a new user defined schema. (<span class="nickname">createUserDefinedSchema</span>)</div>
+    <div class="method-notes">Create a new user defined schema. The request body contains the schema in YANG format.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>multipart/form-data</code></li>
+    </ul>
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+<div class="param">Content-Type (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: multipart/form-data </div>
+
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Form parameters</h3>
+    <div class="field-items">
+      <div class="param">file (required)</div>
+
+      <div class="param-desc"><span class="param-type">Form Parameter</span> &mdash; multipartFile default: null format: binary</div>
+    </div>  <!-- field-items -->
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created without response body
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">409</h4>
+    Conflict
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
   <div class="method"><a name="deleteSchema"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
@@ -2255,12 +2506,79 @@ retrieved and filtered using the <em>/attributes</em>.</p>
         <a href="#ErrorMessage">ErrorMessage</a>
   </div> <!-- method -->
   <hr/>
+  <div class="method"><a name="deleteUserDefinedSchema"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /user-defined-schemas/{schemaName}</code></pre></div>
+    <div class="method-summary">Delete a user defined schema. (<span class="nickname">deleteUserDefinedSchema</span>)</div>
+    <div class="method-notes">Delete a user defined schema.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">schemaName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: o-ran-smo-teiv-ran </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
   <div class="method"><a name="getSchemaByName"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
     <pre class="get"><code class="huge"><span class="http-method">get</span> /schemas/{schemaName}/content</code></pre></div>
-    <div class="method-summary">Get the model schema. (<span class="nickname">getSchemaByName</span>)</div>
-    <div class="method-notes">Get the model schema by name.</div>
+    <div class="method-summary">Get the pre-defined model schema. (<span class="nickname">getSchemaByName</span>)</div>
+    <div class="method-notes">Get the pre-defined model schema by name.</div>
 
     <h3 class="field-label">Path parameters</h3>
     <div class="field-items">
@@ -2338,8 +2656,199 @@ retrieved and filtered using the <em>/attributes</em>.</p>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
     <pre class="get"><code class="huge"><span class="http-method">get</span> /schemas</code></pre></div>
-    <div class="method-summary">Get a list of all schemas. (<span class="nickname">getSchemas</span>)</div>
-    <div class="method-notes">Get a list of all schemas.</div>
+    <div class="method-summary">Get a list of all pre-defined schemas. (<span class="nickname">getSchemas</span>)</div>
+    <div class="method-notes">Get a list of all pre-defined schemas.</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">domain (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  default: null </div><div class="param">offset (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Pagination offset. default: 0 </div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Result limiter. default: 500 </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SchemaList">SchemaList</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "next" : {
+    "href" : "href"
+  },
+  "last" : {
+    "href" : "href"
+  },
+  "prev" : {
+    "href" : "href"
+  },
+  "self" : {
+    "href" : "href"
+  },
+  "totalCount" : 0,
+  "items" : [ {
+    "domain" : "domain",
+    "name" : "name",
+    "content" : {
+      "href" : "href"
+    },
+    "revision" : "revision"
+  }, {
+    "domain" : "domain",
+    "name" : "name",
+    "content" : {
+      "href" : "href"
+    },
+    "revision" : "revision"
+  } ],
+  "first" : {
+    "href" : "href"
+  }
+}</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SchemaList">SchemaList</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getUserDefinedSchemaByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /user-defined-schemas/{schemaName}/content</code></pre></div>
+    <div class="method-summary">Get the user defined model schema. (<span class="nickname">getUserDefinedSchemaByName</span>)</div>
+    <div class="method-notes">Get the user defined model schema by name.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">schemaName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: o-ran-smo-teiv-ran </div>
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">Accept (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash;  default: application/json </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      String
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/problem+json</div>
+    <pre class="example"><code>Custom MIME type example not yet supported: application/problem+json</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>text/plain</code></li>
+      <li><code>application/problem+json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#String">String</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">403</h4>
+    Forbidden
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ErrorMessage">ErrorMessage</a>
+    <h4 class="field-label">500</h4>
+    Internal Server Error
+        <a href="#ErrorMessage">ErrorMessage</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getUserDefinedSchemas"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /user-defined-schemas</code></pre></div>
+    <div class="method-summary">Get a list of all used defined schemas. (<span class="nickname">getUserDefinedSchemas</span>)</div>
+    <div class="method-notes">Get a list of all user defined schemas.</div>
 
 
 

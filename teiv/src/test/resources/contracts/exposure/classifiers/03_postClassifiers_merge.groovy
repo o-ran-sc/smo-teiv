@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Merge classifiers with wrong entity ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -65,7 +65,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Merge classifiers  where entity id does not start with urn:"
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -98,7 +98,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Merge classifiers with wrong relationship ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -136,7 +136,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Merge classifiers with wrong relationship ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -169,7 +169,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Merge valid classifiers to entities and relationships (add)."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/classifiers"
+            url "/topology-inventory/v1alpha11/manage-classifiers"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
