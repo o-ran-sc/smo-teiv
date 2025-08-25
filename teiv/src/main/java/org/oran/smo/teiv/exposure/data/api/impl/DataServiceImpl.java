@@ -24,6 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.oran.smo.teiv.api.model.OranTeivDomains;
+import org.oran.smo.teiv.api.model.OranTeivDomainsItemsInner;
+import org.oran.smo.teiv.api.model.OranTeivEntityTypesItemsInner;
+import org.oran.smo.teiv.api.model.OranTeivEntities;
+import org.oran.smo.teiv.api.model.OranTeivEntityTypes;
+import org.oran.smo.teiv.api.model.OranTeivHref;
+import org.oran.smo.teiv.api.model.OranTeivRelationshipTypesItemsInner;
+import org.oran.smo.teiv.api.model.OranTeivRelationshipTypes;
+import org.oran.smo.teiv.api.model.OranTeivRelationships;
 import org.oran.smo.teiv.exposure.teivpath.resolver.ScopeResolver;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -41,27 +50,13 @@ import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import org.oran.smo.teiv.api.model.OranTeivDomains;
-import org.oran.smo.teiv.api.model.OranTeivDomainsItemsInner;
-import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
-import org.oran.smo.teiv.api.model.OranTeivEntityTypes;
-import org.oran.smo.teiv.api.model.OranTeivEntityTypesItemsInner;
-import org.oran.smo.teiv.api.model.OranTeivHref;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipTypes;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipTypesItemsInner;
-import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.SchemaRegistry;
 import lombok.RequiredArgsConstructor;
 
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.firstHref;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.getViableLimit;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.lastHref;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.nextHref;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.prevHref;
-import static org.oran.smo.teiv.exposure.utils.PaginationUtil.selfHref;
+import static org.oran.smo.teiv.exposure.utils.PaginationUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -81,11 +76,10 @@ public class DataServiceImpl implements DataService {
 
         final List<OranTeivDomainsItemsInner> items = domains.stream().skip(requestDetails.getOffset()).limit(
                 getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
-                        domain -> OranTeivDomainsItemsInner.builder().name(domain).entityTypes(OranTeivHref.builder().href(
-                                requestDetails.getBasePath() + "/" + domain + "/entity-types").build()).relationshipTypes(
-                                        OranTeivHref.builder().href(requestDetails
-                                                .getBasePath() + "/" + domain + "/relationship-types").build()).build())
-                .toList();
+                        domain -> OranTeivDomainsItemsInner.builder().domainName(domain).entityTypes(OranTeivHref.builder()
+                                .href(requestDetails.getBasePath() + "/" + domain + "/entity-types").build())
+                                .relationshipTypes(OranTeivHref.builder().href(requestDetails
+                                        .getBasePath() + "/" + domain + "/relationship-types").build()).build()).toList();
 
         return OranTeivDomains.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
                 totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(lastHref(
@@ -99,9 +93,9 @@ public class DataServiceImpl implements DataService {
 
         final List<OranTeivEntityTypesItemsInner> items = entityTypeNames.stream().skip(requestDetails.getOffset()).limit(
                 getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
-                        entityTypeName -> OranTeivEntityTypesItemsInner.builder().name(entityTypeName).entities(OranTeivHref
-                                .builder().href(requestDetails.getBasePath() + "/" + entityTypeName + "/entities").build())
-                                .build()).toList();
+                        entityTypeName -> OranTeivEntityTypesItemsInner.builder().entityTypeName(entityTypeName).entities(
+                                OranTeivHref.builder().href(requestDetails
+                                        .getBasePath() + "/" + entityTypeName + "/entities").build()).build()).toList();
 
         return OranTeivEntityTypes.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(requestDetails,
                 totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(lastHref(
@@ -116,8 +110,8 @@ public class DataServiceImpl implements DataService {
 
         final List<OranTeivRelationshipTypesItemsInner> items = relationNames.stream().skip(requestDetails.getOffset())
                 .limit(getViableLimit(requestDetails.getOffset(), requestDetails.getLimit(), totalCount)).map(
-                        relationName -> OranTeivRelationshipTypesItemsInner.builder().name(relationName).relationships(
-                                OranTeivHref.builder().href(requestDetails
+                        relationName -> OranTeivRelationshipTypesItemsInner.builder().relationshipTypeName(relationName)
+                                .relationships(OranTeivHref.builder().href(requestDetails
                                         .getBasePath() + "/" + relationName + "/relationships").build()).build()).toList();
 
         return OranTeivRelationshipTypes.builder().items(items).first(firstHref(requestDetails)).prev(prevHref(
@@ -137,8 +131,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public OranTeivEntitiesResponseMessage getTopologyByType(final String domain, final String entityName,
-            final String target, final String scope, final RequestDetails requestDetails) {
+    public OranTeivEntities getTopologyByType(final String domain, final String entityName, final String target,
+            final String scope, final RequestDetails requestDetails) {
         final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(InnerFilterCriteria
                 .builder().targets(targetResolver.resolve(entityName, target)).scope(scopeResolver.resolve(entityName,
                         scope)).build())).resolvingTopologyObjectType(FilterCriteria.ResolvingTopologyObjectType.ENTITY)
@@ -149,8 +143,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public OranTeivEntitiesResponseMessage getEntitiesByDomain(final String domain, final String fields,
-            final String filters, final RequestDetails requestDetails) {
+    public OranTeivEntities getEntitiesByDomain(final String domain, final String fields, final String filters,
+            final RequestDetails requestDetails) {
         final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(InnerFilterCriteria
                 .builder().targets(targetResolver.resolve(null, fields)).scope(scopeResolver.resolve(null, filters))
                 .build())).resolvingTopologyObjectType(FilterCriteria.ResolvingTopologyObjectType.ENTITY).build();
@@ -160,12 +154,12 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public OranTeivRelationshipsResponseMessage getAllRelationshipsForObjectId(final String domain, final String entityName,
+    public OranTeivRelationships getAllRelationshipsForObjectId(final String domain, final String entityName,
             final String id, final String target, final String scope, final RequestDetails requestDetails) {
 
         final List<RelationType> relationNamesForEntityByDomain = SchemaRegistry.getRelationNamesForEntityByDomain(
                 entityName, domain);
-        final OranTeivRelationshipsResponseMessage response;
+        final OranTeivRelationships response;
         if (!relationNamesForEntityByDomain.isEmpty()) {
             final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(
                     InnerFilterCriteria.builder().targets(targetResolver.resolve(null, target)).scope(scopeResolver.resolve(
@@ -202,9 +196,9 @@ public class DataServiceImpl implements DataService {
             response = relationshipMapper.mapRelationships(result, requestDetails);
         } else {
             final int totalCount = 0;
-            response = OranTeivRelationshipsResponseMessage.builder().items(List.of()).first(firstHref(requestDetails))
-                    .prev(prevHref(requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails,
-                            totalCount)).last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
+            response = OranTeivRelationships.builder().items(List.of()).first(firstHref(requestDetails)).prev(prevHref(
+                    requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount))
+                    .last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
         }
 
         if (response.getItems().isEmpty()) {
@@ -225,7 +219,7 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public OranTeivRelationshipsResponseMessage getRelationshipsByType(final String domain, final String relationshipType,
+    public OranTeivRelationships getRelationshipsByType(final String domain, final String relationshipType,
             final String targetFilter, final String scopeFilter, final RequestDetails requestDetails) {
         final FilterCriteria filterCriteria = FilterCriteria.builder(domain).filterCriteriaList(List.of(InnerFilterCriteria
                 .builder().targets(targetResolver.resolve(relationshipType, targetFilter)).scope(scopeResolver.resolve(

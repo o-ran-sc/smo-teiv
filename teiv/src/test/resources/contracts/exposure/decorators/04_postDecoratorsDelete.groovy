@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Delete decorators with wrong entity ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -65,7 +65,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Delete decorators with wrong relationship ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -103,7 +103,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Delete decorators with wrong entity and relationship ids."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -144,7 +144,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "BAD REQUEST - 400: Delete decorators from non-existing schema."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -181,7 +181,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete invalid decorators, no topology object given."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -202,7 +202,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid decorators, no topology object given."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -223,7 +223,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid decorators on entities."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -248,7 +248,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid decorators on relationships."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -273,7 +273,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete valid decorators on entities and relationships."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -302,7 +302,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "BAD REQUEST - 400: Invalid operation type in the decorators request."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')
@@ -340,7 +340,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "BAD REQUEST - 400: Using list type for the decorators parameter in the payload."
         request {
             method POST()
-            url "/topology-inventory/v1alpha11/decorators"
+            url "/topology-inventory/v1/manage-decorators"
             headers {
                 contentType("application/json")
                 accept('application/problem+json')

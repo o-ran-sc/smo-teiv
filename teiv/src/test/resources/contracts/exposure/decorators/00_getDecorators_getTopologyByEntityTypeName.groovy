@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getTopologyByEntityTypeName - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[@test-app-module:textdata = 'Stockholm']"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[@test-app-module:textdata = 'Stockholm']"
         }
         response {
             status OK()
@@ -101,7 +101,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getTopologyByEntityTypeName - CONTAINS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')]"
         }
         response {
             status OK()
@@ -175,7 +175,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using getTopologyByEntityTypeName - CONTAINS and EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')] ; /decorators[@test-app-module:intdata = 123]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/ODUFunction/entities?offset=0&limit=500&targetFilter=/decorators&scopeFilter=/decorators[contains(@test-app-module:textdata, 'Stock')] ; /decorators[@test-app-module:intdata = 123]"
         }
         response {
             status OK()
@@ -237,7 +237,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get decorators using association name - contains"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction/decorators[contains(@test-app-module:textdata, 'ORAN')]"
+            url "/topology-inventory/v1/domains/RAN/entity-types/NRCellDU/entities?offset=0&limit=100&scopeFilter=/provided-by-oduFunction/decorators[contains(@test-app-module:textdata, 'ORAN')]"
         }
         response {
             status OK()

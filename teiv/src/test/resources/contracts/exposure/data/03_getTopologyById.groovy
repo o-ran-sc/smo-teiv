@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology for ManagedElement entity with id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9' in OAM domain."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/OAM/entity-types/ManagedElement/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9"
+            url "/topology-inventory/v1/domains/OAM/entity-types/ManagedElement/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9"
         }
         response {
             status OK()
@@ -53,7 +53,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get topology for ODUFunction entity with id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9' with REL_EQUIPMENT_RAN (domain including other domains)."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
         }
         response {
             status OK()
@@ -89,7 +89,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get topology for ODUFunction entity with non existing id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999'."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999"
         }
         response {
             status NOT_FOUND()
@@ -107,7 +107,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get topology for ODUFunction entity with  with no supported topology id - 3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9 ."
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
+            url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9"
         }
         response {
             status BAD_REQUEST()

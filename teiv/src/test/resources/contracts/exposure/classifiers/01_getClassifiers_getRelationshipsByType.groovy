@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getRelationshipsByType - EQUALS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural']"
         }
         response {
             status OK()
@@ -94,7 +94,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getRelationshipsByType - EQUALS(AND)"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[@item='test-app-module:Rural' and @item='test-app-module:Weekend']"
         }
         response {
             status OK()
@@ -161,7 +161,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get classifiers using getRelationshipsByType - CONTAINS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'ural')]"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'ural')]"
         }
         response {
             status OK()
@@ -228,7 +228,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "NOT FOUND - 404: Get classifiers using getRelationshipsByType - CONTAINS"
         request {
             method GET()
-            url "/topology-inventory/v1alpha11/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'NOT_EXISTING')]"
+            url "/topology-inventory/v1/domains/REL_OAM_RAN/relationship-types/MANAGEDELEMENT_MANAGES_ODUFUNCTION/relationships?offset=0&limit=500&targetFilter=/classifiers&scopeFilter=/classifiers[contains(@item,'NOT_EXISTING')]"
         }
         response {
             status NOT_FOUND()

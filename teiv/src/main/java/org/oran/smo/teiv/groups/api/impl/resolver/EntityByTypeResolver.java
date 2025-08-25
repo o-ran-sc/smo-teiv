@@ -20,16 +20,16 @@
  */
 package org.oran.smo.teiv.groups.api.impl.resolver;
 
+import org.oran.smo.teiv.api.model.OranTeivCriteria;
+import org.oran.smo.teiv.api.model.OranTeivEntities;
+import org.oran.smo.teiv.api.model.OranTeivGetEntitiesByType;
+import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.oran.smo.teiv.api.model.OranTeivCriteria;
-import org.oran.smo.teiv.api.model.OranTeivEntitiesResponseMessage;
-import org.oran.smo.teiv.api.model.OranTeivGetEntitiesByType;
-import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
 import org.oran.smo.teiv.exposure.data.api.DataService;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 
@@ -44,8 +44,8 @@ public class EntityByTypeResolver implements CriteriaResolver {
     public OranTeivMembersResponse resolveByCriteria(final OranTeivCriteria criteria, final RequestDetails requestDetails) {
         log.debug("Resolve group with getEntitiesByName criteria: {}", criteria);
         OranTeivGetEntitiesByType getEntitiesByTypeCriteria = (OranTeivGetEntitiesByType) criteria;
-        final OranTeivEntitiesResponseMessage entitiesByName = dataService.getTopologyByType(getEntitiesByTypeCriteria
-                .getDomain(), getEntitiesByTypeCriteria.getEntityTypeName(), getEntitiesByTypeCriteria.getTargetFilter(),
+        final OranTeivEntities entitiesByName = dataService.getTopologyByType(getEntitiesByTypeCriteria.getDomain(),
+                getEntitiesByTypeCriteria.getEntityTypeName(), getEntitiesByTypeCriteria.getTargetFilter(),
                 getEntitiesByTypeCriteria.getScopeFilter(), requestDetails);
 
         return OranTeivMembersResponse.builder().items(entitiesByName.getItems()).first(entitiesByName.getFirst()).prev(

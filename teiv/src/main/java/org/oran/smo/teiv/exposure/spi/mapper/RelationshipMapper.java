@@ -26,7 +26,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Record;
 import org.jooq.Result;
 
-import org.oran.smo.teiv.api.model.OranTeivRelationshipsResponseMessage;
+import org.oran.smo.teiv.api.model.OranTeivRelationships;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.springframework.stereotype.Component;
 
@@ -39,14 +39,14 @@ import static org.oran.smo.teiv.exposure.utils.PaginationUtil.validateOffset;
 
 @Component
 public class RelationshipMapper extends ResponseMapper {
-    public OranTeivRelationshipsResponseMessage mapRelationships(final Result<Record> results,
-            final RequestDetails requestDetails) {
+
+    public OranTeivRelationships mapRelationships(final Result<Record> results, final RequestDetails requestDetails) {
         //Pair<items, totalCount>
         final Pair<List<Object>, Integer> pair = getItemsWithTotalCount(results);
         int totalCount = pair.getRight();
         validateOffset(requestDetails.getOffset(), totalCount);
-        return OranTeivRelationshipsResponseMessage.builder().items(pair.getLeft()).first(firstHref(requestDetails)).prev(
-                prevHref(requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails,
-                        totalCount)).last(lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
+        return OranTeivRelationships.builder().items(pair.getLeft()).first(firstHref(requestDetails)).prev(prevHref(
+                requestDetails, totalCount)).self(selfHref(requestDetails)).next(nextHref(requestDetails, totalCount)).last(
+                        lastHref(requestDetails, totalCount)).totalCount(totalCount).build();
     }
 }

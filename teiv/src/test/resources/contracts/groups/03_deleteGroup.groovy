@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete an existing dynamic group"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000")
         }
         response {
             status NO_CONTENT()
@@ -37,7 +37,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 204: Delete an existing static group"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655441000")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655441000")
         }
         response {
             status NO_CONTENT()
@@ -47,7 +47,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Delete a group that does not exist"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=non-existing-group")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=non-existing-group")
         }
         response {
             status NOT_FOUND()
@@ -62,7 +62,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Delete an existing group using an invalid endpoint"
         request {
             method DELETE()
-            url("/topology-inventory/v1alpha11/groups-delete/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655441000")
+            url("/topology-inventory/v1/groups-delete/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655441000")
         }
         response {
             status BAD_REQUEST()

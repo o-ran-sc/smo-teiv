@@ -27,7 +27,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a dynamic group by id (criteria: getEntitiesByDomain)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440000")
         }
         response {
             status OK()
@@ -60,7 +60,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a dynamic group by id (criteria: getEntitiesByType)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440001")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440001")
         }
         response {
             status OK()
@@ -97,7 +97,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a dynamic group by id (criteria: getRelationshipsForEntityId)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440002")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440002")
         }
         response {
             status OK()
@@ -134,7 +134,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a dynamic group by id (criteria: getRelationshipsByType)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440003")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440003")
         }
         response {
             status OK()
@@ -169,7 +169,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "SUCCESS - 200: Get a static group by id"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201")
         }
         response {
             status OK()
@@ -200,7 +200,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Get a group by id (Invalid JSON structure)"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440100")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440100")
         }
         response {
             status INTERNAL_SERVER_ERROR()
@@ -223,7 +223,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 400: Invalid endpoint"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/get-groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201")
+            url("/topology-inventory/v1/get-groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201")
         }
         response {
             status BAD_REQUEST()
@@ -232,7 +232,7 @@ import org.springframework.cloud.contract.spec.Contract
             }
             body('''{
                 "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1alpha11/get-groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201.",
+                "message": "No static resource topology-inventory/v1/get-groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201.",
                 "details": null
             }''')
         }
@@ -241,7 +241,7 @@ import org.springframework.cloud.contract.spec.Contract
         description "ERROR - 404: Get a group by id that does not exists"
         request {
             method GET()
-            url("/topology-inventory/v1alpha11/groups/urn:o-ran:smo:teiv:group=non-existing-group")
+            url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=non-existing-group")
         }
         response {
             status NOT_FOUND()
