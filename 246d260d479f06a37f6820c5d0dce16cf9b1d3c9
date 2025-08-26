@@ -16,6 +16,29 @@
       "message": "recheck",
       "revId": "246d260d479f06a37f6820c5d0dce16cf9b1d3c9",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59100473_b4f153dd",
+        "filename": "teiv/src/main/resources/v1/topology-exposure-inventory-openapi.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2025-08-26T12:41:22Z",
+      "side": 1,
+      "message": "The text doesn\u0027t appear to have aligned to the API Specification.\n\n\nUsing the Tag from the specification would result in a completely new interface in the code. And would probably merit the splitting of the \"User Defined\" stuff into its own REST controller. \n\n\n  - name: Schemas\n    description: Schemas are defined in YANG modeling language. A group of Yang schemas makes the topology \u0026 inventory model, which represents topology \u0026 inventory entities, their attributes, and their relationships.\n  - name: User Defined Schemas\n    description: User defined schemas are defined in YANG modeling language.",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 344
+      },
+      "revId": "246d260d479f06a37f6820c5d0dce16cf9b1d3c9",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
