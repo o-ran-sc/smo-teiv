@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bf1eb7b0_2d9a4db8",
+        "filename": "teiv/src/main/java/org/oran/smo/teiv/exposure/model/rest/controller/ModelController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1002548
+      },
+      "writtenOn": "2025-08-26T13:06:44Z",
+      "side": 1,
+      "message": "According to the specification, the response isn\u0027t void",
+      "range": {
+        "startLine": 101,
+        "startChar": 26,
+        "endLine": 101,
+        "endChar": 30
+      },
+      "revId": "246d260d479f06a37f6820c5d0dce16cf9b1d3c9",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "59100473_b4f153dd",
         "filename": "teiv/src/main/resources/v1/topology-exposure-inventory-openapi.yaml",
         "patchSetId": 2
