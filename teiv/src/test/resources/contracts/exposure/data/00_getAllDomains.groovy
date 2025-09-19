@@ -291,9 +291,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid Value",
-                "details": "Offset cannot be larger than 11"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Offset cannot be larger than 11",
+                "instance": ""
             }''')
         }
     }

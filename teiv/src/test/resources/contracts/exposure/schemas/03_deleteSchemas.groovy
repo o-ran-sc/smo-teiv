@@ -45,9 +45,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid schema name",
-                "details": "Invalid schema name: does-not-exist-rapp-module"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid schema name: does-not-exist-rapp-module",
+                "instance": ""
             }''')
         }
     },
@@ -63,9 +65,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid schema name",
-                "details": "Invalid schema name: test-module-in-deleting-state"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid schema name: test-module-in-deleting-state",
+                "instance": ""
             }''')
         }
     }

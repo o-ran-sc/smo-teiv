@@ -236,14 +236,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "NOT_FOUND",
-                    "message": "Invalid classifiers",
-                    "details": "The provided classifiers are invalid [NOT_EXISTING]"
-                }''')
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The provided classifiers are invalid [NOT_EXISTING]",
+                "instance": ""
+            }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },

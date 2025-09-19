@@ -52,9 +52,11 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status NOT_FOUND()
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
         }
     },

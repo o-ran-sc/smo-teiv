@@ -232,9 +232,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid schema name",
-                "details": "Invalid schema name: Invalid classifier classifierTest1"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid schema name: Invalid classifier classifierTest1",
+                "instance": ""
             }''')
         }
     },
@@ -298,9 +300,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid schema name",
-                "details": "Invalid schema name: Invalid classifier geo-classifier"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid schema name: Invalid classifier geo-classifier",
+                "instance": ""
             }''')
         }
     },
@@ -376,9 +380,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Schema already exists"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Schema already exists",
+                "instance": ""
             }''')
         }
     },
@@ -445,9 +451,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Schema already exists"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Schema already exists",
+                "instance": ""
             }''')
         }
     },
@@ -515,9 +523,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Schema already exists"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Schema already exists",
+                "instance": ""
             }''')
         }
     },
@@ -574,9 +584,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid schema name",
-                "details": "Invalid schema name: Invalid classifier classifierTest1"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid schema name: Invalid classifier classifierTest1",
+                "instance": ""
             }''')
         }
     },
@@ -644,9 +656,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Schema already exists"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Schema already exists",
+                "instance": ""
             }''')
         }
     },
@@ -714,9 +728,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Module 'o-ran-smo-teiv-ran' has multiple revisions in the input, but desired exact revision not specified in the 'import' statement."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Module 'o-ran-smo-teiv-ran' has multiple revisions in the input, but desired exact revision not specified in the 'import' statement.",
+                "instance": ""
             }''')
         }
     },
@@ -742,10 +758,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Invalid file"
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Invalid file",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -768,10 +786,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "BAD_REQUEST",
-            "message": "Invalid file input",
-            "details": "Invalid file input: Expected single statement ('module' or 'submodule')."
-        }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Expected single statement ('module' or 'submodule').",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -831,10 +851,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: 'select*fromocucpfunction' is not a valid YANG identifier."
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: 'select*fromocucpfunction' is not a valid YANG identifier.",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -894,10 +916,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Unexpected content at end of document. Check curly braces balance throughout document."
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Unexpected content at end of document. Check curly braces balance throughout document.",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -945,10 +969,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Encountered '{}', which does nothing. Replace with ';' or un-comment the contents."
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Encountered '{}', which does nothing. Replace with ';' or un-comment the contents.",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -988,10 +1014,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Invalid schema"
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Invalid schema",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -1058,9 +1086,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Encountered '{}', which does nothing. Replace with ';' or un-comment the contents."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Encountered '{}', which does nothing. Replace with ';' or un-comment the contents.",
+                "instance": ""
             }''')
         }
     },
@@ -1128,10 +1158,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Cannot resolve typedef 'wrong'."
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Cannot resolve typedef 'wrong'.",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -1171,10 +1203,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Invalid schema"
-                }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Invalid schema",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -1235,9 +1269,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: (Sub-)Module does not have a 'revision' statement."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: (Sub-)Module does not have a 'revision' statement.",
+                "instance": ""
             }''')
         }
     },
@@ -1301,10 +1337,12 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "BAD_REQUEST",
-            "message": "Invalid file input",
-            "details": "Invalid file input: Invalid schema"
-        }''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Invalid schema",
+                "instance": ""
+            }''')
         }
     },
     Contract.make {
@@ -1367,9 +1405,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid file input",
-                "details": "Invalid file input: Path to schema node '/model:decorators', part of 'augment' statement, cannot be resolved."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Path to schema node '/model:decorators', part of 'augment' statement, cannot be resolved.",
+                "instance": ""
             }''')
         }
     },
@@ -1428,9 +1468,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "CONFLICT",
-                "message": "Schema in deleting state",
-                "details": "Schema test-app-in-deleting-status already exists and is in the process of being deleted. This may take some time, please try again later."
+                "type": "about:blank",
+                "title": "CONFLICT",
+                "status": 409,
+                "detail": "Schema test-app-in-deleting-status already exists and is in the process of being deleted. This may take some time, please try again later.",
+                "instance": ""
             }''')
         }
     },
@@ -1498,10 +1540,12 @@ import org.springframework.cloud.contract.spec.Contract
         response {
             status BAD_REQUEST()
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid file input",
-                    "details": "Invalid file input: Cannot resolve typedef 'decimal32'."
-                }''')
+                 "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid file input: Cannot resolve typedef 'decimal32'.",
+                "instance": ""
+            }''')
         }
     }
 ]

@@ -461,9 +461,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Unknown domain",
-                "details": "Unknown domain: bla, known domains: [CLOUD, EQUIPMENT, OAM, PHYSICAL, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, REL_PHYSICAL_RAN, TEIV, TEST]"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unknown domain: bla, known domains: [CLOUD, EQUIPMENT, OAM, PHYSICAL, RAN, REL_CLOUD_RAN, REL_EQUIPMENT_RAN, REL_OAM_CLOUD, REL_OAM_RAN, REL_PHYSICAL_RAN, TEIV, TEST]",
+                "instance": ""
             }''')
         }
     },
@@ -496,9 +498,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid target filter, only relationship conditions can be provided",
-                "details": "NRCellDU is not a valid relation"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "NRCellDU is not a valid relation",
+                "instance": ""
             }''')
         }
     },
@@ -528,9 +532,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Topology ID format not supported",
-                "details": "Topology ID : NRCellDU-1 is not in supported format. Topology ID should start with urn:"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Topology ID : NRCellDU-1 is not in supported format. Topology ID should start with urn:",
+                "instance": ""
             }''')
         }
     },
@@ -615,9 +621,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. List elements are not of the type object."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. List elements are not of the type object.",
+                "instance": ""
             }''')
         }
     },
@@ -649,9 +657,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. List elements are not of the type object."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. List elements are not of the type object.",
+                "instance": ""
             }''')
         }
     },
@@ -687,9 +697,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Invalid topology type 'o-ran-smo-teiv-ran:ManagedElement', not found in the model"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Invalid topology type 'o-ran-smo-teiv-ran:ManagedElement', not found in the model",
+                "instance": ""
             }''')
         }
     },
@@ -725,9 +737,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Topology type must be in the format 'moduleName:topologyTypeName'. Provided: o-ran-smo-teiv-oam:ManagedElement:bla"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Topology type must be in the format 'moduleName:topologyTypeName'. Provided: o-ran-smo-teiv-oam:ManagedElement:bla",
+                "instance": ""
             }''')
         }
     },
@@ -763,9 +777,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Topology id 3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2 is not in supported format. Provided members id should start with urn:"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Topology id 3gpp:dn:NRCellDU=1,ODUFunction=1,ManagedElement=2 is not in supported format. Provided members id should start with urn:",
+                "instance": ""
             }''')
         }
     },
@@ -792,9 +808,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Empty object present in providedMembers."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Empty object present in providedMembers.",
+                "instance": ""
             }''')
         }
     },
@@ -826,9 +844,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Empty object present in providedMembers."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Empty object present in providedMembers.",
+                "instance": ""
             }''')
         }
     },
@@ -861,9 +881,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Invalid key/value present in {\\"idKey\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Invalid key/value present in {\\"idKey\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}.",
+                "instance": ""
             }''')
         }
     },
@@ -896,9 +918,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Invalid key/value present in {\\"id\\":[\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"]}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Invalid key/value present in {\\"id\\":[\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"]}.",
+                "instance": ""
             }''')
         }
     },
@@ -931,9 +955,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Nested topology groups is not supported. Provided members contain topology group id: urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Nested topology groups is not supported. Provided members contain topology group id: urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050",
+                "instance": ""
             }''')
         }
     },
@@ -967,9 +993,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. More than one key:value present in {\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\",\\"extraKey\\":\\"extraValue\\"}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. More than one key:value present in {\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\",\\"extraKey\\":\\"extraValue\\"}.",
+                "instance": ""
             }''')
         }
     },
@@ -1007,9 +1035,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. More than one key:value present in {\\"o-ran-smo-teiv-ran:NRCellDU\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}],\\"o-ran-smo-teiv-ran:ODUFunction\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1\\"}]}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. More than one key:value present in {\\"o-ran-smo-teiv-ran:NRCellDU\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}],\\"o-ran-smo-teiv-ran:ODUFunction\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1\\"}]}.",
+                "instance": ""
             }''')
         }
     },
@@ -1088,9 +1118,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Limit exceeded",
-                "details": "The total number of topology identifiers in the request is 11. The maximum allowed in a single request is 10."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "The total number of topology identifiers in the request is 11. The maximum allowed in a single request is 10.",
+                "instance": ""
             }''')
         }
     },
@@ -1188,9 +1220,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1/teiv-groups.",
-                "details": null
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "No static resource topology-inventory/v1/teiv-groups.",
+                "instance": ""
             }''')
         }
     } //30

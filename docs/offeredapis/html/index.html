@@ -1112,21 +1112,6 @@ ul.nav-tabs {
     }
   }
 };
-    defs["ErrorMessage"] = {
-  "title" : "Error",
-  "type" : "object",
-  "properties" : {
-    "status" : {
-      "type" : "string"
-    },
-    "message" : {
-      "type" : "string"
-    },
-    "details" : {
-      "type" : "string"
-    }
-  }
-};
     defs["getEntitiesByDomain"] = {
   "title" : "getEntitiesByDomain",
   "required" : [ "domain", "queryType" ],
@@ -2318,7 +2303,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2394,7 +2379,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2470,7 +2455,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2546,7 +2531,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2622,7 +2607,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2698,7 +2683,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2774,7 +2759,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2850,7 +2835,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -2926,7 +2911,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -3002,7 +2987,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -3078,7 +3063,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -3154,7 +3139,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -3681,7 +3666,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "400",
@@ -3762,7 +3747,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "401",
@@ -3843,7 +3828,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "403",
@@ -3924,7 +3909,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "409",
@@ -4005,7 +3990,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "500",
@@ -4542,7 +4527,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -4618,7 +4603,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -4694,7 +4679,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -4770,7 +4755,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -4846,7 +4831,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -4922,7 +4907,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -4998,7 +4983,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -5074,7 +5059,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -5150,7 +5135,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -5226,7 +5211,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -5302,7 +5287,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -5378,7 +5363,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -5907,7 +5892,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "400",
@@ -5988,7 +5973,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "401",
@@ -6069,7 +6054,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "403",
@@ -6150,7 +6135,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "409",
@@ -6231,7 +6216,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "500",
@@ -6757,7 +6742,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -6833,7 +6818,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -6909,7 +6894,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -6985,7 +6970,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -7061,7 +7046,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -7137,7 +7122,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -7213,7 +7198,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -7289,7 +7274,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -7365,7 +7350,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -7441,7 +7426,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8124,7 +8109,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8200,7 +8185,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8276,7 +8261,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8352,7 +8337,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8428,7 +8413,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8504,7 +8489,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8580,7 +8565,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8656,7 +8641,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8732,7 +8717,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -8808,7 +8793,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9429,7 +9414,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9505,7 +9490,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9581,7 +9566,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9657,7 +9642,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9733,7 +9718,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9809,7 +9794,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9885,7 +9870,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -9961,7 +9946,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10037,7 +10022,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10113,7 +10098,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10664,7 +10649,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10740,7 +10725,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10816,7 +10801,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10892,7 +10877,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -10968,7 +10953,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -11044,7 +11029,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -11120,7 +11105,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -11196,7 +11181,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -11272,7 +11257,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -11348,7 +11333,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12000,7 +11985,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12076,7 +12061,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12152,7 +12137,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12228,7 +12213,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12304,7 +12289,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12380,7 +12365,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12456,7 +12441,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12532,7 +12517,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12608,7 +12593,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -12684,7 +12669,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13336,7 +13321,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13412,7 +13397,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13488,7 +13473,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13564,7 +13549,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13640,7 +13625,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13716,7 +13701,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13792,7 +13777,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13868,7 +13853,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -13944,7 +13929,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14020,7 +14005,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14571,7 +14556,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14647,7 +14632,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14723,7 +14708,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14799,7 +14784,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14875,7 +14860,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -14951,7 +14936,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15027,7 +15012,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15103,7 +15088,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15179,7 +15164,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15255,7 +15240,7 @@ domain name
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15814,7 +15799,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15890,7 +15875,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -15966,7 +15951,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16042,7 +16027,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16118,7 +16103,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16194,7 +16179,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16270,7 +16255,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16346,7 +16331,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16422,7 +16407,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -16498,7 +16483,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17057,7 +17042,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17133,7 +17118,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17209,7 +17194,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17285,7 +17270,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17361,7 +17346,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17437,7 +17422,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17513,7 +17498,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17589,7 +17574,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17665,7 +17650,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -17741,7 +17726,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -18298,7 +18283,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "400",
@@ -18379,7 +18364,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "500",
@@ -18806,7 +18791,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -18882,7 +18867,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -18958,7 +18943,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -19507,7 +19492,7 @@ Group name. If not specified, returns all the groups.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -19583,7 +19568,7 @@ Group name. If not specified, returns all the groups.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -20071,7 +20056,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -20147,7 +20132,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -20223,7 +20208,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -20779,7 +20764,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -20855,7 +20840,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -20931,7 +20916,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -21518,7 +21503,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -21594,7 +21579,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -21670,7 +21655,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -22198,7 +22183,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -22274,7 +22259,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -22350,7 +22335,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -22913,7 +22898,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -22989,7 +22974,7 @@ $(document).ready(function() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -23489,7 +23474,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "400",
@@ -23570,7 +23555,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "401",
@@ -23651,7 +23636,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "403",
@@ -23732,7 +23717,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "409",
@@ -23813,7 +23798,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "500",
@@ -24278,7 +24263,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "400",
@@ -24359,7 +24344,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "401",
@@ -24440,7 +24425,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "403",
@@ -24521,7 +24506,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       },
       "example" : {
         "status" : "500",
@@ -25011,7 +24996,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25087,7 +25072,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25163,7 +25148,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25239,7 +25224,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25315,7 +25300,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25391,7 +25376,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25467,7 +25452,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25543,7 +25528,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25619,7 +25604,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -25695,7 +25680,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26241,7 +26226,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26317,7 +26302,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26393,7 +26378,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26469,7 +26454,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26545,7 +26530,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26621,7 +26606,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26697,7 +26682,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26773,7 +26758,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26849,7 +26834,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -26925,7 +26910,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27476,7 +27461,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27552,7 +27537,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27628,7 +27613,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27704,7 +27689,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27780,7 +27765,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27856,7 +27841,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -27932,7 +27917,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28008,7 +27993,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28084,7 +28069,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28160,7 +28145,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28236,7 +28221,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28312,7 +28297,7 @@ multipartFile
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28772,7 +28757,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28848,7 +28833,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -28924,7 +28909,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29000,7 +28985,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29076,7 +29061,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29152,7 +29137,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29228,7 +29213,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29304,7 +29289,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29789,7 +29774,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29865,7 +29850,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -29941,7 +29926,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30017,7 +30002,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30093,7 +30078,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30169,7 +30154,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30245,7 +30230,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30321,7 +30306,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30397,7 +30382,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30473,7 +30458,7 @@ pub fn main() {
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -30986,7 +30971,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31062,7 +31047,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31138,7 +31123,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31214,7 +31199,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31290,7 +31275,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31366,7 +31351,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31442,7 +31427,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31518,7 +31503,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31594,7 +31579,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }
@@ -31670,7 +31655,7 @@ Result limiter.
   "content" : {
     "application/problem+json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorMessage"
+        "$ref" : "#/components/schemas/ProblemDetails"
       }
     }
   }

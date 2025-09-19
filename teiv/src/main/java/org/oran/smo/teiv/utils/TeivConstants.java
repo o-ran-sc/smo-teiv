@@ -83,4 +83,5 @@ public class TeivConstants {
     public static final String TOPOLOGY_INVENTORY_AUDIT_TYPE = "topology-inventory-audit.initiate";
 
     public static final String URN_PREFIX = "urn:";
+    public static final String TYPE_DEFAULT_VALUE = "about:blank";
 }

@@ -73,14 +73,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },

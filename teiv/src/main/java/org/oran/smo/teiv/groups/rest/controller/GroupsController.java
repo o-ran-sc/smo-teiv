@@ -31,7 +31,9 @@ import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.MEMBERS_H
 import static org.oran.smo.teiv.groups.rest.controller.GroupsConstants.PROVIDED_MEMBERS_HREF_TEMPLATE;
 import static org.oran.smo.teiv.utils.ResponseUtil.getHeadersContentTypeAppProblemJson;
 import static org.oran.smo.teiv.utils.TeivConstants.REQUEST_MAPPING;
+import static org.oran.smo.teiv.utils.TeivConstants.TYPE_DEFAULT_VALUE;
 
+import java.math.BigDecimal;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -39,6 +41,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.oran.smo.teiv.api.model.OranTeivDynamicGroupByIdResponse;
 import org.oran.smo.teiv.api.model.OranTeivStaticGroupByIdResponse;
+import org.oran.smo.teiv.api.model.OranTeivCreateGroupPayload;
+import org.oran.smo.teiv.api.model.OranTeivGroupByIdResponse;
+import org.oran.smo.teiv.api.model.OranTeivGroupsResponse;
+import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
+import org.oran.smo.teiv.api.model.OranTeivProblemDetails;
+import org.oran.smo.teiv.api.model.OranTeivUpdateGroupNamePayload;
 import org.oran.smo.teiv.exposure.audit.LoggerHandler;
 import org.oran.smo.teiv.groups.audit.AuditInfo;
 import org.oran.smo.teiv.groups.audit.ExecutionStatus;
@@ -59,12 +67,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.oran.smo.teiv.api.GroupsApi;
-import org.oran.smo.teiv.api.model.OranTeivCreateGroupPayload;
-import org.oran.smo.teiv.api.model.OranTeivErrorMessage;
-import org.oran.smo.teiv.api.model.OranTeivGroupByIdResponse;
-import org.oran.smo.teiv.api.model.OranTeivGroupsResponse;
-import org.oran.smo.teiv.api.model.OranTeivMembersResponse;
-import org.oran.smo.teiv.api.model.OranTeivUpdateGroupNamePayload;
 import org.oran.smo.teiv.exposure.utils.RequestDetails;
 import org.oran.smo.teiv.groups.GroupsCustomMetrics;
 import org.oran.smo.teiv.groups.api.GroupsService;
@@ -189,15 +191,16 @@ public class GroupsController implements GroupsApi {
     }
 
     @ExceptionHandler(GroupsException.class)
-    public ResponseEntity<OranTeivErrorMessage> handleGroupsException(final GroupsException exception) {
+    public ResponseEntity<OranTeivProblemDetails> handleGroupsException(final GroupsException exception) {
         if (exception.getException() != null) {
             log.warn(exception.getMessage(), exception.getException());
         }
-        final OranTeivErrorMessage errorMessage = OranTeivErrorMessage.builder().status(exception.getStatus().name())
-                .message(exception.getMessage()).details(exception.getDetails()).build();
+        final OranTeivProblemDetails problemMessage = OranTeivProblemDetails.builder().type(TYPE_DEFAULT_VALUE).title(
+                exception.getStatus().name()).status(new BigDecimal(exception.getStatus().value())).detail(exception
+                        .getDetails()).instance("").build();
 
         return ResponseEntity.status(exception.getStatus()).headers(getHeadersContentTypeAppProblemJson()).body(
-                errorMessage);
+                problemMessage);
     }
 
     private <T> T runWithFailCheck(final Supplier<T> supp, final Runnable runnable) {

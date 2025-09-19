@@ -50,13 +50,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "NOT_FOUND",
-            "message": "Resource Not Found",
-            "details": "The requested resource with the following ids cannot be found. Entities: [WRONG_ENTITY_ID] Relationships: []"}''')
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested resource with the following ids cannot be found. Entities: [WRONG_ENTITY_ID] Relationships: []",
+                "instance": ""
+            }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -87,13 +92,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "NOT_FOUND",
-            "message": "Resource Not Found",
-            "details": "The requested resource with the following ids cannot be found. Entities: [] Relationships: [WRONG_RELATIONSHIP_ID]"}''')
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested resource with the following ids cannot be found. Entities: [] Relationships: [WRONG_RELATIONSHIP_ID]",
+                "instance": ""
+            }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -124,13 +134,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "BAD_REQUEST",
-            "message": "Invalid schema name",
-            "details": "Invalid schema name: test-app-module-wrong"}''')
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid schema name: test-app-module-wrong",
+                "instance": ""
+            }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -261,14 +276,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Failed to process the request to merge/remove classifiers",
-                "details": "Unexpected value 'unknown'. Invalid value for OperationEnum, allowed values: [merge, delete]"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unexpected value 'unknown'. Invalid value for OperationEnum, allowed values: [merge, delete]",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -299,14 +318,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Failed to process the request to merge/remove classifiers",
-                "details": "Cannot deserialize value of type `java.util.ArrayList<java.lang.String>` from Object value (token `JsonToken.START_OBJECT`)"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Cannot deserialize value of type `java.util.ArrayList<java.lang.String>` from Object value (token `JsonToken.START_OBJECT`)",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     }

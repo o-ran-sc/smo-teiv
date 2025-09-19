@@ -1523,9 +1523,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)",
+                "instance": ""
             }''')
         }
     },
@@ -1541,9 +1543,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)",
+                "instance": ""
             }''')
         }
     },
@@ -1559,9 +1563,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid parameter for covered by condition"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid parameter for covered by condition",
+                "instance": ""
             }''')
         }
     },
@@ -1577,9 +1583,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)",
+                "instance": ""
              }''')
         }
     },
@@ -1595,9 +1603,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid geographic format, geographic type must be 2D or 3D coordinates. For example: POINT(39.40 67.94) or POINT Z (47.49 19.04 111.11)",
+                "instance": ""
             }''')
         }
     },
@@ -1613,9 +1623,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Unknown entity type",
-                "details": "Entity type NRCellDU is not part of the domain EQUIPMENT, known entity types: [AntennaModule, Site]"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Entity type NRCellDU is not part of the domain EQUIPMENT, known entity types: [AntennaModule, Site]",
+                "instance": ""
             }''')
         }
     },
@@ -1631,9 +1643,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Unknown entity type",
-                "details": "Entity type NRCellDU1 is not part of the model, known entity types: [AntennaCapability, AntennaModule, CloudifiedNF, EntityTypeA, EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters, ManagedElement, NFDeployment, NRCellCU, NRCellDU, NRSectorCarrier, NearRTRICFunction, NodeCluster, OCUCPFunction, OCUUPFunction, OCloudNamespace, OCloudSite, ODUFunction, ORUFunction, PhysicalAppliance, SMO, Sector, Site, Site]"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Entity type NRCellDU1 is not part of the model, known entity types: [AntennaCapability, AntennaModule, CloudifiedNF, EntityTypeA, EntityTypeAWithEntityTypeNameLengthLongerThanSixtyThreeCharacters, ManagedElement, NFDeployment, NRCellCU, NRCellDU, NRSectorCarrier, NearRTRICFunction, NodeCluster, OCUCPFunction, OCUUPFunction, OCloudNamespace, OCloudSite, ODUFunction, ORUFunction, PhysicalAppliance, SMO, Sector, Site, Site]",
+                "instance": ""
             }''')
         }
     },
@@ -1650,9 +1664,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Grammar error",
-                "details": "no viable alternative at input '[contains(gNBCUName' at line 1:21"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "no viable alternative at input '[contains(gNBCUName' at line 1:21",
+                "instance": ""
             }''')
         }
     },
@@ -1668,9 +1684,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid Value",
-                "details": "Offset cannot be larger than 6"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Offset cannot be larger than 6",
+                "instance": ""
             }''')
         }
     },
@@ -1856,14 +1874,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-               "status": "BAD_REQUEST",
-               "message": "Invalid query condition",
-               "details": "Invalid query function"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid query function",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -1879,14 +1901,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-               "status": "BAD_REQUEST",
-               "message": "Grammar error",
-               "details": "Invalid parameter type provided for scopeFilter"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid parameter type provided for scopeFilter",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -1902,14 +1928,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-               "status": "BAD_REQUEST",
-               "message": "Invalid metadata content",
-               "details": "reliabilityYIndicator is not a valid metadata"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "reliabilityYIndicator is not a valid metadata",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -1925,14 +1955,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-               "status": "BAD_REQUEST",
-               "message": "Grammar error",
-               "details": "Invalid data type provided for scopeFilter"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid data type provided for scopeFilter",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -2821,9 +2855,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid timestamp: 2025-23-23T27:12:48.62817246Z"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid timestamp: 2025-23-23T27:12:48.62817246Z",
+                "instance": ""
             }''')
         }
     },
@@ -2839,9 +2875,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid query condition",
-                "details": "Invalid timestamp: 202510-11T20:12:48.62817246Z"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid timestamp: 202510-11T20:12:48.62817246Z",
+                "instance": ""
             }''')
         }
     },
@@ -3384,14 +3422,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Grammar error",
-                    "details": "Missing container type for queried leaf antennaModelNumber"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Missing container type for queried leaf antennaModelNumber",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -3407,14 +3449,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Invalid parameters for association",
-                    "details": "Invalid parameters provided for association serving-antennaModule"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid parameters provided for association serving-antennaModule",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -3538,14 +3584,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "Grammar error",
-                    "details": "Target/Scope filter can only contain Root Object types mentioned in the path parameter"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Target/Scope filter can only contain Root Object types mentioned in the path parameter",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -3561,9 +3611,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Grammar error",
-                "details": "More than one valid containerType appeared in path: attributes, sourceIds"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "More than one valid containerType appeared in path: attributes, sourceIds",
+                "instance": ""
             }''')
         }
     },
@@ -3579,9 +3631,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Grammar error",
-                "details": "More than one valid containerType appeared in path: attributes, decorators"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "More than one valid containerType appeared in path: attributes, decorators",
+                "instance": ""
             }''')
         }
     },
@@ -3691,9 +3745,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Grammar error",
-                "details": "Invalid data in scopeFilter"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid data in scopeFilter",
+                "instance": ""
             }''')
         }
     },
@@ -3709,9 +3765,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Grammar error",
-                "details": "Invalid data in scopeFilter"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid data in scopeFilter",
+                "instance": ""
             }''')
         }
     },

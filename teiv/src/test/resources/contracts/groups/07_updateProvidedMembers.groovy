@@ -266,14 +266,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Provided members update exception",
-                "details": "The specified provided members for group cannot be updated as group type is not static"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "The specified provided members for group cannot be updated as group type is not static",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -346,14 +350,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Limit exceeded",
-                "details": "The total number of topology identifiers in the request is 11. The maximum allowed in a single request is 10."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "The total number of topology identifiers in the request is 11. The maximum allowed in a single request is 10.",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -402,14 +410,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Limit exceeded",
-                "details": "Merging topology identifiers in request to the group will result in 17 members. The maximum allowed members in the static group is 15."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Merging topology identifiers in request to the group will result in 17 members. The maximum allowed members in the static group is 15.",
+                "instance": "" 
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -457,14 +469,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Limit exceeded",
-                "details": "Merging topology identifiers in request to the group will result in 16 members. The maximum allowed members in the static group is 15."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Merging topology identifiers in request to the group will result in 16 members. The maximum allowed members in the static group is 15.",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -499,9 +515,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Invalid topology type 'o-ran-smo-teiv-ran:ManagedElement', not found in the model"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Invalid topology type 'o-ran-smo-teiv-ran:ManagedElement', not found in the model",
+                "instance": ""
             }''')
         }
     },
@@ -535,14 +553,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -576,14 +598,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Provided members update exception",
-                "details": "The specified provided members topology identifier: [urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=non-existing-id-2, urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=non-existing-id-1] is not part of the group."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "The specified provided members topology identifier: [urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=non-existing-id-2, urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=non-existing-id-1] is not part of the group.",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -617,14 +643,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Provided members update exception",
-                "details": "The specified topology entity/relation: o-ran-smo-teiv-ran:NRCellDU is not part of the group."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "The specified topology entity/relation: o-ran-smo-teiv-ran:NRCellDU is not part of the group.",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -682,14 +712,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Provided members update exception",
-                "details": "The specified topology entity/relation: o-ran-smo-teiv-oam:ManagedElement is not part of the group."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "The specified topology entity/relation: o-ran-smo-teiv-oam:ManagedElement is not part of the group.",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -818,9 +852,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. List elements are not of the type object."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. List elements are not of the type object.",
+                "instance": ""
             }''')
         }
     },
@@ -850,9 +886,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. List elements are not of the type object."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. List elements are not of the type object.",
+                "instance": ""
             }''')
         }
     },
@@ -877,9 +915,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Empty object present in providedMembers."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Empty object present in providedMembers.",
+                "instance": ""
             }''')
         }
     },
@@ -908,9 +948,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Empty object present in providedMembers."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Empty object present in providedMembers.",
+                "instance": ""
             }''')
         }
     },
@@ -941,9 +983,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Invalid key/value present in {\\"idKey\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Invalid key/value present in {\\"idKey\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}.",
+                "instance": ""
             }''')
         }
     },
@@ -974,9 +1018,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Invalid key/value present in {\\"id\\":[\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"]}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Invalid key/value present in {\\"id\\":[\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"]}.",
+                "instance": ""
             }''')
         }
     },
@@ -1007,9 +1053,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. Nested topology groups is not supported. Provided members contain topology group id: urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. Nested topology groups is not supported. Provided members contain topology group id: urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440050",
+                "instance": ""
             }''')
         }
     },
@@ -1041,9 +1089,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. More than one key:value present in {\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\",\\"extraKey\\":\\"extraValue\\"}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. More than one key:value present in {\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\",\\"extraKey\\":\\"extraValue\\"}.",
+                "instance": "" 
             }''')
         }
     },
@@ -1079,9 +1129,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid providedMembers",
-                "details": "Unable to parse the given providedMembers. More than one key:value present in {\\"o-ran-smo-teiv-ran:NRCellDU\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}],\\"o-ran-smo-teiv-ran:ODUFunction\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1\\"}]}."
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unable to parse the given providedMembers. More than one key:value present in {\\"o-ran-smo-teiv-ran:NRCellDU\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1,NRCellDU=1\\"}],\\"o-ran-smo-teiv-ran:ODUFunction\\":[{\\"id\\":\\"urn:3gpp:dn:ManagedElement=1,ODUFunction=1\\"}]}.",
+                "instance": ""
             }''')
         }
     },
@@ -1115,14 +1167,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -1156,9 +1212,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-update.",
-                "details": null
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "No static resource topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440211/provided-members-update.",
+                "instance": ""
             }''')
         }
     }
