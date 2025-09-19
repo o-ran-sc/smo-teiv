@@ -1102,9 +1102,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid Value",
-                "details": "Offset cannot be larger than 5"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Offset cannot be larger than 5",
+                "instance": ""
             }''')
         }
     },
@@ -1120,9 +1122,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid parameter error",
-                "details": "Invalid source id parameter provided for NRCellDU"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid source id parameter provided for NRCellDU",
+                "instance": ""
             }''')
         }
     },

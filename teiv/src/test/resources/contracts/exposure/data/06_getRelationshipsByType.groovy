@@ -680,9 +680,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid Value",
-                "details": "Offset cannot be larger than 6"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Offset cannot be larger than 6",
+                "instance": ""
             }''')
         }
     },
@@ -698,9 +700,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Unknown relationship type",
-                "details": "Relationship type SECTOR_GROUPS_NRCELLDU is not part of the domain OAM, known relationship types: []"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Relationship type SECTOR_GROUPS_NRCELLDU is not part of the domain OAM, known relationship types: []",
+                "instance": ""
             }''')
         }
     },

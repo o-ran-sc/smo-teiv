@@ -81,9 +81,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested resource is not found. ID: urn:non-existing-id"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested resource is not found. ID: urn:non-existing-id",
+                "instance": ""
             }''')
         }
     },

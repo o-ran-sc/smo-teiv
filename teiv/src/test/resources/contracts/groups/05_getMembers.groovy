@@ -611,9 +611,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
         }
     },
@@ -629,9 +631,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body ('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested resource is not found. ID: urn:3gpp:dn:non-existing-odufunction"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested resource is not found. ID: urn:3gpp:dn:non-existing-odufunction",
+                "instance": ""
             }''')
         }
     },
@@ -647,9 +651,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Grammar error",
-                "details": "Invalid data in scopeFilter"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Invalid data in scopeFilter",
+                "instance": ""
             }''')
         }
     },
@@ -665,9 +671,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
         }
     },
@@ -683,9 +691,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Filter Error",
-                "details": "TopologyObjects given in scopeFilter and targetFilter are not matching"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "TopologyObjects given in scopeFilter and targetFilter are not matching",
+                "instance": ""
             }''')
         }
     },
@@ -701,9 +711,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid target filter, only relationship conditions can be provided",
-                "details": "NRCellDU is not a valid relation"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "NRCellDU is not a valid relation",
+                "instance": ""
             }''')
         }
     }

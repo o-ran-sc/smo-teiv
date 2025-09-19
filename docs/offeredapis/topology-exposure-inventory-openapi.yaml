@@ -1446,16 +1446,6 @@ components:
         totalCount:
           type: integer
       required: ['items']
-    ErrorMessage:
-      type: object
-      title: Error
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        details:
-          type: string
     ProblemDetails:
       description: 'A problem detail to carry details in an HTTP response according to RFC 7807'
       type: object
@@ -1861,97 +1851,97 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '401':
       description: 'Unauthorized'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '403':
       description: 'Forbidden'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '404':
       description: 'Not Found'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '405':
       description: 'Method Not Allowed'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '406':
       description: 'Not Acceptable'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '409':
       description: 'Conflict'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '411':
       description: 'Length Required'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '413':
       description: 'Payload Too Large'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '414':
       description: 'URI Too Large'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '415':
       description: 'Unsupported Media Type'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '429':
       description: 'Too Many Requests'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '500':
       description: 'Internal Server Error'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '502':
       description: 'Bad Gateway'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     '503':
       description: 'Service Unavailable'
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
     NotFound:
       description: Not Found
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
           example:
             status: '404'
             title: Resource Not Found
@@ -1961,7 +1951,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
           example:
             status: '401'
             title: Unauthorized request
@@ -1971,7 +1961,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
           example:
             status: '403'
             title: Request Forbidden
@@ -1981,7 +1971,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
           example:
             status: '400'
             title: Bad Request
@@ -1991,7 +1981,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
           example:
             status: '409'
             title: Conflicting request
@@ -2003,7 +1993,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorMessage'
+            $ref: '#/components/schemas/ProblemDetails'
           example:
             status: '500'
             title: Internal Server Error

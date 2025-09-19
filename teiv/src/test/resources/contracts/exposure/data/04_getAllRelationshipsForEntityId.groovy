@@ -740,9 +740,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "BAD_REQUEST",
-            "message": "Invalid Value",
-            "details": "Offset cannot be larger than 2"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Offset cannot be larger than 2",
+                "instance": ""
         }''')
         }
     },
@@ -758,9 +760,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-            "status": "NOT_FOUND",
-            "message": "Resource Not Found",
-            "details": "The requested resource is not found. ID: urn:non-existent"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested resource is not found. ID: urn:non-existent",
+                "instance": ""
         }''')
         }
     },

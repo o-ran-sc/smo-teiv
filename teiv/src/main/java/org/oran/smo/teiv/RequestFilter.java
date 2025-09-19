@@ -29,7 +29,10 @@ import org.oran.smo.teiv.exposure.OranTeivErrorJsonMessage;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+
+import static org.oran.smo.teiv.utils.TeivConstants.TYPE_DEFAULT_VALUE;
 
 public abstract class RequestFilter implements Filter {
     protected void writeError(final ServletResponse servletResponse, final JsonProcessingException exception,
@@ -37,8 +40,9 @@ public abstract class RequestFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         httpResponse.setContentType("application/problem+json");
-        final OranTeivErrorJsonMessage errorMessage = OranTeivErrorJsonMessage.extendedBuilder().status(
-                HttpStatus.BAD_REQUEST.name()).message(message).details(getErrorDetails(exception)).build();
+        final OranTeivErrorJsonMessage errorMessage = OranTeivErrorJsonMessage.extendedBuilder().type(TYPE_DEFAULT_VALUE)
+                .title(HttpStatus.BAD_REQUEST.name()).status(new BigDecimal(HttpStatus.BAD_REQUEST.value())).detail(
+                        getErrorDetails(exception)).instance("").build();
         httpResponse.getWriter().write(errorMessage.toJson());
         httpResponse.getWriter().flush();
     }

@@ -50,14 +50,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "NOT_FOUND",
-                    "message": "Resource Not Found",
-                    "details": "The requested resource with the following ids cannot be found. Entities: [urn:WRONG_ENTITY_ID] Relationships: []"
+                    "type": "about:blank",
+                    "title": "NOT_FOUND",
+                    "status": 404,
+                    "detail": "The requested resource with the following ids cannot be found. Entities: [urn:WRONG_ENTITY_ID] Relationships: []",
+                    "instance": ""
                 }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -88,9 +92,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Topology ID format not supported",
-                "details": "Topology ID : WRONG_ENTITY_ID is not in supported format. Topology ID should start with urn:"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Topology ID : WRONG_ENTITY_ID is not in supported format. Topology ID should start with urn:",
+                "instance": ""
             }''')
         }
     },
@@ -121,14 +127,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "NOT_FOUND",
-                    "message": "Resource Not Found",
-                    "details": "The requested resource with the following ids cannot be found. Entities: [] Relationships: [urn:WRONG_RELATIONSHIP_ID]"
+                    "type": "about:blank",
+                    "title": "NOT_FOUND",
+                    "status": 404,
+                    "detail": "The requested resource with the following ids cannot be found. Entities: [] Relationships: [urn:WRONG_RELATIONSHIP_ID]",
+                    "instance": ""
                 }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byEquality())
+                jsonPath('$.detail', byEquality())
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -159,9 +169,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Topology ID format not supported",
-                "details": "Topology ID : WRONG_RELATIONSHIP_ID is not in supported format. Topology ID should start with urn:"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Topology ID : WRONG_RELATIONSHIP_ID is not in supported format. Topology ID should start with urn:",
+                "instance": ""
             }''')
         }
     },

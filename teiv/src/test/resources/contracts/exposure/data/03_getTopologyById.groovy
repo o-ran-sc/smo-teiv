@@ -86,7 +86,7 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "ERROR - 400: Get topology for ODUFunction entity with non existing id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999'."
+        description "ERROR - 404: Get topology for ODUFunction entity with non existing id 'urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999'."
         request {
             method GET()
             url "/topology-inventory/v1/domains/REL_EQUIPMENT_RAN/entity-types/ODUFunction/entities/urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999"
@@ -97,9 +97,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested resource is not found. ID: urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested resource is not found. ID: urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=99999",
+                "instance": ""
             }''')
         }
     },
@@ -115,9 +117,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Topology ID format not supported",
-                "details": "Topology ID : 3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9 is not in supported format. Topology ID should start with urn:"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Topology ID : 3gpp:dn:SubNetwork=Europe,SubNetwork=Hungary,MeContext=1,ManagedElement=9,ODUFunction=9 is not in supported format. Topology ID should start with urn:",
+                "instance": ""
             }''')
         }
     }

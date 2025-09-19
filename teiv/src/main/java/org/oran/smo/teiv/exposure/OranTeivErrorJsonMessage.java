@@ -21,16 +21,19 @@
 package org.oran.smo.teiv.exposure;
 
 import lombok.Builder;
-import org.oran.smo.teiv.api.model.OranTeivErrorMessage;
+import org.oran.smo.teiv.api.model.OranTeivProblemDetails;
 
-public class OranTeivErrorJsonMessage extends OranTeivErrorMessage {
+import java.math.BigDecimal;
+
+public class OranTeivErrorJsonMessage extends OranTeivProblemDetails {
     @Builder(builderMethodName = "extendedBuilder")
-    public OranTeivErrorJsonMessage(String status, final String message, final String details) {
-        super(status, message, details);
+    public OranTeivErrorJsonMessage(String type, String title, BigDecimal status, String detail, String instance) {
+        super(type, title, status, detail, instance);
     }
 
     public String toJson() {
-        return "{" + "\"status\": \"" + this.getStatus() + "\"," + "\"message\": \"" + this
-                .getMessage() + "\"," + "\"details\": \"" + this.getDetails() + "\"}";
+        return "{" + "\"type\": \"" + this.getType() + "\"," + "\"title\": \"" + this
+                .getTitle() + "\"," + "\"status\": \"" + this.getStatus() + "\", " + "\"detail\": \"" + this
+                        .getDetail() + "\" , " + "\"instance\": \"" + this.getInstance() + "\"}";
     }
 }

@@ -20,7 +20,7 @@
  */
 package org.oran.smo.teiv.exposure.exception;
 
-import org.oran.smo.teiv.api.model.OranTeivErrorMessage;
+import org.oran.smo.teiv.api.model.OranTeivProblemDetails;
 import org.oran.smo.teiv.exception.TeivException;
 import org.oran.smo.teiv.utils.query.exception.TeivPathException;
 import jakarta.validation.ConstraintViolationException;
@@ -38,7 +38,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.math.BigDecimal;
+
 import static org.oran.smo.teiv.utils.ResponseUtil.getHeadersContentTypeAppProblemJson;
+import static org.oran.smo.teiv.utils.TeivConstants.TYPE_DEFAULT_VALUE;
 
 @Slf4j
 @ControllerAdvice
@@ -46,13 +49,13 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ResponseBody
     @ExceptionHandler(TeivException.class)
-    public ResponseEntity<OranTeivErrorMessage> handleTeivException(final TeivException exception) {
+    public ResponseEntity<OranTeivProblemDetails> handleTeivException(final TeivException exception) {
         if (exception.getException() != null) {
             log.error(exception.getMessage(), exception.getException());
         }
         return ResponseEntity.status(exception.getStatus()).headers(getHeadersContentTypeAppProblemJson()).body(
-                OranTeivErrorMessage.builder().status(exception.getStatus().name()).message(exception.getMessage()).details(
-                        exception.getDetails()).build());
+                OranTeivProblemDetails.builder().type(TYPE_DEFAULT_VALUE).title(exception.getStatus().name()).status(
+                        new BigDecimal(exception.getStatus().value())).detail(exception.getDetails()).instance("").build());
     }
 
     @ResponseBody
@@ -62,22 +65,25 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             return new ResponseEntity<>(exception.getResponse(), HttpStatus.OK);
         } else {
             return ResponseEntity.status(exception.getHttpStatus()).headers(getHeadersContentTypeAppProblemJson()).body(
-                    OranTeivErrorMessage.builder().status(exception.getHttpStatus().name()).message(exception.getMessage())
-                            .details(exception.getDetails()).build());
+                    OranTeivProblemDetails.builder().type(TYPE_DEFAULT_VALUE).title(exception.getHttpStatus().name())
+                            .status(new BigDecimal(exception.getHttpStatus().value())).detail(exception.getDetails())
+                            .instance("").build());
         }
     }
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<OranTeivErrorMessage> handleGeneralException(final Exception ex) {
+    protected ResponseEntity<OranTeivProblemDetails> handleGeneralException(final Exception ex) {
         log.error("Handling general exception", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(getHeadersContentTypeAppProblemJson()).body(
-                new OranTeivErrorMessage().status(HttpStatus.INTERNAL_SERVER_ERROR.name()));
+                new OranTeivProblemDetails().type(TYPE_DEFAULT_VALUE).title(HttpStatus.INTERNAL_SERVER_ERROR.name()).status(
+                        new BigDecimal(HttpStatus.INTERNAL_SERVER_ERROR.value())).detail(ex.getMessage()).instance(""));
     }
 
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<OranTeivErrorMessage> handleConstraintViolationException(ConstraintViolationException exception) {
+    public ResponseEntity<OranTeivProblemDetails> handleConstraintViolationException(
+            ConstraintViolationException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(getHeadersContentTypeAppProblemJson()).body(
                 getBadRequestErrorMessage(exception));
     }
@@ -96,7 +102,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
                 getBadRequestErrorMessage(exception));
     }
 
-    public static OranTeivErrorMessage getBadRequestErrorMessage(final Exception e) {
-        return OranTeivErrorMessage.builder().status(HttpStatus.BAD_REQUEST.name()).message(e.getMessage()).build();
+    public static OranTeivProblemDetails getBadRequestErrorMessage(final Exception e) {
+        return OranTeivProblemDetails.builder().type(TYPE_DEFAULT_VALUE).title(HttpStatus.BAD_REQUEST.name()).status(
+                new BigDecimal(HttpStatus.BAD_REQUEST.value())).detail(e.getMessage()).instance("").build();
     }
 }

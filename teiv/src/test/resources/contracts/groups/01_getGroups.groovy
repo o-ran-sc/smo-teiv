@@ -272,8 +272,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                    "status": "BAD_REQUEST",
-                    "message": "getAllGroups.limit: must be less than or equal to 500"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "getAllGroups.limit: must be less than or equal to 500",
+                "instance": ""
                 }''')
         }
     }

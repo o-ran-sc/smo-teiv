@@ -414,9 +414,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "Invalid status",
-                "details": "Unsupported status for provided members: absent"
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "Unsupported status for provided members: absent",
+                "instance": ""
             }''')
         }
     },
@@ -432,9 +434,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
         }
     }

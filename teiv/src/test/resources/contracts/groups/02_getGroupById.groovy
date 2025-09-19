@@ -197,7 +197,7 @@ import org.springframework.cloud.contract.spec.Contract
         }
     },
     Contract.make {
-        description "ERROR - 400: Get a group by id (Invalid JSON structure)"
+        description "ERROR - 500: Get a group by id (Invalid JSON structure)"
         request {
             method GET()
             url("/topology-inventory/v1/groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440100")
@@ -208,14 +208,18 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "INTERNAL_SERVER_ERROR",
-                "message": "Criteria deserialization exception",
-                "details": "Could not resolve subtype of [simple type, class org.oran.smo.teiv.api.model.OranTeivCriteria]: missing type id property 'queryType'\\n"
+                "type": "about:blank",
+                "title": "INTERNAL_SERVER_ERROR",
+                "status": 500,
+                "detail": "Could not resolve subtype of [simple type, class org.oran.smo.teiv.api.model.OranTeivCriteria]: missing type id property 'queryType'\\n",
+                "instance": ""
             }''')
             bodyMatchers {
+                jsonPath('$.type', byEquality())
+                jsonPath('$.title', byEquality())
                 jsonPath('$.status', byEquality())
-                jsonPath('$.message', byEquality())
-                jsonPath('$.details', byRegex("Could not resolve subtype of \\[simple type, class org\\.oran\\.smo\\.teiv\\.api\\.model\\.OranTeivCriteria\\]: missing type id property 'queryType'[\\s\\S]*"))
+                jsonPath('$.detail', byRegex("Could not resolve subtype of \\[simple type, class org\\.oran\\.smo\\.teiv\\.api\\.model\\.OranTeivCriteria\\]: missing type id property 'queryType'[\\s\\S]*"))
+                jsonPath('$.instance', byEquality())
             }
         }
     },
@@ -231,9 +235,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "BAD_REQUEST",
-                "message": "No static resource topology-inventory/v1/get-groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201.",
-                "details": null
+                "type": "about:blank",
+                "title": "BAD_REQUEST",
+                "status": 400,
+                "detail": "No static resource topology-inventory/v1/get-groups/urn:o-ran:smo:teiv:group=550e8400-e29b-41d4-a716-446655440201.",
+                "instance": ""
             }''')
         }
     },
@@ -249,9 +255,11 @@ import org.springframework.cloud.contract.spec.Contract
                 contentType('application/problem+json')
             }
             body('''{
-                "status": "NOT_FOUND",
-                "message": "Resource Not Found",
-                "details": "The requested group is not found"
+                "type": "about:blank",
+                "title": "NOT_FOUND",
+                "status": 404,
+                "detail": "The requested group is not found",
+                "instance": ""
             }''')
         }
     }
