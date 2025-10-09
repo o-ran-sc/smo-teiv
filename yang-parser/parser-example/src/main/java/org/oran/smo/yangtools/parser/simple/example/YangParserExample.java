@@ -32,7 +32,7 @@ import java.util.List;
 
 public class YangParserExample {
 
-    private static final String DIR = "yang-parser-example/src/main/resources/yang/";
+    private static final String DIR = "yang-parser/parser-example/src/main/resources/yang/";
 
     public static List<YangModel> parseYangModels(YangDeviceModel yangDeviceModel, ParserExecutionContext context) {
 

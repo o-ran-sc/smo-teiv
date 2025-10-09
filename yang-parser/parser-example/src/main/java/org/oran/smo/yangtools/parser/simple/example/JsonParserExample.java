@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class JsonParserExample {
 
-    private static final String DIR = "yang-parser-example/src/main/resources/json/";
+    private static final String DIR = "yang-parser/parser-example/src/main/resources/json/";
 
     public static JsonValue parseJsonFile(ParserExecutionContext context) {
         final File jsonFile = new File(DIR + "AntennaModule-response.json");
