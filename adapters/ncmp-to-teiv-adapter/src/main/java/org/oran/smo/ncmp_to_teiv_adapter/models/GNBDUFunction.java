@@ -21,10 +21,14 @@ package org.oran.smo.ncmp_to_teiv_adapter.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import org.oran.smo.common.utils.TeivIdBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.oran.smo.common.utils.Constants.SMO_TEIV_RAN_PREFIX;
+import static org.oran.smo.common.utils.Constants.SMO_TEIV_REL_OAM_RAN_PREFIX;
 
 public class GNBDUFunction extends AbstractFunction {
 
@@ -39,7 +43,7 @@ public class GNBDUFunction extends AbstractFunction {
     public Map<String, Object> addTeivEntitiesAndRelationships(Map<String, List<Object>> entityMap,
             Map<String, List<Object>> relationshipMap, String parentId) {
         createRelationshipWithSmo(relationshipMap);
-        String gnbduFunctionFdn = "urn:oran:smo:teiv:" + getId();
+        String gnbduFunctionFdn = TeivIdBuilder.buildFunctionFdn(getId());
 
         for (NRCellDU nrCellDU : getNrCellDUs()) {
             addNrcellduEntitiesAndRelationships(nrCellDU, entityMap, relationshipMap);
@@ -47,12 +51,12 @@ public class GNBDUFunction extends AbstractFunction {
         }
 
         return Map.of("id", gnbduFunctionFdn, "attributes", attributes.createEntityAttributes(), "sourceIds", List.of(
-                gnbduFunctionFdn, "urn:oran:smo:teiv:" + parentId));
+                gnbduFunctionFdn, TeivIdBuilder.buildFunctionFdn(parentId)));
     }
 
     private void addNrcellduEntitiesAndRelationships(NRCellDU nrCellDU, Map<String, List<Object>> entityMap,
             Map<String, List<Object>> relationshipMap) {
-        String type = "o-ran-smo-teiv-ran:NRCellDU";
+        String type = TeivIdBuilder.buildEntityTypeName(SMO_TEIV_RAN_PREFIX, "NRCellDU");
         if (!entityMap.containsKey(type)) {
             entityMap.put(type, new ArrayList<>());
         }
@@ -60,7 +64,7 @@ public class GNBDUFunction extends AbstractFunction {
     }
 
     private void addRelationshipWithNrcelldu(NRCellDU nrCellDU, Map<String, List<Object>> relationshipMap) {
-        String relType = "o-ran-smo-teiv-ran:ODUFUNCTION_PROVIDES_NRCELLDU";
+        String relType = TeivIdBuilder.buildEntityTypeName(SMO_TEIV_RAN_PREFIX, "ODUFUNCTION_PROVIDES_NRCELLDU");
         if (!relationshipMap.containsKey(relType)) {
             relationshipMap.put(relType, new ArrayList<>());
         }
@@ -69,33 +73,33 @@ public class GNBDUFunction extends AbstractFunction {
 
     @Override
     public Map<String, Object> createRelationshipWithManagedElement(String managedElementId) {
-        String gnbduFunctionFdn = "urn:oran:smo:teiv:" + getId();
-        String managedElementFdn = "urn:oran:smo:teiv:" + managedElementId;
-        return Map.of("id", String.format("urn:oran:smo:teiv:%s_MANAGES_%s", managedElementId, getId()), "aSide",
+        String gnbduFunctionFdn = TeivIdBuilder.buildFunctionFdn(getId());
+        String managedElementFdn = TeivIdBuilder.buildFunctionFdn(managedElementId);
+        return Map.of("id", TeivIdBuilder.buildRelationshipTypeName("MANAGES", gnbduFunctionFdn, getId()), "aSide",
                 managedElementFdn, "bSide", gnbduFunctionFdn, "sourceIds", List.of(managedElementFdn, gnbduFunctionFdn));
     }
 
     @Override
     public String getTeivEntityType() {
-        return "o-ran-smo-teiv-ran:ODUFunction";
+        return TeivIdBuilder.buildEntityTypeName(SMO_TEIV_RAN_PREFIX, "ODUFunction");
     }
 
     @Override
     public String getTeivRelationshipWithManagedElement() {
-        return "o-ran-smo-teiv-rel-oam-ran:MANAGEDELEMENT_MANAGES_ODUFUNCTION";
+        return TeivIdBuilder.buildEntityTypeName(SMO_TEIV_REL_OAM_RAN_PREFIX, "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION");
     }
 
     @Override
     public void createRelationshipWithSmo(Map<String, List<Object>> relationshipMap) {
-        String ranFunctionRelType = "o-ran-smo-teiv-ran:ODUFUNCTION_O1LINK_SMO";
+        String ranFunctionRelType = TeivIdBuilder.buildEntityTypeName(SMO_TEIV_RAN_PREFIX, "ODUFUNCTION_O1LINK_SMO");
         if (!relationshipMap.containsKey(ranFunctionRelType)) {
             relationshipMap.put(ranFunctionRelType, new ArrayList<>());
         }
         String gnbduFunctionId = getId();
         String smoId = "SMO";
-        Map<String, Object> test = Map.of("id", String.format("urn:oran:smo:teiv:%s_O1LINK_%s", gnbduFunctionId, smoId),
-                "bSide", "urn:oran:smo:teiv:" + smoId, "aSide", "urn:oran:smo:teiv:" + gnbduFunctionId, "sourceIds", List
-                        .of(smoId, gnbduFunctionId));
+        Map<String, Object> test = Map.of("id", TeivIdBuilder.buildRelationshipTypeName("O1LINK", gnbduFunctionId, smoId),
+                "bSide", TeivIdBuilder.buildFunctionFdn(smoId), "aSide", TeivIdBuilder.buildFunctionFdn(gnbduFunctionId),
+                "sourceIds", List.of(smoId, gnbduFunctionId));
         relationshipMap.get(ranFunctionRelType).add(test);
     }
 }
