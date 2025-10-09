@@ -22,13 +22,14 @@ package org.oran.smo.ncmp_to_teiv_adapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.oran.smo.common.utils.TeivIdBuilder;
 
 public class SmoPayloadBuilder {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String build() {
         ArrayNode sourceIds = objectMapper.createArrayNode();
-        sourceIds.add("urn:oran:smo:teiv:SMO");
+        sourceIds.add(TeivIdBuilder.buildFunctionFdn("SMO"));
         sourceIds.add("http://smo.o-ran-sc.org");
         sourceIds.add("http://gateway.smo.o-ran-sc.org");
         sourceIds.add("http://dentity.smo.o-ran-sc.org");
@@ -44,7 +45,7 @@ public class SmoPayloadBuilder {
         ObjectNode attributes = objectMapper.createObjectNode();
         attributes.put("smoName", "SMO");
         ObjectNode smo = objectMapper.createObjectNode();
-        smo.put("id", "urn:oran:smo:teiv:SMO");
+        smo.put("id", TeivIdBuilder.buildFunctionFdn("SMO"));
         smo.set("sourceIds", sourceIds);
         smo.set("attributes", attributes);
         ArrayNode smoArray = objectMapper.createArrayNode();

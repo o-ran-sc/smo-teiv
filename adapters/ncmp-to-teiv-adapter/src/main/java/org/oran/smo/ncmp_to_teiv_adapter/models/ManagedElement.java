@@ -23,10 +23,15 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.oran.smo.common.utils.TeivIdBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.oran.smo.common.utils.Constants.SMO_TEIV_OAM_PREFIX;
+import static org.oran.smo.common.utils.Constants._3GPP_GNBDUFUNTION_PREFIX;
+import static org.oran.smo.common.utils.Constants._3GPP_GNBCUCPFUNTION_PREFIX;
 
 @Slf4j
 public class ManagedElement extends AbstractEntity {
@@ -40,13 +45,13 @@ public class ManagedElement extends AbstractEntity {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            if ("_3gpp-nr-nrm-gnbdufunction:GNBDUFunction".equals(name)) {
+            if (TeivIdBuilder.buildEntityTypeName(_3GPP_GNBDUFUNTION_PREFIX, "GNBDUFunction").equals(name)) {
                 List<Object> list = (List<Object>) value;
                 for (Object item : list) {
                     GNBDUFunction du = mapper.convertValue(item, GNBDUFunction.class);
                     ranFunctions.add(du);
                 }
-            } else if ("_3gpp-nr-nrm-gnbcucpfunction:GNBCUCPFunction".equals(name)) {
+            } else if (TeivIdBuilder.buildEntityTypeName(_3GPP_GNBCUCPFUNTION_PREFIX, "GNBCUCPFunction").equals(name)) {
                 List<Object> list = (List<Object>) value;
                 for (Object item : list) {
                     GNBCUCPFunction cu = mapper.convertValue(item, GNBCUCPFunction.class);
@@ -67,7 +72,7 @@ public class ManagedElement extends AbstractEntity {
             addRanFunctionEntitiesAndRelationships(ranFunction, entityMap, relationshipMap);
             addRelationshipWithRanFunction(ranFunction, relationshipMap);
         }
-        String managedElementId = "urn:oran:smo:teiv:" + getId();
+        String managedElementId = TeivIdBuilder.buildFunctionFdn(getId());
         return Map.of("id", managedElementId, "sourceIds", List.of(managedElementId));
     }
 
@@ -91,6 +96,6 @@ public class ManagedElement extends AbstractEntity {
 
     @Override
     public String getTeivEntityType() {
-        return "o-ran-smo-teiv-oam:ManagedElement";
+        return TeivIdBuilder.buildEntityTypeName(SMO_TEIV_OAM_PREFIX, "ManagedElement");
     }
 }

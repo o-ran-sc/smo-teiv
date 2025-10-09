@@ -21,11 +21,14 @@ package org.oran.smo.ncmp_to_teiv_adapter.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import org.oran.smo.common.utils.TeivIdBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.oran.smo.common.utils.Constants.SMO_TEIV_OAM_PREFIX;
 
 public class ManagedElementWrapper {
 
@@ -40,7 +43,7 @@ public class ManagedElementWrapper {
         for (ManagedElement managedElement : this.managedElements) {
             managedElements.add(managedElement.addTeivEntitiesAndRelationships(entityMap, relationshipMap, ""));
         }
-        entityMap.put("o-ran-smo-teiv-oam:ManagedElement", new ArrayList<>(managedElements));
+        entityMap.put(TeivIdBuilder.buildEntityTypeName(SMO_TEIV_OAM_PREFIX, "ManagedElement"), new ArrayList<>(managedElements));
         Map<String, Object> finalJson = Map.of("relationships", List.of(relationshipMap), "entities", List.of(entityMap));
         return finalJson;
     }

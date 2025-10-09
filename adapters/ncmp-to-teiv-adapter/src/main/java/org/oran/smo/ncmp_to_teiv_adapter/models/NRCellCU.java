@@ -21,9 +21,12 @@ package org.oran.smo.ncmp_to_teiv_adapter.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import org.oran.smo.common.utils.TeivIdBuilder;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.oran.smo.common.utils.Constants.SMO_TEIV_RAN_PREFIX;
 
 public class NRCellCU extends AbstractEntity {
 
@@ -34,20 +37,20 @@ public class NRCellCU extends AbstractEntity {
     @Override
     public Map<String, Object> addTeivEntitiesAndRelationships(Map<String, List<Object>> entityMap,
             Map<String, List<Object>> relationshipMap, String parentId) {
-        String nrcellcucpFdn = "urn:oran:smo:teiv:" + getId();
+        String nrcellcucpFdn = TeivIdBuilder.buildFunctionFdn(getId());
         return Map.of("id", nrcellcucpFdn, "attributes", attributes.createEntityAttributes(), "sourceIds", List.of(
-                nrcellcucpFdn, "urn:oran:smo:teiv:" + parentId));
+                nrcellcucpFdn, TeivIdBuilder.buildFunctionFdn(parentId)));
     }
 
     public Map<String, Object> createRelationshipWithGnbcucpFunction(String gnbcucpFunctionId) {
-        String gnbcucpFunctionFdn = "urn:oran:smo:teiv:" + gnbcucpFunctionId;
-        String nrcellCuFdn = "urn:oran:smo:teiv:" + getId();
-        return Map.of("id", String.format("urn:oran:smo:teiv:%s_PROVIDES_%s", gnbcucpFunctionId, getId()), "aSide",
+        String gnbcucpFunctionFdn = TeivIdBuilder.buildFunctionFdn(gnbcucpFunctionId);
+        String nrcellCuFdn = TeivIdBuilder.buildFunctionFdn(getId());
+        return Map.of("id", TeivIdBuilder.buildTeivRelationshipTypeName("PROVIDES", gnbcucpFunctionId, getId()), "aSide",
                 gnbcucpFunctionFdn, "bSide", nrcellCuFdn, "sourceIds", List.of(gnbcucpFunctionFdn, nrcellCuFdn));
     }
 
     @Override
     public String getTeivEntityType() {
-        return "o-ran-smo-teiv-ran:NRCellCU";
+        return TeivIdBuilder.buildEntityTypeName(SMO_TEIV_RAN_PREFIX, "NRCellCU");
     }
 }
