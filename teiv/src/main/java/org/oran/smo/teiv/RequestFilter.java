@@ -50,7 +50,7 @@ public abstract class RequestFilter implements Filter {
     private String getErrorDetails(JsonProcessingException exception) {
         String details;
         if (exception instanceof ValueInstantiationException e && exception
-                .getCause()instanceof IllegalArgumentException cause) {
+                .getCause() instanceof IllegalArgumentException cause) {
             final Class<?> targetType = e.getType().getRawClass();
             details = cause.getMessage() + ". Invalid value for " + targetType.getSimpleName() + ", allowed values: " + List
                     .of(targetType.getEnumConstants());
