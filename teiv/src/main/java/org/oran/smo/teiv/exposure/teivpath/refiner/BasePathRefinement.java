@@ -961,11 +961,11 @@ public class BasePathRefinement {
             filterCriteria.getFilterCriteriaList().forEach(criteria -> {
                 if (criteria.getScope() instanceof EmptyLogicalBlock) {
                     criteria.setScope(buildScopeLogicalBlockForRelationship(criteria));
-                } else if (criteria.getScope()instanceof AndOrLogicalBlock andOrLogicalBlock) {
+                } else if (criteria.getScope() instanceof AndOrLogicalBlock andOrLogicalBlock) {
                     AndOrLogicalBlock aolb = new AndLogicalBlock();
                     aolb.setChildren(List.of(andOrLogicalBlock, buildScopeLogicalBlockForRelationship(criteria)));
                     criteria.setScope(aolb);
-                } else if (criteria.getScope()instanceof ScopeLogicalBlock scopeLogicalBlock) {
+                } else if (criteria.getScope() instanceof ScopeLogicalBlock scopeLogicalBlock) {
                     AndOrLogicalBlock aolb = new AndLogicalBlock();
                     aolb.setChildren(List.of(scopeLogicalBlock, buildScopeLogicalBlockForRelationship(criteria)));
                     criteria.setScope(aolb);

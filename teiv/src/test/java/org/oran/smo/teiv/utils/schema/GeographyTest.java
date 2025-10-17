@@ -51,7 +51,7 @@ class GeographyTest {
 
         assertEquals("POINT Z (19.040236 47.497913 123.9878)", new Geography(
                 "{\"location\":{\"ellipsoid\":{\"longitude\": 19.040236, \"latitude\":47.497913 , \"height\": 123.9878}}}")
-                        .toString());
+                .toString());
 
         assertEquals("POINT Z (19.040236 47.497913 123.9878)", new Geography(
                 "{\"location\":{\"longitude\": 19.040236, \"latitude\":47.497913, \"height\": 123.9878}}}").toString());

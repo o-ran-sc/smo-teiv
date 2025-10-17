@@ -64,10 +64,10 @@ public class JsonTest extends YangTestCommon {
         assertTrue(leaf13.getValue() == null);
 
         final YangDataDomNode leaf14 = getChildDataDomNode(cont1, "leaf14");
-        assertTrue(leaf14.getValue().equals(new Long(123)));
+        assertTrue(leaf14.getValue().equals(Long.valueOf(123)));
 
         final YangDataDomNode leaf15 = getChildDataDomNode(cont1, "leaf15");
-        assertTrue(leaf15.getValue().equals(new Boolean(true)));
+        assertTrue(leaf15.getValue().equals(Boolean.valueOf(true)));
 
         final YangDataDomNode leaf21index0 = getChildDataDomNode(cont1, "leaflist21", 0);
         assertTrue(leaf21index0.getModuleName().equals("module1"));
@@ -86,16 +86,16 @@ public class JsonTest extends YangTestCommon {
         assertTrue(leaf23index0.getValue() == null);
 
         final YangDataDomNode leaf23index1 = getChildDataDomNode(cont1, "leaflist23", 1);
-        assertTrue(leaf23index1.getValue().equals(new Boolean(true)));
+        assertTrue(leaf23index1.getValue().equals(Boolean.valueOf(true)));
 
         final YangDataDomNode leaf24index0 = getChildDataDomNode(cont1, "leaflist24", 0);
-        assertTrue(leaf24index0.getValue().equals(new Long(10)));
+        assertTrue(leaf24index0.getValue().equals(Long.valueOf(10)));
 
         final YangDataDomNode leaf24index1 = getChildDataDomNode(cont1, "leaflist24", 1);
-        assertTrue(leaf24index1.getValue().equals(new Long(-999)));
+        assertTrue(leaf24index1.getValue().equals(Long.valueOf(-999)));
 
         final YangDataDomNode leaf24index2 = getChildDataDomNode(cont1, "leaflist24", 2);
-        assertTrue(leaf24index2.getValue().equals(new Double(1234567890.123456)));
+        assertTrue(leaf24index2.getValue().equals(Double.valueOf(1234567890.123456)));
 
         // =======================================
 
@@ -108,7 +108,7 @@ public class JsonTest extends YangTestCommon {
 
         final YangDataDomNode leaf32 = getChildDataDomNode(cont2, "leaf32");
         assertTrue(leaf32.getModuleName().equals("module99"));
-        assertTrue(leaf32.getValue().equals(new Boolean(false)));
+        assertTrue(leaf32.getValue().equals(Boolean.valueOf(false)));
 
         final YangDataDomNode cont3 = getChildDataDomNode(cont2, "cont3");
         assertTrue(cont3.getModuleName().equals("module2"));
@@ -126,7 +126,7 @@ public class JsonTest extends YangTestCommon {
         assertTrue(leaflist35index0.getValue() == null);
 
         final YangDataDomNode leaflist35index1 = getChildDataDomNode(cont3, "leaflist35", 1);
-        assertTrue(leaflist35index1.getValue().equals(new Boolean(true)));
+        assertTrue(leaflist35index1.getValue().equals(Boolean.valueOf(true)));
 
         // =======================================
 
@@ -134,31 +134,31 @@ public class JsonTest extends YangTestCommon {
         assertTrue(list5index0.getModuleName().equals("module5"));
 
         final YangDataDomNode list5index0leaf51 = getChildDataDomNode(list5index0, "leaf51");
-        assertTrue(list5index0leaf51.getValue().equals(new Long(1234)));
+        assertTrue(list5index0leaf51.getValue().equals(Long.valueOf(1234)));
 
         final YangDataDomNode list5index0leaf52 = getChildDataDomNode(list5index0, "leaf52");
         assertTrue(list5index0leaf52.getValue() == null);
 
         final YangDataDomNode list5index0leaf53index0 = getChildDataDomNode(list5index0, "leaflist53", 0);
-        assertTrue(list5index0leaf53index0.getValue().equals(new Boolean(false)));
+        assertTrue(list5index0leaf53index0.getValue().equals(Boolean.valueOf(false)));
 
         final YangDataDomNode list5index0leaf53index1 = getChildDataDomNode(list5index0, "leaflist53", 1);
-        assertTrue(list5index0leaf53index1.getValue().equals(new Boolean(true)));
+        assertTrue(list5index0leaf53index1.getValue().equals(Boolean.valueOf(true)));
 
         final YangDataDomNode list5index1 = getChildDataDomNode(root, "list5", 1);
         assertTrue(list5index1.getModuleName().equals("module5"));
 
         final YangDataDomNode list5index1leaf51 = getChildDataDomNode(list5index1, "leaf51");
-        assertTrue(list5index1leaf51.getValue().equals(new Long(1235)));
+        assertTrue(list5index1leaf51.getValue().equals(Long.valueOf(1235)));
 
         final YangDataDomNode list5index1leaf52 = getChildDataDomNode(list5index1, "leaf52");
         assertTrue(list5index1leaf52.getValue().equals(new String("hello")));
 
         final YangDataDomNode list5index1leaf53index0 = getChildDataDomNode(list5index1, "leaflist53", 0);
-        assertTrue(list5index1leaf53index0.getValue().equals(new Boolean(false)));
+        assertTrue(list5index1leaf53index0.getValue().equals(Boolean.valueOf(false)));
 
         final YangDataDomNode list5index1leaf53index1 = getChildDataDomNode(list5index1, "leaflist53", 1);
-        assertTrue(list5index1leaf53index1.getValue().equals(new Boolean(false)));
+        assertTrue(list5index1leaf53index1.getValue().equals(Boolean.valueOf(false)));
     }
 
     @Test
@@ -185,7 +185,7 @@ public class JsonTest extends YangTestCommon {
         final YangDataDomNodeAnnotationValue cont6anno2 = getDataDomNodeAnnotation(cont6, "anno2");
         assertTrue(cont6anno2.getModuleName().equals("anno-module1"));
         assertTrue(cont6anno2.getName().equals("anno2"));
-        assertTrue(cont6anno2.getValue().equals(new Long(12345)));
+        assertTrue(cont6anno2.getValue().equals(Long.valueOf(12345)));
 
         final YangDataDomNode leaf61 = getChildDataDomNode(cont6, "leaf61");
         assertTrue(leaf61.getValue().equals(new String("hello")));
@@ -194,7 +194,7 @@ public class JsonTest extends YangTestCommon {
         final YangDataDomNodeAnnotationValue leaf61anno61 = getDataDomNodeAnnotation(leaf61, "anno61");
         assertTrue(leaf61anno61.getModuleName().equals("anno-module6"));
         assertTrue(leaf61anno61.getName().equals("anno61"));
-        assertTrue(leaf61anno61.getValue().equals(new Boolean(true)));
+        assertTrue(leaf61anno61.getValue().equals(Boolean.valueOf(true)));
 
         final YangDataDomNodeAnnotationValue leaf61anno62 = getDataDomNodeAnnotation(leaf61, "anno62");
         assertTrue(leaf61anno62.getModuleName().equals("anno-module6"));
@@ -212,12 +212,12 @@ public class JsonTest extends YangTestCommon {
         final YangDataDomNodeAnnotationValue leaflist81Index0anno81 = getDataDomNodeAnnotation(leaflist81Index0, "anno81");
         assertTrue(leaflist81Index0anno81.getModuleName().equals("anno-module8"));
         assertTrue(leaflist81Index0anno81.getName().equals("anno81"));
-        assertTrue(leaflist81Index0anno81.getValue().equals(new Boolean(false)));
+        assertTrue(leaflist81Index0anno81.getValue().equals(Boolean.valueOf(false)));
 
         final YangDataDomNodeAnnotationValue leaflist81Index0anno82 = getDataDomNodeAnnotation(leaflist81Index0, "anno82");
         assertTrue(leaflist81Index0anno82.getModuleName().equals("anno-module8"));
         assertTrue(leaflist81Index0anno82.getName().equals("anno82"));
-        assertTrue(leaflist81Index0anno82.getValue().equals(new Long(-99987)));
+        assertTrue(leaflist81Index0anno82.getValue().equals(Long.valueOf(-99987)));
 
         final YangDataDomNode leaflist81Index1 = getChildDataDomNode(cont6, "leaflist81", 1);
         assertTrue(leaflist81Index1.getValue().equals(new String("two")));
@@ -230,12 +230,12 @@ public class JsonTest extends YangTestCommon {
         final YangDataDomNodeAnnotationValue leaflist81Index2anno81 = getDataDomNodeAnnotation(leaflist81Index2, "anno81");
         assertTrue(leaflist81Index2anno81.getModuleName().equals("anno-module8"));
         assertTrue(leaflist81Index2anno81.getName().equals("anno81"));
-        assertTrue(leaflist81Index2anno81.getValue().equals(new Boolean(true)));
+        assertTrue(leaflist81Index2anno81.getValue().equals(Boolean.valueOf(true)));
 
         final YangDataDomNodeAnnotationValue leaflist81Index2anno82 = getDataDomNodeAnnotation(leaflist81Index2, "anno82");
         assertTrue(leaflist81Index2anno82.getModuleName().equals("anno-module8"));
         assertTrue(leaflist81Index2anno82.getName().equals("anno82"));
-        assertTrue(leaflist81Index2anno82.getValue().equals(new Double(12345678.12345678)));
+        assertTrue(leaflist81Index2anno82.getValue().equals(Double.valueOf(12345678.12345678)));
 
         final YangDataDomNode list7index0 = getChildDataDomNode(root, "list7", 0);
         assertTrue(list7index0.getModuleName().equals("module7"));
@@ -399,7 +399,7 @@ public class JsonTest extends YangTestCommon {
         assertTrue(cont1anno2.getModuleName().equals("module4"));
         assertTrue(cont1anno2.getNamespace().equals("ns4"));
         assertTrue(cont1anno2.getName().equals("anno2"));
-        assertTrue(cont1anno2.getValue().equals(new Long(12345)));
+        assertTrue(cont1anno2.getValue().equals(Long.valueOf(12345)));
 
         final YangDataDomNode leaf11 = getChildDataDomNode(cont1, "leaf11");
         assertTrue(leaf11.getModuleName().equals("module1"));

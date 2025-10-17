@@ -77,9 +77,9 @@ class SchemaCleanUpServiceTest {
                         Collections.EMPTY_LIST);
         when(DATA_REPOSITORY.getRelationshipIdsForDecoratorDeletion(SchemaRegistry.getRelationTypeByName(
                 "GNBCUUPFUNCTION_REALISED_BY_CLOUDNATIVEAPPLICATION"), Set.of("gnbcucp-gnbcuup-model:metadata")))
-                        .thenReturn(Collections.singletonList(
-                                "urn:base64:R05CQ1VVUEZ1bmN0aW9uOkJGRUVBQzJDRTYwMjczQ0IwQTc4MzE5Q0MyMDFBN0ZFOlJFQUxJU0VEX0JZOkNsb3VkTmF0aXZlQXBwbGljYXRpb246QUQ0MkQ5MDQ5N0U5M0QyNzYyMTVERjZEM0I4OTlFMTc="),
-                                Collections.EMPTY_LIST);
+                .thenReturn(Collections.singletonList(
+                        "urn:base64:R05CQ1VVUEZ1bmN0aW9uOkJGRUVBQzJDRTYwMjczQ0IwQTc4MzE5Q0MyMDFBN0ZFOlJFQUxJU0VEX0JZOkNsb3VkTmF0aXZlQXBwbGljYXRpb246QUQ0MkQ5MDQ5N0U5M0QyNzYyMTVERjZEM0I4OTlFMTc="),
+                        Collections.EMPTY_LIST);
         when(DATA_REPOSITORY.getRelationshipIdsForClassifierDeletion(SchemaRegistry.getRelationTypeByName(
                 "MANAGEDELEMENT_MANAGES_GNBCUUPFUNCTION"), Set.of("gnbcucp-gnbcuup-model:Weekend"))).thenReturn(Collections
                         .singletonList(

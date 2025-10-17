@@ -21,10 +21,12 @@
 package org.oran.smo.teiv.pgsqlgenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(force = true)
 public enum IndexType {
     GIN("CREATE INDEX IF NOT EXISTS \"%s\" ON teiv_data.\"%s\" USING GIN (\"%s\");"),
     GIN_TRGM_OPS_ON_LIST_AS_JSONB(

@@ -188,7 +188,7 @@ public class InstanceIdentifierTest {
         assertNull(ii9.getSteps().get(0).getPredicateLeafListMemberValue());
 
         assertNotNull(ii9.getSteps().get(0).getPredicateListEntryOrLeafListMemberIndex());
-        assertEquals(new Integer(4), ii9.getSteps().get(0).getPredicateListEntryOrLeafListMemberIndex());
+        assertEquals(Integer.valueOf(4), ii9.getSteps().get(0).getPredicateListEntryOrLeafListMemberIndex());
 
         // - - - - - - - - - - - -
 
@@ -220,7 +220,7 @@ public class InstanceIdentifierTest {
         assertEquals("namespace2", ii11.getSteps().get(1).getDataNodeNsai().getNamespace());
         assertNull(ii11.getSteps().get(1).getPredicateKeyValues());
         assertNull(ii11.getSteps().get(1).getPredicateLeafListMemberValue());
-        assertEquals(new Integer(5), ii11.getSteps().get(1).getPredicateListEntryOrLeafListMemberIndex());
+        assertEquals(Integer.valueOf(5), ii11.getSteps().get(1).getPredicateListEntryOrLeafListMemberIndex());
 
         assertEquals("node3", ii11.getSteps().get(2).getDataNodeNsai().getIdentifier());
         assertEquals("namespace3", ii11.getSteps().get(2).getDataNodeNsai().getNamespace());

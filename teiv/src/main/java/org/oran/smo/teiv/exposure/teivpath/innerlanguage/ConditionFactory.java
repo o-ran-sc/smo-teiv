@@ -68,9 +68,9 @@ public class ConditionFactory {
             case ATTRIBUTES -> new AttributesCondition();
             case RELATION -> new RelationCondition();
             case ID -> switch (scopeObject.getTopologyObjectType()) {
-                    case ASSOCIATION -> new AssociationCondition();
-                    default -> new IdCondition();
-                };
+                case ASSOCIATION -> new AssociationCondition();
+                default -> new IdCondition();
+            };
             case NOT_NULL -> new AssociationCondition();
             case CLASSIFIERS, SOURCE_IDS -> new ConsumerDataListCondition();
             case DECORATORS -> new ConsumerDataMapCondition();
