@@ -201,8 +201,8 @@ public class SelectBlockTest {
                         "teiv_data.\"AntennaModule\".\"REL_ID_SECTOR_GROUPS_ANTENNAMODULE\"").as(hashAlias(
                                 "o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE.id")), PRIMITIVE, field(
                                         "teiv_data.\"AntennaModule\".\"REL_CD_classifiers_SECTOR_GROUPS_ANTENNAMODULE\"")
-                                                .as(hashAlias(
-                                                        "o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE.classifiers")),
+                                        .as(hashAlias(
+                                                "o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE.classifiers")),
                         CONTAINER, field("teiv_data.\"AntennaModule\".\"REL_FK_grouped-by-sector\"").as(hashAlias(
                                 "o-ran-smo-teiv-rel-equipment-ran:SECTOR_GROUPS_ANTENNAMODULE.aSide")), PRIMITIVE, field(
                                         "teiv_data.\"AntennaModule\".\"id\"").as(hashAlias(

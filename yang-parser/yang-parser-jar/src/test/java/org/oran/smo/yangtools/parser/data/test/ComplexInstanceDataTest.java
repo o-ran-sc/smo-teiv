@@ -232,13 +232,13 @@ public class ComplexInstanceDataTest extends YangTestCommon {
 
         final LeafInstance leaf11data = getLeafInstance(cont1data, NS1, "leaf11");
         assertTrue(leaf11data != null);
-        assertTrue(leaf11data.getValue().equals(new Long(42)));
+        assertTrue(leaf11data.getValue().equals(Long.valueOf(42)));
 
         final LeafInstance leaf12data = getLeafInstance(cont1data, NS1, "leaf12");
         assertTrue(leaf12data != null);
         assertTrue(leaf12data.getDataDomNode().getNamespace().equals("test:module1"));
         assertTrue(leaf12data.getDataDomNode().getModuleName().equals("module1"));
-        assertTrue(leaf12data.getValue().equals(new Long(58)));
+        assertTrue(leaf12data.getValue().equals(Long.valueOf(58)));
 
         final LeafInstance leaf13data = getLeafInstance(cont1data, NS1, "leaf13");
         assertTrue(leaf13data != null);
@@ -258,7 +258,7 @@ public class ComplexInstanceDataTest extends YangTestCommon {
         assertTrue(leaf21data != null);
         assertTrue(leaf21data.getDataDomNode().getNamespace().equals("test:module1"));
         assertTrue(leaf21data.getDataDomNode().getModuleName().equals("module1"));
-        assertTrue(leaf21data.getValue().equals(new Long(4)));
+        assertTrue(leaf21data.getValue().equals(Long.valueOf(4)));
 
         ContainerInstance cont22data = getContainerInstance(list2data4, NS1, "cont22");
         assertTrue(cont22data != null);
@@ -288,7 +288,7 @@ public class ComplexInstanceDataTest extends YangTestCommon {
 
         leaf21data = getLeafInstance(list2data5, NS1, "leaf21");
         assertTrue(leaf21data != null);
-        assertTrue(leaf21data.getValue().equals(new Long(5)));
+        assertTrue(leaf21data.getValue().equals(Long.valueOf(5)));
 
         cont22data = getContainerInstance(list2data5, NS1, "cont22");
         assertTrue(cont22data != null);
@@ -315,7 +315,7 @@ public class ComplexInstanceDataTest extends YangTestCommon {
 
         leaf21data = getLeafInstance(list2data6, NS1, "leaf21");
         assertTrue(leaf21data != null);
-        assertTrue(leaf21data.getValue().equals(new Long(6)));
+        assertTrue(leaf21data.getValue().equals(Long.valueOf(6)));
 
         cont22data = getContainerInstance(list2data6, NS1, "cont22");
         assertTrue(cont22data == null);

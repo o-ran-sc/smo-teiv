@@ -81,7 +81,7 @@ public class IdentityRefValueTest {
          * Equality
          */
         assertTrue(new IdentityRefValue("ns1", "module1", "identity1").equals(null) == false);
-        assertTrue(new IdentityRefValue("ns1", "module1", "identity1").equals(new Integer(1)) == false);
+        assertTrue(new IdentityRefValue("ns1", "module1", "identity1").equals(Integer.valueOf(1)) == false);
 
         assertTrue(new IdentityRefValue("ns1", "module1", "identity1").equals(new IdentityRefValue("ns1", "module1",
                 "identityXXX")) == false);

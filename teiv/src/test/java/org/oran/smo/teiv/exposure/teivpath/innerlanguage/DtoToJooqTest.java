@@ -350,7 +350,7 @@ class DtoToJooqTest {
         Condition actualCondition = scopeObject.getCondition();
         assertEquals(condition(
                 "ST_CoveredBy(\"geo-location\", ST_GeographyFromText('POLYGON((12.3426 45.24568, 13.3426 45.24568, 12.3426 44.24568, 13.3426 44.24568))'))")
-                        .toString(), actualCondition.toString());
+                .toString(), actualCondition.toString());
     }
 
     @Test
@@ -362,7 +362,7 @@ class DtoToJooqTest {
         Condition actualCondition = scopeObject.getCondition();
         assertEquals(condition(
                 "ST_CoveredBy(\"geo-location\", ST_GeographyFromText('POLYGON((12.3426 45.24568, 13.3426 45.24568, 12.3426 44.24568, 13.3426 -44.24568, 35.2 45.6))'))")
-                        .toString(), actualCondition.toString());
+                .toString(), actualCondition.toString());
     }
 
     @Test

@@ -28,7 +28,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.2</version>
+        <version>3.4.10</version>
         <relativePath />
     </parent>
     <groupId>org.oran.smo</groupId>
@@ -52,23 +52,25 @@
 
     <properties>
         <!-- Set compiler Java version, MUST match the Dockerfile JDK version -->
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <!-- Versions of co-located functions to use -->
         <version.yang-parser-jar>1.2.1-SNAPSHOT</version.yang-parser-jar> <!--use current master snapshot version -->
+
         <!-- 3PP Versions -->
         <version.jackson-databind-nullable>0.2.6</version.jackson-databind-nullable>
-        <version.lombok>1.18.26</version.lombok>
+        <version.lombok>1.18.38</version.lombok>
         <version.logback>6.6</version.logback>
-        <!-- Updated from 1.9.0 to comply with CVE-2022-36437 -->
         <version.micrometer>1.10.6</version.micrometer>
         <version.cloudevents-kafka>2.5.0</version.cloudevents-kafka>
         <version.cloudevents-json-jackson>2.5.0</version.cloudevents-json-jackson>
         <version.springdoc-openapi>2.1.0</version.springdoc-openapi>
-        <!-- Updated from version 1.33 to comply with CVE-2022-1471 -->
-        <version.postgresql>42.5.4</version.postgresql>
+        <version.postgresql>42.5.6</version.postgresql>
         <jooq.version>3.18.6</jooq.version>
         <version.saxpath>1.0-FCS</version.saxpath>
+        <version.snakeyaml>2.3</version.snakeyaml>
+
         <!-- External Yang model source prefix URI -->
         <source.3gpp.Rel18_SA103>https://forge.3gpp.org/rep/sa5/MnS/-/raw/Tag_Rel18_SA103/yang-models/</source.3gpp.Rel18_SA103>
         <source.3gpp.Rel18_SA98>https://forge.3gpp.org/rep/sa5/MnS/-/raw/Tag_Rel18_SA98/yang-models/</source.3gpp.Rel18_SA98>
@@ -80,27 +82,26 @@
         <version.spring-cloud>2023.0.0</version.spring-cloud>
         <version.mockitoinline>5.2.0</version.mockitoinline>
         <version.testcontainers>1.18.0</version.testcontainers>
+
         <!-- Plugin Dependencies -->
         <version.openapi-generator-maven-plugin>7.7.0</version.openapi-generator-maven-plugin>
-        <version.spotless-plugin>2.30.0</version.spotless-plugin>
+        <version.spotless-plugin>2.46.1</version.spotless-plugin>
         <version.contract-documentation-generator-mvn-plugin>1.0.1</version.contract-documentation-generator-mvn-plugin>
         <version.asciidoctor-maven-plugin>2.2.1</version.asciidoctor-maven-plugin>
         <version.spring-cloud-starter-contract-verifier>3.0.2</version.spring-cloud-starter-contract-verifier>
         <version.reactor-test>3.2.3.RELEASE</version.reactor-test>
-        <!-- Updated from 3.0 to comply with CVE-2023-20861, CVE-2022-22971 & 17
-            more -->
         <version.license-maven-plugin>4.2</version.license-maven-plugin>
         <version.sonar-maven-plugin>3.9.1.2184</version.sonar-maven-plugin>
         <version.antrun-maven-plugin>3.1.0</version.antrun-maven-plugin>
         <version.antlr>4.13.0</version.antlr>
         <docker-maven-plugin>0.43.4</docker-maven-plugin>
+
         <!-- JaCoCo plugin for Java Code Coverage -->
-        <version.jacoco-maven.plugin>0.8.8</version.jacoco-maven.plugin>
+        <version.jacoco-maven.plugin>0.8.13</version.jacoco-maven.plugin>
         <!-- Minimum ratio or percentage of instructions to be covered, used by
             JaCoCo plugin. Industry standard is 0.8 or 80% which allows at least 80%
             of the code to be covered by the test cases. -->
         <jacoco-maven-plugin.coveredratio.minimum>0.8</jacoco-maven-plugin.coveredratio.minimum>
-        <version.snakeyaml>2.3</version.snakeyaml>
     </properties>
     <build>
         <pluginManagement>

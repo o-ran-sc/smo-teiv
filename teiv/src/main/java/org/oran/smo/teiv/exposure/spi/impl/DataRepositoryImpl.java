@@ -125,8 +125,8 @@ public class DataRepositoryImpl implements DataRepository {
         return runMethodSafe(() -> readDataDslContext.select(field(relationType.getTableName() + "." + String.format(
                 QUOTED_STRING, relationType.getIdColumnName()))).from(table(relationType.getTableName())).where(field(
                         relationType.getTableName() + "." + String.format(QUOTED_STRING, relationType.getIdColumnName()))
-                                .isNotNull().and(finalCondition)).orderBy(field(String.format(QUOTED_STRING, "id"))).limit(
-                                        batchSize).fetchInto(String.class));
+                        .isNotNull().and(finalCondition)).orderBy(field(String.format(QUOTED_STRING, "id"))).limit(
+                                batchSize).fetchInto(String.class));
     }
 
     @Override
@@ -142,8 +142,8 @@ public class DataRepositoryImpl implements DataRepository {
         return runMethodSafe(() -> readDataDslContext.select(field(relationType.getTableName() + "." + String.format(
                 QUOTED_STRING, relationType.getIdColumnName()))).from(table(relationType.getTableName())).where(field(
                         relationType.getTableName() + "." + String.format(QUOTED_STRING, relationType.getIdColumnName()))
-                                .isNotNull().and(finalCondition)).orderBy(field(String.format(QUOTED_STRING, "id"))).limit(
-                                        batchSize).fetchInto(String.class));
+                        .isNotNull().and(finalCondition)).orderBy(field(String.format(QUOTED_STRING, "id"))).limit(
+                                batchSize).fetchInto(String.class));
     }
 
     @Override
