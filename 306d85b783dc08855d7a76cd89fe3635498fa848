@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7cf3ce8_f72870d7",
+        "filename": "adapters/common-utils/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "org.oran.smo.teiv.adapters I think\n\nThis should change in the parent POM I think. \nSorry should have spotted that in the review when this adapters package was added originally,",
+      "range": {
+        "startLine": 7,
+        "startChar": 26,
+        "endLine": 7,
+        "endChar": 32
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a7517f8_0914fd0a",
+        "filename": "adapters/common-utils/src/main/java/org/oran/smo/common/utils/Constants.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "Should we take this direct from the models?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 53
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e9d52ae_d6bb21d3",
+        "filename": "adapters/common-utils/src/main/java/org/oran/smo/common/utils/Constants.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "some of these constants seem a bit specific to the NCMP adapter - maybe too specific for a common-utils projects ... But maybe lets see if other adapters might use this info, or additional info from other adapters might be useful here.",
+      "range": {
+        "startLine": 28,
+        "startChar": 2,
+        "endLine": 37,
+        "endChar": 1
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "870eafb7_f01b2e2f",
+        "filename": "adapters/common-utils/src/main/java/org/oran/smo/common/utils/TeivIdBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "namespace should be org.oran.smo.teiv.adapters.common.utils i think",
+      "range": {
+        "startLine": 20,
+        "startChar": 18,
+        "endLine": 20,
+        "endChar": 34
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa1f4449_14075d20",
+        "filename": "adapters/common-utils/src/main/java/org/oran/smo/common/utils/TeivIdBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "Again, these are very specific to just the NCMP adapter ... \nI suppose we will add more here for other adapters - so probably OK for now.",
+      "range": {
+        "startLine": 50,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 5
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a33a443_3c4aebb4",
+        "filename": "adapters/ncmp-to-teiv-adapter/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "again .....smo.teiv",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 31
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20433be3_74e67efa",
+        "filename": "adapters/ncmp-to-teiv-adapter/src/main/java/org/oran/smo/ncmp_to_teiv_adapter/models/GNBCUCPFunction.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-21T11:52:41Z",
+      "side": 1,
+      "message": "again - package name should have been corrected during initial review adding this adapter",
+      "range": {
+        "startLine": 20,
+        "startChar": 18,
+        "endLine": 20,
+        "endChar": 22
+      },
+      "revId": "306d85b783dc08855d7a76cd89fe3635498fa848",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
