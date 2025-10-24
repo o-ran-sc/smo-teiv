@@ -1,0 +1,9 @@
+Code-Review+2: John Keeney <john.keeney@est.tech>
+Code-Review+1: Krupa Nagabhushan <krupa.nagabhushan@est.tech>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Verified+1: ORAN Jobbuilder <releng+oran-jobbuilder@linuxfoundation.org>
+Submitted-by: John Keeney <john.keeney@est.tech>
+Submitted-at: Fri, 24 Oct 2025 09:15:28 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/smo/teiv/+/15162
+Project: smo/teiv
+Branch: refs/heads/master
