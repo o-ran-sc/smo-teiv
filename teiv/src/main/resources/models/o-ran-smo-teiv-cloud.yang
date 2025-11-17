@@ -38,6 +38,12 @@ module o-ran-smo-teiv-cloud {
 
         SPDX-License-Identifier: Apache-2.0";
 
+    revision "2025-10-23" {
+        description "Initial revision.";
+        or-teiv-yext:label 1.0.0;
+        reference "O-RAN.WG10.TE&IV-DM.0-R005-v04.00";
+    }
+
     revision "2024-10-04" {
         description "Added groupings, Origin_Entity_Mapping_Grp or Origin_Relationship_Mapping_Grp
         to the corresponding topology objects.";
@@ -57,81 +63,114 @@ module o-ran-smo-teiv-cloud {
     or-teiv-yext:domain CLOUD;
 
     list CloudifiedNF {
-        description "A RAN Network Function software that is deployed in the O-Cloud via one or more NF Deployments.";
+        description "Represents the Cloudified Network Function in the O-Cloud domain";
 
         uses or-teiv-types:Top_Grp_Type;
         uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
-            leaf name {
-                description "Name of Cloudified NF";
+            description "Container for CloudifiedNF attributes";
+            leaf cloudifiedNfId {
                 type string;
+                description "Identifier of the CloudifiedNF";
+            }
+            leaf serviceOrchestrationId {
+                type string;
+                description "Identifier of the service orchestrator";
             }
         }
     }
 
     list NFDeployment {
-        description "A software deployment on O-Cloud resources that realizes, all or part of, a Cloudified NF.";
+        description "Represents the NF Deployment in the O-Cloud domain";
 
         uses or-teiv-types:Top_Grp_Type;
         uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
-            leaf name {
-                description "Name of NF Deployment";
+            description "Container for NF Deployment attributes";
+            leaf nfDeploymentId {
                 type string;
+                description "Identifier of the NF Deployment";
+            }
+            leaf resourceOrchestrationId {
+                type string;
+                description "Identifier of the resoure orchestrator";
+            }
+            leaf serviceOrchestrationId {
+                type string;
+                description "Identifier of the service orchestrator";
             }
         }
     }
 
     list OCloudNamespace {
-        description "OCloudNamespace provide a mechanism for isolating
-        groups of resources within a single cluster.";
+        description "Represents the O-Cloud Namespace in the O-Cloud domain";
 
         uses or-teiv-types:Top_Grp_Type;
         uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
-            leaf name {
-                description "Name of Cloud Namespace";
+            description "Container for O-Cloud Namespace attributes";
+            leaf oCloudNamespaceName {
                 type string;
+                description "Name of the O-Cloud Namespace";
             }
         }
     }
 
     list NodeCluster {
-        description "A NodeCluster manages a collection of Nodes.";
+        description "Represents the Node Cluster in the O-Cloud domain";
 
         uses or-teiv-types:Top_Grp_Type;
         uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
-            leaf name {
-                description "Name of Node Cluster";
+            description "Container for Node Cluster attributes";
+            leaf nodeClusterId {
                 type string;
+                description "Identifier of the Node Cluster";
+            }
+            leaf nodeClusterName {
+                type string;
+                description "Name of the Node Cluster";
+            }
+            leaf resourceOrchestrationId {
+                type string;
+                description "Identifier of the resoure orchestrator";
+            }
+            leaf serviceOrchestrationId {
+                type string;
+                description "Identifier of the service orchestrator";
             }
         }
     }
 
     list OCloudSite {
-        description "Represents the infrastructure that
-        hosts the NF Deployment.";
+        description "Represents the O-Cloud Site in the O-Cloud domain";
 
         uses or-teiv-types:Top_Grp_Type;
         uses or-teiv-types:Origin_Entity_Mapping_Grp;
         key id;
 
         container attributes {
-            leaf name {
-                description "Name of Cloud Site";
-                type string;
+            description "Container for O-Cloud Site attributes";
+            container oCloudSiteLocation {
+                description "Representation of O-Cloud Site location";
+                uses or-teiv-types:GeoInformation;
             }
-
-            uses geo:geo-location;
+            leaf oCloudSiteId {
+                type string;
+                description "Identifier of the O-Cloud Site";
+            }
+            leaf-list supportedMITs {
+                type string;
+                description "List of the supported MITs in the O-Cloud Site";
+            }
         }
     }
 
