@@ -701,6 +701,7 @@
                                 <argument>--schema.model.output=src/test/resources/pgsqlschema/01_init-oran-smo-teiv-model.sql</argument>
                                 <argument>--schema.consumer-data.output=src/test/resources/pgsqlschema/02_init-oran-smo-teiv-consumer-data.sql</argument>
                                 <argument>--schema.groups.output=src/test/resources/pgsqlschema/03_init-oran-smo-teiv-groups.sql</argument>
+                                <argument>--graphs.output=${project.parent.basedir}/docs/_static/data-model</argument>
                             </arguments>
                         </configuration>
                     </execution>

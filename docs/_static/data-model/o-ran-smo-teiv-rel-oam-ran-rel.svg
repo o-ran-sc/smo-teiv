@@ -1,88 +1,88 @@
-<svg width="654px" height="131px"
- viewBox="0.00 0.00 654.00 131.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 127.0)">
+<svg width="696px" height="133px"
+ viewBox="0.00 0.00 696.28 132.80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 128.8)">
 <title>moduleName</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-127 650,-127 650,4 -4,4"/>
-<!-- ManagedElement -->
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-128.8 692.28,-128.8 692.28,4 -4,4"/>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement -->
 <g id="node1" class="node">
-<title>ManagedElement</title>
-<polygon fill="#3663f0" fill-opacity="0.254902" stroke="black" points="414.5,-123 290.5,-123 290.5,-87 414.5,-87 414.5,-123"/>
-<text text-anchor="middle" x="352.5" y="-101.3" font-family="Arial" font-size="14.00">ManagedElement</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement</title>
+<polygon fill="#3663f0" fill-opacity="0.254902" stroke="black" points="444.87,-124.8 308.11,-124.8 308.11,-88.8 444.87,-88.8 444.87,-124.8"/>
+<text text-anchor="middle" x="376.49" y="-102.6" font-family="Arial" font-size="14.00">ManagedElement</text>
 </g>
-<!-- NearRTRICFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction -->
 <g id="node2" class="node">
-<title>NearRTRICFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="139,-36 0,-36 0,0 139,0 139,-36"/>
-<text text-anchor="middle" x="69.5" y="-14.3" font-family="Arial" font-size="14.00">NearRTRICFunction</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="148.97,-36 0.01,-36 0.01,0 148.97,0 148.97,-36"/>
+<text text-anchor="middle" x="74.49" y="-13.8" font-family="Arial" font-size="14.00">NearRTRICFunction</text>
 </g>
-<!-- ManagedElement&#45;&gt;NearRTRICFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction -->
 <g id="edge5" class="edge">
-<title>ManagedElement&#45;&gt;NearRTRICFunction</title>
-<path fill="none" stroke="#528b8b" d="M290.27,-94.02C258.52,-88.17 219.53,-79.78 185.5,-69 161.01,-61.24 134.63,-50.11 113.24,-40.32"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="104.08,-36.08 115.05,-36.2 108.62,-38.18 113.16,-40.28 113.16,-40.28 113.16,-40.28 108.62,-38.18 111.26,-44.37 104.08,-36.08 104.08,-36.08"/>
-<text text-anchor="middle" x="220.5" y="-57.8" font-family="Arial" font-size="14.00">MANAGES</text>
-<text text-anchor="middle" x="92.58" y="-39.88" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="279.77" y="-97.82" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction</title>
+<path fill="none" stroke="#528b8b" d="M308.03,-95.84C274.29,-90.07 233.23,-81.76 197.3,-70.8 170.55,-62.64 141.69,-50.64 118.67,-40.25"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="109.51,-36.06 120.47,-36.12 114.05,-38.14 118.6,-40.22 118.6,-40.22 118.6,-40.22 114.05,-38.14 116.73,-44.31 109.51,-36.06 109.51,-36.06"/>
+<text text-anchor="middle" x="234.58" y="-58.2" font-family="Arial" font-size="14.00">MANAGES</text>
+<text text-anchor="middle" x="96.91" y="-40.26" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="296.13" y="-100.04" font-family="Arial" font-size="14.00">0..*</text>
 </g>
-<!-- OCUCPFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction -->
 <g id="node3" class="node">
-<title>OCUCPFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="275.5,-36 157.5,-36 157.5,0 275.5,0 275.5,-36"/>
-<text text-anchor="middle" x="216.5" y="-14.3" font-family="Arial" font-size="14.00">OCUCPFunction</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="294.47,-36 166.51,-36 166.51,0 294.47,0 294.47,-36"/>
+<text text-anchor="middle" x="230.49" y="-13.8" font-family="Arial" font-size="14.00">OCUCPFunction</text>
 </g>
-<!-- ManagedElement&#45;&gt;OCUCPFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction -->
 <g id="edge4" class="edge">
-<title>ManagedElement&#45;&gt;OCUCPFunction</title>
-<path fill="none" stroke="#528b8b" d="M312.02,-86.97C300.88,-81.72 288.97,-75.57 278.5,-69 266.18,-61.27 253.51,-51.45 242.87,-42.57"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="235.16,-36 245.69,-39.06 238.97,-39.24 242.78,-42.49 242.78,-42.49 242.78,-42.49 238.97,-39.24 239.86,-45.91 235.16,-36 235.16,-36"/>
-<text text-anchor="middle" x="313.5" y="-57.8" font-family="Arial" font-size="14.00">MANAGES</text>
-<text text-anchor="middle" x="223.66" y="-39.8" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="301.52" y="-75.77" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction</title>
+<path fill="none" stroke="#528b8b" d="M333.39,-88.65C321.72,-83.43 309.29,-77.34 298.3,-70.8 284.44,-62.55 270.1,-51.95 258.2,-42.49"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="250.39,-36.17 260.99,-38.96 254.27,-39.31 258.16,-42.46 258.16,-42.46 258.16,-42.46 254.27,-39.31 255.33,-45.96 250.39,-36.17 250.39,-36.17"/>
+<text text-anchor="middle" x="335.58" y="-58.2" font-family="Arial" font-size="14.00">MANAGES</text>
+<text text-anchor="middle" x="237.79" y="-40.37" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="321.49" y="-76.05" font-family="Arial" font-size="14.00">0..*</text>
 </g>
-<!-- OCUUPFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction -->
 <g id="node4" class="node">
-<title>OCUUPFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="411.5,-36 293.5,-36 293.5,0 411.5,0 411.5,-36"/>
-<text text-anchor="middle" x="352.5" y="-14.3" font-family="Arial" font-size="14.00">OCUUPFunction</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="440.47,-36 312.51,-36 312.51,0 440.47,0 440.47,-36"/>
+<text text-anchor="middle" x="376.49" y="-13.8" font-family="Arial" font-size="14.00">OCUUPFunction</text>
 </g>
-<!-- ManagedElement&#45;&gt;OCUUPFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction -->
 <g id="edge3" class="edge">
-<title>ManagedElement&#45;&gt;OCUUPFunction</title>
-<path fill="none" stroke="#528b8b" d="M352.5,-86.8C352.5,-75.16 352.5,-59.55 352.5,-46.24"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="352.5,-36.18 357,-46.18 352.5,-41.18 352.5,-46.18 352.5,-46.18 352.5,-46.18 352.5,-41.18 348,-46.18 352.5,-36.18 352.5,-36.18"/>
-<text text-anchor="middle" x="387.5" y="-57.8" font-family="Arial" font-size="14.00">MANAGES</text>
-<text text-anchor="middle" x="341" y="-39.98" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="342" y="-75.6" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction</title>
+<path fill="none" stroke="#528b8b" d="M376.49,-88.65C376.49,-76.52 376.49,-60.02 376.49,-46.12"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="376.49,-36.11 380.99,-46.11 376.49,-41.11 376.49,-46.11 376.49,-46.11 376.49,-46.11 376.49,-41.11 371.99,-46.11 376.49,-36.11 376.49,-36.11"/>
+<text text-anchor="middle" x="413.58" y="-58.2" font-family="Arial" font-size="14.00">MANAGES</text>
+<text text-anchor="middle" x="363.89" y="-40.31" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="364.59" y="-76.05" font-family="Arial" font-size="14.00">0..*</text>
 </g>
-<!-- ODUFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="node5" class="node">
-<title>ODUFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="529,-36 430,-36 430,0 529,0 529,-36"/>
-<text text-anchor="middle" x="479.5" y="-14.3" font-family="Arial" font-size="14.00">ODUFunction</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="564.97,-36 458,-36 458,0 564.97,0 564.97,-36"/>
+<text text-anchor="middle" x="511.49" y="-13.8" font-family="Arial" font-size="14.00">ODUFunction</text>
 </g>
-<!-- ManagedElement&#45;&gt;ODUFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="edge2" class="edge">
-<title>ManagedElement&#45;&gt;ODUFunction</title>
-<path fill="none" stroke="#528b8b" d="M394.47,-86.95C405.28,-81.81 416.64,-75.73 426.5,-69 437.27,-61.64 447.97,-52.1 456.9,-43.33"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="463.95,-36.2 460.11,-46.48 460.43,-39.76 456.91,-43.31 456.91,-43.31 456.91,-43.31 460.43,-39.76 453.72,-40.15 463.95,-36.2 463.95,-36.2"/>
-<text text-anchor="middle" x="480.5" y="-57.8" font-family="Arial" font-size="14.00">MANAGES</text>
-<text text-anchor="middle" x="452.45" y="-40" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="383.97" y="-75.75" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
+<path fill="none" stroke="#528b8b" d="M421.09,-88.7C432.36,-83.6 444.18,-77.55 454.49,-70.8 466.32,-63.06 478.1,-52.87 487.85,-43.58"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="495.2,-36.39 491.2,-46.6 491.63,-39.89 488.06,-43.39 488.06,-43.39 488.06,-43.39 491.63,-39.89 484.91,-40.17 495.2,-36.39 495.2,-36.39"/>
+<text text-anchor="middle" x="513.58" y="-58.2" font-family="Arial" font-size="14.00">MANAGES</text>
+<text text-anchor="middle" x="482.61" y="-40.59" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="409.19" y="-76.1" font-family="Arial" font-size="14.00">0..*</text>
 </g>
-<!-- ORUFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction -->
 <g id="node6" class="node">
-<title>ORUFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="646,-36 547,-36 547,0 646,0 646,-36"/>
-<text text-anchor="middle" x="596.5" y="-14.3" font-family="Arial" font-size="14.00">ORUFunction</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="688.07,-36 582.9,-36 582.9,0 688.07,0 688.07,-36"/>
+<text text-anchor="middle" x="635.49" y="-13.8" font-family="Arial" font-size="14.00">ORUFunction</text>
 </g>
-<!-- ManagedElement&#45;&gt;ORUFunction -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction -->
 <g id="edge1" class="edge">
-<title>ManagedElement&#45;&gt;ORUFunction</title>
-<path fill="none" stroke="#528b8b" d="M414.8,-96.53C446.92,-91.31 486.23,-82.73 519.5,-69 535.94,-62.22 552.67,-51.85 566.32,-42.31"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="574.81,-36.21 569.32,-45.7 570.75,-39.13 566.69,-42.05 566.69,-42.05 566.69,-42.05 570.75,-39.13 564.07,-38.39 574.81,-36.21 574.81,-36.21"/>
-<text text-anchor="middle" x="580.5" y="-57.8" font-family="Arial" font-size="14.00">MANAGES</text>
-<text text-anchor="middle" x="563.31" y="-40.01" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="425.3" y="-100.33" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction</title>
+<path fill="none" stroke="#528b8b" d="M444.98,-98.45C478.8,-93.3 519.71,-84.76 554.49,-70.8 572.49,-63.58 590.84,-52.24 605.51,-42.01"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="613.69,-36.16 608.18,-45.63 609.62,-39.07 605.56,-41.97 605.56,-41.97 605.56,-41.97 609.62,-39.07 602.94,-38.32 613.69,-36.16 613.69,-36.16"/>
+<text text-anchor="middle" x="621.58" y="-58.2" font-family="Arial" font-size="14.00">MANAGES</text>
+<text text-anchor="middle" x="601.09" y="-40.36" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="456.87" y="-102.65" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 </g>
 </svg>

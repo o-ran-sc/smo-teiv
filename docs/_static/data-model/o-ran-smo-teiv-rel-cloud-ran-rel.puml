@@ -1,0 +1,7 @@
+@startuml
+skinparam componentStyle rectangle
+NFDeployment "0..*" --> "0..*" NearRTRICFunction : SERVES
+NFDeployment "0..*" --> "0..*" OCUCPFunction : SERVES
+NFDeployment "0..*" --> "0..*" OCUUPFunction : SERVES
+NFDeployment "0..*" --> "0..*" ODUFunction : SERVES
+@enduml

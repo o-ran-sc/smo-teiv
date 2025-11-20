@@ -1,0 +1,7 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-physicalPhysicalAppliance" ["label"="PhysicalAppliance","style"="filled","fillcolor"="#074EE241"]
+"o-ran-smo-teiv-physicalSite" ["style"="filled","fillcolor"="#074EE241","label"="Site"]
+"o-ran-smo-teiv-physicalPhysicalAppliance" -> "o-ran-smo-teiv-physicalSite" ["label"="INSTALLEDAT","headlabel"="0..*","taillabel"="0..*","arrowhead"="vee"]
+}

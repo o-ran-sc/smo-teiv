@@ -1,0 +1,33 @@
+@startuml
+skinparam class {
+    BackgroundColor<<Entity>> #9A38E341
+    BackgroundColor<<Module>> LightBlue
+}
+class o-ran-smo-teiv-equipment <<Module>> {
+}
+class AntennaModule <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        antennaBeamWidth : uint32
+        antennaModelNumber : string
+        azimuth : decimal64
+        electricalAntennaTilt : int32
+        geo-location : << Refer to Module >>
+        horizontalBeamWidth : decimal64
+        mechanicalAntennaBearing : int32
+        mechanicalAntennaTilt : int32
+        positionWithinSector : string
+        totalTilt : int32
+        verticalBeamWidth : decimal64
+}
+"o-ran-smo-teiv-equipment" --> AntennaModule
+class Site <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        geo-location : << Refer to Module >>
+        name : string
+}
+"o-ran-smo-teiv-equipment" --> Site
+@enduml

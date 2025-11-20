@@ -1,0 +1,14 @@
+@startuml
+skinparam class {
+    BackgroundColor<<Entity>> #3663F041
+    BackgroundColor<<Module>> LightBlue
+}
+class o-ran-smo-teiv-oam <<Module>> {
+}
+class ManagedElement <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+}
+"o-ran-smo-teiv-oam" --> ManagedElement
+@enduml
