@@ -1,0 +1,13 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-cloudNFDeployment" ["label"="NFDeployment","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-ranNearRTRICFunction" ["label"="NearRTRICFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranOCUCPFunction" ["label"="OCUCPFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranOCUUPFunction" ["label"="OCUUPFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranODUFunction" ["label"="ODUFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-cloudNFDeployment" -> "o-ran-smo-teiv-ranODUFunction" ["label"="SERVES","headlabel"="0..*","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudNFDeployment" -> "o-ran-smo-teiv-ranOCUUPFunction" ["label"="SERVES","headlabel"="0..*","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudNFDeployment" -> "o-ran-smo-teiv-ranOCUCPFunction" ["label"="SERVES","headlabel"="0..*","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudNFDeployment" -> "o-ran-smo-teiv-ranNearRTRICFunction" ["label"="SERVES","headlabel"="0..*","taillabel"="0..*","arrowhead"="vee"]
+}

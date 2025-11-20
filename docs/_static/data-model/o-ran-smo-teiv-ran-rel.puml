@@ -1,0 +1,46 @@
+@startuml
+skinparam componentStyle rectangle
+class AntennaCapability #366F3441 {
+}
+class NRCellCU #366F3441 {
+}
+class NRCellDU #366F3441 {
+}
+class NRSectorCarrier #366F3441 {
+}
+class NearRTRICFunction #366F3441 {
+}
+class OCUCPFunction #366F3441 {
+}
+class OCUUPFunction #366F3441 {
+}
+class ODUFunction #366F3441 {
+}
+class ORUFunction #366F3441 {
+}
+class SMO #366F3441 {
+}
+class Sector #366F3441 {
+}
+NearRTRICFunction "0..*" --> "0..1" SMO : O1LINK
+NRCellDU "0..1" --> "0..*" NRSectorCarrier : USES
+NRSectorCarrier "0..*" --> "0..1" AntennaCapability : USES
+OCUCPFunction "0..*" --> "0..1" OCUUPFunction : E1LINK
+OCUCPFunction "0..*" --> "0..1" NearRTRICFunction : E2LINK
+OCUCPFunction "0..*" --> "0..1" SMO : O1LINK
+OCUCPFunction "1..1" --> "0..*" NRCellCU : PROVIDES
+OCUUPFunction "0..*" --> "0..1" NearRTRICFunction : E2LINK
+ODUFunction "0..*" --> "0..1" NearRTRICFunction : E2LINK
+ODUFunction "0..1" --> "0..1" OCUCPFunction : F1CLINK
+ODUFunction "0..*" --> "0..1" OCUUPFunction : F1ULINK
+ODUFunction "0..*" --> "0..1" SMO : O1LINK
+ODUFunction "1..1" --> "0..*" NRCellDU : PROVIDES
+ODUFunction "1..1" --> "0..*" NRSectorCarrier : PROVIDES
+ORUFunction "0..*" --> "0..1" SMO : O1LINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHCLINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHMLINK
+ORUFunction "0..*" --> "0..1" SMO : OFHMLINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHSLINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHULINK
+Sector "0..1" --> "0..*" NRCellDU : GROUPS
+@enduml

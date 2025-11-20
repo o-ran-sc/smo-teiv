@@ -1,0 +1,51 @@
+@startuml
+skinparam class {
+    BackgroundColor<<Entity>> #89240A41
+    BackgroundColor<<Module>> LightBlue
+}
+class o-ran-smo-teiv-cloud <<Module>> {
+}
+class CloudifiedNF <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        cloudifiedNfId : string
+        serviceOrchestrationId : string
+}
+"o-ran-smo-teiv-cloud" --> CloudifiedNF
+class NFDeployment <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        nfDeploymentId : string
+        resourceOrchestrationId : string
+        serviceOrchestrationId : string
+}
+"o-ran-smo-teiv-cloud" --> NFDeployment
+class NodeCluster <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        nodeClusterId : string
+        nodeClusterName : string
+        resourceOrchestrationId : string
+        serviceOrchestrationId : string
+}
+"o-ran-smo-teiv-cloud" --> NodeCluster
+class OCloudNamespace <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        oCloudNamespaceName : string
+}
+"o-ran-smo-teiv-cloud" --> OCloudNamespace
+class OCloudSite <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        oCloudSiteId : string
+        oCloudSiteLocation : << Refer to Module >>
+        supportedMITs : string
+}
+"o-ran-smo-teiv-cloud" --> OCloudSite
+@enduml

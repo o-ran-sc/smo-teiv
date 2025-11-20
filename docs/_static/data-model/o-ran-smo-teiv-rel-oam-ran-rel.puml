@@ -1,0 +1,8 @@
+@startuml
+skinparam componentStyle rectangle
+ManagedElement "1..1" --> "0..*" NearRTRICFunction : MANAGES
+ManagedElement "1..1" --> "0..*" OCUCPFunction : MANAGES
+ManagedElement "1..1" --> "0..*" OCUUPFunction : MANAGES
+ManagedElement "1..1" --> "0..*" ODUFunction : MANAGES
+ManagedElement "1..1" --> "0..*" ORUFunction : MANAGES
+@enduml

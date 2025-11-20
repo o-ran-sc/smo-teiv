@@ -1,0 +1,90 @@
+@startuml
+skinparam componentStyle rectangle
+class CloudifiedNF #89240A41 {
+}
+class NFDeployment #89240A41 {
+}
+class NodeCluster #89240A41 {
+}
+class OCloudNamespace #89240A41 {
+}
+class OCloudSite #89240A41 {
+}
+class AntennaModule #9A38E341 {
+}
+class Site #9A38E341 {
+}
+class ManagedElement #3663F041 {
+}
+class PhysicalAppliance #074EE241 {
+}
+class Site #074EE241 {
+}
+class AntennaCapability #366F3441 {
+}
+class NRCellCU #366F3441 {
+}
+class NRCellDU #366F3441 {
+}
+class NRSectorCarrier #366F3441 {
+}
+class NearRTRICFunction #366F3441 {
+}
+class OCUCPFunction #366F3441 {
+}
+class OCUUPFunction #366F3441 {
+}
+class ODUFunction #366F3441 {
+}
+class ORUFunction #366F3441 {
+}
+class SMO #366F3441 {
+}
+class Sector #366F3441 {
+}
+AntennaModule "0..*" --> "0..1" Site : INSTALLED
+AntennaModule "0..*" --> "0..*" AntennaCapability : SERVES
+AntennaModule "1..*" --> "0..*" NRCellDU : SERVES
+CloudifiedNF "1..1" --> "1..*" NFDeployment : COMPRISES
+ManagedElement "1..1" --> "0..1" CloudifiedNF : DEPLOYED
+ManagedElement "1..1" --> "0..*" NearRTRICFunction : MANAGES
+ManagedElement "1..1" --> "0..*" OCUCPFunction : MANAGES
+ManagedElement "1..1" --> "0..*" OCUUPFunction : MANAGES
+ManagedElement "1..1" --> "0..*" ODUFunction : MANAGES
+ManagedElement "1..1" --> "0..*" ORUFunction : MANAGES
+NearRTRICFunction "0..*" --> "0..1" SMO : O1LINK
+NFDeployment "1..*" --> "1..*" OCloudNamespace : DEPLOYED
+NFDeployment "1..*" --> "1..1" ManagedElement : SERVES
+NFDeployment "0..*" --> "0..*" NearRTRICFunction : SERVES
+NFDeployment "0..*" --> "0..*" OCUCPFunction : SERVES
+NFDeployment "0..*" --> "0..*" OCUUPFunction : SERVES
+NFDeployment "0..*" --> "0..*" ODUFunction : SERVES
+NodeCluster "1..*" --> "1..*" OCloudSite : LOCATED
+NRCellDU "0..1" --> "0..*" NRSectorCarrier : USES
+NRSectorCarrier "0..*" --> "0..1" AntennaCapability : USES
+OCloudNamespace "1..*" --> "1..1" NodeCluster : DEPLOYED
+OCUCPFunction "0..*" --> "0..1" OCUUPFunction : E1LINK
+OCUCPFunction "0..*" --> "0..1" NearRTRICFunction : E2LINK
+OCUCPFunction "0..*" --> "0..1" SMO : O1LINK
+OCUCPFunction "1..1" --> "0..*" NRCellCU : PROVIDES
+OCUUPFunction "0..*" --> "0..1" NearRTRICFunction : E2LINK
+ODUFunction "0..*" --> "0..1" NearRTRICFunction : E2LINK
+ODUFunction "0..1" --> "0..1" OCUCPFunction : F1CLINK
+ODUFunction "0..*" --> "0..1" OCUUPFunction : F1ULINK
+ODUFunction "0..*" --> "0..1" SMO : O1LINK
+ODUFunction "1..1" --> "0..*" NRCellDU : PROVIDES
+ODUFunction "1..1" --> "0..*" NRSectorCarrier : PROVIDES
+ORUFunction "0..*" --> "0..1" SMO : O1LINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHCLINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHMLINK
+ORUFunction "0..*" --> "0..1" SMO : OFHMLINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHSLINK
+ORUFunction "0..*" --> "0..1" ODUFunction : OFHULINK
+PhysicalAppliance "0..*" --> "0..*" Site : INSTALLEDAT
+PhysicalAppliance "0..*" --> "0..*" NearRTRICFunction : SERVES
+PhysicalAppliance "0..*" --> "0..*" OCUCPFunction : SERVES
+PhysicalAppliance "0..*" --> "0..*" OCUUPFunction : SERVES
+PhysicalAppliance "0..*" --> "0..*" ODUFunction : SERVES
+Sector "0..1" --> "0..*" AntennaModule : GROUPS
+Sector "0..1" --> "0..*" NRCellDU : GROUPS
+@enduml

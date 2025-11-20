@@ -1,0 +1,6 @@
+@startuml
+skinparam componentStyle rectangle
+AntennaModule "0..*" --> "0..*" AntennaCapability : SERVES
+AntennaModule "1..*" --> "0..*" NRCellDU : SERVES
+Sector "0..1" --> "0..*" AntennaModule : GROUPS
+@enduml

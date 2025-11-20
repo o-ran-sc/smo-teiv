@@ -1,0 +1,108 @@
+@startuml
+skinparam class {
+    BackgroundColor<<Entity>> #366F3441
+    BackgroundColor<<Module>> LightBlue
+}
+class o-ran-smo-teiv-ran <<Module>> {
+}
+class AntennaCapability <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        eUtranFqBands : string
+        geranFqBands : string
+        nRFqBands : string
+}
+"o-ran-smo-teiv-ran" --> AntennaCapability
+class NRCellCU <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        cellLocalId : int32
+        nCI : int64
+        nRTAC : int32
+        plmnId : << Refer to Module >>
+}
+"o-ran-smo-teiv-ran" --> NRCellCU
+class NRCellDU <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        cellLocalId : int32
+        nCI : int64
+        nRPCI : int32
+        nRTAC : int32
+}
+"o-ran-smo-teiv-ran" --> NRCellDU
+class NRSectorCarrier <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        arfcnDL : int32
+        arfcnUL : int32
+        bSChannelBwDL : int32
+        frequencyDL : int32
+        frequencyUL : int32
+}
+"o-ran-smo-teiv-ran" --> NRSectorCarrier
+class NearRTRICFunction <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        nearRtRicId : int64
+        pLMNId : << Refer to Module >>
+}
+"o-ran-smo-teiv-ran" --> NearRTRICFunction
+class OCUCPFunction <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        gNBCUName : string
+        gNBId : int64
+        gNBIdLength : int32
+        pLMNId : << Refer to Module >>
+}
+"o-ran-smo-teiv-ran" --> OCUCPFunction
+class OCUUPFunction <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        gNBId : int64
+        gNBIdLength : int32
+        pLMNIdList : []
+}
+"o-ran-smo-teiv-ran" --> OCUUPFunction
+class ODUFunction <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        dUpLMNId : << Refer to Module >>
+        gNBDUId : int64
+        gNBId : int64
+        gNBIdLength : int32
+}
+"o-ran-smo-teiv-ran" --> ODUFunction
+class ORUFunction <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        oruId : int64
+}
+"o-ran-smo-teiv-ran" --> ORUFunction
+class SMO <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        smoName : string
+}
+"o-ran-smo-teiv-ran" --> SMO
+class Sector <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        azimuth : decimal64
+        geo-location : << Refer to Module >>
+        sectorId : uint64
+}
+"o-ran-smo-teiv-ran" --> Sector
+@enduml

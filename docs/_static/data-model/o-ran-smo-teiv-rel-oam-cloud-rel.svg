@@ -1,43 +1,43 @@
-<svg width="145px" height="218px"
- viewBox="0.00 0.00 145.00 218.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 214.0)">
+<svg width="157px" height="222px"
+ viewBox="0.00 0.00 157.38 221.60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 217.6)">
 <title>moduleName</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-214 141,-214 141,4 -4,4"/>
-<!-- ManagedElement -->
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-217.6 153.38,-217.6 153.38,4 -4,4"/>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement -->
 <g id="node1" class="node">
-<title>ManagedElement</title>
-<polygon fill="#3663f0" fill-opacity="0.254902" stroke="black" points="124,-123 0,-123 0,-87 124,-87 124,-123"/>
-<text text-anchor="middle" x="62" y="-101.3" font-family="Arial" font-size="14.00">ManagedElement</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement</title>
+<polygon fill="#3663f0" fill-opacity="0.254902" stroke="black" points="136.57,-124.8 -0.19,-124.8 -0.19,-88.8 136.57,-88.8 136.57,-124.8"/>
+<text text-anchor="middle" x="68.19" y="-102.6" font-family="Arial" font-size="14.00">ManagedElement</text>
 </g>
-<!-- CloudifiedNF -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloudCloudifiedNF -->
 <g id="node2" class="node">
-<title>CloudifiedNF</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="109.5,-36 14.5,-36 14.5,0 109.5,0 109.5,-36"/>
-<text text-anchor="middle" x="62" y="-14.3" font-family="Arial" font-size="14.00">CloudifiedNF</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloudCloudifiedNF</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="119.48,-36 16.9,-36 16.9,0 119.48,0 119.48,-36"/>
+<text text-anchor="middle" x="68.19" y="-13.8" font-family="Arial" font-size="14.00">CloudifiedNF</text>
 </g>
-<!-- ManagedElement&#45;&gt;CloudifiedNF -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;cloudCloudifiedNF -->
 <g id="edge1" class="edge">
-<title>ManagedElement&#45;&gt;CloudifiedNF</title>
-<path fill="none" stroke="#528b8b" d="M62,-86.8C62,-75.16 62,-59.55 62,-46.24"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="62,-36.18 66.5,-46.18 62,-41.18 62,-46.18 62,-46.18 62,-46.18 62,-41.18 57.5,-46.18 62,-36.18 62,-36.18"/>
-<text text-anchor="middle" x="99.5" y="-57.8" font-family="Arial" font-size="14.00">DEPLOYED</text>
-<text text-anchor="middle" x="50.5" y="-39.98" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="50.5" y="-75.6" font-family="Arial" font-size="14.00">0..1</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;cloudCloudifiedNF</title>
+<path fill="none" stroke="#528b8b" d="M68.19,-88.65C68.19,-76.52 68.19,-60.02 68.19,-46.12"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="68.19,-36.11 72.69,-46.11 68.19,-41.11 68.19,-46.11 68.19,-46.11 68.19,-46.11 68.19,-41.11 63.69,-46.11 68.19,-36.11 68.19,-36.11"/>
+<text text-anchor="middle" x="108.78" y="-58.2" font-family="Arial" font-size="14.00">DEPLOYED</text>
+<text text-anchor="middle" x="55.59" y="-40.31" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="55.59" y="-76.05" font-family="Arial" font-size="14.00">0..1</text>
 </g>
-<!-- NFDeployment -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloudNFDeployment -->
 <g id="node3" class="node">
-<title>NFDeployment</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="115.5,-210 8.5,-210 8.5,-174 115.5,-174 115.5,-210"/>
-<text text-anchor="middle" x="62" y="-188.3" font-family="Arial" font-size="14.00">NFDeployment</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloudNFDeployment</title>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="127.77,-213.6 8.61,-213.6 8.61,-177.6 127.77,-177.6 127.77,-213.6"/>
+<text text-anchor="middle" x="68.19" y="-191.4" font-family="Arial" font-size="14.00">NFDeployment</text>
 </g>
-<!-- NFDeployment&#45;&gt;ManagedElement -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;cloudNFDeployment&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement -->
 <g id="edge2" class="edge">
-<title>NFDeployment&#45;&gt;ManagedElement</title>
-<path fill="none" stroke="#528b8b" d="M62,-173.8C62,-162.16 62,-146.55 62,-133.24"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="62,-123.18 66.5,-133.18 62,-128.18 62,-133.18 62,-133.18 62,-133.18 62,-128.18 57.5,-133.18 62,-123.18 62,-123.18"/>
-<text text-anchor="middle" x="89.5" y="-144.8" font-family="Arial" font-size="14.00">SERVES</text>
-<text text-anchor="middle" x="51.5" y="-126.98" font-family="Arial" font-size="14.00">1..*</text>
-<text text-anchor="middle" x="50.5" y="-162.6" font-family="Arial" font-size="14.00">1..1</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;cloudNFDeployment&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;oamManagedElement</title>
+<path fill="none" stroke="#528b8b" d="M68.19,-177.45C68.19,-165.32 68.19,-148.82 68.19,-134.92"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="68.19,-124.91 72.69,-134.91 68.19,-129.91 68.19,-134.91 68.19,-134.91 68.19,-134.91 68.19,-129.91 63.69,-134.91 68.19,-124.91 68.19,-124.91"/>
+<text text-anchor="middle" x="97.59" y="-147" font-family="Arial" font-size="14.00">SERVES</text>
+<text text-anchor="middle" x="56.29" y="-129.11" font-family="Arial" font-size="14.00">1..*</text>
+<text text-anchor="middle" x="55.59" y="-164.85" font-family="Arial" font-size="14.00">1..1</text>
 </g>
 </g>
 </svg>

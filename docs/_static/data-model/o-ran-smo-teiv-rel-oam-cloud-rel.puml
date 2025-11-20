@@ -1,0 +1,5 @@
+@startuml
+skinparam componentStyle rectangle
+ManagedElement "1..1" --> "0..1" CloudifiedNF : DEPLOYED
+NFDeployment "1..*" --> "1..1" ManagedElement : SERVES
+@enduml

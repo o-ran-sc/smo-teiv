@@ -1,0 +1,13 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-cloudCloudifiedNF" ["label"="CloudifiedNF","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-cloudNFDeployment" ["label"="NFDeployment","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-cloudNodeCluster" ["label"="NodeCluster","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-cloudOCloudNamespace" ["label"="OCloudNamespace","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-cloudOCloudSite" ["style"="filled","fillcolor"="#89240A41","label"="OCloudSite"]
+"o-ran-smo-teiv-cloudCloudifiedNF" -> "o-ran-smo-teiv-cloudNFDeployment" ["label"="COMPRISES","headlabel"="1..1","taillabel"="1..*","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudNFDeployment" -> "o-ran-smo-teiv-cloudOCloudNamespace" ["label"="DEPLOYED","headlabel"="1..*","taillabel"="1..*","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudNodeCluster" -> "o-ran-smo-teiv-cloudOCloudSite" ["label"="LOCATED","headlabel"="1..*","taillabel"="1..*","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudOCloudNamespace" -> "o-ran-smo-teiv-cloudNodeCluster" ["label"="DEPLOYED","headlabel"="1..*","taillabel"="1..1","arrowhead"="vee"]
+}

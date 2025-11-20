@@ -1,0 +1,8 @@
+digraph "o-ran-smo-teiv-oam" {
+graph ["rankdir"="LR"]
+node ["shape"="rect","style"="filled","color"="black","fillcolor"="#3663F041","fontname"="Arial"]
+"o-ran-smo-teiv-oam" ["fillcolor"="lightblue"]
+"ManagedElement-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR></TABLE>>]
+"o-ran-smo-teiv-oam" -> "ManagedElement"
+"ManagedElement" -> "ManagedElement-attributes"
+}

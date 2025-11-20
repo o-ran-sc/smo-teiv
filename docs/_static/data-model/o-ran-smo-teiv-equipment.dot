@@ -1,0 +1,11 @@
+digraph "o-ran-smo-teiv-equipment" {
+graph ["rankdir"="LR"]
+node ["shape"="rect","style"="filled","color"="black","fillcolor"="#9A38E341","fontname"="Arial"]
+"o-ran-smo-teiv-equipment" ["fillcolor"="lightblue"]
+"AntennaModule-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        antennaBeamWidth</TD> <TD align='right'>uint32</TD> </TR><TR> <TD align='left'>        antennaModelNumber</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        azimuth</TD> <TD align='right'>decimal64</TD> </TR><TR> <TD align='left'>        electricalAntennaTilt</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        geo-location</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD align='left'>        horizontalBeamWidth</TD> <TD align='right'>decimal64</TD> </TR><TR> <TD align='left'>        mechanicalAntennaBearing</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        mechanicalAntennaTilt</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        positionWithinSector</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        totalTilt</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        verticalBeamWidth</TD> <TD align='right'>decimal64</TD> </TR></TABLE>>]
+"Site-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        geo-location</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD align='left'>        name</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"o-ran-smo-teiv-equipment" -> "AntennaModule"
+"o-ran-smo-teiv-equipment" -> "Site"
+"AntennaModule" -> "AntennaModule-attributes"
+"Site" -> "Site-attributes"
+}

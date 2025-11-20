@@ -1,0 +1,15 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-oamManagedElement" ["label"="ManagedElement","style"="filled","fillcolor"="#3663F041"]
+"o-ran-smo-teiv-ranNearRTRICFunction" ["label"="NearRTRICFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranOCUCPFunction" ["label"="OCUCPFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranOCUUPFunction" ["label"="OCUUPFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranODUFunction" ["label"="ODUFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranORUFunction" ["label"="ORUFunction","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-oamManagedElement" -> "o-ran-smo-teiv-ranORUFunction" ["label"="MANAGES","headlabel"="1..1","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-oamManagedElement" -> "o-ran-smo-teiv-ranODUFunction" ["label"="MANAGES","headlabel"="1..1","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-oamManagedElement" -> "o-ran-smo-teiv-ranOCUUPFunction" ["label"="MANAGES","headlabel"="1..1","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-oamManagedElement" -> "o-ran-smo-teiv-ranOCUCPFunction" ["label"="MANAGES","headlabel"="1..1","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-oamManagedElement" -> "o-ran-smo-teiv-ranNearRTRICFunction" ["label"="MANAGES","headlabel"="1..1","taillabel"="0..*","arrowhead"="vee"]
+}
