@@ -1,0 +1,24 @@
+@startuml
+skinparam class {
+    BackgroundColor<<Entity>> #074EE241
+    BackgroundColor<<Module>> LightBlue
+}
+class o-ran-smo-teiv-physical <<Module>> {
+}
+class PhysicalAppliance <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        modelName : string
+        vendorName : string
+}
+"o-ran-smo-teiv-physical" --> PhysicalAppliance
+class Site <<Entity>> {
+    id : string
+    sourceIds : << Refer to Module >>
+    attributes:
+        siteLocation : << Refer to Module >>
+        siteName : string
+}
+"o-ran-smo-teiv-physical" --> Site
+@enduml

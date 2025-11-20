@@ -1,0 +1,9 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-oamManagedElement" ["label"="ManagedElement","style"="filled","fillcolor"="#3663F041"]
+"o-ran-smo-teiv-cloudCloudifiedNF" ["label"="CloudifiedNF","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-cloudNFDeployment" ["label"="NFDeployment","style"="filled","fillcolor"="#89240A41"]
+"o-ran-smo-teiv-oamManagedElement" -> "o-ran-smo-teiv-cloudCloudifiedNF" ["label"="DEPLOYED","headlabel"="1..1","taillabel"="0..1","arrowhead"="vee"]
+"o-ran-smo-teiv-cloudNFDeployment" -> "o-ran-smo-teiv-oamManagedElement" ["label"="SERVES","headlabel"="1..*","taillabel"="1..1","arrowhead"="vee"]
+}

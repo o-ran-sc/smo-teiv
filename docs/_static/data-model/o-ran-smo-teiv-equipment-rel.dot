@@ -1,0 +1,7 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-equipmentAntennaModule" ["label"="AntennaModule","style"="filled","fillcolor"="#9A38E341"]
+"o-ran-smo-teiv-equipmentSite" ["style"="filled","fillcolor"="#9A38E341","label"="Site"]
+"o-ran-smo-teiv-equipmentAntennaModule" -> "o-ran-smo-teiv-equipmentSite" ["label"="INSTALLED","headlabel"="0..*","taillabel"="0..1","arrowhead"="vee"]
+}

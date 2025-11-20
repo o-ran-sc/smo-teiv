@@ -1,0 +1,8 @@
+@startuml
+skinparam componentStyle rectangle
+class AntennaModule #9A38E341 {
+}
+class Site #9A38E341 {
+}
+AntennaModule "0..*" --> "0..1" Site : INSTALLED
+@enduml

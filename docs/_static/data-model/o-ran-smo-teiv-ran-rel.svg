@@ -1,262 +1,262 @@
-<svg width="753px" height="479px"
- viewBox="0.00 0.00 753.41 479.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 475.0)">
+<svg width="800px" height="488px"
+ viewBox="0.00 0.00 799.63 488.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 484.0)">
 <title>moduleName</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-475 749.41,-475 749.41,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-484 795.63,-484 795.63,4 -4,4"/>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability -->
 <g id="node1" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="495.41,-123 369.41,-123 369.41,-87 495.41,-87 495.41,-123"/>
-<text text-anchor="middle" x="432.41" y="-101.3" font-family="Arial" font-size="14.00">AntennaCapability</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="528.52,-124.8 388.36,-124.8 388.36,-88.8 528.52,-88.8 528.52,-124.8"/>
+<text text-anchor="middle" x="458.44" y="-102.6" font-family="Arial" font-size="14.00">AntennaCapability</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellCU -->
 <g id="node2" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellCU</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="229.91,-210 150.91,-210 150.91,-174 229.91,-174 229.91,-210"/>
-<text text-anchor="middle" x="190.41" y="-188.3" font-family="Arial" font-size="14.00">NRCellCU</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="244.53,-213.6 160.35,-213.6 160.35,-177.6 244.53,-177.6 244.53,-213.6"/>
+<text text-anchor="middle" x="202.44" y="-191.4" font-family="Arial" font-size="14.00">NRCellCU</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU -->
 <g id="node3" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="495.91,-297 416.91,-297 416.91,-261 495.91,-261 495.91,-297"/>
-<text text-anchor="middle" x="456.41" y="-275.3" font-family="Arial" font-size="14.00">NRCellDU</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="529.53,-302.4 445.35,-302.4 445.35,-266.4 529.53,-266.4 529.53,-302.4"/>
+<text text-anchor="middle" x="487.44" y="-280.2" font-family="Arial" font-size="14.00">NRCellDU</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier -->
 <g id="node4" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="488.41,-210 372.41,-210 372.41,-174 488.41,-174 488.41,-210"/>
-<text text-anchor="middle" x="430.41" y="-188.3" font-family="Arial" font-size="14.00">NRSectorCarrier</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="521.32,-213.6 391.56,-213.6 391.56,-177.6 521.32,-177.6 521.32,-213.6"/>
+<text text-anchor="middle" x="456.44" y="-191.4" font-family="Arial" font-size="14.00">NRSectorCarrier</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier -->
 <g id="edge1" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier</title>
-<path fill="none" stroke="#528b8b" d="M451.15,-260.8C447.55,-249.05 442.72,-233.24 438.62,-219.84"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="435.66,-210.18 442.89,-218.42 437.13,-214.96 438.59,-219.74 438.59,-219.74 438.59,-219.74 437.13,-214.96 434.28,-221.05 435.66,-210.18 435.66,-210.18"/>
-<text text-anchor="middle" x="463.91" y="-231.8" font-family="Arial" font-size="14.00">USES</text>
-<text text-anchor="middle" x="424.16" y="-213.98" font-family="Arial" font-size="14.00">0..1</text>
-<text text-anchor="middle" x="440.65" y="-249.6" font-family="Arial" font-size="14.00">0..*</text>
+<path fill="none" stroke="#528b8b" d="M481.32,-266.25C476.94,-254.01 470.97,-237.29 465.98,-223.31"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="462.55,-213.71 470.15,-221.62 464.23,-218.42 465.92,-223.13 465.92,-223.13 465.92,-223.13 464.23,-218.42 461.68,-224.64 462.55,-213.71 462.55,-213.71"/>
+<text text-anchor="middle" x="495.74" y="-235.8" font-family="Arial" font-size="14.00">USES</text>
+<text text-anchor="middle" x="449.95" y="-217.91" font-family="Arial" font-size="14.00">0..1</text>
+<text text-anchor="middle" x="469.42" y="-253.65" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability -->
 <g id="edge2" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability</title>
-<path fill="none" stroke="#528b8b" d="M430.81,-173.8C431.09,-162.16 431.45,-146.55 431.77,-133.24"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="432,-123.18 436.27,-133.28 431.89,-128.17 431.77,-133.17 431.77,-133.17 431.77,-133.17 431.89,-128.17 427.27,-133.07 432,-123.18 432,-123.18"/>
-<text text-anchor="middle" x="450.91" y="-144.8" font-family="Arial" font-size="14.00">USES</text>
-<text text-anchor="middle" x="421.5" y="-126.98" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="419.31" y="-162.6" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M456.84,-177.45C457.12,-165.32 457.5,-148.82 457.82,-134.92"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="458.05,-124.91 462.31,-135.01 457.93,-129.91 457.82,-134.91 457.82,-134.91 457.82,-134.91 457.93,-129.91 453.32,-134.81 458.05,-124.91 458.05,-124.91"/>
+<text text-anchor="middle" x="478.74" y="-147" font-family="Arial" font-size="14.00">USES</text>
+<text text-anchor="middle" x="446.15" y="-129.11" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="444.24" y="-164.85" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction -->
 <g id="node5" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="260.91,-123 121.91,-123 121.91,-87 260.91,-87 260.91,-123"/>
-<text text-anchor="middle" x="191.41" y="-101.3" font-family="Arial" font-size="14.00">NearRTRICFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="276.92,-124.8 127.96,-124.8 127.96,-88.8 276.92,-88.8 276.92,-124.8"/>
+<text text-anchor="middle" x="202.44" y="-102.6" font-family="Arial" font-size="14.00">NearRTRICFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranSMO -->
 <g id="node10" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranSMO</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="551.41,-36 497.41,-36 497.41,0 551.41,0 551.41,-36"/>
-<text text-anchor="middle" x="524.41" y="-14.3" font-family="Arial" font-size="14.00">SMO</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="584.44,-36 530.44,-36 530.44,0 584.44,0 584.44,-36"/>
+<text text-anchor="middle" x="557.44" y="-13.8" font-family="Arial" font-size="14.00">SMO</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO -->
 <g id="edge3" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO</title>
-<path fill="none" stroke="#528b8b" d="M215.33,-86.91C232.17,-75.74 255.68,-61.82 278.41,-54 349.47,-29.54 437.74,-22.16 486.89,-19.95"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="497.05,-19.54 487.24,-24.43 492.06,-19.74 487.06,-19.94 487.06,-19.94 487.06,-19.94 492.06,-19.74 486.88,-15.44 497.05,-19.54 497.05,-19.54"/>
-<text text-anchor="middle" x="302.91" y="-57.8" font-family="Arial" font-size="14.00">O1LINK</text>
-<text text-anchor="middle" x="486.55" y="-23.34" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="203.83" y="-75.71" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M226.27,-88.78C243.91,-77.06 269,-62.17 293.25,-54 371.18,-27.74 468.26,-21.07 520.33,-19.45"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="530.43,-19.18 520.55,-23.95 525.43,-19.31 520.43,-19.45 520.43,-19.45 520.43,-19.45 525.43,-19.31 520.31,-14.95 530.43,-19.18 530.43,-19.18"/>
+<text text-anchor="middle" x="320.04" y="-58.2" font-family="Arial" font-size="14.00">O1LINK</text>
+<text text-anchor="middle" x="518.53" y="-6.58" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="213.67" y="-76.18" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction -->
 <g id="node6" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="291.41,-297 173.41,-297 173.41,-261 291.41,-261 291.41,-297"/>
-<text text-anchor="middle" x="232.41" y="-275.3" font-family="Arial" font-size="14.00">OCUCPFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="315.42,-302.4 187.46,-302.4 187.46,-266.4 315.42,-266.4 315.42,-302.4"/>
+<text text-anchor="middle" x="251.44" y="-280.2" font-family="Arial" font-size="14.00">OCUCPFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellCU -->
 <g id="edge4" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellCU</title>
-<path fill="none" stroke="#528b8b" d="M197.6,-260.94C191.09,-256.08 185.16,-250.13 181.41,-243 177.69,-235.95 177.72,-227.64 179.32,-219.84"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="182.13,-210.04 183.7,-220.89 180.75,-214.85 179.37,-219.65 179.37,-219.65 179.37,-219.65 180.75,-214.85 175.05,-218.41 182.13,-210.04 182.13,-210.04"/>
-<text text-anchor="middle" x="216.91" y="-231.8" font-family="Arial" font-size="14.00">PROVIDES</text>
-<text text-anchor="middle" x="170.63" y="-213.84" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="187.1" y="-249.74" font-family="Arial" font-size="14.00">0..*</text>
+<path fill="none" stroke="#528b8b" d="M208.39,-266.28C201.38,-261.55 195.04,-255.66 190.85,-248.4 186.48,-240.83 186.94,-231.75 189.25,-223.33"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="192.64,-213.87 193.51,-224.8 190.95,-218.58 189.27,-223.29 189.27,-223.29 189.27,-223.29 190.95,-218.58 185.03,-221.77 192.64,-213.87 192.64,-213.87"/>
+<text text-anchor="middle" x="229.23" y="-235.8" font-family="Arial" font-size="14.00">PROVIDES</text>
+<text text-anchor="middle" x="180.04" y="-218.07" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="196.49" y="-253.68" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction -->
 <g id="edge6" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction</title>
-<path fill="none" stroke="#528b8b" d="M244.48,-260.97C247.71,-255.49 250.76,-249.22 252.41,-243 254.12,-236.56 253.25,-234.61 252.41,-228 249.27,-203.41 248.73,-196.54 238.41,-174 231.47,-158.84 221.15,-143.43 211.94,-131.13"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="205.8,-123.14 215.47,-128.33 208.85,-127.11 211.9,-131.07 211.9,-131.07 211.9,-131.07 208.85,-127.11 208.33,-133.81 205.8,-123.14 205.8,-123.14"/>
-<text text-anchor="middle" x="273.91" y="-188.3" font-family="Arial" font-size="14.00">E2LINK</text>
-<text text-anchor="middle" x="195.3" y="-126.94" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="232.98" y="-249.77" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M260.52,-266.05C262.94,-260.55 265.22,-254.36 266.44,-248.4 272.87,-217.06 266.88,-206.63 253.44,-177.6 245.99,-161.51 234.56,-145.41 224.4,-132.73"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="217.97,-124.93 227.8,-129.78 221.15,-128.79 224.33,-132.64 224.33,-132.64 224.33,-132.64 221.15,-128.79 220.86,-135.51 217.97,-124.93 217.97,-124.93"/>
+<text text-anchor="middle" x="294.34" y="-191.4" font-family="Arial" font-size="14.00">E2LINK</text>
+<text text-anchor="middle" x="206.07" y="-129.13" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="247.92" y="-253.45" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction -->
 <g id="node7" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="132.41,-210 14.41,-210 14.41,-174 132.41,-174 132.41,-210"/>
-<text text-anchor="middle" x="73.41" y="-188.3" font-family="Arial" font-size="14.00">OCUUPFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="142.42,-213.6 14.46,-213.6 14.46,-177.6 142.42,-177.6 142.42,-213.6"/>
+<text text-anchor="middle" x="78.44" y="-191.4" font-family="Arial" font-size="14.00">OCUUPFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction -->
 <g id="edge7" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction</title>
-<path fill="none" stroke="#528b8b" d="M173.26,-263.15C157.76,-257.97 141.46,-251.32 127.41,-243 115.9,-236.19 104.77,-226.59 95.64,-217.61"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="88.47,-210.3 98.69,-214.29 91.97,-213.87 95.47,-217.44 95.47,-217.44 95.47,-217.44 91.97,-213.87 92.26,-220.59 88.47,-210.3 88.47,-210.3"/>
-<text text-anchor="middle" x="150.91" y="-231.8" font-family="Arial" font-size="14.00">E1LINK</text>
-<text text-anchor="middle" x="77.97" y="-214.1" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="161.76" y="-251.95" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M187.19,-270.47C168.83,-265.21 149.3,-258.04 132.65,-248.4 120.38,-241.3 108.74,-230.87 99.42,-221.22"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="92.46,-213.74 102.57,-218 95.87,-217.4 99.27,-221.06 99.27,-221.06 99.27,-221.06 95.87,-217.4 95.97,-224.13 92.46,-213.74 92.46,-213.74"/>
+<text text-anchor="middle" x="159.34" y="-235.8" font-family="Arial" font-size="14.00">E1LINK</text>
+<text text-anchor="middle" x="104.36" y="-217.94" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="174.59" y="-257.87" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO -->
 <g id="edge5" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO</title>
-<path fill="none" stroke="#528b8b" d="M253.33,-260.85C268.1,-247.97 287.63,-229.3 301.41,-210 336.64,-160.65 316.39,-128.69 360.41,-87 396.05,-53.24 450.83,-35.17 487.13,-26.33"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="497.3,-23.97 488.58,-30.61 492.43,-25.1 487.56,-26.23 487.56,-26.23 487.56,-26.23 492.43,-25.1 486.55,-21.84 497.3,-23.97 497.3,-23.97"/>
-<text text-anchor="middle" x="353.91" y="-144.8" font-family="Arial" font-size="14.00">O1LINK</text>
-<text text-anchor="middle" x="486.8" y="-12.77" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="264.83" y="-249.65" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M273.47,-266.33C289.25,-253.23 310.15,-233.99 324.44,-213.6 359.24,-163.97 335.7,-130.76 379.44,-88.8 418.69,-51.14 480.62,-33.1 520.11,-24.98"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="530.13,-23.04 521.17,-29.36 525.22,-23.99 520.32,-24.94 520.32,-24.94 520.32,-24.94 525.22,-23.99 519.46,-20.53 530.13,-23.04 530.13,-23.04"/>
+<text text-anchor="middle" x="377.04" y="-147" font-family="Arial" font-size="14.00">O1LINK</text>
+<text text-anchor="middle" x="518.23" y="-27.24" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="286.07" y="-253.73" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction -->
 <g id="edge8" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction</title>
-<path fill="none" stroke="#528b8b" d="M97.29,-173.8C115.12,-160.95 139.69,-143.26 159.25,-129.17"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="167.57,-123.18 162.08,-132.67 163.51,-126.1 159.45,-129.02 159.45,-129.02 159.45,-129.02 163.51,-126.1 156.82,-125.37 167.57,-123.18 167.57,-123.18"/>
-<text text-anchor="middle" x="163.91" y="-144.8" font-family="Arial" font-size="14.00">E2LINK</text>
-<text text-anchor="middle" x="157.07" y="-126.98" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="85.79" y="-162.6" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M102.94,-177.45C122.05,-164.08 148.76,-145.37 169.7,-130.72"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="177.99,-124.91 172.38,-134.33 173.9,-127.78 169.8,-130.65 169.8,-130.65 169.8,-130.65 173.9,-127.78 167.22,-126.96 177.99,-124.91 177.99,-124.91"/>
+<text text-anchor="middle" x="178.34" y="-147" font-family="Arial" font-size="14.00">E2LINK</text>
+<text text-anchor="middle" x="166.1" y="-129.11" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="90.34" y="-164.85" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="node8" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="377.91,-384 278.91,-384 278.91,-348 377.91,-348 377.91,-384"/>
-<text text-anchor="middle" x="328.41" y="-362.3" font-family="Arial" font-size="14.00">ODUFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="403.93,-391.2 296.96,-391.2 296.96,-355.2 403.93,-355.2 403.93,-391.2"/>
+<text text-anchor="middle" x="350.44" y="-369" font-family="Arial" font-size="14.00">ODUFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU -->
 <g id="edge10" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU</title>
-<path fill="none" stroke="#528b8b" d="M354.31,-347.8C373.83,-334.84 400.78,-316.94 422.09,-302.79"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="430.54,-297.18 424.7,-306.46 426.38,-299.94 422.21,-302.71 422.21,-302.71 422.21,-302.71 426.38,-299.94 419.72,-298.96 430.54,-297.18 430.54,-297.18"/>
-<text text-anchor="middle" x="435.91" y="-318.8" font-family="Arial" font-size="14.00">PROVIDES</text>
-<text text-anchor="middle" x="419.04" y="-300.98" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="343.81" y="-336.6" font-family="Arial" font-size="14.00">0..*</text>
+<path fill="none" stroke="#528b8b" d="M377.51,-355.05C398.8,-341.56 428.66,-322.64 451.89,-307.93"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="460.43,-302.51 454.39,-311.67 456.21,-305.19 451.98,-307.87 451.98,-307.87 451.98,-307.87 456.21,-305.19 449.57,-304.06 460.43,-302.51 460.43,-302.51"/>
+<text text-anchor="middle" x="469.23" y="-324.6" font-family="Arial" font-size="14.00">PROVIDES</text>
+<text text-anchor="middle" x="447.83" y="-306.71" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="365.61" y="-342.45" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier -->
 <g id="edge9" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRSectorCarrier</title>
-<path fill="none" stroke="#528b8b" d="M325.56,-347.91C322.83,-326.22 321.1,-288.33 336.41,-261 347.24,-241.67 366.12,-226.4 384.13,-215.26"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="392.86,-210.13 386.52,-219.08 388.55,-212.66 384.24,-215.2 384.24,-215.2 384.24,-215.2 388.55,-212.66 381.96,-211.32 392.86,-210.13 392.86,-210.13"/>
-<text text-anchor="middle" x="371.91" y="-275.3" font-family="Arial" font-size="14.00">PROVIDES</text>
-<text text-anchor="middle" x="381.36" y="-213.93" font-family="Arial" font-size="14.00">1..1</text>
-<text text-anchor="middle" x="315.06" y="-336.71" font-family="Arial" font-size="14.00">0..*</text>
+<path fill="none" stroke="#528b8b" d="M348.06,-355.17C345.84,-333.14 344.92,-294.28 360.85,-266.4 372.29,-246.38 392.07,-230.5 410.68,-218.97"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="419.4,-213.83 413.07,-222.79 415.09,-216.37 410.79,-218.91 410.79,-218.91 410.79,-218.91 415.09,-216.37 408.5,-215.04 419.4,-213.83 419.4,-213.83"/>
+<text text-anchor="middle" x="399.23" y="-280.2" font-family="Arial" font-size="14.00">PROVIDES</text>
+<text text-anchor="middle" x="406.8" y="-218.03" font-family="Arial" font-size="14.00">1..1</text>
+<text text-anchor="middle" x="336.16" y="-342.57" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction -->
 <g id="edge14" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNearRTRICFunction</title>
-<path fill="none" stroke="#528b8b" d="M278.59,-362.47C237.04,-358.92 176.99,-350.41 128.41,-330 58,-300.42 26.76,-283.33 5.41,-210 0.94,-194.64 -3.76,-187.11 5.41,-174 29.37,-139.73 72.55,-122.67 111.28,-114.21"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="121.54,-112.14 112.62,-118.53 116.63,-113.13 111.73,-114.12 111.73,-114.12 111.73,-114.12 116.63,-113.13 110.84,-109.71 121.54,-112.14 121.54,-112.14"/>
-<text text-anchor="middle" x="40.91" y="-231.8" font-family="Arial" font-size="14.00">E2LINK</text>
-<text text-anchor="middle" x="111.04" y="-115.94" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="267.09" y="-366.27" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M296.56,-370.55C252.03,-367.53 188,-359.3 136.44,-337.2 62.87,-305.67 27.87,-290.44 5.44,-213.6 0.96,-198.24 -3.79,-190.67 5.44,-177.6 30.88,-141.6 76.54,-124.05 117.5,-115.54"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="127.52,-113.62 118.54,-119.92 122.61,-114.56 117.7,-115.51 117.7,-115.51 117.7,-115.51 122.61,-114.56 116.85,-111.09 127.52,-113.62 127.52,-113.62"/>
+<text text-anchor="middle" x="44.34" y="-235.8" font-family="Arial" font-size="14.00">E2LINK</text>
+<text text-anchor="middle" x="115.62" y="-117.82" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="283.96" y="-374.75" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction -->
 <g id="edge13" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUCPFunction</title>
-<path fill="none" stroke="#528b8b" d="M282.71,-347.96C273.59,-343.12 264.62,-337.17 257.41,-330 250.88,-323.51 245.76,-314.96 241.89,-306.77"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="237.93,-297.47 245.99,-304.91 239.89,-302.07 241.85,-306.67 241.85,-306.67 241.85,-306.67 239.89,-302.07 237.71,-308.43 237.93,-297.47 237.93,-297.47"/>
-<text text-anchor="middle" x="285.41" y="-318.8" font-family="Arial" font-size="14.00">F1CLINK</text>
-<text text-anchor="middle" x="226.43" y="-301.27" font-family="Arial" font-size="14.00">0..1</text>
-<text text-anchor="middle" x="271.21" y="-336.76" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M301.14,-355.03C291.98,-350.26 283.04,-344.38 275.85,-337.2 268.9,-330.26 263.68,-320.96 259.89,-312.16"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="256.2,-302.58 263.99,-310.29 257.99,-307.24 259.79,-311.91 259.79,-311.91 259.79,-311.91 257.99,-307.24 255.59,-313.53 256.2,-302.58 256.2,-302.58"/>
+<text text-anchor="middle" x="307.24" y="-324.6" font-family="Arial" font-size="14.00">F1CLINK</text>
+<text text-anchor="middle" x="243.6" y="-306.78" font-family="Arial" font-size="14.00">0..1</text>
+<text text-anchor="middle" x="288.54" y="-342.43" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction -->
 <g id="edge12" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranOCUUPFunction</title>
-<path fill="none" stroke="#528b8b" d="M278.58,-362.38C229.15,-357.16 154.34,-341.8 108.41,-297 87.6,-276.7 79.16,-243.64 75.74,-220.25"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="74.49,-210.26 80.2,-219.63 75.11,-215.22 75.73,-220.19 75.73,-220.19 75.73,-220.19 75.11,-215.22 71.27,-220.74 74.49,-210.26 74.49,-210.26"/>
-<text text-anchor="middle" x="136.41" y="-275.3" font-family="Arial" font-size="14.00">F1ULINK</text>
-<text text-anchor="middle" x="63.99" y="-214.06" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="267.08" y="-351.18" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M296.82,-369.67C244.54,-364.43 165.95,-348.73 116.85,-302.4 95.04,-281.81 85.57,-247.88 81.49,-224"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="79.97,-213.83 85.9,-223.05 80.71,-218.77 81.45,-223.72 81.45,-223.72 81.45,-223.72 80.71,-218.77 77,-224.38 79.97,-213.83 79.97,-213.83"/>
+<text text-anchor="middle" x="148.24" y="-280.2" font-family="Arial" font-size="14.00">F1ULINK</text>
+<text text-anchor="middle" x="68.07" y="-218.03" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="284.22" y="-357.07" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO -->
 <g id="edge11" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO</title>
-<path fill="none" stroke="#528b8b" d="M377.92,-360.84C407.87,-356.54 445.85,-347.79 475.41,-330 515.61,-305.81 524.41,-283.42 524.41,-236.5 524.41,-236.5 524.41,-236.5 524.41,-104 524.41,-84.75 524.41,-63.05 524.41,-46.4"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="524.41,-36.26 528.91,-46.26 524.41,-41.26 524.41,-46.26 524.41,-46.26 524.41,-46.26 524.41,-41.26 519.91,-46.26 524.41,-36.26 524.41,-36.26"/>
-<text text-anchor="middle" x="548.91" y="-188.3" font-family="Arial" font-size="14.00">O1LINK</text>
-<text text-anchor="middle" x="513.91" y="-40.06" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="389.42" y="-349.64" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M403.94,-369.78C437.06,-366.14 479.26,-357.49 511.44,-337.2 551.53,-311.93 557.44,-288.39 557.44,-241 557.44,-241 557.44,-241 557.44,-105.8 557.44,-86.02 557.44,-63.71 557.44,-46.66"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="557.44,-36.29 561.94,-46.29 557.44,-41.29 557.44,-46.29 557.44,-46.29 557.44,-46.29 557.44,-41.29 552.94,-46.29 557.44,-36.29 557.44,-36.29"/>
+<text text-anchor="middle" x="584.04" y="-191.4" font-family="Arial" font-size="14.00">O1LINK</text>
+<text text-anchor="middle" x="545.54" y="-40.49" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="416.54" y="-357.18" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction -->
 <g id="node9" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="517.91,-471 418.91,-471 418.91,-435 517.91,-435 517.91,-471"/>
-<text text-anchor="middle" x="468.41" y="-449.3" font-family="Arial" font-size="14.00">ORUFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="550.03,-480 444.85,-480 444.85,-444 550.03,-444 550.03,-480"/>
+<text text-anchor="middle" x="497.44" y="-457.8" font-family="Arial" font-size="14.00">ORUFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="edge15" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
-<path fill="none" stroke="#528b8b" d="M418.79,-451.74C358.02,-450.25 260.32,-443.64 237.41,-417 222.87,-400.09 243.63,-387.85 268.97,-379.71"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="278.84,-376.79 270.52,-383.95 274.04,-378.21 269.25,-379.63 269.25,-379.63 269.25,-379.63 274.04,-378.21 267.97,-375.31 278.84,-376.79 278.84,-376.79"/>
-<text text-anchor="middle" x="272.41" y="-405.8" font-family="Arial" font-size="14.00">OFHULINK</text>
-<text text-anchor="middle" x="268.34" y="-380.59" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="407.29" y="-455.54" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M444.65,-461.19C380.31,-460.16 277.16,-454.03 252.85,-426 237.29,-408.05 259.64,-395.34 286.86,-387"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="296.64,-384.24 288.24,-391.29 291.83,-385.6 287.02,-386.96 287.02,-386.96 287.02,-386.96 291.83,-385.6 285.79,-382.63 296.64,-384.24 296.64,-384.24"/>
+<text text-anchor="middle" x="291.23" y="-413.4" font-family="Arial" font-size="14.00">OFHULINK</text>
+<text text-anchor="middle" x="284.74" y="-388.44" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="432.05" y="-465.39" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="edge16" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
-<path fill="none" stroke="#528b8b" d="M418.71,-445.7C383.88,-440.17 341.62,-430.82 330.41,-417 325.31,-410.71 323.66,-402.38 323.62,-394.32"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="324.34,-384.08 328.13,-394.37 323.99,-389.07 323.64,-394.06 323.64,-394.06 323.64,-394.06 323.99,-389.07 319.15,-393.74 324.34,-384.08 324.34,-384.08"/>
-<text text-anchor="middle" x="364.91" y="-405.8" font-family="Arial" font-size="14.00">OFHSLINK</text>
-<text text-anchor="middle" x="313.84" y="-387.88" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="407.21" y="-434.5" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M444.73,-455.18C407.79,-449.9 363.01,-440.66 351.25,-426 345.81,-419.21 344.37,-410.17 344.67,-401.53"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="345.77,-391.38 349.17,-401.81 345.23,-396.36 344.7,-401.33 344.7,-401.33 344.7,-401.33 345.23,-396.36 340.22,-400.84 345.77,-391.38 345.77,-391.38"/>
+<text text-anchor="middle" x="388.53" y="-413.4" font-family="Arial" font-size="14.00">OFHSLINK</text>
+<text text-anchor="middle" x="333.87" y="-395.58" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="432.13" y="-442.58" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="edge18" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
-<path fill="none" stroke="#528b8b" d="M446.69,-434.8C433.41,-424.67 415.88,-411.93 399.41,-402 391.71,-397.36 383.32,-392.81 375.08,-388.6"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="365.89,-384.01 376.85,-384.45 370.36,-386.24 374.84,-388.48 374.84,-388.48 374.84,-388.48 370.36,-386.24 372.83,-392.5 365.89,-384.01 365.89,-384.01"/>
-<text text-anchor="middle" x="457.41" y="-405.8" font-family="Arial" font-size="14.00">OFHMLINK</text>
-<text text-anchor="middle" x="355.39" y="-387.81" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="435.19" y="-423.6" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M473.49,-443.96C465.51,-438.27 456.59,-431.87 448.45,-426 438.19,-418.59 436.34,-415.64 425.44,-409.2 417.45,-404.48 408.71,-399.91 400.11,-395.72"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="390.88,-391.33 401.84,-391.56 395.4,-393.47 399.91,-395.62 399.91,-395.62 399.91,-395.62 395.4,-393.47 397.98,-399.69 390.88,-391.33 390.88,-391.33"/>
+<text text-anchor="middle" x="487.93" y="-413.4" font-family="Arial" font-size="14.00">OFHMLINK</text>
+<text text-anchor="middle" x="378.98" y="-395.53" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="460.89" y="-431.36" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction -->
 <g id="edge19" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranODUFunction</title>
-<path fill="none" stroke="#528b8b" d="M486.93,-434.76C495.59,-424.62 502.42,-411.88 494.41,-402 481.04,-385.52 430.11,-376.5 388.15,-371.77"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="377.98,-370.68 388.41,-367.27 382.96,-371.21 387.93,-371.74 387.93,-371.74 387.93,-371.74 382.96,-371.21 387.45,-376.22 377.98,-370.68 377.98,-370.68"/>
-<text text-anchor="middle" x="533.41" y="-405.8" font-family="Arial" font-size="14.00">OFHCLINK</text>
-<text text-anchor="middle" x="388.48" y="-374.48" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="475.43" y="-423.56" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M516.81,-443.66C526.28,-433.08 534,-419.64 525.44,-409.2 511.36,-392.03 458.19,-383.11 414.11,-378.59"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="404,-377.61 414.39,-374.1 408.98,-378.1 413.95,-378.58 413.95,-378.58 413.95,-378.58 408.98,-378.1 413.52,-383.06 404,-377.61 404,-377.61"/>
+<text text-anchor="middle" x="567.23" y="-413.4" font-family="Arial" font-size="14.00">OFHCLINK</text>
+<text text-anchor="middle" x="415.9" y="-381.81" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="504.21" y="-431.06" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO -->
 <g id="edge17" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO</title>
-<path fill="none" stroke="#528b8b" d="M518.1,-443.04C536.64,-437.82 556.92,-429.65 572.41,-417 592.3,-400.75 601.41,-392.69 601.41,-367 601.41,-367 601.41,-367 601.41,-104 601.41,-77.22 580.16,-55.12 559.99,-40.18"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="551.77,-34.41 562.54,-36.47 555.87,-37.28 559.96,-40.15 559.96,-40.15 559.96,-40.15 555.87,-37.28 557.38,-43.84 551.77,-34.41 551.77,-34.41"/>
-<text text-anchor="middle" x="637.41" y="-231.8" font-family="Arial" font-size="14.00">OFHMLINK</text>
-<text text-anchor="middle" x="562.27" y="-38.21" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="529.6" y="-431.84" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M550.18,-453.12C570.38,-448.02 592.59,-439.67 609.44,-426 629.93,-409.38 638.44,-400.58 638.44,-374.2 638.44,-374.2 638.44,-374.2 638.44,-105.8 638.44,-77.41 615,-54.45 593.34,-39.29"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="584.86,-33.67 595.68,-35.44 589.03,-36.43 593.2,-39.19 593.2,-39.19 593.2,-39.19 589.03,-36.43 590.71,-42.94 584.86,-33.67 584.86,-33.67"/>
+<text text-anchor="middle" x="676.93" y="-235.8" font-family="Arial" font-size="14.00">OFHMLINK</text>
+<text text-anchor="middle" x="596.76" y="-37.87" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="562.78" y="-457.32" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO -->
 <g id="edge20" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranORUFunction&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranSMO</title>
-<path fill="none" stroke="#528b8b" d="M518.16,-443.77C585.25,-431.23 696.41,-404.76 696.41,-367 696.41,-367 696.41,-367 696.41,-104 696.41,-44.45 612.52,-26.62 561.91,-21.28"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="551.66,-20.32 562.04,-16.77 556.64,-20.79 561.62,-21.25 561.62,-21.25 561.62,-21.25 556.64,-20.79 561.2,-25.73 551.66,-20.32 551.66,-20.32"/>
-<text text-anchor="middle" x="720.91" y="-231.8" font-family="Arial" font-size="14.00">O1LINK</text>
-<text text-anchor="middle" x="562.16" y="-9.12" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="529.66" y="-447.57" font-family="Arial" font-size="14.00">0..1</text>
+<path fill="none" stroke="#528b8b" d="M550.03,-452.92C620.94,-440.51 738.44,-413.95 738.44,-374.2 738.44,-374.2 738.44,-374.2 738.44,-105.8 738.44,-42.58 647.55,-25.37 594.59,-20.71"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="584.54,-19.94 594.85,-16.22 589.52,-20.32 594.51,-20.71 594.51,-20.71 594.51,-20.71 589.52,-20.32 594.16,-25.19 584.54,-19.94 584.54,-19.94"/>
+<text text-anchor="middle" x="765.04" y="-235.8" font-family="Arial" font-size="14.00">O1LINK</text>
+<text text-anchor="middle" x="596.44" y="-7.34" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="562.63" y="-440.32" font-family="Arial" font-size="14.00">0..1</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranSector -->
 <g id="node11" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranSector</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="553.41,-384 497.41,-384 497.41,-348 553.41,-348 553.41,-384"/>
-<text text-anchor="middle" x="525.41" y="-362.3" font-family="Arial" font-size="14.00">Sector</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="590.73,-391.2 530.15,-391.2 530.15,-355.2 590.73,-355.2 590.73,-391.2"/>
+<text text-anchor="middle" x="560.44" y="-369" font-family="Arial" font-size="14.00">Sector</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ranSector&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU -->
 <g id="edge21" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ranSector&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU</title>
-<path fill="none" stroke="#528b8b" d="M511.45,-347.8C501.53,-335.59 488.06,-318.99 476.93,-305.28"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="470.35,-297.18 480.15,-302.1 473.5,-301.06 476.65,-304.94 476.65,-304.94 476.65,-304.94 473.5,-301.06 473.16,-307.78 470.35,-297.18 470.35,-297.18"/>
-<text text-anchor="middle" x="525.91" y="-318.8" font-family="Arial" font-size="14.00">GROUPS</text>
-<text text-anchor="middle" x="458.85" y="-300.98" font-family="Arial" font-size="14.00">0..1</text>
-<text text-anchor="middle" x="500.95" y="-336.6" font-family="Arial" font-size="14.00">0..*</text>
+<path fill="none" stroke="#528b8b" d="M546.02,-355.05C535.32,-342.33 520.57,-324.79 508.55,-310.49"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="501.83,-302.51 511.71,-307.27 505.05,-306.34 508.27,-310.17 508.27,-310.17 508.27,-310.17 505.05,-306.34 504.83,-313.06 501.83,-302.51 501.83,-302.51"/>
+<text text-anchor="middle" x="562.94" y="-324.6" font-family="Arial" font-size="14.00">GROUPS</text>
+<text text-anchor="middle" x="489.24" y="-306.71" font-family="Arial" font-size="14.00">0..1</text>
+<text text-anchor="middle" x="534.12" y="-342.45" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 </g>
 </svg>

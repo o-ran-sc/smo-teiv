@@ -1,0 +1,20 @@
+digraph "o-ran-smo-teiv-cloud" {
+graph ["rankdir"="LR"]
+node ["shape"="rect","style"="filled","color"="black","fillcolor"="#89240A41","fontname"="Arial"]
+"o-ran-smo-teiv-cloud" ["fillcolor"="lightblue"]
+"CloudifiedNF-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        cloudifiedNfId</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        serviceOrchestrationId</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"NFDeployment-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        nfDeploymentId</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        resourceOrchestrationId</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        serviceOrchestrationId</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"NodeCluster-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        nodeClusterId</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        nodeClusterName</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        resourceOrchestrationId</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        serviceOrchestrationId</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"OCloudNamespace-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        oCloudNamespaceName</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"OCloudSite-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        oCloudSiteId</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        oCloudSiteLocation</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD align='left'>        supportedMITs</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"o-ran-smo-teiv-cloud" -> "CloudifiedNF"
+"o-ran-smo-teiv-cloud" -> "NFDeployment"
+"o-ran-smo-teiv-cloud" -> "NodeCluster"
+"o-ran-smo-teiv-cloud" -> "OCloudNamespace"
+"o-ran-smo-teiv-cloud" -> "OCloudSite"
+"CloudifiedNF" -> "CloudifiedNF-attributes"
+"NFDeployment" -> "NFDeployment-attributes"
+"NodeCluster" -> "NodeCluster-attributes"
+"OCloudNamespace" -> "OCloudNamespace-attributes"
+"OCloudSite" -> "OCloudSite-attributes"
+}

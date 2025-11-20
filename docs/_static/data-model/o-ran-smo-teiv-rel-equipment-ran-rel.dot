@@ -1,0 +1,11 @@
+digraph "moduleName" {
+node ["shape"="box","fontname"="Arial"]
+edge ["color"="darkslategray4","fontname"="Arial"]
+"o-ran-smo-teiv-equipmentAntennaModule" ["label"="AntennaModule","style"="filled","fillcolor"="#9A38E341"]
+"o-ran-smo-teiv-ranAntennaCapability" ["label"="AntennaCapability","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranNRCellDU" ["label"="NRCellDU","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-ranSector" ["label"="Sector","style"="filled","fillcolor"="#366F3441"]
+"o-ran-smo-teiv-equipmentAntennaModule" -> "o-ran-smo-teiv-ranNRCellDU" ["label"="SERVES","headlabel"="1..*","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-equipmentAntennaModule" -> "o-ran-smo-teiv-ranAntennaCapability" ["label"="SERVES","headlabel"="0..*","taillabel"="0..*","arrowhead"="vee"]
+"o-ran-smo-teiv-ranSector" -> "o-ran-smo-teiv-equipmentAntennaModule" ["label"="GROUPS","headlabel"="0..1","taillabel"="0..*","arrowhead"="vee"]
+}

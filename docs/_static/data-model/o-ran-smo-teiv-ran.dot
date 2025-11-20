@@ -1,0 +1,38 @@
+digraph "o-ran-smo-teiv-ran" {
+graph ["rankdir"="LR"]
+node ["shape"="rect","style"="filled","color"="black","fillcolor"="#366F3441","fontname"="Arial"]
+"o-ran-smo-teiv-ran" ["fillcolor"="lightblue"]
+"AntennaCapability-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        eUtranFqBands</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        geranFqBands</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        nRFqBands</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"NRCellCU-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        cellLocalId</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        nCI</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        nRTAC</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        plmnId</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR></TABLE>>]
+"NRCellDU-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        cellLocalId</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        nCI</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        nRPCI</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        nRTAC</TD> <TD align='right'>int32</TD> </TR></TABLE>>]
+"NRSectorCarrier-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        arfcnDL</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        arfcnUL</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        bSChannelBwDL</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        frequencyDL</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        frequencyUL</TD> <TD align='right'>int32</TD> </TR></TABLE>>]
+"NearRTRICFunction-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        nearRtRicId</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        pLMNId</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR></TABLE>>]
+"OCUCPFunction-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        gNBCUName</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        gNBId</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        gNBIdLength</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        pLMNId</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR></TABLE>>]
+"OCUUPFunction-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        gNBId</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        gNBIdLength</TD> <TD align='right'>int32</TD> </TR><TR> <TD align='left'>        pLMNIdList</TD> <TD align='right'>[]</TD> </TR></TABLE>>]
+"ODUFunction-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        dUpLMNId</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD align='left'>        gNBDUId</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        gNBId</TD> <TD align='right'>int64</TD> </TR><TR> <TD align='left'>        gNBIdLength</TD> <TD align='right'>int32</TD> </TR></TABLE>>]
+"ORUFunction-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        oruId</TD> <TD align='right'>int64</TD> </TR></TABLE>>]
+"SMO-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        smoName</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"Sector-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        azimuth</TD> <TD align='right'>decimal64</TD> </TR><TR> <TD align='left'>        geo-location</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD align='left'>        sectorId</TD> <TD align='right'>uint64</TD> </TR></TABLE>>]
+"o-ran-smo-teiv-ran" -> "AntennaCapability"
+"o-ran-smo-teiv-ran" -> "NRCellCU"
+"o-ran-smo-teiv-ran" -> "NRCellDU"
+"o-ran-smo-teiv-ran" -> "NRSectorCarrier"
+"o-ran-smo-teiv-ran" -> "NearRTRICFunction"
+"o-ran-smo-teiv-ran" -> "OCUCPFunction"
+"o-ran-smo-teiv-ran" -> "OCUUPFunction"
+"o-ran-smo-teiv-ran" -> "ODUFunction"
+"o-ran-smo-teiv-ran" -> "ORUFunction"
+"o-ran-smo-teiv-ran" -> "SMO"
+"o-ran-smo-teiv-ran" -> "Sector"
+"AntennaCapability" -> "AntennaCapability-attributes"
+"NRCellCU" -> "NRCellCU-attributes"
+"NRCellDU" -> "NRCellDU-attributes"
+"NRSectorCarrier" -> "NRSectorCarrier-attributes"
+"NearRTRICFunction" -> "NearRTRICFunction-attributes"
+"OCUCPFunction" -> "OCUCPFunction-attributes"
+"OCUUPFunction" -> "OCUUPFunction-attributes"
+"ODUFunction" -> "ODUFunction-attributes"
+"ORUFunction" -> "ORUFunction-attributes"
+"SMO" -> "SMO-attributes"
+"Sector" -> "Sector-attributes"
+}

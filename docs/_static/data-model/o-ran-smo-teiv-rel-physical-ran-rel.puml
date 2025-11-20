@@ -1,0 +1,7 @@
+@startuml
+skinparam componentStyle rectangle
+PhysicalAppliance "0..*" --> "0..*" NearRTRICFunction : SERVES
+PhysicalAppliance "0..*" --> "0..*" OCUCPFunction : SERVES
+PhysicalAppliance "0..*" --> "0..*" OCUUPFunction : SERVES
+PhysicalAppliance "0..*" --> "0..*" ODUFunction : SERVES
+@enduml

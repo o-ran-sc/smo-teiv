@@ -1,0 +1,11 @@
+digraph "o-ran-smo-teiv-physical" {
+graph ["rankdir"="LR"]
+node ["shape"="rect","style"="filled","color"="black","fillcolor"="#074EE241","fontname"="Arial"]
+"o-ran-smo-teiv-physical" ["fillcolor"="lightblue"]
+"PhysicalAppliance-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        modelName</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>        vendorName</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"Site-attributes" ["label"=<<TABLE border='0' cellborder='0' cellspacing='0' cellpadding='0'><TR> <TD align='left'>id</TD> <TD align='right'>string</TD> </TR><TR> <TD align='left'>sourceIds</TD> <TD align='right' >&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD colspan='2' align='left'> attributes: </TD> </TR><TR> <TD align='left'>        siteLocation</TD> <TD align='right'>&lt;&lt; Refer to Module &gt;&gt;</TD> </TR><TR> <TD align='left'>        siteName</TD> <TD align='right'>string</TD> </TR></TABLE>>]
+"o-ran-smo-teiv-physical" -> "PhysicalAppliance"
+"o-ran-smo-teiv-physical" -> "Site"
+"PhysicalAppliance" -> "PhysicalAppliance-attributes"
+"Site" -> "Site-attributes"
+}

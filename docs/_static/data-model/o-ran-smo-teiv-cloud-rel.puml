@@ -1,0 +1,17 @@
+@startuml
+skinparam componentStyle rectangle
+class CloudifiedNF #89240A41 {
+}
+class NFDeployment #89240A41 {
+}
+class NodeCluster #89240A41 {
+}
+class OCloudNamespace #89240A41 {
+}
+class OCloudSite #89240A41 {
+}
+CloudifiedNF "1..1" --> "1..*" NFDeployment : COMPRISES
+NFDeployment "1..*" --> "1..*" OCloudNamespace : DEPLOYED
+NodeCluster "1..*" --> "1..*" OCloudSite : LOCATED
+OCloudNamespace "1..*" --> "1..1" NodeCluster : DEPLOYED
+@enduml

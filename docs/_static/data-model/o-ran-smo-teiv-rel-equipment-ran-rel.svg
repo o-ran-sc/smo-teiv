@@ -1,58 +1,58 @@
-<svg width="232px" height="218px"
- viewBox="0.00 0.00 231.50 218.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 214.0)">
+<svg width="252px" height="222px"
+ viewBox="0.00 0.00 251.58 221.60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 217.6)">
 <title>moduleName</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-214 227.5,-214 227.5,4 -4,4"/>
-<!-- AntennaModule -->
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-217.6 247.58,-217.6 247.58,4 -4,4"/>
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule -->
 <g id="node1" class="node">
-<title>AntennaModule</title>
-<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="179,-123 67,-123 67,-87 179,-87 179,-123"/>
-<text text-anchor="middle" x="123" y="-101.3" font-family="Arial" font-size="14.00">AntennaModule</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule</title>
+<polygon fill="#9a38e3" fill-opacity="0.254902" stroke="black" points="196.67,-124.8 73.91,-124.8 73.91,-88.8 196.67,-88.8 196.67,-124.8"/>
+<text text-anchor="middle" x="135.29" y="-102.6" font-family="Arial" font-size="14.00">AntennaModule</text>
 </g>
-<!-- AntennaCapability -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability -->
 <g id="node2" class="node">
-<title>AntennaCapability</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="126,-36 0,-36 0,0 126,0 126,-36"/>
-<text text-anchor="middle" x="63" y="-14.3" font-family="Arial" font-size="14.00">AntennaCapability</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="140.37,-36 0.21,-36 0.21,0 140.37,0 140.37,-36"/>
+<text text-anchor="middle" x="70.29" y="-13.8" font-family="Arial" font-size="14.00">AntennaCapability</text>
 </g>
-<!-- AntennaModule&#45;&gt;AntennaCapability -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability -->
 <g id="edge2" class="edge">
-<title>AntennaModule&#45;&gt;AntennaCapability</title>
-<path fill="none" stroke="#528b8b" d="M110.86,-86.8C102.32,-74.7 90.74,-58.3 81.12,-44.67"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="75.12,-36.18 84.57,-41.75 78.01,-40.26 80.89,-44.35 80.89,-44.35 80.89,-44.35 78.01,-40.26 77.21,-46.94 75.12,-36.18 75.12,-36.18"/>
-<text text-anchor="middle" x="124.5" y="-57.8" font-family="Arial" font-size="14.00">SERVES</text>
-<text text-anchor="middle" x="64.62" y="-39.98" font-family="Arial" font-size="14.00">0..*</text>
-<text text-anchor="middle" x="100.36" y="-75.6" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranAntennaCapability</title>
+<path fill="none" stroke="#528b8b" d="M122.45,-88.65C113.01,-76.05 100.03,-58.72 89.38,-44.5"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="83.1,-36.11 92.7,-41.42 86.1,-40.12 89.1,-44.12 89.1,-44.12 89.1,-44.12 86.1,-40.12 85.5,-46.82 83.1,-36.11 83.1,-36.11"/>
+<text text-anchor="middle" x="138.68" y="-58.2" font-family="Arial" font-size="14.00">SERVES</text>
+<text text-anchor="middle" x="71.21" y="-40.31" font-family="Arial" font-size="14.00">0..*</text>
+<text text-anchor="middle" x="110.55" y="-76.05" font-family="Arial" font-size="14.00">0..*</text>
 </g>
-<!-- NRCellDU -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU -->
 <g id="node3" class="node">
-<title>NRCellDU</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="223.5,-36 144.5,-36 144.5,0 223.5,0 223.5,-36"/>
-<text text-anchor="middle" x="184" y="-14.3" font-family="Arial" font-size="14.00">NRCellDU</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="243.38,-36 159.2,-36 159.2,0 243.38,0 243.38,-36"/>
+<text text-anchor="middle" x="201.29" y="-13.8" font-family="Arial" font-size="14.00">NRCellDU</text>
 </g>
-<!-- AntennaModule&#45;&gt;NRCellDU -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU -->
 <g id="edge1" class="edge">
-<title>AntennaModule&#45;&gt;NRCellDU</title>
-<path fill="none" stroke="#528b8b" d="M140.68,-86.94C145.91,-81.46 151.45,-75.19 156,-69 161.42,-61.62 166.56,-53.09 170.92,-45.18"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="175.65,-36.3 174.92,-47.24 173.3,-40.71 170.95,-45.13 170.95,-45.13 170.95,-45.13 173.3,-40.71 166.98,-43.01 175.65,-36.3 175.65,-36.3"/>
-<text text-anchor="middle" x="193.5" y="-57.8" font-family="Arial" font-size="14.00">SERVES</text>
-<text text-anchor="middle" x="165.15" y="-40.1" font-family="Arial" font-size="14.00">1..*</text>
-<text text-anchor="middle" x="130.18" y="-75.74" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;ranNRCellDU</title>
+<path fill="none" stroke="#528b8b" d="M155.62,-88.66C161.37,-83.27 167.4,-77.08 172.29,-70.8 178.43,-62.92 184.08,-53.58 188.73,-45.01"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="193.35,-36.13 192.72,-47.08 191.04,-40.57 188.73,-45 188.73,-45 188.73,-45 191.04,-40.57 184.74,-42.92 193.35,-36.13 193.35,-36.13"/>
+<text text-anchor="middle" x="212.68" y="-58.2" font-family="Arial" font-size="14.00">SERVES</text>
+<text text-anchor="middle" x="181.46" y="-40.33" font-family="Arial" font-size="14.00">1..*</text>
+<text text-anchor="middle" x="143.72" y="-76.06" font-family="Arial" font-size="14.00">0..*</text>
 </g>
-<!-- Sector -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranSector -->
 <g id="node4" class="node">
-<title>Sector</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="151,-210 95,-210 95,-174 151,-174 151,-210"/>
-<text text-anchor="middle" x="123" y="-188.3" font-family="Arial" font-size="14.00">Sector</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranSector</title>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="165.58,-213.6 105,-213.6 105,-177.6 165.58,-177.6 165.58,-213.6"/>
+<text text-anchor="middle" x="135.29" y="-191.4" font-family="Arial" font-size="14.00">Sector</text>
 </g>
-<!-- Sector&#45;&gt;AntennaModule -->
+<!-- o&#45;ran&#45;smo&#45;teiv&#45;ranSector&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule -->
 <g id="edge3" class="edge">
-<title>Sector&#45;&gt;AntennaModule</title>
-<path fill="none" stroke="#528b8b" d="M123,-173.8C123,-162.16 123,-146.55 123,-133.24"/>
-<polygon fill="#528b8b" stroke="#528b8b" points="123,-123.18 127.5,-133.18 123,-128.18 123,-133.18 123,-133.18 123,-133.18 123,-128.18 118.5,-133.18 123,-123.18 123,-123.18"/>
-<text text-anchor="middle" x="153.5" y="-144.8" font-family="Arial" font-size="14.00">GROUPS</text>
-<text text-anchor="middle" x="111.5" y="-126.98" font-family="Arial" font-size="14.00">0..1</text>
-<text text-anchor="middle" x="112.5" y="-162.6" font-family="Arial" font-size="14.00">0..*</text>
+<title>o&#45;ran&#45;smo&#45;teiv&#45;ranSector&#45;&gt;o&#45;ran&#45;smo&#45;teiv&#45;equipmentAntennaModule</title>
+<path fill="none" stroke="#528b8b" d="M135.29,-177.45C135.29,-165.32 135.29,-148.82 135.29,-134.92"/>
+<polygon fill="#528b8b" stroke="#528b8b" points="135.29,-124.91 139.79,-134.91 135.29,-129.91 135.29,-134.91 135.29,-134.91 135.29,-134.91 135.29,-129.91 130.79,-134.91 135.29,-124.91 135.29,-124.91"/>
+<text text-anchor="middle" x="166.78" y="-147" font-family="Arial" font-size="14.00">GROUPS</text>
+<text text-anchor="middle" x="122.69" y="-129.11" font-family="Arial" font-size="14.00">0..1</text>
+<text text-anchor="middle" x="123.39" y="-164.85" font-family="Arial" font-size="14.00">0..*</text>
 </g>
 </g>
 </svg>

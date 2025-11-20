@@ -1,0 +1,8 @@
+@startuml
+skinparam componentStyle rectangle
+class PhysicalAppliance #074EE241 {
+}
+class Site #074EE241 {
+}
+PhysicalAppliance "0..*" --> "0..*" Site : INSTALLEDAT
+@enduml
