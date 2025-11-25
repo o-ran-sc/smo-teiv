@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96384ed1_fe8a634e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-11-25T09:56:30Z",
+      "side": 1,
+      "message": "Please also check in the first versions of all the files copied over too. (*.svg, *.puml, *.dot)",
+      "revId": "e53f88a5eda4d186b38d90bfaa44cccb2720409a",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bbc07425_c12ac3e2",
