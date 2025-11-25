@@ -29,6 +29,7 @@ public class Constants {
     public static final String _3GPP_GNBDUFUNTION_PREFIX = "_3gpp-nr-nrm-gnbdufunction";
     public static final String _3GPP_GNBCUCPFUNTION_PREFIX = "_3gpp-nr-nrm-gnbcucpfunction";
     public static final String SMO_TEIV_OAM_PREFIX = "o-ran-smo-teiv-oam";
+    public static final String SMO_TEIV_CLOUD_PREFIX = "o-ran-smo-teiv-cloud";
 
     //relationshipType
     public static final String MANAGES = "MANAGES";
@@ -42,4 +43,8 @@ public class Constants {
     public static final String OCUCPFUNCTION_O1LINK_SMO = "OCUCPFUNCTION_O1LINK_SMO";
     public static final String MANAGEDELEMENT_MANAGES_OCUCPFUNCTION = "MANAGEDELEMENT_MANAGES_OCUCPFUNCTION";
     public static final String MANAGEDELEMENT_MANAGES_ODUFUNCTION = "MANAGEDELEMENT_MANAGES_ODUFUNCTION";
+
+    public static final String ENTITY_OCLOUD_NAMESPACE = "OCloudNamespace";
+    public static final String ENTITY_NODE_CLUSTER = "NodeCluster";
+    public static final String REL_DEPLOYED_ON = "DEPLOYED_ON";
 }
