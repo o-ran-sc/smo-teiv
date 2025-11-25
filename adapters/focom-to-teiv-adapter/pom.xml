@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- spotless:off -->
+<!--
+  ============LICENSE_START=======================================================
+  Copyright (C) 2025 OpenInfra Foundation Europe
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  SPDX-License-Identifier: Apache-2.0
+  ============LICENSE_END=========================================================
+ -->
+<!-- spotless:on -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.oran.smo.teiv.adapters</groupId>
+        <artifactId>adapters</artifactId>
+        <version>0.3.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>focom-to-teiv-adapter</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-api</artifactId>
+            <version>${cloudevents.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-core</artifactId>
+            <version>${cloudevents.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-kafka</artifactId>
+            <version>${cloudevents.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.oran.smo.teiv.adapters</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>0.3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>generator-annotations</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.sundr</groupId>
+            <artifactId>builder-annotations</artifactId>
+            <version>${sundr.builder.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-focom-to-teiv-adapter-image</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <pullRegistry>${env.CONTAINER_PULL_REGISTRY}</pullRegistry>
+                            <pushRegistry>${env.CONTAINER_PUSH_REGISTRY}</pushRegistry>
+                            <images>
+                                <image>
+                                    <name>
+                                        o-ran-sc/smo-focom-to-teiv-adapter:${project.version}
+                                    </name>
+                                    <build>
+                                        <contextDir>${project.basedir}</contextDir>
+                                        <dockerFile>Dockerfile</dockerFile>
+                                        <args>
+                                            <JAR>${project.build.finalName}.jar</JAR>
+                                        </args>
+                                        <tags>
+                                            <tag>${project.version}</tag>
+                                            <tag>latest</tag>
+                                        </tags>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>java-generator-maven-plugin</artifactId>
+                <version>${fabric8.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>src/main/resources/crds</source>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <fabric8.version>7.0.0</fabric8.version>
+        <sundr.builder.version>0.200.0</sundr.builder.version>
+        <cloudevents.version>3.0.0</cloudevents.version>
+    </properties>
+</project>

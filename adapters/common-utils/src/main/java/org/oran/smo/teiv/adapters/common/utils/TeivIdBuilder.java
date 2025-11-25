@@ -20,6 +20,7 @@
 package org.oran.smo.teiv.adapters.common.utils;
 
 import static org.oran.smo.teiv.adapters.common.utils.Constants.ORAN_SMO_TEIV_URN_PREFIX;
+import static org.oran.smo.teiv.adapters.common.utils.Constants.SMO_TEIV_CLOUD_PREFIX;
 
 public class TeivIdBuilder {
 
@@ -51,6 +52,10 @@ public class TeivIdBuilder {
 
     public static String buildTeivRelationshipTypeName(String type, String sourceId, String destinationId) {
         return buildRelationshipTypeName(ORAN_SMO_TEIV_URN_PREFIX, type, sourceId, destinationId);
+    }
+
+    public static String buildTeivFocomRelationshipTypeName(String type, String sourceId, String destinationId) {
+        return buildRelationshipTypeName(SMO_TEIV_CLOUD_PREFIX, type, sourceId, destinationId);
     }
 
     /**
