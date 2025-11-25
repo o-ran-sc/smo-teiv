@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe1d6cc7_014902f7",
+        "filename": "teiv/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-11-25T15:19:30Z",
+      "side": 1,
+      "message": "I think this should be generate-resources phase. \nOtherwise this review is fine.",
+      "range": {
+        "startLine": 716,
+        "startChar": 31,
+        "endLine": 716,
+        "endChar": 38
+      },
+      "revId": "1181068bab31b81fb95d929d1614220167206aba",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
