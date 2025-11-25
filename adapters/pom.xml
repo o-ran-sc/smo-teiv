@@ -45,6 +45,7 @@
     <modules>
         <module>ncmp-to-teiv-adapter</module>
         <module>common-utils</module>
+        <module>focom-to-teiv-adapter</module>
     </modules>
 
     <properties>
@@ -52,4 +53,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

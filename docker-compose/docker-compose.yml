@@ -71,7 +71,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-topology_exposure_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-dbpassword}
     restart: always
-#    depends_on:
+#   depends_on:
 #      - pgsql-schema-generator
     deploy:
       resources:
@@ -168,3 +168,17 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 3
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+#  focom-to-teiv-adapter:
+#    container_name: focom-to-teiv-adapter
+#    image: o-ran-sc/smo-focom-to-teiv-adapter:latest
+#    depends_on:
+#      - topology-ingestion-inventory
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+#    volumes:
+#      - ./kubeconfig:/opt/app/teiv/config/kubeconfig:ro
+#    extra_hosts:
+#      - "focom-cluster-control-plane:host-gateway"
+#      - "kind-control-plane:host-gateway"
