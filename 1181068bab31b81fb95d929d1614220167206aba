@@ -22,6 +22,30 @@
       },
       "revId": "1181068bab31b81fb95d929d1614220167206aba",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94c96dc2_a5c92520",
+        "filename": "teiv/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1002721
+      },
+      "writtenOn": "2025-11-26T11:02:43Z",
+      "side": 1,
+      "message": "Initially it wasnt working with generate-resources phase, as graphs was also generatimg in that phase. But looking more into it, I found a existing plugin which can do the copy files in generate-resources phase itself, updated the same. Ignore the newly added plugin previously.",
+      "parentUuid": "fe1d6cc7_014902f7",
+      "range": {
+        "startLine": 716,
+        "startChar": 31,
+        "endLine": 716,
+        "endChar": 38
+      },
+      "revId": "1181068bab31b81fb95d929d1614220167206aba",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
