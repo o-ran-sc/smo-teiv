@@ -605,6 +605,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83eb9403_7800c329",
+        "filename": "adapters/focom-to-teiv-adapter/src/main/java/org/oran/smo/teiv/adapters/focom_to_teiv_adapter/focomprovisioningrequest/FocomProvisioningRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1002721
+      },
+      "writtenOn": "2025-12-03T09:17:25Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ae3cc854_2b8e74eb",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 33,
+        "endChar": 37
+      },
+      "revId": "1c2cf1e1624e0650373b8a0cdd550f664664fb69",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5ebdddba_ddb16a15",
