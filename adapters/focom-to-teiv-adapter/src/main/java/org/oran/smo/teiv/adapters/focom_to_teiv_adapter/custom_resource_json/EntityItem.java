@@ -32,4 +32,9 @@ public class EntityItem {
 
     @JsonProperty("attributes")
     private Map<String, Object> attributes;
+
+    public boolean isEmpty() {
+        return (id == null || id.isBlank()) &&
+                (attributes == null || attributes.isEmpty());
+    }
 }

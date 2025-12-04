@@ -27,8 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.oran.smo.teiv.adapters.focom_to_teiv_adapter.service.FocomToTeivModelBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.testcontainers.shaded.com.google.common.hash.Hashing;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Slf4j
@@ -38,14 +40,30 @@ public class FocomToTeivIngestion {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final KafkaEventProducer kafkaEventProducer;
-    private final FocomToTeivModelBuilder jsonBuilder;
+    private final FocomToTeivModelBuilder focomToTeivModelBuilder;
+
+    private String lastPayloadHash = null;
 
     @Scheduled(fixedRateString = "${polling.interval}")
     public void pollExternalApi() throws IOException {
-        Map<String, Object> json = jsonBuilder.getFocomtoTeivJson();
-        log.debug("Retrieved JSON for FOCOM_PROVISION_REQUEST_NAME: {}", json);
+        Map<String, Object> modelJson = focomToTeivModelBuilder.getFocomtoTeivJson();
+        if (modelJson == null || modelJson.isEmpty()) {
+            log.info("FOCOM JSON is empty. CloudEvent will NOT be sent.");
+            return;
+        }
+        log.debug("Retrieved JSON for FOCOM_PROVISION_REQUEST_NAME: {}", modelJson);
+
+        String newPayload = objectMapper.writeValueAsString(modelJson);
+        String newPayloadHash = Hashing.sha256().hashString(newPayload, StandardCharsets.UTF_8).toString();
+
+        if (newPayloadHash.equals(lastPayloadHash)) {
+            log.info("No change detected in CR. Skipping CloudEvent.");
+            return;
+        }
+
         try {
-            sendCloudEvent(json, "merge");
+            sendCloudEvent(modelJson, "merge");
+            lastPayloadHash = newPayloadHash;
         } catch (IOException e) {
             log.error("Failed to poll external API or send CloudEvent", e);
         }

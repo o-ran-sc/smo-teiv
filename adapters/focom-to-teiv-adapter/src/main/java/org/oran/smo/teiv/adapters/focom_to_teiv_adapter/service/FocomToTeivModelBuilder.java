@@ -22,6 +22,7 @@ package org.oran.smo.teiv.adapters.focom_to_teiv_adapter.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.nephio.focom.v1alpha1.FocomProvisioningRequest;
 import org.oran.provisioning.o2ims.v1alpha1.ProvisioningRequest;
@@ -32,10 +33,11 @@ import org.oran.smo.teiv.adapters.focom_to_teiv_adapter.custom_resource_json.Rel
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 import static org.oran.smo.teiv.adapters.common.utils.Constants.ENTITY_OCLOUD_NAMESPACE;
@@ -63,10 +65,23 @@ public class FocomToTeivModelBuilder {
         List<EntityItem> oCloudNamespaces = new ArrayList<>();
         List<EntityItem> nodeClusters = new ArrayList<>();
         List<RelationshipItem> deployOnRelationships = new ArrayList<>();
+        List<FocomProvisioningRequest> focomRequests;
 
         int index = 1;
 
-        List<FocomProvisioningRequest> focomRequests = service.getAllFocomProvisioningRequests();
+        try {
+            focomRequests = service.getAllFocomProvisioningRequests();
+        } catch (KubernetesClientException e) {
+            log.error("Failed to retrieve FOCOM provisioning requests from Kubernetes: {}", e.getMessage(), e);
+            return Collections.emptyMap();
+        } catch (Exception e) {
+            log.error("Unexpected error while retrieving FOCOM provisioning requests", e);
+            return Collections.emptyMap();
+        }
+
+        if (focomRequests == null || focomRequests.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
         for (FocomProvisioningRequest focomProvisioningRequest : focomRequests) {
 
@@ -76,6 +91,11 @@ public class FocomToTeivModelBuilder {
             oCloudNamespaces.add(oCloudNamespace);
 
             EntityItem nodeCluster = buildNodeCluster(focomProvisioningRequest, index);
+            if (nodeCluster == null || nodeCluster.isEmpty()) {
+                log.error("Failed to build Nodecluster, attributes missing");
+                index++;
+                continue;
+            }
             nodeClusters.add(nodeCluster);
 
             RelationshipItem rel = modelService.getTeivRelationshipDeployOn(oCloudNamespace, nodeCluster, index);
@@ -89,20 +109,25 @@ public class FocomToTeivModelBuilder {
                 buildEntityTypeName(SMO_TEIV_CLOUD_PREFIX, ENTITY_OCLOUD_NAMESPACE),
                 oCloudNamespaces
         );
-        entities.put(
-                buildEntityTypeName(SMO_TEIV_CLOUD_PREFIX, ENTITY_NODE_CLUSTER),
-                nodeClusters
-        );
+
+        if (!nodeClusters.isEmpty()) {
+            entities.put(
+                    buildEntityTypeName(SMO_TEIV_CLOUD_PREFIX, ENTITY_NODE_CLUSTER),
+                    nodeClusters
+            );
+        }
 
         Map<String, List<RelationshipItem>> relationships = new HashMap<>();
-        relationships.put(
-                buildTeivFocomRelationshipTypeName(
-                        REL_DEPLOYED_ON,
-                        ENTITY_OCLOUD_NAMESPACE.toUpperCase(),
-                        ENTITY_NODE_CLUSTER.toUpperCase()
-                ),
-                deployOnRelationships
-        );
+        if (!deployOnRelationships.isEmpty()) {
+            relationships.put(
+                    buildTeivFocomRelationshipTypeName(
+                            REL_DEPLOYED_ON,
+                            ENTITY_OCLOUD_NAMESPACE.toUpperCase(),
+                            ENTITY_NODE_CLUSTER.toUpperCase()
+                    ),
+                    deployOnRelationships
+            );
+        }
 
         EntityAndRelationshipModel entityAndRelationshipModel = new EntityAndRelationshipModel();
         entityAndRelationshipModel.setEntities(List.of(entities));
@@ -128,14 +153,23 @@ public class FocomToTeivModelBuilder {
     }
 
     private EntityItem buildNodeCluster(FocomProvisioningRequest focomProvisioningRequest, int index) {
-        ProvisioningRequest o2imsReq = service.getO2imsProvisioningRequest(focomProvisioningRequest.getMetadata().getName());
+        ProvisioningRequest o2imsRequest;
+        try {
+            o2imsRequest = service.getO2imsProvisioningRequest(focomProvisioningRequest.getMetadata().getName());
+        } catch (KubernetesClientException e) {
+            log.error("Failed to retrieve O2ims provisioning requests from Kubernetes: {}", e.getMessage(), e);
+            return new EntityItem();
+        } catch (Exception e) {
+            log.error("Unexpected error while retrieving O2ims provisioning requests", e);
+            return new EntityItem();
+        }
 
         String clusterName = focomProvisioningRequest.getSpec().getTemplateParameters()
                 .getAdditionalProperties()
                 .get("clusterName")
                 .toString();
 
-        String nodeClusterId = String.valueOf(o2imsReq.getStatus()
+        String nodeClusterId = String.valueOf(o2imsRequest.getStatus()
                 .getProvisionedResourceSet()
                 .getOCloudNodeClusterId());
 
