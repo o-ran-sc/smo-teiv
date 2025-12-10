@@ -30,6 +30,9 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Slf4j
 @Configuration
@@ -58,12 +61,22 @@ public class KubernetesConfig {
 
         if (path != null && !path.isBlank()) {
             log.debug("Using explicit kubeconfig from path: {}", path);
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+            String kubeconfig;
 
-            if (inputStream == null) {
-                throw new IOException("Kubeconfig file not found in classpath: " + path);
+            // Check filesystem first
+            Path filePath = Paths.get(path);
+            if (Files.exists(filePath)) {
+                log.debug("Loading kubeconfig from filesystem: {}", path);
+                kubeconfig = Files.readString(filePath, StandardCharsets.UTF_8);
+            } else {
+                // Fall back to classpath
+                log.debug("Loading kubeconfig from classpath: {}", path);
+                InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+                if (inputStream == null) {
+                    throw new IOException("Kubeconfig file not found in filesystem or classpath: " + path);
+                }
+                kubeconfig = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             }
-            String kubeconfig = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             config = Config.fromKubeconfig(kubeconfig);
         } else {
             log.info("No kubeconfig path provided. Using default auto-configured Kubernetes client");
