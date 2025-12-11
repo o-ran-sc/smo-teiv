@@ -1,0 +1,11 @@
+---
+distribution_type: container
+container_release_tag: 0.0.2
+tag_release: false
+container_pull_registry: nexus3.o-ran-sc.org:10004
+container_push_registry: nexus3.o-ran-sc.org:10002
+project: smo-teiv
+ref: ee898469d2b9a3de5047ac6675f097ca72e97884 
+containers:
+    - name: smo-ncmp-to-teiv-adapter
+      version: 0.0.2
