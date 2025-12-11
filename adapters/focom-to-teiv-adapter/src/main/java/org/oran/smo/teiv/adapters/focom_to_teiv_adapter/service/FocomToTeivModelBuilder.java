@@ -85,7 +85,10 @@ public class FocomToTeivModelBuilder {
 
         for (FocomProvisioningRequest focomProvisioningRequest : focomRequests) {
 
-            validateProvisioningRequest(focomProvisioningRequest);
+            if (!isProvisioningRequestFulfilled(focomProvisioningRequest)) {
+                index++;
+                continue;
+            }
 
             EntityItem oCloudNamespace = buildOCloudNamespace(focomProvisioningRequest, index);
             oCloudNamespaces.add(oCloudNamespace);
@@ -141,10 +144,14 @@ public class FocomToTeivModelBuilder {
         return json;
     }
 
-    private void validateProvisioningRequest(FocomProvisioningRequest focomProvisioningRequest) {
+    private boolean isProvisioningRequestFulfilled(FocomProvisioningRequest focomProvisioningRequest) {
         if (!"Fulfilled".equals(focomProvisioningRequest.getStatus().getPhase())) {
-            throw new RuntimeException("Requested Focomprovisioning request is not in Fulfilled phase");
+            log.info("Skipping FOCOM provisioning request '{}' as it is not in Fulfilled phase (current phase: '{}')",
+                    focomProvisioningRequest.getMetadata().getName(),
+                    focomProvisioningRequest.getStatus().getPhase());
+            return false;
         }
+        return true;
     }
 
     private EntityItem buildOCloudNamespace(FocomProvisioningRequest focomProvisioningRequest, int index) {
