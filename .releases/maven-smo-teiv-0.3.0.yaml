@@ -1,0 +1,6 @@
+---
+distribution_type: 'maven'
+version: '0.3.0'
+tag_release: false
+project: 'smo-teiv'
+log_dir: 'smo-teiv-maven-stage-master/8'
