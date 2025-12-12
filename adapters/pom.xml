@@ -27,12 +27,12 @@
     <parent>
         <groupId>org.oran.smo</groupId>
         <artifactId>topology-exposure-inventory</artifactId>
-        <version>0.3.0-SNAPSHOT</version>
+        <version>0.4.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.oran.smo.teiv.adapters</groupId>
     <artifactId>adapters</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <licenses>
