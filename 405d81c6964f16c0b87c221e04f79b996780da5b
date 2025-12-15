@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "826c2bb3_4e8d837f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-12-15T11:39:07Z",
+      "side": 1,
+      "message": "Cannot merge until ci-management issue IT-29098 is solved to create verify jobs for this branch. \nRef: https://gerrit.o-ran-sc.org/r/c/ci-management/+/15377\nOnce solved, recheck \u0026 merge.",
+      "revId": "405d81c6964f16c0b87c221e04f79b996780da5b",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
