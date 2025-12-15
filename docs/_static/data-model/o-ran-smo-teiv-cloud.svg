@@ -1,179 +1,179 @@
-<svg width="768px" height="568px"
- viewBox="0.00 0.00 768.35 568.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 564.0)">
+<svg width="717px" height="542px"
+ viewBox="0.00 0.00 717.00 541.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 537.5)">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-564 764.35,-564 764.35,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-537.5 713,-537.5 713,4 -4,4"/>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud -->
 <g id="node1" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud</title>
-<polygon fill="lightblue" stroke="black" points="158.66,-290 0.11,-290 0.11,-254 158.66,-254 158.66,-290"/>
-<text text-anchor="middle" x="79.39" y="-267.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;cloud</text>
+<polygon fill="lightblue" stroke="black" points="146,-277 0,-277 0,-241 146,-241 146,-277"/>
+<text text-anchor="middle" x="73" y="-255.3" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;cloud</text>
 </g>
 <!-- CloudifiedNF -->
 <g id="node7" class="node">
 <title>CloudifiedNF</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="319.85,-485 217.28,-485 217.28,-449 319.85,-449 319.85,-485"/>
-<text text-anchor="middle" x="268.57" y="-462.8" font-family="Arial" font-size="14.00">CloudifiedNF</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="303,-465 203,-465 203,-429 303,-429 303,-465"/>
+<text text-anchor="middle" x="253" y="-443.3" font-family="Arial" font-size="14.00">CloudifiedNF</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;CloudifiedNF -->
 <g id="edge1" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;CloudifiedNF</title>
-<path fill="none" stroke="black" d="M98,-290.35C131.53,-325.28 204.61,-401.41 242.95,-441.36"/>
-<polygon fill="black" stroke="black" points="240.69,-444.06 250.14,-448.85 245.74,-439.21 240.69,-444.06"/>
+<path fill="none" stroke="black" d="M90.72,-277.2C111.84,-300.13 149.38,-340.71 182,-375 196.8,-390.56 213.57,-407.82 226.98,-421.53"/>
+<polygon fill="black" stroke="black" points="224.56,-424.06 234.05,-428.76 229.56,-419.16 224.56,-424.06"/>
 </g>
 <!-- NFDeployment -->
 <g id="node8" class="node">
 <title>NFDeployment</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="328.15,-382 208.98,-382 208.98,-346 328.15,-346 328.15,-382"/>
-<text text-anchor="middle" x="268.57" y="-359.8" font-family="Arial" font-size="14.00">NFDeployment</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="309,-366 197,-366 197,-330 309,-330 309,-366"/>
+<text text-anchor="middle" x="253" y="-344.3" font-family="Arial" font-size="14.00">NFDeployment</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NFDeployment -->
 <g id="edge2" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NFDeployment</title>
-<path fill="none" stroke="black" d="M117.37,-290.18C147.23,-304.86 189.42,-325.59 221.48,-341.35"/>
-<polygon fill="black" stroke="black" points="220.14,-344.59 230.66,-345.86 223.23,-338.31 220.14,-344.59"/>
+<path fill="none" stroke="black" d="M110.02,-277.01C137.92,-290.96 176.73,-310.36 206.72,-325.36"/>
+<polygon fill="black" stroke="black" points="205.22,-328.52 215.73,-329.86 208.35,-322.26 205.22,-328.52"/>
 </g>
 <!-- NodeCluster -->
 <g id="node9" class="node">
 <title>NodeCluster</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="319.45,-290 217.68,-290 217.68,-254 319.45,-254 319.45,-290"/>
-<text text-anchor="middle" x="268.57" y="-267.8" font-family="Arial" font-size="14.00">NodeCluster</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="301,-277 205,-277 205,-241 301,-241 301,-277"/>
+<text text-anchor="middle" x="253" y="-255.3" font-family="Arial" font-size="14.00">NodeCluster</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NodeCluster -->
 <g id="edge3" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;NodeCluster</title>
-<path fill="none" stroke="black" d="M158.68,-272C175.12,-272 192.2,-272 207.83,-272"/>
-<polygon fill="black" stroke="black" points="207.87,-275.5 217.87,-272 207.87,-268.5 207.87,-275.5"/>
+<path fill="none" stroke="black" d="M146.14,-259C162.19,-259 179.01,-259 194.38,-259"/>
+<polygon fill="black" stroke="black" points="194.77,-262.5 204.77,-259 194.77,-255.5 194.77,-262.5"/>
 </g>
 <!-- OCloudNamespace -->
 <g id="node10" class="node">
 <title>OCloudNamespace</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="342.14,-208 194.99,-208 194.99,-172 342.14,-172 342.14,-208"/>
-<text text-anchor="middle" x="268.57" y="-185.8" font-family="Arial" font-size="14.00">OCloudNamespace</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="324,-195 182,-195 182,-159 324,-159 324,-195"/>
+<text text-anchor="middle" x="253" y="-173.3" font-family="Arial" font-size="14.00">OCloudNamespace</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudNamespace -->
 <g id="edge4" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudNamespace</title>
-<path fill="none" stroke="black" d="M121.93,-253.8C150.02,-241.5 187.27,-225.18 217.07,-212.12"/>
-<polygon fill="black" stroke="black" points="218.71,-215.22 226.46,-208.01 215.9,-208.81 218.71,-215.22"/>
+<path fill="none" stroke="black" d="M113.5,-240.8C140.1,-228.55 175.34,-212.32 203.61,-199.29"/>
+<polygon fill="black" stroke="black" points="205.29,-202.37 212.91,-195.01 202.37,-196.01 205.29,-202.37"/>
 </g>
 <!-- OCloudSite -->
 <g id="node11" class="node">
 <title>OCloudSite</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="315.05,-98 222.08,-98 222.08,-62 315.05,-62 315.05,-98"/>
-<text text-anchor="middle" x="268.57" y="-75.8" font-family="Arial" font-size="14.00">OCloudSite</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="298,-118 208,-118 208,-82 298,-82 298,-118"/>
+<text text-anchor="middle" x="253" y="-96.3" font-family="Arial" font-size="14.00">OCloudSite</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudSite -->
 <g id="edge5" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;cloud&#45;&gt;OCloudSite</title>
-<path fill="none" stroke="black" d="M98,-253.94C131.44,-219.63 204.24,-144.96 242.66,-105.55"/>
-<polygon fill="black" stroke="black" points="245.39,-107.76 249.87,-98.15 240.38,-102.87 245.39,-107.76"/>
+<path fill="none" stroke="black" d="M90.34,-240.69C110.78,-218.24 147.31,-179.52 182,-150 192.6,-140.98 204.77,-131.89 215.95,-123.99"/>
+<polygon fill="black" stroke="black" points="218.06,-126.79 224.27,-118.2 214.06,-121.04 218.06,-126.79"/>
 </g>
 <!-- CloudifiedNF&#45;attributes -->
 <g id="node2" class="node">
 <title>CloudifiedNF&#45;attributes</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="751.35,-560 387.35,-560 387.35,-472 751.35,-472 751.35,-560"/>
-<text text-anchor="start" x="395.35" y="-543.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="705.56" y="-543.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="395.35" y="-527.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="581.17" y="-527.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="395.35" y="-511.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="395.35" y="-495.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;cloudifiedNfId</text>
-<text text-anchor="start" x="705.56" y="-495.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="395.27" y="-479.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;serviceOrchestrationId</text>
-<text text-anchor="start" x="705.56" y="-479.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="701,-533.5 368,-533.5 368,-450.5 701,-450.5 701,-533.5"/>
+<text text-anchor="start" x="376.5" y="-517.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="658.5" y="-517.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="376.5" y="-502.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="550.5" y="-502.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="376.5" y="-487.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="376.5" y="-472.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;cloudifiedNfId</text>
+<text text-anchor="start" x="658.5" y="-472.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="376.5" y="-457.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;serviceOrchestrationId</text>
+<text text-anchor="start" x="658.5" y="-457.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- NFDeployment&#45;attributes -->
 <g id="node3" class="node">
 <title>NFDeployment&#45;attributes</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="756.85,-454 381.85,-454 381.85,-350 756.85,-350 756.85,-454"/>
-<text text-anchor="start" x="390.35" y="-437.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="711.56" y="-437.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.35" y="-421.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="587.17" y="-421.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="390.35" y="-405.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="390.35" y="-389.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nfDeploymentId</text>
-<text text-anchor="start" x="711.56" y="-389.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.17" y="-373.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;resourceOrchestrationId</text>
-<text text-anchor="start" x="711.56" y="-373.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.35" y="-357.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;serviceOrchestrationId</text>
-<text text-anchor="start" x="711.56" y="-357.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="706,-432 363,-432 363,-334 706,-334 706,-432"/>
+<text text-anchor="start" x="371.5" y="-416.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="663.5" y="-416.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-401.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="555.5" y="-401.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="371.5" y="-386.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="371.5" y="-371.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nfDeploymentId</text>
+<text text-anchor="start" x="663.5" y="-371.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-356.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;resourceOrchestrationId</text>
+<text text-anchor="start" x="663.5" y="-356.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-341.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;serviceOrchestrationId</text>
+<text text-anchor="start" x="663.5" y="-341.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- NodeCluster&#45;attributes -->
 <g id="node4" class="node">
 <title>NodeCluster&#45;attributes</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="756.85,-332 381.85,-332 381.85,-212 756.85,-212 756.85,-332"/>
-<text text-anchor="start" x="390.35" y="-315.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="711.56" y="-315.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.35" y="-299.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="587.17" y="-299.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="390.35" y="-283.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="390.35" y="-267.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nodeClusterId</text>
-<text text-anchor="start" x="711.56" y="-267.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.35" y="-251.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nodeClusterName</text>
-<text text-anchor="start" x="711.56" y="-251.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.17" y="-235.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;resourceOrchestrationId</text>
-<text text-anchor="start" x="711.56" y="-235.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="390.35" y="-219.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;serviceOrchestrationId</text>
-<text text-anchor="start" x="711.56" y="-219.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="706,-315.5 363,-315.5 363,-202.5 706,-202.5 706,-315.5"/>
+<text text-anchor="start" x="371.5" y="-299.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="663.5" y="-299.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-284.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="555.5" y="-284.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="371.5" y="-269.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="371.5" y="-254.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nodeClusterId</text>
+<text text-anchor="start" x="663.5" y="-254.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-239.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nodeClusterName</text>
+<text text-anchor="start" x="663.5" y="-239.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-224.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;resourceOrchestrationId</text>
+<text text-anchor="start" x="663.5" y="-224.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="371.5" y="-209.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;serviceOrchestrationId</text>
+<text text-anchor="start" x="663.5" y="-209.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- OCloudNamespace&#45;attributes -->
 <g id="node5" class="node">
 <title>OCloudNamespace&#45;attributes</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="760.35,-194 378.35,-194 378.35,-122 760.35,-122 760.35,-194"/>
-<text text-anchor="start" x="386.35" y="-177.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="714.56" y="-177.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="386.35" y="-161.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="590.17" y="-161.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="386.35" y="-145.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="386.17" y="-129.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oCloudNamespaceName</text>
-<text text-anchor="start" x="714.56" y="-129.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="709,-184 360,-184 360,-116 709,-116 709,-184"/>
+<text text-anchor="start" x="368.5" y="-168.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="666.5" y="-168.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="368.5" y="-153.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="558.5" y="-153.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="368.5" y="-138.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="368.5" y="-123.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oCloudNamespaceName</text>
+<text text-anchor="start" x="666.5" y="-123.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- OCloudSite&#45;attributes -->
 <g id="node6" class="node">
 <title>OCloudSite&#45;attributes</title>
-<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="740.85,-104 397.85,-104 397.85,0 740.85,0 740.85,-104"/>
-<text text-anchor="start" x="406.35" y="-87.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="695.56" y="-87.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="406.35" y="-71.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="571.17" y="-71.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="406.35" y="-55.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="406.35" y="-39.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oCloudSiteId</text>
-<text text-anchor="start" x="695.56" y="-39.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="406.27" y="-23.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oCloudSiteLocation</text>
-<text text-anchor="start" x="571.17" y="-23.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="406.35" y="-7.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;supportedMITs</text>
-<text text-anchor="start" x="695.56" y="-7.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#89240a" fill-opacity="0.254902" stroke="black" points="691.5,-98 377.5,-98 377.5,0 691.5,0 691.5,-98"/>
+<text text-anchor="start" x="385.5" y="-82.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="648.5" y="-82.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="385.5" y="-67.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="540.5" y="-67.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="385.5" y="-52.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="385.5" y="-37.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oCloudSiteId</text>
+<text text-anchor="start" x="648.5" y="-37.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="385.5" y="-22.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oCloudSiteLocation</text>
+<text text-anchor="start" x="540.5" y="-22.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="385.5" y="-7.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;supportedMITs</text>
+<text text-anchor="start" x="648.5" y="-7.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- CloudifiedNF&#45;&gt;CloudifiedNF&#45;attributes -->
 <g id="edge6" class="edge">
 <title>CloudifiedNF&#45;&gt;CloudifiedNF&#45;attributes</title>
-<path fill="none" stroke="black" d="M319.91,-475.26C336.64,-478 356.38,-481.24 377.31,-484.67"/>
-<polygon fill="black" stroke="black" points="376.9,-488.15 387.33,-486.31 378.03,-481.24 376.9,-488.15"/>
+<path fill="none" stroke="black" d="M303.01,-454.89C319.01,-457.47 337.81,-460.49 357.66,-463.69"/>
+<polygon fill="black" stroke="black" points="357.37,-467.19 367.8,-465.32 358.48,-460.28 357.37,-467.19"/>
 </g>
 <!-- NFDeployment&#45;&gt;NFDeployment&#45;attributes -->
 <g id="edge7" class="edge">
 <title>NFDeployment&#45;&gt;NFDeployment&#45;attributes</title>
-<path fill="none" stroke="black" d="M328.24,-371.46C341.41,-373.14 356.1,-375.01 371.55,-376.97"/>
-<polygon fill="black" stroke="black" points="371.44,-380.48 381.8,-378.27 372.32,-373.54 371.44,-380.48"/>
+<path fill="none" stroke="black" d="M309.22,-354.91C322.34,-356.56 337.04,-358.4 352.49,-360.33"/>
+<polygon fill="black" stroke="black" points="352.38,-363.85 362.74,-361.62 353.25,-356.9 352.38,-363.85"/>
 </g>
 <!-- NodeCluster&#45;&gt;NodeCluster&#45;attributes -->
 <g id="edge8" class="edge">
 <title>NodeCluster&#45;&gt;NodeCluster&#45;attributes</title>
-<path fill="none" stroke="black" d="M319.58,-272C334.85,-272 352.67,-272 371.62,-272"/>
-<polygon fill="black" stroke="black" points="371.63,-275.5 381.63,-272 371.63,-268.5 371.63,-275.5"/>
+<path fill="none" stroke="black" d="M301.1,-259C316.2,-259 333.92,-259 352.74,-259"/>
+<polygon fill="black" stroke="black" points="352.98,-262.5 362.98,-259 352.98,-255.5 352.98,-262.5"/>
 </g>
 <!-- OCloudNamespace&#45;&gt;OCloudNamespace&#45;attributes -->
 <g id="edge9" class="edge">
 <title>OCloudNamespace&#45;&gt;OCloudNamespace&#45;attributes</title>
-<path fill="none" stroke="black" d="M342.28,-182.21C350.5,-181.33 359.14,-180.41 368.06,-179.45"/>
-<polygon fill="black" stroke="black" points="368.67,-182.91 378.24,-178.36 367.93,-175.95 368.67,-182.91"/>
+<path fill="none" stroke="black" d="M324.17,-170.22C332.33,-169.43 340.93,-168.6 349.78,-167.75"/>
+<polygon fill="black" stroke="black" points="350.26,-171.22 359.88,-166.77 349.59,-164.25 350.26,-171.22"/>
 </g>
 <!-- OCloudSite&#45;&gt;OCloudSite&#45;attributes -->
 <g id="edge10" class="edge">
 <title>OCloudSite&#45;&gt;OCloudSite&#45;attributes</title>
-<path fill="none" stroke="black" d="M315.27,-75.72C335.49,-73.82 360.71,-71.46 387.34,-68.96"/>
-<polygon fill="black" stroke="black" points="387.98,-72.42 397.61,-68 387.33,-65.45 387.98,-72.42"/>
+<path fill="none" stroke="black" d="M298.29,-91.92C317.72,-88.37 341.87,-83.97 367.23,-79.34"/>
+<polygon fill="black" stroke="black" points="368.17,-82.72 377.38,-77.49 366.92,-75.84 368.17,-82.72"/>
 </g>
 </g>
 </svg>

@@ -1,389 +1,389 @@
-<svg width="701px" height="1348px"
- viewBox="0.00 0.00 701.16 1348.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 1344.0)">
+<svg width="655px" height="1284px"
+ viewBox="0.00 0.00 655.00 1284.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 1280.0)">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-1344 697.16,-1344 697.16,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-1280 651,-1280 651,4 -4,4"/>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran -->
 <g id="node1" class="node">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran</title>
-<polygon fill="lightblue" stroke="black" points="146.27,-640 -0.09,-640 -0.09,-604 146.27,-604 146.27,-640"/>
-<text text-anchor="middle" x="73.09" y="-617.8" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;ran</text>
+<polygon fill="lightblue" stroke="black" points="131,-611 0,-611 0,-575 131,-575 131,-611"/>
+<text text-anchor="middle" x="65.5" y="-589.3" font-family="Arial" font-size="14.00">o&#45;ran&#45;smo&#45;teiv&#45;ran</text>
 </g>
 <!-- AntennaCapability -->
 <g id="node13" class="node">
 <title>AntennaCapability</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="326.75,-1228 186.59,-1228 186.59,-1192 326.75,-1192 326.75,-1228"/>
-<text text-anchor="middle" x="256.67" y="-1205.8" font-family="Arial" font-size="14.00">AntennaCapability</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="305,-1173 175,-1173 175,-1137 305,-1137 305,-1173"/>
+<text text-anchor="middle" x="240" y="-1151.3" font-family="Arial" font-size="14.00">AntennaCapability</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;AntennaCapability -->
 <g id="edge1" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;AntennaCapability</title>
-<path fill="none" stroke="black" d="M75.58,-640.39C81.44,-706.2 106.43,-935.21 182.18,-1106 195.02,-1134.95 216.5,-1164.07 232.93,-1184.1"/>
-<polygon fill="black" stroke="black" points="230.3,-1186.41 239.4,-1191.84 235.67,-1181.92 230.3,-1186.41"/>
+<path fill="none" stroke="black" d="M67.7,-611.11C72.49,-674.94 93.67,-894.32 167,-1057 179.09,-1083.83 199.36,-1110.49 215.31,-1129.22"/>
+<polygon fill="black" stroke="black" points="212.87,-1131.74 222.07,-1136.98 218.15,-1127.14 212.87,-1131.74"/>
 </g>
 <!-- NRCellCU -->
 <g id="node14" class="node">
 <title>NRCellCU</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="298.76,-1097 214.58,-1097 214.58,-1061 298.76,-1061 298.76,-1097"/>
-<text text-anchor="middle" x="256.67" y="-1074.8" font-family="Arial" font-size="14.00">NRCellCU</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="281,-1048 199,-1048 199,-1012 281,-1012 281,-1048"/>
+<text text-anchor="middle" x="240" y="-1026.3" font-family="Arial" font-size="14.00">NRCellCU</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NRCellCU -->
 <g id="edge2" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NRCellCU</title>
-<path fill="none" stroke="black" d="M77.63,-640.26C88.41,-693.53 123.64,-852.58 182.18,-973 196.38,-1002.21 218.07,-1032.34 234.21,-1052.98"/>
-<polygon fill="black" stroke="black" points="231.58,-1055.28 240.53,-1060.94 237.06,-1050.93 231.58,-1055.28"/>
+<path fill="none" stroke="black" d="M69.62,-611.02C79.05,-662.87 110.19,-816.01 167,-931 180.2,-957.72 200.55,-984.88 216.25,-1003.97"/>
+<polygon fill="black" stroke="black" points="213.77,-1006.47 222.88,-1011.89 219.14,-1001.98 213.77,-1006.47"/>
 </g>
 <!-- NRCellDU -->
 <g id="node15" class="node">
 <title>NRCellDU</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="298.76,-964 214.58,-964 214.58,-928 298.76,-928 298.76,-964"/>
-<text text-anchor="middle" x="256.67" y="-941.8" font-family="Arial" font-size="14.00">NRCellDU</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="281,-922 199,-922 199,-886 281,-886 281,-922"/>
+<text text-anchor="middle" x="240" y="-900.3" font-family="Arial" font-size="14.00">NRCellDU</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NRCellDU -->
 <g id="edge3" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NRCellDU</title>
-<path fill="none" stroke="black" d="M81.43,-640C97.55,-678.81 138.1,-772.74 182.18,-846 198.02,-872.33 219.02,-900.36 234.51,-920.02"/>
-<polygon fill="black" stroke="black" points="231.82,-922.26 240.79,-927.91 237.3,-917.91 231.82,-922.26"/>
+<path fill="none" stroke="black" d="M73.36,-611.01C88.11,-648.92 124.97,-739.2 167,-809 181.88,-833.71 201.9,-859.67 217.05,-878.2"/>
+<polygon fill="black" stroke="black" points="214.35,-880.43 223.42,-885.91 219.75,-875.97 214.35,-880.43"/>
 </g>
 <!-- NRSectorCarrier -->
 <g id="node16" class="node">
 <title>NRSectorCarrier</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="321.55,-837 191.79,-837 191.79,-801 321.55,-801 321.55,-837"/>
-<text text-anchor="middle" x="256.67" y="-814.8" font-family="Arial" font-size="14.00">NRSectorCarrier</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="301,-800 179,-800 179,-764 301,-764 301,-800"/>
+<text text-anchor="middle" x="240" y="-778.3" font-family="Arial" font-size="14.00">NRSectorCarrier</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NRSectorCarrier -->
 <g id="edge4" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NRSectorCarrier</title>
-<path fill="none" stroke="black" d="M90.85,-640.18C123.28,-675.36 194.7,-752.85 231.97,-793.29"/>
-<polygon fill="black" stroke="black" points="229.6,-795.88 238.95,-800.86 234.75,-791.14 229.6,-795.88"/>
+<path fill="none" stroke="black" d="M82.75,-611.34C102.53,-633.61 137,-672.25 167,-705 182.79,-722.24 200.75,-741.44 214.78,-756.36"/>
+<polygon fill="black" stroke="black" points="212.32,-758.86 221.73,-763.74 217.42,-754.06 212.32,-758.86"/>
 </g>
 <!-- NearRTRICFunction -->
 <g id="node17" class="node">
 <title>NearRTRICFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="331.15,-728 182.19,-728 182.19,-692 331.15,-692 331.15,-728"/>
-<text text-anchor="middle" x="256.67" y="-705.8" font-family="Arial" font-size="14.00">NearRTRICFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="313,-696 167,-696 167,-660 313,-660 313,-696"/>
+<text text-anchor="middle" x="240" y="-674.3" font-family="Arial" font-size="14.00">NearRTRICFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NearRTRICFunction -->
 <g id="edge5" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;NearRTRICFunction</title>
-<path fill="none" stroke="black" d="M111.27,-640.02C139.58,-653.74 178.71,-672.7 209.09,-687.43"/>
-<polygon fill="black" stroke="black" points="207.7,-690.64 218.22,-691.85 210.75,-684.34 207.7,-690.64"/>
+<path fill="none" stroke="black" d="M103.08,-611.03C129.38,-623.99 165.03,-641.55 193.22,-655.44"/>
+<polygon fill="black" stroke="black" points="191.95,-658.72 202.47,-660 195.05,-652.44 191.95,-658.72"/>
 </g>
 <!-- OCUCPFunction -->
 <g id="node18" class="node">
 <title>OCUCPFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="320.65,-640 192.69,-640 192.69,-604 320.65,-604 320.65,-640"/>
-<text text-anchor="middle" x="256.67" y="-617.8" font-family="Arial" font-size="14.00">OCUCPFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="301,-611 179,-611 179,-575 301,-575 301,-611"/>
+<text text-anchor="middle" x="240" y="-589.3" font-family="Arial" font-size="14.00">OCUCPFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;OCUCPFunction -->
 <g id="edge6" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;OCUCPFunction</title>
-<path fill="none" stroke="black" d="M146.38,-622C158.16,-622 170.37,-622 182.18,-622"/>
-<polygon fill="black" stroke="black" points="182.43,-625.5 192.43,-622 182.43,-618.5 182.43,-625.5"/>
+<path fill="none" stroke="black" d="M131.22,-593C143.4,-593 156.18,-593 168.52,-593"/>
+<polygon fill="black" stroke="black" points="168.76,-596.5 178.76,-593 168.76,-589.5 168.76,-596.5"/>
 </g>
 <!-- OCUUPFunction -->
 <g id="node19" class="node">
 <title>OCUUPFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="320.65,-577 192.69,-577 192.69,-541 320.65,-541 320.65,-577"/>
-<text text-anchor="middle" x="256.67" y="-554.8" font-family="Arial" font-size="14.00">OCUUPFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="301,-522 179,-522 179,-486 301,-486 301,-522"/>
+<text text-anchor="middle" x="240" y="-500.3" font-family="Arial" font-size="14.00">OCUUPFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;OCUUPFunction -->
 <g id="edge7" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;OCUUPFunction</title>
-<path fill="none" stroke="black" d="M126.12,-603.95C147.3,-596.6 171.94,-588.05 194.02,-580.39"/>
-<polygon fill="black" stroke="black" points="195.33,-583.64 203.63,-577.06 193.03,-577.03 195.33,-583.64"/>
+<path fill="none" stroke="black" d="M101.41,-574.99C128.32,-561.1 165.73,-541.8 194.75,-526.83"/>
+<polygon fill="black" stroke="black" points="196.57,-529.83 203.85,-522.14 193.36,-523.61 196.57,-529.83"/>
 </g>
 <!-- ODUFunction -->
 <g id="node20" class="node">
 <title>ODUFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="310.15,-504 203.18,-504 203.18,-468 310.15,-468 310.15,-504"/>
-<text text-anchor="middle" x="256.67" y="-481.8" font-family="Arial" font-size="14.00">ODUFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="291,-415 189,-415 189,-379 291,-379 291,-415"/>
+<text text-anchor="middle" x="240" y="-393.3" font-family="Arial" font-size="14.00">ODUFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;ODUFunction -->
 <g id="edge8" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;ODUFunction</title>
-<path fill="none" stroke="black" d="M94.15,-603.89C115.37,-585.08 150.14,-555.2 182.18,-532 192.86,-524.27 204.83,-516.44 215.96,-509.49"/>
-<polygon fill="black" stroke="black" points="217.99,-512.35 224.67,-504.12 214.32,-506.39 217.99,-512.35"/>
+<path fill="none" stroke="black" d="M82.06,-574.82C101.72,-551.91 136.66,-511.35 167,-477 183.11,-458.75 201.48,-438.36 215.62,-422.73"/>
+<polygon fill="black" stroke="black" points="218.48,-424.78 222.6,-415.02 213.29,-420.08 218.48,-424.78"/>
 </g>
 <!-- ORUFunction -->
 <g id="node21" class="node">
 <title>ORUFunction</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="309.25,-413 204.08,-413 204.08,-377 309.25,-377 309.25,-413"/>
-<text text-anchor="middle" x="256.67" y="-390.8" font-family="Arial" font-size="14.00">ORUFunction</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="291,-307 189,-307 189,-271 291,-271 291,-307"/>
+<text text-anchor="middle" x="240" y="-285.3" font-family="Arial" font-size="14.00">ORUFunction</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;ORUFunction -->
 <g id="edge9" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;ORUFunction</title>
-<path fill="none" stroke="black" d="M84.01,-603.77C101.53,-572.4 140.09,-507 182.18,-459 194.56,-444.88 210.01,-430.98 223.55,-419.76"/>
-<polygon fill="black" stroke="black" points="226.14,-422.16 231.69,-413.14 221.72,-416.73 226.14,-422.16"/>
+<path fill="none" stroke="black" d="M72.6,-574.71C86.16,-535.37 121.27,-440.56 167,-370 179.98,-349.97 197.78,-329.89 212.44,-314.74"/>
+<polygon fill="black" stroke="black" points="215.25,-316.87 219.77,-307.29 210.26,-311.96 215.25,-316.87"/>
 </g>
 <!-- SMO -->
 <g id="node22" class="node">
 <title>SMO</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="283.67,-284 229.67,-284 229.67,-248 283.67,-248 283.67,-284"/>
-<text text-anchor="middle" x="256.67" y="-261.8" font-family="Arial" font-size="14.00">SMO</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="267,-184 213,-184 213,-148 267,-148 267,-184"/>
+<text text-anchor="middle" x="240" y="-162.3" font-family="Arial" font-size="14.00">SMO</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;SMO -->
 <g id="edge10" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;SMO</title>
-<path fill="none" stroke="black" d="M80.25,-603.8C95.02,-561.18 134.76,-452.12 182.18,-368 197.47,-340.88 218.53,-312.32 234.19,-292.34"/>
-<polygon fill="black" stroke="black" points="237.07,-294.34 240.54,-284.33 231.58,-290 237.07,-294.34"/>
+<path fill="none" stroke="black" d="M69.68,-574.95C79.18,-523.73 110.25,-373.96 167,-262 179.99,-236.38 199.87,-210.51 215.46,-192.09"/>
+<polygon fill="black" stroke="black" points="218.4,-194.04 222.27,-184.18 213.09,-189.47 218.4,-194.04"/>
 </g>
 <!-- Sector -->
 <g id="node23" class="node">
 <title>Sector</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="286.96,-80 226.37,-80 226.37,-44 286.96,-44 286.96,-80"/>
-<text text-anchor="middle" x="256.67" y="-57.8" font-family="Arial" font-size="14.00">Sector</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="269.5,-107 210.5,-107 210.5,-71 269.5,-71 269.5,-107"/>
+<text text-anchor="middle" x="240" y="-85.3" font-family="Arial" font-size="14.00">Sector</text>
 </g>
 <!-- o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;Sector -->
 <g id="edge11" class="edge">
 <title>o&#45;ran&#45;smo&#45;teiv&#45;ran&#45;&gt;Sector</title>
-<path fill="none" stroke="black" d="M78.41,-603.82C91.73,-548.41 134.23,-377.04 182.18,-239 200.86,-185.22 227.4,-124.26 242.95,-89.74"/>
-<polygon fill="black" stroke="black" points="246.27,-90.88 247.21,-80.32 239.9,-87.99 246.27,-90.88"/>
+<path fill="none" stroke="black" d="M65.99,-574.73C65.06,-509.54 69.42,-284.48 167,-139 175.68,-126.06 188.93,-115.47 201.71,-107.43"/>
+<polygon fill="black" stroke="black" points="203.6,-110.38 210.42,-102.27 200.03,-104.35 203.6,-110.38"/>
 </g>
 <!-- AntennaCapability&#45;attributes -->
 <g id="node2" class="node">
 <title>AntennaCapability&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="688.66,-1340 371.66,-1340 371.66,-1236 688.66,-1236 688.66,-1340"/>
-<text text-anchor="start" x="380.16" y="-1323.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="643.36" y="-1323.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="380.16" y="-1307.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="518.97" y="-1307.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="380.16" y="-1291.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="379.67" y="-1275.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;eUtranFqBands</text>
-<text text-anchor="start" x="643.36" y="-1275.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="380.16" y="-1259.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;geranFqBands</text>
-<text text-anchor="start" x="643.36" y="-1259.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="380.16" y="-1243.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRFqBands</text>
-<text text-anchor="start" x="643.36" y="-1243.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="642.5,-1276 353.5,-1276 353.5,-1178 642.5,-1178 642.5,-1276"/>
+<text text-anchor="start" x="362" y="-1260.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="600" y="-1260.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="362" y="-1245.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="492" y="-1245.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="362" y="-1230.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="362" y="-1215.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;eUtranFqBands</text>
+<text text-anchor="start" x="600" y="-1215.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="362" y="-1200.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;geranFqBands</text>
+<text text-anchor="start" x="600" y="-1200.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="362" y="-1185.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRFqBands</text>
+<text text-anchor="start" x="600" y="-1185.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- NRCellCU&#45;attributes -->
 <g id="node3" class="node">
 <title>NRCellCU&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="670.16,-1218 390.16,-1218 390.16,-1098 670.16,-1098 670.16,-1218"/>
-<text text-anchor="start" x="398.16" y="-1201.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="624.36" y="-1201.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="398.16" y="-1185.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="499.97" y="-1185.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="398.16" y="-1169.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="398.06" y="-1153.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;cellLocalId</text>
-<text text-anchor="start" x="628.56" y="-1153.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="398.16" y="-1137.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nCI</text>
-<text text-anchor="start" x="628.56" y="-1137.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="398.16" y="-1121.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRTAC</text>
-<text text-anchor="start" x="628.56" y="-1121.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="398.16" y="-1105.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;plmnId</text>
-<text text-anchor="start" x="499.97" y="-1105.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="627.5,-1159.5 368.5,-1159.5 368.5,-1046.5 627.5,-1046.5 627.5,-1159.5"/>
+<text text-anchor="start" x="377" y="-1143.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="585" y="-1143.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="377" y="-1128.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="477" y="-1128.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="377" y="-1113.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="377" y="-1098.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;cellLocalId</text>
+<text text-anchor="start" x="589" y="-1098.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="377" y="-1083.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nCI</text>
+<text text-anchor="start" x="589" y="-1083.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="377" y="-1068.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRTAC</text>
+<text text-anchor="start" x="589" y="-1068.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="377" y="-1053.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;plmnId</text>
+<text text-anchor="start" x="477" y="-1053.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
 </g>
 <!-- NRCellDU&#45;attributes -->
 <g id="node4" class="node">
 <title>NRCellDU&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="670.16,-1080 390.16,-1080 390.16,-960 670.16,-960 670.16,-1080"/>
-<text text-anchor="start" x="398.16" y="-1063.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="624.36" y="-1063.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="398.16" y="-1047.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="499.97" y="-1047.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="398.16" y="-1031.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="398.06" y="-1015.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;cellLocalId</text>
-<text text-anchor="start" x="628.56" y="-1015.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="398.16" y="-999.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nCI</text>
-<text text-anchor="start" x="628.56" y="-999.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="398.16" y="-983.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRPCI</text>
-<text text-anchor="start" x="628.56" y="-983.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="398.16" y="-967.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRTAC</text>
-<text text-anchor="start" x="628.56" y="-967.4" font-family="Arial" font-size="14.00">int32</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="627.5,-1028.5 368.5,-1028.5 368.5,-915.5 627.5,-915.5 627.5,-1028.5"/>
+<text text-anchor="start" x="377" y="-1012.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="585" y="-1012.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="377" y="-997.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="477" y="-997.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="377" y="-982.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="377" y="-967.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;cellLocalId</text>
+<text text-anchor="start" x="589" y="-967.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="377" y="-952.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nCI</text>
+<text text-anchor="start" x="589" y="-952.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="377" y="-937.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRPCI</text>
+<text text-anchor="start" x="589" y="-937.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="377" y="-922.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nRTAC</text>
+<text text-anchor="start" x="589" y="-922.8" font-family="Arial" font-size="14.00">int32</text>
 </g>
 <!-- NRSectorCarrier&#45;attributes -->
 <g id="node5" class="node">
 <title>NRSectorCarrier&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="693.16,-942 367.16,-942 367.16,-806 693.16,-806 693.16,-942"/>
-<text text-anchor="start" x="375.16" y="-925.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="647.36" y="-925.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="375.16" y="-909.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="522.97" y="-909.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="375.16" y="-893.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="375.16" y="-877.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;arfcnDL</text>
-<text text-anchor="start" x="651.56" y="-877.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="375.16" y="-861.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;arfcnUL</text>
-<text text-anchor="start" x="651.56" y="-861.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="374.97" y="-845.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;bSChannelBwDL</text>
-<text text-anchor="start" x="651.56" y="-845.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="375.16" y="-829.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;frequencyDL</text>
-<text text-anchor="start" x="651.56" y="-829.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="375.16" y="-813.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;frequencyUL</text>
-<text text-anchor="start" x="651.56" y="-813.4" font-family="Arial" font-size="14.00">int32</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="647,-897 349,-897 349,-769 647,-769 647,-897"/>
+<text text-anchor="start" x="357" y="-881.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="604" y="-881.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="357" y="-866.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="496" y="-866.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="357" y="-851.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="357" y="-836.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;arfcnDL</text>
+<text text-anchor="start" x="608" y="-836.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="357" y="-821.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;arfcnUL</text>
+<text text-anchor="start" x="608" y="-821.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="357" y="-806.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;bSChannelBwDL</text>
+<text text-anchor="start" x="608" y="-806.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="357" y="-791.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;frequencyDL</text>
+<text text-anchor="start" x="608" y="-791.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="357" y="-776.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;frequencyUL</text>
+<text text-anchor="start" x="608" y="-776.8" font-family="Arial" font-size="14.00">int32</text>
 </g>
 <!-- NearRTRICFunction&#45;attributes -->
 <g id="node6" class="node">
 <title>NearRTRICFunction&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="674.66,-788 385.66,-788 385.66,-700 674.66,-700 674.66,-788"/>
-<text text-anchor="start" x="394.16" y="-771.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="629.36" y="-771.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="394.16" y="-755.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="504.97" y="-755.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="394.16" y="-739.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="393.67" y="-723.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nearRtRicId</text>
-<text text-anchor="start" x="633.56" y="-723.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="394.16" y="-707.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;pLMNId</text>
-<text text-anchor="start" x="504.97" y="-707.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="630.5,-750.5 365.5,-750.5 365.5,-667.5 630.5,-667.5 630.5,-750.5"/>
+<text text-anchor="start" x="374" y="-734.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="588" y="-734.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="374" y="-719.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="480" y="-719.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="374" y="-704.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="374" y="-689.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;nearRtRicId</text>
+<text text-anchor="start" x="592" y="-689.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="374" y="-674.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;pLMNId</text>
+<text text-anchor="start" x="480" y="-674.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
 </g>
 <!-- OCUCPFunction&#45;attributes -->
 <g id="node7" class="node">
 <title>OCUCPFunction&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="682.66,-682 377.66,-682 377.66,-562 682.66,-562 682.66,-682"/>
-<text text-anchor="start" x="386.16" y="-665.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="637.36" y="-665.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="386.16" y="-649.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="512.97" y="-649.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="386.16" y="-633.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="385.97" y="-617.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBCUName</text>
-<text text-anchor="start" x="637.36" y="-617.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="386.16" y="-601.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBId</text>
-<text text-anchor="start" x="641.56" y="-601.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="386.16" y="-585.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBIdLength</text>
-<text text-anchor="start" x="641.56" y="-585.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="386.16" y="-569.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;pLMNId</text>
-<text text-anchor="start" x="512.97" y="-569.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="635.5,-649.5 360.5,-649.5 360.5,-536.5 635.5,-536.5 635.5,-649.5"/>
+<text text-anchor="start" x="369" y="-633.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="593" y="-633.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="369" y="-618.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="485" y="-618.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="369" y="-603.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="369" y="-588.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBCUName</text>
+<text text-anchor="start" x="593" y="-588.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="369" y="-573.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBId</text>
+<text text-anchor="start" x="597" y="-573.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="369" y="-558.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBIdLength</text>
+<text text-anchor="start" x="597" y="-558.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="369" y="-543.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;pLMNId</text>
+<text text-anchor="start" x="485" y="-543.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
 </g>
 <!-- OCUUPFunction&#45;attributes -->
 <g id="node8" class="node">
 <title>OCUUPFunction&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="680.66,-544 379.66,-544 379.66,-440 680.66,-440 680.66,-544"/>
-<text text-anchor="start" x="388.16" y="-527.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="635.36" y="-527.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="388.16" y="-511.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="510.97" y="-511.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="388.16" y="-495.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="388.16" y="-479.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBId</text>
-<text text-anchor="start" x="639.56" y="-479.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="388.07" y="-463.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBIdLength</text>
-<text text-anchor="start" x="639.56" y="-463.4" font-family="Arial" font-size="14.00">int32</text>
-<text text-anchor="start" x="388.16" y="-447.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;pLMNIdList</text>
-<text text-anchor="start" x="661.96" y="-447.4" font-family="Arial" font-size="14.00">[]</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="635,-518 361,-518 361,-420 635,-420 635,-518"/>
+<text text-anchor="start" x="369" y="-502.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="592" y="-502.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="369" y="-487.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="484" y="-487.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="369" y="-472.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="369" y="-457.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBId</text>
+<text text-anchor="start" x="596" y="-457.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="369" y="-442.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBIdLength</text>
+<text text-anchor="start" x="596" y="-442.8" font-family="Arial" font-size="14.00">int32</text>
+<text text-anchor="start" x="369" y="-427.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;pLMNIdList</text>
+<text text-anchor="start" x="619" y="-427.8" font-family="Arial" font-size="14.00">[]</text>
 </g>
 <!-- ODUFunction&#45;attributes -->
 <g id="node9" class="node">
 <title>ODUFunction&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="680.66,-422 379.66,-422 379.66,-302 680.66,-302 680.66,-422"/>
-<text text-anchor="start" x="388.16" y="-405.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="635.36" y="-405.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="388.16" y="-389.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="510.97" y="-389.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="388.16" y="-373.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="388.16" y="-357.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;dUpLMNId</text>
-<text text-anchor="start" x="510.97" y="-357.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="388.16" y="-341.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBDUId</text>
-<text text-anchor="start" x="639.56" y="-341.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="388.16" y="-325.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBId</text>
-<text text-anchor="start" x="639.56" y="-325.4" font-family="Arial" font-size="14.00">int64</text>
-<text text-anchor="start" x="388.07" y="-309.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBIdLength</text>
-<text text-anchor="start" x="639.56" y="-309.4" font-family="Arial" font-size="14.00">int32</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="635,-401.5 361,-401.5 361,-288.5 635,-288.5 635,-401.5"/>
+<text text-anchor="start" x="369" y="-385.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="592" y="-385.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="369" y="-370.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="484" y="-370.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="369" y="-355.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="369" y="-340.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;dUpLMNId</text>
+<text text-anchor="start" x="484" y="-340.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="369" y="-325.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBDUId</text>
+<text text-anchor="start" x="596" y="-325.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="369" y="-310.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBId</text>
+<text text-anchor="start" x="596" y="-310.8" font-family="Arial" font-size="14.00">int64</text>
+<text text-anchor="start" x="369" y="-295.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;gNBIdLength</text>
+<text text-anchor="start" x="596" y="-295.8" font-family="Arial" font-size="14.00">int32</text>
 </g>
 <!-- ORUFunction&#45;attributes -->
 <g id="node10" class="node">
 <title>ORUFunction&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="653.16,-284 407.16,-284 407.16,-212 653.16,-212 653.16,-284"/>
-<text text-anchor="start" x="415.16" y="-267.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="607.36" y="-267.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="415.16" y="-251.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="482.97" y="-251.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="415.16" y="-235.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="414.86" y="-219.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oruId</text>
-<text text-anchor="start" x="611.56" y="-219.4" font-family="Arial" font-size="14.00">int64</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="609.5,-270 386.5,-270 386.5,-202 609.5,-202 609.5,-270"/>
+<text text-anchor="start" x="395" y="-254.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="567" y="-254.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="395" y="-239.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="459" y="-239.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="395" y="-224.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="395" y="-209.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;oruId</text>
+<text text-anchor="start" x="571" y="-209.8" font-family="Arial" font-size="14.00">int64</text>
 </g>
 <!-- SMO&#45;attributes -->
 <g id="node11" class="node">
 <title>SMO&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="671.16,-194 389.16,-194 389.16,-122 671.16,-122 671.16,-194"/>
-<text text-anchor="start" x="397.16" y="-177.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="625.36" y="-177.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="397.16" y="-161.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="500.97" y="-161.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="397.16" y="-145.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="396.66" y="-129.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;smoName</text>
-<text text-anchor="start" x="625.36" y="-129.4" font-family="Arial" font-size="14.00">string</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="625.5,-184 370.5,-184 370.5,-116 625.5,-116 625.5,-184"/>
+<text text-anchor="start" x="379" y="-168.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="583" y="-168.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="379" y="-153.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="475" y="-153.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="379" y="-138.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="379" y="-123.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;smoName</text>
+<text text-anchor="start" x="583" y="-123.8" font-family="Arial" font-size="14.00">string</text>
 </g>
 <!-- Sector&#45;attributes -->
 <g id="node12" class="node">
 <title>Sector&#45;attributes</title>
-<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="677.16,-104 383.16,-104 383.16,0 677.16,0 677.16,-104"/>
-<text text-anchor="start" x="391.16" y="-87.4" font-family="Arial" font-size="14.00">id</text>
-<text text-anchor="start" x="631.36" y="-87.4" font-family="Arial" font-size="14.00">string</text>
-<text text-anchor="start" x="391.16" y="-71.4" font-family="Arial" font-size="14.00">sourceIds</text>
-<text text-anchor="start" x="506.97" y="-71.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="391.16" y="-55.4" font-family="Arial" font-size="14.00"> attributes: </text>
-<text text-anchor="start" x="391.16" y="-39.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;azimuth</text>
-<text text-anchor="start" x="600.57" y="-39.4" font-family="Arial" font-size="14.00">decimal64</text>
-<text text-anchor="start" x="391.07" y="-23.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;geo&#45;location</text>
-<text text-anchor="start" x="506.97" y="-23.4" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
-<text text-anchor="start" x="391.16" y="-7.4" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;sectorId</text>
-<text text-anchor="start" x="627.16" y="-7.4" font-family="Arial" font-size="14.00">uint64</text>
+<polygon fill="#366f34" fill-opacity="0.254902" stroke="black" points="632,-98 364,-98 364,0 632,0 632,-98"/>
+<text text-anchor="start" x="372" y="-82.8" font-family="Arial" font-size="14.00">id</text>
+<text text-anchor="start" x="589" y="-82.8" font-family="Arial" font-size="14.00">string</text>
+<text text-anchor="start" x="372" y="-67.8" font-family="Arial" font-size="14.00">sourceIds</text>
+<text text-anchor="start" x="481" y="-67.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="372" y="-52.8" font-family="Arial" font-size="14.00"> attributes: </text>
+<text text-anchor="start" x="372" y="-37.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;azimuth</text>
+<text text-anchor="start" x="557" y="-37.8" font-family="Arial" font-size="14.00">decimal64</text>
+<text text-anchor="start" x="372" y="-22.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;geo&#45;location</text>
+<text text-anchor="start" x="481" y="-22.8" font-family="Arial" font-size="14.00">&lt;&lt; Refer to Module &gt;&gt;</text>
+<text text-anchor="start" x="372" y="-7.8" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;sectorId</text>
+<text text-anchor="start" x="585" y="-7.8" font-family="Arial" font-size="14.00">uint64</text>
 </g>
 <!-- AntennaCapability&#45;&gt;AntennaCapability&#45;attributes -->
 <g id="edge12" class="edge">
 <title>AntennaCapability&#45;&gt;AntennaCapability&#45;attributes</title>
-<path fill="none" stroke="black" d="M320.63,-1228.09C333.3,-1231.73 347.16,-1235.71 361.53,-1239.84"/>
-<polygon fill="black" stroke="black" points="360.97,-1243.32 371.55,-1242.72 362.9,-1236.59 360.97,-1243.32"/>
+<path fill="none" stroke="black" d="M305.27,-1173.08C317.25,-1176.44 330.22,-1180.09 343.59,-1183.85"/>
+<polygon fill="black" stroke="black" points="342.8,-1187.27 353.38,-1186.61 344.7,-1180.53 342.8,-1187.27"/>
 </g>
 <!-- NRCellCU&#45;&gt;NRCellCU&#45;attributes -->
 <g id="edge13" class="edge">
 <title>NRCellCU&#45;&gt;NRCellCU&#45;attributes</title>
-<path fill="none" stroke="black" d="M298.9,-1091C321.25,-1097.5 350.39,-1105.98 380.39,-1114.71"/>
-<polygon fill="black" stroke="black" points="379.57,-1118.12 390.15,-1117.55 381.53,-1111.4 379.57,-1118.12"/>
+<path fill="none" stroke="black" d="M281.28,-1041.49C302.66,-1047.58 330.33,-1055.47 358.68,-1063.56"/>
+<polygon fill="black" stroke="black" points="357.74,-1066.93 368.31,-1066.3 359.66,-1060.2 357.74,-1066.93"/>
 </g>
 <!-- NRCellDU&#45;&gt;NRCellDU&#45;attributes -->
 <g id="edge14" class="edge">
 <title>NRCellDU&#45;&gt;NRCellDU&#45;attributes</title>
-<path fill="none" stroke="black" d="M298.9,-957.24C321.25,-963.33 350.39,-971.27 380.39,-979.45"/>
-<polygon fill="black" stroke="black" points="379.58,-982.86 390.15,-982.11 381.43,-976.11 379.58,-982.86"/>
+<path fill="none" stroke="black" d="M281.28,-914.7C302.57,-920.35 330.09,-927.66 358.31,-935.16"/>
+<polygon fill="black" stroke="black" points="357.75,-938.63 368.31,-937.82 359.55,-931.87 357.75,-938.63"/>
 </g>
 <!-- NRSectorCarrier&#45;&gt;NRSectorCarrier&#45;attributes -->
 <g id="edge15" class="edge">
 <title>NRSectorCarrier&#45;&gt;NRSectorCarrier&#45;attributes</title>
-<path fill="none" stroke="black" d="M321.66,-831.96C332.73,-834.21 344.7,-836.63 357.1,-839.14"/>
-<polygon fill="black" stroke="black" points="356.63,-842.62 367.13,-841.18 358.02,-835.76 356.63,-842.62"/>
+<path fill="none" stroke="black" d="M301.02,-793.96C312.85,-796.31 325.78,-798.89 339.16,-801.56"/>
+<polygon fill="black" stroke="black" points="338.49,-804.99 348.98,-803.51 339.86,-798.13 338.49,-804.99"/>
 </g>
 <!-- NearRTRICFunction&#45;&gt;NearRTRICFunction&#45;attributes -->
 <g id="edge16" class="edge">
 <title>NearRTRICFunction&#45;&gt;NearRTRICFunction&#45;attributes</title>
-<path fill="none" stroke="black" d="M331.49,-719.25C345.34,-720.98 360.28,-722.85 375.53,-724.76"/>
-<polygon fill="black" stroke="black" points="375.23,-728.25 385.58,-726.02 376.1,-721.3 375.23,-728.25"/>
+<path fill="none" stroke="black" d="M313.33,-686.76C326.55,-688.36 340.75,-690.08 355.18,-691.83"/>
+<polygon fill="black" stroke="black" points="354.85,-695.31 365.2,-693.04 355.7,-688.36 354.85,-695.31"/>
 </g>
 <!-- OCUCPFunction&#45;&gt;OCUCPFunction&#45;attributes -->
 <g id="edge17" class="edge">
 <title>OCUCPFunction&#45;&gt;OCUCPFunction&#45;attributes</title>
-<path fill="none" stroke="black" d="M320.98,-622C335.25,-622 351.03,-622 367.34,-622"/>
-<polygon fill="black" stroke="black" points="367.55,-625.5 377.55,-622 367.55,-618.5 367.55,-625.5"/>
+<path fill="none" stroke="black" d="M301.02,-593C316.09,-593 332.94,-593 350.25,-593"/>
+<polygon fill="black" stroke="black" points="350.48,-596.5 360.48,-593 350.48,-589.5 350.48,-596.5"/>
 </g>
 <!-- OCUUPFunction&#45;&gt;OCUUPFunction&#45;attributes -->
 <g id="edge18" class="edge">
 <title>OCUUPFunction&#45;&gt;OCUUPFunction&#45;attributes</title>
-<path fill="none" stroke="black" d="M320.98,-543.38C335.84,-539.71 352.35,-535.63 369.37,-531.43"/>
-<polygon fill="black" stroke="black" points="370.58,-534.74 379.45,-528.95 368.9,-527.94 370.58,-534.74"/>
+<path fill="none" stroke="black" d="M301.02,-495.79C316.22,-493.72 333.21,-491.39 350.67,-489.01"/>
+<polygon fill="black" stroke="black" points="351.56,-492.42 361,-487.59 350.61,-485.48 351.56,-492.42"/>
 </g>
 <!-- ODUFunction&#45;&gt;ODUFunction&#45;attributes -->
 <g id="edge19" class="edge">
 <title>ODUFunction&#45;&gt;ODUFunction&#45;attributes</title>
-<path fill="none" stroke="black" d="M292.4,-467.85C313.8,-456.85 341.87,-442.72 367.16,-431 370.54,-429.43 373.98,-427.85 377.45,-426.27"/>
-<polygon fill="black" stroke="black" points="379.03,-429.39 386.7,-422.08 376.14,-423.02 379.03,-429.39"/>
+<path fill="none" stroke="black" d="M291.27,-386.79C308.82,-383.22 329.51,-379.02 350.89,-374.68"/>
+<polygon fill="black" stroke="black" points="351.65,-378.1 360.75,-372.67 350.26,-371.24 351.65,-378.1"/>
 </g>
 <!-- ORUFunction&#45;&gt;ORUFunction&#45;attributes -->
 <g id="edge20" class="edge">
 <title>ORUFunction&#45;&gt;ORUFunction&#45;attributes</title>
-<path fill="none" stroke="black" d="M272.37,-376.71C291.73,-353.82 327.94,-314.96 367.16,-293 376.61,-287.7 386.74,-283 397.13,-278.82"/>
-<polygon fill="black" stroke="black" points="398.66,-281.98 406.74,-275.13 396.15,-275.45 398.66,-281.98"/>
+<path fill="none" stroke="black" d="M291.27,-278.59C315.74,-273.53 346.3,-267.2 376.32,-260.98"/>
+<polygon fill="black" stroke="black" points="377.39,-264.34 386.47,-258.88 375.97,-257.48 377.39,-264.34"/>
 </g>
 <!-- SMO&#45;&gt;SMO&#45;attributes -->
 <g id="edge21" class="edge">
 <title>SMO&#45;&gt;SMO&#45;attributes</title>
-<path fill="none" stroke="black" d="M283.7,-248.52C305.3,-234.63 337.22,-215.54 367.16,-203 371.55,-201.16 376.05,-199.37 380.61,-197.63"/>
-<polygon fill="black" stroke="black" points="381.89,-200.89 390.06,-194.14 379.47,-194.32 381.89,-200.89"/>
+<path fill="none" stroke="black" d="M267.43,-164.35C290.14,-162.93 324.76,-160.76 360.28,-158.54"/>
+<polygon fill="black" stroke="black" points="360.55,-162.03 370.31,-157.92 360.12,-155.05 360.55,-162.03"/>
 </g>
 <!-- Sector&#45;&gt;Sector&#45;attributes -->
 <g id="edge22" class="edge">
 <title>Sector&#45;&gt;Sector&#45;attributes</title>
-<path fill="none" stroke="black" d="M286.98,-60.92C308.6,-60.12 339.87,-58.97 372.81,-57.76"/>
-<polygon fill="black" stroke="black" points="373.21,-61.25 383.07,-57.38 372.95,-54.25 373.21,-61.25"/>
+<path fill="none" stroke="black" d="M269.87,-84.49C291.14,-81.17 321.82,-76.37 353.79,-71.38"/>
+<polygon fill="black" stroke="black" points="354.4,-74.82 363.74,-69.82 353.32,-67.91 354.4,-74.82"/>
 </g>
 </g>
 </svg>
