@@ -1,6 +1,6 @@
 #  ============LICENSE_START=======================================================
 #  Copyright (C) 2024 Ericsson
-#  Modifications Copyright (C) 2024 OpenInfra Foundation Europe
+#  Modifications Copyright (C) 2025 OpenInfra Foundation Europe
 #  ================================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
 from docs_conf.conf import *
 
 project = "teiv"
-release = "master"
-version = "master"
+release = "m-release"
+version = "m-release"
 
 author = "ORAN"
 
