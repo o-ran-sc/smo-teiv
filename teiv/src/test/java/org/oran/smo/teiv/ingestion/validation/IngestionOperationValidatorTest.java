@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -46,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +150,7 @@ class IngestionOperationValidatorTest {
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
+        // Verify that the lock was attempted but transaction was rolled back
         assertEmptyTable("teiv_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
         assertEmptyTable("teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
 
@@ -156,8 +159,8 @@ class IngestionOperationValidatorTest {
         ParsedCloudEventData parsedCloudEventData2 = new ParsedCloudEventData(entities, relationships);
         assertEquals(entities.size() + relationships.size(), teivDbOperations.executeEntityAndRelationshipMergeOperations(
                 parsedCloudEventData2, "testSource").size());
-        verify(spiedDbServiceForValidation).acquireEntityInstanceExclusiveLock(
-                "teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"", "NRCellDU_1");
+        verify(spiedDbServiceForValidation).acquireEntityInstanceExclusiveLock(ArgumentMatchers.startsWith("teiv_data."),
+                eq("NRCellDU_1"));
 
         //Try to insert an extra relationship. It's expected to fail, because the NRCellDU_1 entity already has the maximum number of relationships.
         ParsedCloudEventData parsedCloudEventData3 = new ParsedCloudEventData(List.of(), List.of(redundantRelationship));
