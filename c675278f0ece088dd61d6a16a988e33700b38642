@@ -16,6 +16,23 @@
       "message": "As before. Recheck and merge when ready",
       "revId": "c675278f0ece088dd61d6a16a988e33700b38642",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a26430de_7050cc0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-12-16T09:48:04Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "c675278f0ece088dd61d6a16a988e33700b38642",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
