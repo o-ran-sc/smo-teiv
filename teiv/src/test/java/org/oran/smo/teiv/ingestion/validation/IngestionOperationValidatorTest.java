@@ -61,11 +61,13 @@ import org.oran.smo.teiv.db.TestPostgresqlContainer;
 import org.oran.smo.teiv.exception.InvalidFieldInYangDataException;
 import org.oran.smo.teiv.ingestion.validation.IngestionOperationValidator.MAXIMUM_CARDINALITY_CASE;
 import org.oran.smo.teiv.schema.Association;
+import org.oran.smo.teiv.schema.EntityType;
 import org.oran.smo.teiv.schema.PostgresSchemaLoader;
 import org.oran.smo.teiv.schema.RelationType;
 import org.oran.smo.teiv.schema.RelationshipDataLocation;
 import org.oran.smo.teiv.schema.SchemaLoaderException;
 import org.oran.smo.teiv.schema.SchemaRegistry;
+import org.oran.smo.teiv.schema.SchemaRegistryException;
 import org.oran.smo.teiv.service.TeivDbOperations;
 import org.oran.smo.teiv.service.cloudevent.data.Entity;
 import org.oran.smo.teiv.service.cloudevent.data.ParsedCloudEventData;
@@ -132,7 +134,7 @@ class IngestionOperationValidatorTest {
     }
 
     @Test
-    void maximumCardinalityViolationOneToOne_aSideMax() throws InvalidFieldInYangDataException {
+    void maximumCardinalityViolationOneToOne_aSideMax() throws InvalidFieldInYangDataException, SchemaRegistryException {
         //ManagedElementttttttttttttttttt_USES_NRCellDUUUUUUUUUUUU is a 0..1 to 1 relationship
         List<Entity> entities = generateEntities(MAXIMUM_CARDINALITY_CASE.ONE_ONE);
         List<Relationship> relationships = new ArrayList<>();
@@ -148,8 +150,10 @@ class IngestionOperationValidatorTest {
                 .executeEntityAndRelationshipMergeOperations(parsedCloudEventData, "testSource"));
 
         //The whole transaction is rolled back. Neither the entities nor the relationships are persisted.
-        assertEmptyTable("teiv_data.\"28C9A375E800E82308EBE7DA2932EF2C0AF13C38\"");
-        assertEmptyTable("teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"");
+        EntityType managedElementType = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-oam", "ManagedElementtttttttttttttttttttttttttttttttttttttttttttttttttt");
+        EntityType nrCellDuType = SchemaRegistry.getEntityTypeByModuleAndName("o-ran-smo-teiv-ran", "NRCellDUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+        assertEmptyTable(managedElementType.getTableName());
+        assertEmptyTable(nrCellDuType.getTableName());
 
         //Remove the extra relationship that caused the cardinality violation. Successfully insert the others.
         Relationship redundantRelationship = relationships.remove(1);
@@ -157,7 +161,7 @@ class IngestionOperationValidatorTest {
         assertEquals(entities.size() + relationships.size(), teivDbOperations.executeEntityAndRelationshipMergeOperations(
                 parsedCloudEventData2, "testSource").size());
         verify(spiedDbServiceForValidation).acquireEntityInstanceExclusiveLock(
-                "teiv_data.\"84E676149362F50C55FE1E004B98D4891916BBF3\"", "NRCellDU_1");
+                nrCellDuType.getTableName(), "NRCellDU_1");
 
         //Try to insert an extra relationship. It's expected to fail, because the NRCellDU_1 entity already has the maximum number of relationships.
         ParsedCloudEventData parsedCloudEventData3 = new ParsedCloudEventData(List.of(), List.of(redundantRelationship));
