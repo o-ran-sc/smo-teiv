@@ -28,26 +28,19 @@ author = "ORAN"
 extensions = [
     'sphinx.ext.autosectionlabel',
     'sphinxcontrib.openapi',
-    'sphinxcontrib.redoc'
 ]
 
-redoc = [
-            {
-                'name': 'Topology Exposure & Inventory Service API',
-                'page': 'offeredapis/topology-exposure-inventory-openapi',
-                'spec': './offeredapis/topology-exposure-inventory-openapi.yaml',
-                'embed': True,
-                'opts': {
-                    'suppress-warnings': True
-                }
-            }
-]
+# sphinxcontrib-openapi synthesises HTTP request/response examples
+# whose bodies (e.g. enum literal values, free-form 'string'
+# placeholders) Pygments' http lexer rejects. The extension already
+# falls back to relaxed-mode lexing, but the warnings are promoted to
+# errors under sphinx-build -W. Suppress them since the rendered
+# output is correct.
+suppress_warnings = ['misc.highlighting_failure']
+
 html_extra_path = [
 ]
 
 linkcheck_ignore = [
   r'http://localhost:\d+/',
-  './offeredapis/topology-exposure-inventory-openapi.html',  #Generated file that doesn't exist at link check.
-  './offeredapis/index.html',  #Generated file that doesn't exist at link check.
-  './offeredapis/html/index.html'  #Generated file that doesn't exist at link check.
 ]
