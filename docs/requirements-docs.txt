@@ -3,5 +3,3 @@ sphinx-rtd-theme
 sphinxcontrib-httpdomain
 lfdocs-conf
 sphinxcontrib-openapi
-sphinxcontrib-redoc
-setuptools<81

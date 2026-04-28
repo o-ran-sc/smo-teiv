@@ -29,11 +29,8 @@ API Table
 Topology Exposure & Inventory Service API
 -----------------------------------------
 
-The Topology Exposure & Inventory Service API is described in more detail in:
-
-* `Topology Exposure & Inventory Service API (html) (1) <./offeredapis/topology-exposure-inventory-openapi.html>`_
-* `Topology Exposure & Inventory Service API (html) (2) <./offeredapis/index.html>`_
-* `Topology Exposure & Inventory Service API (html) (3) <./offeredapis/html/index.html>`_
+The Topology Exposure & Inventory Service API is rendered inline below
+from the OpenAPI specification.
 
 Topology Exposure & Inventory Service API (Summary)
 ....................................................
