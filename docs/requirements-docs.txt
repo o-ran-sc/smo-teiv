@@ -1,9 +1,7 @@
-tox
-sphinx
-doc8
-docutils
+sphinx>=7,<10
+sphinx-rtd-theme
+sphinxcontrib-httpdomain
+lfdocs-conf
 sphinxcontrib-openapi
 sphinxcontrib-redoc
-lfdocs-conf
-urllib3~=1.26.15
-pillow==11.2.1
+setuptools<81
