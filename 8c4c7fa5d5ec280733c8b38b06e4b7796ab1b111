@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6e06fc6_37fe2d80",
+        "filename": ".readthedocs.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2026-05-07T14:58:44Z",
+      "side": 0,
+      "message": "Why remove this?",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 109
+      },
+      "revId": "8c4c7fa5d5ec280733c8b38b06e4b7796ab1b111",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
